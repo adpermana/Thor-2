@@ -1,0 +1,52 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Wazuh Security Platform DLL Sideloading
+id: db77ce78-7e28-4188-9337-cf30e2b3ba9f
+status: experimental
+description: Detects potential DLL side loading of DLLs that are part of the Wazuh
+    security platform
+author: X__Junior (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/03/13 18:57:51
+references:
+  - https://www.trendmicro.com/en_us/research/23/c/iron-tiger-sysupdate-adds-linux-targeting.html
+logsource:
+    category: image_load
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+    filter_main_generic:
+        ImageLoaded|startswith:
+          - C:\Program Files\
+          - C:\Program Files (x86)\
+    filter_optional_mingw64:
+        ImageLoaded|contains:
+          - \AppData\Local\
+          - \ProgramData\
+        ImageLoaded|endswith: \mingw64\bin\libwinpthread-1.dll
+    selection:
+        ImageLoaded|endswith:
+          - \libwazuhshared.dll
+          - \libwinpthread-1.dll
+falsepositives: Many legitimate applications leverage this DLL. (Visual Studio, JetBrains,
+    Ruby, Anaconda, GithubDesktop, etc.)
+level: medium
+customer: 'demo'
+modified: 2023/05/12
+tags:
+  - attack.defense_evasion
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1574.001
+  - attack.t1574.002
+  - DEMO

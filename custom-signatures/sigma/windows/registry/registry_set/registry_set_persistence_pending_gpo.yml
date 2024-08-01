@@ -1,0 +1,27 @@
+title: Potential Persistence Via PendingGPOs
+id: bb7e5c53-341c-409a-a7ce-31c503e1cda2
+status: experimental
+description: Detects potential persistence activity using pending GPO installation
+references:
+    - https://www.sentinelone.com/labs/gootkit-banking-trojan-part-2-persistence-other-capabilities/
+author: Nasreddine Bencherchali (Nextron Systems)
+date: 2023/02/27
+tags:
+    - attack.persistence
+    - attack.t1112
+logsource:
+    product: windows
+    category: registry_set
+detection:
+    selection:
+        EventType: SetValue
+        TargetObject|contains: '\GroupPolicy\PendingGPOs'
+    filter:
+        Image|endswith: '\svchost.exe'
+        User|contains: # covers many language settings
+            - 'AUTHORI'
+            - 'AUTORI'
+    condition: selection and not filter
+falsepositives:
+    - Unknown
+level: high

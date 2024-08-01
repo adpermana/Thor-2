@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Important Windows Service Terminated Unexpectedly
+id: 56abae0c-6212-4b97-adc0-0b559bb950c3
+status: experimental
+description: Detects important or interesting Windows services that got terminated
+    unexpectedly.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/04/14 19:30:51
+references:
+  - https://www.randori.com/blog/vulnerability-analysis-queuejumper-cve-2023-21554/
+logsource:
+    product: windows
+    service: system
+detection:
+    condition: all of selection_*
+    selection_eid:
+        EventID: "7034"
+        Provider_Name: Service Control Manager
+    selection_name:
+      - param1|contains: Message Queuing
+      - Binary|contains:
+          - 4d0053004d005100
+          - 6d0073006d007100
+falsepositives: Rare false positives could occur since service termination could happen
+    due to multiple reasons
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - DEMO

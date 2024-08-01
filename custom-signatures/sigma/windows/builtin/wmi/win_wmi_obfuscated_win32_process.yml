@@ -1,0 +1,26 @@
+title: Obfuscated Usage of WMI Win32_Process Class
+id: 6f418f9c-0bed-4b86-926a-5f3d320bccd8
+status: test
+description: Detects the usage of an obfuscated "Win32_Process" class to create processes
+references:
+    - Internal Research
+    - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1047/T1047.md#atomic-test-8---create-a-process-using-obfuscated-win32_process
+author: Nasreddine Bencherchali
+date: 2022/11/22
+modified: 2023/03/29
+tags:
+    - attack.execution
+    - attack.t1047
+logsource:
+    product: windows
+    service: wmi
+detection:
+    selection:
+        EventID: 22
+        ImplementationClass: 'Win32_Process'
+    filter:
+        ClassName: 'Win32_Process'
+    condition: selection and not filter
+falsepositives:
+    - Unknown
+level: high

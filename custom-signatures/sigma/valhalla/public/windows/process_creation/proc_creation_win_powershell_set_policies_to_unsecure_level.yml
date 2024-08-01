@@ -1,0 +1,61 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Change PowerShell Policies to an Insecure Level
+id: 87e3c4e8-a6a8-4ad9-bb4f-46e7ff99a180
+related:
+  - type: similar
+    id: cf2e938e-9a3e-4fe8-a347-411642b28a9f
+  - type: similar
+    id: 61d0475c-173f-4844-86f7-f3eebae1c66b
+  - type: similar
+    id: fad91067-08c5-4d1a-8d8c-d96a21b37814
+status: test
+description: Detects changing the PowerShell script execution policy to a potentially
+    insecure level using the "-ExecutionPolicy" flag.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/11/01 18:12:31
+references:
+  - https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.security/set-executionpolicy?view=powershell-7.1
+  - https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.1
+  - https://adsecurity.org/?p=2604
+  - https://thedfirreport.com/2021/11/01/from-zero-to-domain-admin/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_img:
+      - OriginalFileName:
+          - PowerShell.EXE
+          - pwsh.dll
+      - Image|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+    selection_level:
+        CommandLine|contains:
+          - Bypass
+          - Unrestricted
+    selection_option:
+        CommandLine|contains:
+          - '-executionpolicy '
+          - ' -ep '
+          - ' -exec '
+falsepositives: Administrator scripts
+level: medium
+customer: 'demo'
+modified: 2023/12/13
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

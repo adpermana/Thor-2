@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: MSSQL XPCmdshell Suspicious Execution
+id: 7f103213-a04e-4d59-8261-213dddf22314
+status: test
+description: Detects when the MSSQL "xp_cmdshell" stored procedure is used to execute
+    commands
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/12 15:43:51
+references:
+  - https://www.netspi.com/blog/technical/network-penetration-testing/sql-server-persistence-part-1-startup-stored-procedures/
+  - https://thedfirreport.com/2022/07/11/select-xmrig-from-sqlserver/
+logsource:
+    product: windows
+    service: application
+    definition: MSSQL audit policy to monitor for 'xp_cmdshell' must be enabled in
+        order to receive this event in the application log (Follow this tutorial https://dba.stackexchange.com/questions/103183/is-there-any-way-to-monitor-execution-of-xp-cmdshell-in-sql-server-2012)
+detection:
+    condition: selection
+    selection:
+        Data|contains|all:
+          - object_name:xp_cmdshell
+          - statement:EXEC
+        EventID: "33205"
+        Provider_Name: MSSQLSERVER
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.execution
+  - DEMO

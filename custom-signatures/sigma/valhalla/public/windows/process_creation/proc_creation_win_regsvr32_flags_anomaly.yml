@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Regsvr32 Commandline Flag Anomaly
+id: b236190c-1c61-41e9-84b3-3fe03f6d76b0
+status: test
+description: Detects a potential command line flag anomaly related to "regsvr32" in
+    which the "/i" flag is used without the "/n" which should be uncommon.
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/07/13 17:12:01
+references:
+  - https://twitter.com/sbousseaden/status/1282441816986484737?s=12
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_flag:
+        CommandLine|contains|windash: ' -n '
+    selection:
+        CommandLine|contains|windash: ' -i:'
+        Image|endswith: \regsvr32.exe
+falsepositives: Administrator typo might cause some false positives
+level: medium
+customer: 'demo'
+modified: 2024/03/13
+tags:
+  - attack.defense_evasion
+  - attack.t1218.010
+  - DEMO

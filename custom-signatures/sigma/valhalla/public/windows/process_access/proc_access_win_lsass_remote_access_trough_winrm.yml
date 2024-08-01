@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Remote LSASS Process Access Through Windows Remote Management
+id: aa35a627-33fb-4d04-a165-d33b4afca3e8
+status: stable
+description: Detects remote access to the LSASS process via WinRM. This could be a
+    sign of credential dumping from tools like mimikatz.
+author: Patryk Prauze - ING Tech
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/05/20 21:48:01
+references:
+  - https://pentestlab.blog/2018/05/15/lateral-movement-winrm/
+logsource:
+    category: process_access
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_access:
+        GrantedAccess: "0x80000000"
+    selection:
+        SourceImage|endswith: :\Windows\system32\wsmprovhost.exe
+        TargetImage|endswith: \lsass.exe
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/11/29
+tags:
+  - attack.credential_access
+  - attack.execution
+  - attack.t1003.001
+  - attack.t1059.001
+  - attack.lateral_movement
+  - attack.t1021.006
+  - attack.s0002
+  - DEMO

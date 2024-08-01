@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Active Directory Enumeration Using AD Module - PsScript
+id: 9e620995-f2d8-4630-8430-4afd89f77604
+related:
+  - type: similar
+    id: 70bc5215-526f-4477-963c-a47a5c9ebd12
+  - type: similar
+    id: 74176142-4684-4d8a-8b0a-713257e7df8e
+status: test
+description: Detects usage of the "Import-Module" cmdlet to load the "Microsoft.ActiveDirectory.Management.dl"
+    DLL. Which is often used by attackers to perform AD enumeration.
+author: frack113, Nasreddine Bencherchali
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/22 22:47:41
+references:
+  - https://github.com/samratashok/ADModule
+  - https://twitter.com/cyb3rops/status/1617108657166061568?s=20
+  - https://www.ired.team/offensive-security-experiments/active-directory-kerberos-abuse/active-directory-enumeration-with-ad-module-without-rsat-or-admin-privileges
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enable'
+detection:
+    condition: 1 of selection_*
+    selection_generic:
+        ScriptBlockText|contains|all:
+          - 'Import-Module '
+          - Microsoft.ActiveDirectory.Management.dll
+    selection_specific:
+        ScriptBlockText|contains: ipmo Microsoft.ActiveDirectory.Management.dll
+falsepositives: Legitimate use of the library for administrative activity
+level: medium
+customer: 'demo'
+tags:
+  - attack.reconnaissance
+  - attack.discovery
+  - attack.impact
+  - DEMO

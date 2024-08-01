@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: New PDQDeploy Service - Server Side
+id: ee9ca27c-9bd7-4cee-9b01-6e906be7cae3
+status: test
+description: |
+    Detects a PDQDeploy service installation which indicates that PDQDeploy was installed on the machines.
+    PDQDeploy can be abused by attackers to remotely install packages or execute commands on target machines
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/22 14:35:41
+references:
+  - https://documentation.pdq.com/PDQDeploy/13.0.3.0/index.html?windows-services.htm
+logsource:
+    product: windows
+    service: system
+detection:
+    condition: all of selection_*
+    selection_root:
+        EventID: "7045"
+        Provider_Name: Service Control Manager
+    selection_service:
+      - ImagePath|contains: PDQDeployService.exe
+      - ServiceName:
+          - PDQDeploy
+          - PDQ Deploy
+falsepositives: Legitimate use of the tool
+level: medium
+customer: 'demo'
+tags:
+  - attack.privilege_escalation
+  - attack.t1543.003
+  - DEMO

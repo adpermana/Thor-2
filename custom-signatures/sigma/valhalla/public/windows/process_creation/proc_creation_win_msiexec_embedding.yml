@@ -1,0 +1,51 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious MsiExec Embedding Parent
+id: 4a2a2c3e-209f-4d01-b513-4155a540b469
+status: test
+description: Adversaries may abuse msiexec.exe to proxy the execution of malicious
+    payloads
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/04/16 15:22:21
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218.007/T1218.007.md
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter*
+    filter_splunk_ufw:
+        CommandLine|contains: C:\Program Files\SplunkUniversalForwarder\bin\
+        Image|endswith: :\Windows\System32\cmd.exe
+    filter_vs:
+      - CommandLine|contains: \DismFoDInstall.cmd
+      - ParentCommandLine|contains|all:
+          - '\MsiExec.exe -Embedding '
+          - Global\MSI0000
+    selection:
+        Image|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+          - \cmd.exe
+        ParentCommandLine|contains|all:
+          - MsiExec.exe
+          - '-Embedding '
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/07/14
+tags:
+  - attack.t1218.007
+  - attack.defense_evasion
+  - DEMO

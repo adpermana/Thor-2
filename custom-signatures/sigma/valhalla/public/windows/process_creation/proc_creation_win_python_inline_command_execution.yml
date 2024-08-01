@@ -1,0 +1,52 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Python Inline Command Execution
+id: 899133d5-4d7c-4a7f-94ee-27355c879d90
+status: test
+description: Detects execution of python using the "-c" flag. This is could be used
+    as a way to launch a reverse shell or execute live python code.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/02 14:19:21
+references:
+  - https://docs.python.org/3/using/cmdline.html#cmdoption-c
+  - https://www.revshells.com/
+  - https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_* and not 1 of filter_*
+    filter_python:
+        ParentCommandLine|contains: -E -s -m ensurepip -U --default-pip
+        ParentImage|endswith: \python.exe
+        ParentImage|startswith: C:\Program Files\Python
+    filter_vscode:
+        ParentImage|endswith: \AppData\Local\Programs\Microsoft VS Code\Code.exe
+    selection_cli:
+        CommandLine|contains: ' -c'
+    selection_img:
+      - OriginalFileName: python.exe
+      - Image|endswith:
+          - python.exe
+          - python3.exe
+          - python2.exe
+falsepositives: Python libraries that use a flag starting with "-c". Filter according
+    to your environment
+level: medium
+customer: 'demo'
+modified: 2023/02/17
+tags:
+  - attack.execution
+  - attack.t1059
+  - DEMO

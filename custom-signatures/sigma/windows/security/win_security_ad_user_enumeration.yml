@@ -1,0 +1,55 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential AD User Enumeration From Non-Machine Account
+id: ab6bffca-beff-4baa-af11-6733f296d57a
+status: test
+description: Detects read access to a domain user from a non-machine account
+author: Maxime Thiebaut (@0xThiebaut)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/03/30 19:53:31
+references:
+  - https://www.specterops.io/assets/resources/an_ace_up_the_sleeve.pdf
+  - http://www.stuffithoughtiknew.com/2019/02/detecting-bloodhound.html
+  - https://docs.microsoft.com/en-us/windows/win32/adschema/attributes-all
+  - https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4662
+logsource:
+    product: windows
+    service: security
+    definition: 'Requirements: The "Read all properties" permission on the user object
+        needs to be audited for the "Everyone" principal'
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_machine_accounts:
+        SubjectUserName|endswith: $
+    filter_main_msql:
+        SubjectUserName|startswith: MSOL_
+    selection:
+        AccessMask|endswith:
+          - 1?
+          - 3?
+          - 4?
+          - 7?
+          - 9?
+          - B?
+          - D?
+          - F?
+        EventID: "4662"
+        ObjectType|contains: bf967aba-0de6-11d0-a285-00aa003049e2
+falsepositives: Administrators configuring new users.
+level: medium
+customer: 'demo'
+modified: 2022/11/08
+tags:
+  - attack.discovery
+  - attack.t1087.002
+  - DEMO

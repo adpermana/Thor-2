@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious JavaScript Execution Via Mshta.EXE
+id: 67f113fa-e23d-4271-befa-30113b3e08b1
+status: test
+description: Detects execution of javascript code using "mshta.exe".
+author: E.M. Anhaus (originally from Atomic Blue Detections, Endgame), oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/24 17:46:31
+references:
+  - https://eqllib.readthedocs.io/en/latest/analytics/6bc283c4-21f2-4aed-a05c-a9a3ffa95dd4.html
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218.005/T1218.005.md
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains: javascript
+    selection_img:
+      - Image|endswith: \mshta.exe
+      - OriginalFileName: MSHTA.EXE
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/02/07
+tags:
+  - attack.defense_evasion
+  - attack.t1218.005
+  - DEMO

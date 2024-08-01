@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Workstation Locking via Rundll32
+id: 3b5b0213-0460-4e3f-8937-3abf98ff7dcc
+status: test
+description: Detects a suspicious call to the user32.dll function that locks the user
+    workstation
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/04 17:32:11
+references:
+  - https://app.any.run/tasks/2aef9c63-f944-4763-b3ef-81eee209d128/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_call_cli:
+        CommandLine|contains: user32.dll,
+    selection_call_img:
+      - Image|endswith: \rundll32.exe
+      - OriginalFileName: RUNDLL32.EXE
+    selection_call_parent:
+        ParentImage|endswith: \cmd.exe
+    selection_function:
+        CommandLine|contains: LockWorkStation
+fields:
+  - Image
+  - ParentImage
+falsepositives: Scripts or links on the user desktop used to lock the workstation
+    instead of Windows+L or the menu option
+level: medium
+customer: 'demo'
+modified: 2023/02/09
+tags:
+  - attack.defense_evasion
+  - DEMO

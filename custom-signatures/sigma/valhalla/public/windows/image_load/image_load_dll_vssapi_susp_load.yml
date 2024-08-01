@@ -1,0 +1,57 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Volume Shadow Copy Vssapi.dll Load
+id: 37774c23-25a1-4adb-bb6d-8bb9fd59c0f8
+related:
+  - type: similar
+    id: 333cdbe8-27bb-4246-bf82-b41a0dca4b70
+  - type: similar
+    id: 48bfd177-7cf2-412b-ad77-baf923489e82
+status: test
+description: Detects the image load of VSS DLL by uncommon executables
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/10/31 17:52:01
+references:
+  - https://github.com/ORCx41/DeleteShadowCopies
+logsource:
+    category: image_load
+    product: windows
+detection:
+    condition: selection and not 1 of filter_*
+    filter_program_files:
+        Image|startswith:
+          - C:\Program Files\
+          - C:\Program Files (x86)\
+    filter_programdata_packagecache:
+        Image|startswith: C:\ProgramData\Package Cache\
+    filter_windows:
+      - Image:
+          - C:\Windows\explorer.exe
+          - C:\Windows\ImmersiveControlPanel\SystemSettings.exe
+      - Image|startswith:
+          - C:\Windows\System32\
+          - C:\Windows\SysWOW64\
+          - C:\Windows\Temp\{
+          - C:\Windows\WinSxS\
+    selection:
+        ImageLoaded|endswith: \vssapi.dll
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/05/03
+tags:
+  - attack.defense_evasion
+  - attack.impact
+  - attack.t1490
+  - DEMO

@@ -1,0 +1,53 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Camera and Microphone Access
+id: 62120148-6b7a-42be-8b91-271c04e281a3
+status: test
+description: Detects Processes accessing the camera and microphone from suspicious
+    folder
+author: Den Iuzvyk
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/06/07 16:22:51
+references:
+  - https://medium.com/@7a616368/can-you-track-processes-accessing-the-camera-and-microphone-7e6885b37072
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_1:
+        TargetObject|contains|all:
+          - \Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\
+          - \NonPackaged
+    selection_2:
+        TargetObject|contains:
+          - microphone
+          - webcam
+    selection_3:
+        TargetObject|contains:
+          - :#Windows#Temp#
+          - :#$Recycle.bin#
+          - :#Temp#
+          - :#Users#Public#
+          - :#Users#Default#
+          - :#Users#Desktop#
+falsepositives: Unlikely, there could be conferencing software running from a Temp
+    folder accessing the devices
+level: high
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.collection
+  - attack.t1125
+  - attack.t1123
+  - DEMO

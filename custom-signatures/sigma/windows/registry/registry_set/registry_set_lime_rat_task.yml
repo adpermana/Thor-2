@@ -1,0 +1,23 @@
+title: LimeRAT-Admin Scheduled Task Name
+id: 74447851-6bf8-4e84-ad14-16ebb39dec1d
+description: Detects the creation of a the LimeRAT-Admin scheduled task
+status: test
+date: 2022/05/15
+modified: 2023/03/29
+author: Nasreddine Bencherchali
+references:
+    - https://github.com/NYAN-x-CAT/Lime-RAT/blob/master/Project/Client/C_Installation.vb
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection:
+        TargetObject|contains: '\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree\LimeRAT-Admin'
+    condition: selection
+falsepositives:
+    - Unknown
+level: critical
+tags:
+    - attack.persistence
+    - attack.execution
+    - attack.t1053.005

@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Disable Important Scheduled Task
+id: 9ac94dc8-9042-493c-ba45-3b5e7c86b980
+related:
+  - type: similar
+    id: 7595ba94-cf3b-4471-aa03-4f6baa9e5fad
+status: test
+description: Detects when adversaries stop services or processes by disabling their
+    respective scheduled tasks in order to conduct data destructive activities
+author: frack113, Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/12/26 14:30:21
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1490/T1490.md#atomic-test-8---windows---disable-the-sr-scheduled-task
+  - https://twitter.com/MichalKoczwara/status/1553634816016498688
+  - https://thedfirreport.com/2021/10/18/icedid-to-xinglocker-ransomware-in-24-hours/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of schtasks_*
+    schtasks_exe:
+        CommandLine|contains:
+          - \Windows\SystemRestore\SR
+          - \Windows\Windows Defender\
+          - \Windows\BitLocker
+          - \Windows\WindowsBackup\
+          - \Windows\WindowsUpdate\
+          - \Windows\UpdateOrchestrator\
+          - \Windows\ExploitGuard
+        CommandLine|contains|all:
+          - /Change
+          - /TN
+          - /disable
+        Image|endswith: \schtasks.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/09/02
+tags:
+  - attack.impact
+  - attack.t1489
+  - DEMO

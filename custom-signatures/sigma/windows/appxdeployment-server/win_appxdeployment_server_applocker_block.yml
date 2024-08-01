@@ -1,0 +1,35 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Deployment AppX Package Was Blocked By AppLocker
+id: 6ae53108-c3a0-4bee-8f45-c7591a2c337f
+status: test
+description: Detects an appx package deployment that was blocked by AppLocker policy
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/11 18:10:51
+references:
+  - https://learn.microsoft.com/en-us/windows/win32/appxpkg/troubleshooting
+  - https://github.com/nasbench/EVTX-ETW-Resources/blob/7a806a148b3d9d381193d4a80356016e6e8b1ee8/ETWEventsList/CSV/Windows11/22H2/W11_22H2_Pro_20220920_22621.382/Providers/Microsoft-Windows-AppXDeployment-Server.csv
+logsource:
+    product: windows
+    service: appxdeployment-server
+detection:
+    condition: selection
+    selection:
+        EventID: "412"
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - DEMO

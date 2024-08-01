@@ -1,0 +1,70 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious CMD Shell Output Redirect
+id: 8e0bb260-d4b2-4fff-bb8d-3f82118e6892
+related:
+  - type: derived
+    id: aa2efee7-34dd-446e-8a37-40790a66efd7
+  - type: similar
+    id: 4f4eaa9f-5ad4-410c-a4be-bc6132b0175a
+status: experimental
+description: Detects inline Windows shell commands redirecting output via the ">"
+    symbol to a suspicious location
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/12 15:26:21
+references:
+  - https://thedfirreport.com/2022/07/11/select-xmrig-from-sqlserver/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection_img and 1 of selection_cli_*
+    selection_cli_1:
+        CommandLine|contains:
+          - '> \Users\Public\'
+          - '> %APPDATA%\'
+          - '> %TEMP%\'
+          - '> %TMP%\'
+          - '> %USERPROFILE%\'
+          - '> C:\Temp\'
+          - '> C:\Users\Public\'
+          - '> C:\Windows\Temp\'
+          - '>\Users\Public\'
+          - '>%APPDATA%\'
+          - '>%TEMP%\'
+          - '>%TMP%\'
+          - '>%USERPROFILE%\'
+          - '>C:\Temp\'
+          - '>C:\Users\Public\'
+          - '>C:\Windows\Temp\'
+    selection_cli_2:
+        CommandLine|contains:
+          - ' >'
+          - '">'
+          - '''>'
+        CommandLine|contains|all:
+          - C:\Users\
+          - \AppData\Local\
+    selection_img:
+      - Image|endswith: \cmd.exe
+      - OriginalFileName: Cmd.Exe
+falsepositives: Legitimate admin or third party scripts used for diagnostic collection
+    might generate some false positives
+level: medium
+customer: 'demo'
+modified: 2023/05/15
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

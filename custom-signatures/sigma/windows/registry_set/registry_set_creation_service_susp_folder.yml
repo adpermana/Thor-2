@@ -1,0 +1,62 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Service Binary in Suspicious Folder
+id: a07f0359-4c90-4dc4-a681-8ffea40b4f47
+related:
+  - type: obsoletes
+    id: c0abc838-36b0-47c9-b3b3-a90c39455382
+status: experimental
+description: Detect the creation of a service with a service binary located in a suspicious
+    directory
+author: Florian Roth (Nextron Systems), frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/05/02 15:20:01
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.001/T1562.001.md
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: 1 of selection_* and not 1 of filter_*
+    filter_1:
+        Image|contains|all:
+          - \Common Files\
+          - \Temp\
+    selection_1:
+        Details:
+          - DWORD (0x00000000)
+          - DWORD (0x00000001)
+          - DWORD (0x00000002)
+        Image|contains:
+          - \Users\Public\
+          - \Perflogs\
+          - \ADMIN$\
+          - \Temp\
+        TargetObject|endswith: \Start
+        TargetObject|startswith: HKLM\System\CurrentControlSet\Services\
+    selection_2:
+        Details|contains:
+          - \Users\Public\
+          - \Perflogs\
+          - \ADMIN$\
+          - \Temp\
+        TargetObject|endswith: \ImagePath
+        TargetObject|startswith: HKLM\System\CurrentControlSet\Services\
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.defense_evasion
+  - attack.t1112
+  - DEMO

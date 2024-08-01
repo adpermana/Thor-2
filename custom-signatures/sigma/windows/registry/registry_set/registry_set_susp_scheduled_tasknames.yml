@@ -1,0 +1,53 @@
+title: Suspicious Scheduled Task Names
+id: 96b980c3-c32a-411a-8e8d-6c1b9f7b8c23
+description: Detects when a scheduled task is created with a suspicious name that is derived from windows processes.
+status: test
+date: 2022/05/15
+modified: 2023/03/29
+author: Nasreddine Bencherchali
+references:
+    - https://app.any.run/tasks/4a483e00-1591-438b-92d7-cf2f682d7682/
+    - https://app.any.run/tasks/3036c664-7f15-4439-b425-8ff49ffbed81/
+    - https://app.any.run/tasks/2e4ab0ed-91a5-49ad-a675-aaabec81a770/
+    - https://app.any.run/tasks/ae2b0a08-1354-407d-b404-e266db91aacb/
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection_root:
+        TargetObject|contains: '\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree\'
+    selection_value:
+        TargetObject|contains:
+            - 'explorere'
+            - 'lsassl'
+            - 'winlogonw'
+            - 'SystemS'
+            - 'csrssc'
+            - 'SearchIndexerS'
+            - 'SearchProtocolHostS'
+            - 'WmiPrvSEW'
+            - 'IMEDICTUPDATE'
+            - 'SearchFilterHostS'
+            - 'lsml'
+            - 'smsss'
+            - 'ctfmonc'
+            - 'wininitw'
+            - 'savessessions'
+            - 'conhostc'
+            - 'taskengt'
+            - 'WinRARW'
+            - 'dllhostd'
+            - 'IdleI'
+            - 'servicess'
+            - 'dwmd'
+            - 'taskhostt'
+            - 'audiodga'
+            - 'spoolsvs'
+    condition: all of selection*
+falsepositives:
+    - Unknown
+level: high
+tags:
+    - attack.persistence
+    - attack.execution
+    - attack.t1053.005

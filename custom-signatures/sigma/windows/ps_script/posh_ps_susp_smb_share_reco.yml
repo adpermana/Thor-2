@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Get Information for SMB Share
+id: 95f0643a-ed40-467c-806b-aac9542ec5ab
+status: test
+description: |
+    Adversaries may look for folders and drives shared on remote systems as a means of identifying sources of information to gather as
+    a precursor for Collection and to identify potential systems of interest for Lateral Movement.
+    Networks often contain shared network drives and folders that enable users to access file directories on various systems across a network.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/12/15 16:22:51
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1069.002/T1069.002.md
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: selection
+    selection:
+        ScriptBlockText|contains: get-smbshare
+falsepositives: Unknown
+level: low
+customer: 'demo'
+modified: 2022/12/25
+tags:
+  - attack.discovery
+  - attack.t1069.001
+  - DEMO

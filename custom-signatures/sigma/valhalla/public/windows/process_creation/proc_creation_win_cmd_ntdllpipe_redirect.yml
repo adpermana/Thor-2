@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: NtdllPipe Like Activity Execution
+id: bbc865e4-7fcd-45a6-8ff1-95ced28ec5b2
+status: test
+description: Detects command that type the content of ntdll.dll to a different file
+    or a pipe in order to evade AV / EDR detection. As seen being used in the POC
+    NtdllPipe
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/03/05 14:51:01
+references:
+  - https://web.archive.org/web/20220306121156/https://www.x86matthew.com/view_post?id=ntdll_pipe
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - type %windir%\system32\ntdll.dll
+          - type %systemroot%\system32\ntdll.dll
+          - type c:\windows\system32\ntdll.dll
+          - \\ntdll.dll > \\\\.\\pipe\\
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/03/07
+tags:
+  - attack.defense_evasion
+  - DEMO

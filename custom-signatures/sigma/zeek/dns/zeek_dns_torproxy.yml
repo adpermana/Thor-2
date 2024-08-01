@@ -1,0 +1,70 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: DNS TOR Proxies
+id: a8322756-015c-42e7-afb1-436e85ed3ff5
+status: test
+description: Identifies IPs performing DNS lookups associated with common Tor proxies.
+author: Saw Winn Naung , Azure-Sentinel
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/15 09:34:01
+references:
+  - https://github.com/Azure/Azure-Sentinel/blob/f99542b94afe0ad2f19a82cc08262e7ac8e1428e/Detections/ASimDNS/imDNS_TorProxies.yaml
+logsource:
+    product: zeek
+    service: dns
+detection:
+    condition: selection
+    selection:
+        query:
+          - tor2web.org
+          - tor2web.com
+          - torlink.co
+          - onion.to
+          - onion.ink
+          - onion.cab
+          - onion.nu
+          - onion.link
+          - onion.it
+          - onion.city
+          - onion.direct
+          - onion.top
+          - onion.casa
+          - onion.plus
+          - onion.rip
+          - onion.dog
+          - tor2web.fi
+          - tor2web.blutmagie.de
+          - onion.sh
+          - onion.lu
+          - onion.pet
+          - t2w.pw
+          - tor2web.ae.org
+          - tor2web.io
+          - tor2web.xyz
+          - onion.lt
+          - s1.tor-gateways.de
+          - s2.tor-gateways.de
+          - s3.tor-gateways.de
+          - s4.tor-gateways.de
+          - s5.tor-gateways.de
+          - hiddenservice.net
+fields:
+  - clientip
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.exfiltration
+  - attack.t1048
+  - DEMO

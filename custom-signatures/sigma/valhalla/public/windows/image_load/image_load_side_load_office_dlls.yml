@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Microsoft Office DLL Sideload
+id: 829a3bdf-34da-4051-9cf4-8ed221a8ae4f
+status: test
+description: Detects DLL sideloading of DLLs that are part of Microsoft Office from
+    non standard location
+author: Nasreddine Bencherchali (Nextron Systems), Wietze Beukema (project and research)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/17 13:23:11
+references:
+  - https://hijacklibs.net/
+logsource:
+    category: image_load
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        ImageLoaded|startswith:
+          - C:\Program Files\Microsoft Office\OFFICE
+          - C:\Program Files (x86)\Microsoft Office\OFFICE
+          - C:\Program Files\Microsoft Office\Root\OFFICE
+          - C:\Program Files (x86)\Microsoft Office\Root\OFFICE
+    selection:
+        ImageLoaded|endswith: \outllib.dll
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/03/15
+tags:
+  - attack.defense_evasion
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1574.001
+  - attack.t1574.002
+  - DEMO

@@ -1,0 +1,61 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious AddinUtil.EXE CommandLine Execution
+id: 631b22a4-70f4-4e2f-9ea8-42f84d9df6d8
+status: experimental
+description: |
+    Detects execution of the Add-In deployment cache updating utility (AddInutil.exe) with suspicious Addinroot or Pipelineroot paths. An adversary may execute AddinUtil.exe with uncommon Addinroot/Pipelineroot paths that point to the adversaries Addins.Store payload.
+author: Nasreddine Bencherchali (Nextron Systems), Michael McKinley (@McKinleyMike),
+    Tony Latteri (@TheLatteri)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/09/18 18:10:41
+references:
+  - https://www.blue-prints.blog/content/blog/posts/lolbin/addinutil-lolbas.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection_img and (all of selection_susp_1_* or selection_susp_2)
+    selection_img:
+      - Image|endswith: \addinutil.exe
+      - OriginalFileName: AddInUtil.exe
+    selection_susp_1_flags:
+        CommandLine|contains:
+          - '-AddInRoot:'
+          - '-PipelineRoot:'
+    selection_susp_1_paths:
+        CommandLine|contains:
+          - \AppData\Local\Temp\
+          - \Desktop\
+          - \Downloads\
+          - \Users\Public\
+          - \Windows\Temp\
+    selection_susp_2:
+        CommandLine|contains:
+          - -AddInRoot:.
+          - -AddInRoot:"."
+          - -PipelineRoot:.
+          - -PipelineRoot:"."
+        CurrentDirectory|contains:
+          - \AppData\Local\Temp\
+          - \Desktop\
+          - \Downloads\
+          - \Users\Public\
+          - \Windows\Temp\
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

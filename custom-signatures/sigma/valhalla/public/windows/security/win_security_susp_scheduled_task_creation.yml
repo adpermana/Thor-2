@@ -1,0 +1,78 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Scheduled Task Creation
+id: 3a734d25-df5c-4b99-8034-af1ddb5883a4
+status: test
+description: Detects suspicious scheduled task creation events. Based on attributes
+    such as paths, commands line flags, etc.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/12/05 15:12:01
+references:
+  - https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4698
+logsource:
+    product: windows
+    service: security
+    definition: The Advanced Audit Policy setting Object Access > Audit Other Object
+        Access Events has to be configured to allow this detection. We also recommend
+        extracting the Command field from the embedded XML in the event data.
+detection:
+    condition: all of selection_*
+    selection_commands:
+        TaskContent|contains:
+          - regsvr32
+          - rundll32
+          - cmd.exe</Command>
+          - cmd</Command>
+          - '<Arguments>/c '
+          - '<Arguments>/k '
+          - '<Arguments>/r '
+          - powershell
+          - pwsh
+          - mshta
+          - wscript
+          - cscript
+          - certutil
+          - bitsadmin
+          - bash.exe
+          - 'bash '
+          - scrcons
+          - 'wmic '
+          - wmic.exe
+          - forfiles
+          - scriptrunner
+          - hh.exe
+    selection_eid:
+        EventID: "4698"
+    selection_paths:
+        TaskContent|contains:
+          - \AppData\Local\Temp\
+          - \AppData\Roaming\
+          - \Users\Public\
+          - \WINDOWS\Temp\
+          - C:\Temp\
+          - \Desktop\
+          - \Downloads\
+          - \Temporary Internet
+          - C:\ProgramData\
+          - C:\Perflogs\
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/12/07
+tags:
+  - attack.execution
+  - attack.privilege_escalation
+  - attack.persistence
+  - attack.t1053.005
+  - DEMO

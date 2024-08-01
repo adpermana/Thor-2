@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: UAC Bypass Using Iscsicpl - ImageLoad
+id: 9ed5959a-c43c-4c59-84e3-d28628429456
+status: test
+description: Detects the "iscsicpl.exe" UAC bypass technique that leverages a DLL
+    Search Order hijacking technique to load a custom DLL's from temp or a any user
+    controlled location in the users %PATH%
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/17 15:03:11
+references:
+  - https://github.com/hackerhouse-opensource/iscsicpl_bypassUAC
+  - https://twitter.com/wdormann/status/1547583317410607110
+logsource:
+    category: image_load
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        ImageLoaded|contains|all:
+          - C:\Windows\
+          - iscsiexe.dll
+    selection:
+        Image: C:\Windows\SysWOW64\iscsicpl.exe
+        ImageLoaded|endswith: \iscsiexe.dll
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/07/25
+tags:
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - attack.t1548.002
+  - DEMO

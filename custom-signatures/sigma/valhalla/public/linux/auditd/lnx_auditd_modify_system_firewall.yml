@@ -1,0 +1,51 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Modify System Firewall
+id: 323ff3f5-0013-4847-bbd4-250b5edb62cc
+related:
+  - type: similar
+    id: 53059bc0-1472-438b-956a-7508a94a91f0
+status: test
+description: |
+    Detects the removal of system firewall rules. Adversaries may only delete or modify a specific system firewall rule to bypass controls limiting network usage or access.
+    Detection rules that match only on the disabling of firewalls will miss this.
+author: IAI
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/03/06 11:57:51
+references:
+  - https://www.trendmicro.com/en_us/research/22/c/cyclops-blink-sets-sights-on-asus-routers--.html
+  - https://blog.aquasec.com/container-security-tnt-container-attack
+logsource:
+    product: linux
+    service: auditd
+detection:
+    condition: 1 of selection*
+    selection1:
+        a0: iptables
+        a1|contains: DROP
+        type: EXECVE
+    selection2:
+        a0: firewall-cmd
+        a1|contains: remove
+        type: EXECVE
+    selection3:
+        a0: ufw
+        a1|contains: delete
+        type: EXECVE
+falsepositives: Legitimate admin activity
+level: medium
+customer: 'demo'
+tags:
+  - attack.t1562.004
+  - attack.defense_evasion
+  - DEMO

@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Shell Open Registry Keys Manipulation
+id: 152f3630-77c1-4284-bcc0-4cc68ab2f6e7
+status: test
+description: Detects the shell open key manipulation (exefile and ms-settings) used
+    for persistence and the pattern of UAC Bypass using fodhelper.exe, computerdefaults.exe,
+    slui.exe via registry keys (e.g. UACMe 33 or 62)
+author: Christian Burkard (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/30 15:54:41
+references:
+  - https://github.com/hfiref0x/UACME
+  - https://winscripting.blog/2017/05/12/first-entry-welcome-and-uac-bypass/
+  - https://github.com/RhinoSecurityLabs/Aggressor-Scripts/tree/master/UACBypass
+  - https://tria.ge/211119-gs7rtshcfr/behavioral2 [Lokibot sample from Nov 2021]
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    condition: selection1 or selection2 or (selection3 and not filter_sel3)
+    filter_sel3:
+        Details: (Empty)
+    selection1:
+        Details|contains: \Software\Classes\{
+        EventType: SetValue
+        TargetObject|endswith: Classes\ms-settings\shell\open\command\SymbolicLinkValue
+    selection2:
+        TargetObject|endswith: Classes\ms-settings\shell\open\command\DelegateExecute
+    selection3:
+        EventType: SetValue
+        TargetObject|endswith:
+          - Classes\ms-settings\shell\open\command\(Default)
+          - Classes\exefile\shell\open\command\(Default)
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/01/13
+tags:
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - attack.t1548.002
+  - attack.t1546.001
+  - DEMO

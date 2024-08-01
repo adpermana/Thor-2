@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Windows Update Agent Empty Cmdline
+id: 52d097e2-063e-4c9c-8fbb-855c8948d135
+status: test
+description: |
+    Detects suspicious Windows Update Agent activity in which a wuauclt.exe process command line doesn't contain any command line flags
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/02/26 17:59:51
+references:
+  - https://redcanary.com/blog/blackbyte-ransomware/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection*
+    selection_cli:
+        CommandLine|endswith:
+          - Wuauclt
+          - Wuauclt.exe
+    selection_img:
+      - Image|endswith: \Wuauclt.exe
+      - OriginalFileName: Wuauclt.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/11/11
+tags:
+  - attack.defense_evasion
+  - attack.t1036
+  - DEMO

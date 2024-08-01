@@ -1,0 +1,77 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious WindowsTerminal Child Processes
+id: 8de89e52-f6e1-4b5b-afd1-41ecfa300d48
+status: test
+description: Detects suspicious children spawned via the Windows Terminal application
+    which could be a sign of persistence via WindowsTerminal (see references section)
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/25 17:37:31
+references:
+  - https://persistence-info.github.io/Data/windowsterminalprofile.html
+  - https://twitter.com/nas_bench/status/1550836225652686848
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_* and not 1 of filter_*
+    filter_builtin_visual_studio_shell:
+        CommandLine|contains|all:
+          - Import-Module
+          - Microsoft.VisualStudio.DevShell.dll
+          - Enter-VsDevShell
+    filter_open_settings:
+        CommandLine|contains|all:
+          - \AppData\Local\Packages\Microsoft.WindowsTerminal_
+          - \LocalState\settings.json
+    filter_vsdevcmd:
+        CommandLine|contains|all:
+          - C:\Program Files\Microsoft Visual Studio\
+          - \Common7\Tools\VsDevCmd.bat
+    selection_parent:
+        ParentImage|endswith:
+          - \WindowsTerminal.exe
+          - \wt.exe
+    selection_susp:
+      - Image|endswith:
+          - \rundll32.exe
+          - \regsvr32.exe
+          - \certutil.exe
+          - \cscript.exe
+          - \wscript.exe
+          - \csc.exe
+      - Image|contains:
+          - C:\Users\Public\
+          - \Downloads\
+          - \Desktop\
+          - \AppData\Local\Temp\
+          - \Windows\TEMP\
+      - CommandLine|contains:
+          - ' iex '
+          - ' icm'
+          - Invoke-
+          - 'Import-Module '
+          - 'ipmo '
+          - DownloadString(
+          - ' /c '
+          - ' /k '
+          - ' /r '
+falsepositives: Other legitimate "Windows Terminal" profiles
+level: medium
+customer: 'demo'
+modified: 2023/02/14
+tags:
+  - attack.execution
+  - attack.persistence
+  - DEMO

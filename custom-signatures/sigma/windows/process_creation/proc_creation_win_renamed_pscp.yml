@@ -1,0 +1,24 @@
+title: Renamed PuTTY Secure Copy Execution
+id: f4e8d74a-9096-48d3-873b-c5ff35a822ef
+status: experimental
+description: Detects execution of a renamed PuTTY Secure Copy (PSCP)
+references:
+    - https://the.earth.li/~sgtatham/putty/0.60/htmldoc/Chapter5.html
+    - https://www.microsoft.com/en-us/security/blog/2022/10/18/defenders-beware-a-case-for-post-ransomware-investigations/
+author: Nasreddine Bencherchali
+tags:
+    - attack.exfiltration
+    - attack.t1048.003
+date: 2022/11/10
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        OriginalFileName: 'PSCP'
+    filter:
+        Image|endswith: '\pscp.exe'
+    condition: selection and not filter
+falsepositives:
+    - Administrators who rename their tools
+level: high

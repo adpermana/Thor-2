@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Failed Code Integrity Checks
+id: 470ec5fa-7b4e-4071-b200-4c753100f49b
+status: stable
+description: |
+    Detects code integrity failures such as missing page hashes or corrupted drivers due unauthorized modification. This could be a sign of tampered binaries.
+author: Thomas Patzke
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/12/03 13:14:41
+references:
+  - https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-5038
+  - https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-6281
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: selection
+    selection:
+        EventID:
+          - "5038"
+          - "6281"
+falsepositives: Disk device errors
+level: informational
+customer: 'demo'
+modified: 2023/12/13
+tags:
+  - attack.defense_evasion
+  - attack.t1027.001
+  - DEMO

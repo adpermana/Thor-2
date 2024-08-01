@@ -1,0 +1,100 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Tampering With Security Products Via WMIC
+id: 847d5ff3-8a31-4737-a970-aeae8fe21765
+related:
+  - type: derived
+    id: b53317a0-8acf-4fd1-8de8-a5401e776b96
+status: test
+description: Detects uninstallation or termination of security products using the
+    WMIC utility
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/01/30 19:17:11
+references:
+  - https://twitter.com/cglyer/status/1355171195654709249
+  - https://thedfirreport.com/2021/10/18/icedid-to-xinglocker-ransomware-in-24-hours/
+  - https://www.mandiant.com/resources/unc2165-shifts-to-evade-sanctions
+  - https://research.nccgroup.com/2022/08/19/back-in-black-unlocking-a-lockbit-3-0-ransomware-attack/
+  - https://www.trendmicro.com/en_us/research/23/a/vice-society-ransomware-group-targets-manufacturing-companies.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_cli_* and selection_product
+    selection_cli_1:
+        CommandLine|contains|all:
+          - wmic
+          - 'product where '
+          - call
+          - uninstall
+          - /nointeractive
+    selection_cli_2:
+        CommandLine|contains:
+          - call delete
+          - call terminate
+        CommandLine|contains|all:
+          - wmic
+          - 'caption like '
+    selection_cli_3:
+        CommandLine|contains|all:
+          - 'process '
+          - 'where '
+          - delete
+    selection_product:
+        CommandLine|contains:
+          - '%carbon%'
+          - '%cylance%'
+          - '%endpoint%'
+          - '%eset%'
+          - '%malware%'
+          - '%Sophos%'
+          - '%symantec%'
+          - Antivirus
+          - 'AVG '
+          - Carbon Black
+          - CarbonBlack
+          - Cb Defense Sensor 64-bit
+          - Crowdstrike Sensor
+          - 'Cylance '
+          - Dell Threat Defense
+          - DLP Endpoint
+          - Endpoint Detection
+          - Endpoint Protection
+          - Endpoint Security
+          - Endpoint Sensor
+          - ESET File Security
+          - LogRhythm System Monitor Service
+          - Malwarebytes
+          - McAfee Agent
+          - Microsoft Security Client
+          - Sophos Anti-Virus
+          - Sophos AutoUpdate
+          - Sophos Credential Store
+          - Sophos Management Console
+          - Sophos Management Database
+          - Sophos Management Server
+          - Sophos Remote Management System
+          - Sophos Update Manager
+          - Threat Protection
+          - VirusScan
+          - Webroot SecureAnywhere
+          - Windows Defender
+falsepositives: Legitimate administration
+level: high
+customer: 'demo'
+modified: 2023/02/14
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+  - DEMO

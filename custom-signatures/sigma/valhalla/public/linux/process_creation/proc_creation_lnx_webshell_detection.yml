@@ -1,0 +1,64 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Linux Webshell Indicators
+id: 818f7b24-0fba-4c49-a073-8b755573b9c7
+status: test
+description: Detects suspicious sub processes of web server processes
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/10/15 12:49:01
+references:
+  - https://www.acunetix.com/blog/articles/web-shells-101-using-php-introduction-web-shells-part-2/
+  - https://media.defense.gov/2020/Jun/09/2002313081/-1/-1/0/CSI-DETECT-AND-PREVENT-WEB-SHELL-MALWARE-20200422.PDF
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    condition: 1 of selection_* and sub_processes
+    selection_general:
+        ParentImage|endswith:
+          - /httpd
+          - /lighttpd
+          - /nginx
+          - /apache2
+          - /node
+          - /caddy
+    selection_tomcat:
+        ParentCommandLine|contains|all:
+          - /bin/java
+          - tomcat
+    selection_websphere:
+        ParentCommandLine|contains|all:
+          - /bin/java
+          - websphere
+    sub_processes:
+        Image|endswith:
+          - /whoami
+          - /ifconfig
+          - /ip
+          - /bin/uname
+          - /bin/cat
+          - /bin/crontab
+          - /hostname
+          - /iptables
+          - /netstat
+          - /pwd
+          - /route
+falsepositives: Web applications that invoke Linux command line tools
+level: high
+customer: 'demo'
+modified: 2022/12/28
+tags:
+  - attack.persistence
+  - attack.t1505.003
+  - DEMO

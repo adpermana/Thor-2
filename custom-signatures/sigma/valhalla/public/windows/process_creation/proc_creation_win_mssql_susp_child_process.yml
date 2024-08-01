@@ -1,0 +1,62 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Child Process Of SQL Server
+id: 869b9ca7-9ea2-4a5a-8325-e80e62f75445
+related:
+  - type: obsoletes
+    id: 344482e4-a477-436c-aa70-7536d18a48c7
+status: test
+description: Detects suspicious child processes of the SQLServer process. This could
+    indicate potential RCE or SQL Injection.
+author: FPT.EagleEye Team, wagga
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/12/11 15:45:01
+references:
+  - Internal Research
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_optional_*
+    filter_optional_datev:
+        CommandLine|startswith: '"C:\Windows\system32\cmd.exe" '
+        Image: C:\Windows\System32\cmd.exe
+        ParentImage|endswith: DATEV_DBENGINE\MSSQL\Binn\sqlservr.exe
+        ParentImage|startswith: C:\Program Files\Microsoft SQL Server\
+    selection:
+        Image|endswith:
+          - \bash.exe
+          - \bitsadmin.exe
+          - \cmd.exe
+          - \netstat.exe
+          - \nltest.exe
+          - \ping.exe
+          - \powershell.exe
+          - \pwsh.exe
+          - \regsvr32.exe
+          - \rundll32.exe
+          - \sh.exe
+          - \systeminfo.exe
+          - \tasklist.exe
+          - \wsl.exe
+        ParentImage|endswith: \sqlservr.exe
+level: high
+customer: 'demo'
+modified: 2023/05/04
+tags:
+  - attack.t1505.003
+  - attack.t1190
+  - attack.initial_access
+  - attack.persistence
+  - attack.privilege_escalation
+  - DEMO

@@ -1,0 +1,40 @@
+title: New Scheduled Tasks Created Via WMI From Suspicous Location
+id: 4fe811f2-0a85-4526-af62-f4bf70636639
+status: test
+description: Detects the creation of a new scheduled task using WMI (Example using the "New-ScheduledTaskAction") where the initiating process is located in a suspicious location
+references:
+    - Internal Research
+author: Nasreddine Bencherchali
+date: 2022/12/09
+modified: 2023/03/29
+tags:
+    - attack.execution
+    - attack.t1047
+logsource:
+    product: windows
+    service: wmi
+detection:
+    selection_eid:
+        EventID: 11
+        Namespace|contains: '\Microsoft\Windows\TaskScheduler'
+    selection_paths:
+        - ClientCommandLine|contains:
+            - '\Appdata\Local\'
+            - '\Windows\Temp\'
+            - ':\Temp\'
+            - '\Perflogs\'
+            - '\Downloads\'
+            - '\Desktop\'
+            - '\Users\Public\'
+        - ClientImage|contains:
+            - '\Appdata\Local\'
+            - '\Windows\Temp\'
+            - ':\Temp\'
+            - '\Perflogs\'
+            - '\Downloads\'
+            - '\Desktop\'
+            - '\Users\Public\'
+    condition: all of selection_*
+falsepositives:
+    - Unknown
+level: medium

@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Network Sniffing Activity Using Network Tools
+id: ba1f7802-adc7-48b4-9ecb-81e227fddfd5
+status: test
+description: |
+    Detects potential network sniffing via use of network tools such as "tshark", "windump".
+    Network sniffing refers to using the network interface on a system to monitor or capture information sent over a wired or wireless connection.
+    An adversary may place a network interface into promiscuous mode to passively access data in transit over the network, or use span ports to capture a larger amount of data.
+author: Timur Zinniatullin, oscd.community, Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/21 20:50:01
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1040/T1040.md
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_tshark:
+        CommandLine|contains: -i
+        Image|endswith: \tshark.exe
+    selection_windump:
+        Image|endswith: \windump.exe
+falsepositives: Legitimate administration activity to troubleshoot network issues
+level: medium
+customer: 'demo'
+modified: 2023/02/20
+tags:
+  - attack.credential_access
+  - attack.discovery
+  - attack.t1040
+  - DEMO

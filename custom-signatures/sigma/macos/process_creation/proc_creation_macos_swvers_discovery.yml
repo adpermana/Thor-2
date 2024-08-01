@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: System Information Discovery Using sw_vers
+id: 5de06a6f-673a-4fc0-8d48-bcfe3837b033
+status: experimental
+description: Detects the use of "sw_vers" for system information discovery
+author: Joseliyo Sanchez, @Joseliyo_Jstnk
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/12/20 17:36:21
+references:
+  - https://www.virustotal.com/gui/file/d3fa64f63563fe958b75238742d1e473800cb5f49f5cb79d38d4aa3c93709026/behavior
+  - https://www.virustotal.com/gui/file/03b71eaceadea05bc0eea5cddecaa05f245126d6b16cfcd0f3ba0442ac58dab3/behavior
+  - https://ss64.com/osx/sw_vers.html
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    condition: all of selection_*
+    selection_image:
+        Image|endswith: /sw_vers
+    selection_options:
+        CommandLine|contains:
+          - -buildVersion
+          - -productName
+          - -productVersion
+falsepositives: Legitimate administrative activities
+level: medium
+customer: 'demo'
+tags:
+  - attack.discovery
+  - attack.t1082
+  - DEMO

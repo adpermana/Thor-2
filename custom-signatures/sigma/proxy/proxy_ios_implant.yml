@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: iOS Implant URL Pattern
+id: e06ac91d-b9e6-443d-8e5b-af749e7aa6b6
+status: test
+description: Detects URL pattern used by iOS Implant
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/08/30 11:44:11
+references:
+  - https://googleprojectzero.blogspot.com/2019/08/implant-teardown.html
+  - https://twitter.com/craiu/status/1167358457344925696
+logsource:
+    category: proxy
+detection:
+    condition: selection
+    selection:
+        c-uri|contains: /list/suc\?name=
+fields:
+  - ClientIP
+  - c-uri
+  - c-useragent
+falsepositives: Unknown
+level: critical
+customer: 'demo'
+modified: 2022/08/15
+tags:
+  - attack.execution
+  - attack.t1203
+  - attack.collection
+  - attack.t1005
+  - attack.t1119
+  - attack.credential_access
+  - attack.t1528
+  - attack.t1552.001
+  - DEMO

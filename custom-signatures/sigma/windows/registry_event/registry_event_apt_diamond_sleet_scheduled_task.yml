@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Diamond Sleet APT Scheduled Task Creation - Registry
+id: 9f9f92ba-5300-43a4-b435-87d1ee571688
+status: experimental
+description: |
+    Detects registry event related to the creation of a scheduled task used by Diamond Sleet APT during exploitation of Team City CVE-2023-42793 vulnerability
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/10/24 19:03:31
+references:
+  - https://www.microsoft.com/en-us/security/blog/2023/10/18/multiple-north-korean-threat-actors-exploiting-the-teamcity-cve-2023-42793-vulnerability/
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetObject|contains|all:
+          - \SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree\
+          - Windows TeamCity Settings User Interface
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1562
+  - detection.emerging_threats
+  - DEMO

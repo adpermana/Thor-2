@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Cobalt Strike DNS Beaconing - DNS Client
+id: 0d18728b-f5bf-4381-9dcf-915539fff6c2
+related:
+  - type: similar
+    id: f356a9c4-effd-4608-bbf8-408afd5cd006
+status: test
+description: Detects a program that invoked suspicious DNS queries known from Cobalt
+    Strike beacons
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/16 18:36:21
+references:
+  - https://www.icebrg.io/blog/footprints-of-fin7-tracking-actor-patterns
+  - https://www.sekoia.io/en/hunting-and-detecting-cobalt-strike/
+logsource:
+    product: windows
+    service: dns-client
+    definition: 'Requirements: Microsoft-Windows-DNS Client Events/Operational Event
+        Log must be enabled/collected in order to receive the events.'
+detection:
+    condition: selection_eid and 1 of selection_query_*
+    selection_eid:
+        EventID: "3008"
+    selection_query_1:
+        QueryName|startswith:
+          - aaa.stage.
+          - post.1
+    selection_query_2:
+        QueryName|contains: .stage.123456.
+falsepositives: Unknown
+level: critical
+customer: 'demo'
+tags:
+  - attack.command_and_control
+  - attack.t1071.004
+  - DEMO

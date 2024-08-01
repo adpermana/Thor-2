@@ -1,0 +1,51 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: A Rule Has Been Deleted From The Windows Firewall Exception List
+id: c187c075-bb3e-4c62-b4fa-beae0ffc211f
+status: experimental
+description: Detects when a single rules or all of the rules have been deleted from
+    the Windows Defender Firewall
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/02/19 22:01:11
+references:
+  - https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-r2-and-2008/dd364427(v=ws.10)
+logsource:
+    product: windows
+    service: firewall-as
+detection:
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+    filter_main_empty:
+        ModifyingApplication: ""
+    filter_main_generic:
+        ModifyingApplication|startswith:
+          - C:\Program Files\
+          - C:\Program Files (x86)\
+    filter_main_null:
+        ModifyingApplication: []
+    filter_main_svchost:
+        ModifyingApplication: C:\Windows\System32\svchost.exe
+    filter_optional_msmpeng:
+        ModifyingApplication|endswith: \MsMpEng.exe
+        ModifyingApplication|startswith: C:\ProgramData\Microsoft\Windows Defender\Platform\
+    selection:
+        EventID:
+          - "2006"
+          - "2052"
+level: medium
+customer: 'demo'
+modified: 2023/06/12
+tags:
+  - attack.defense_evasion
+  - attack.t1562.004
+  - DEMO

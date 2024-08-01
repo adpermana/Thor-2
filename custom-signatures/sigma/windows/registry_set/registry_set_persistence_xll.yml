@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Persistence Via Excel Add-in - Registry
+id: 961e33d1-4f86-4fcf-80ab-930a708b2f82
+status: experimental
+description: Detect potential persistence via the creation of an excel add-in (XLL)
+    file to make it run automatically when Excel is started.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/15 18:30:51
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/4ae9580a1a8772db87a1b6cdb0d03e5af231e966/atomics/T1137.006/T1137.006.md
+  - https://labs.withsecure.com/publications/add-in-opportunities-for-office-persistence
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Details|endswith: .xll
+        Details|startswith: '/R '
+        TargetObject|contains: Software\Microsoft\Office\
+        TargetObject|endswith: \Excel\Options
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.persistence
+  - attack.t1137.006
+  - DEMO

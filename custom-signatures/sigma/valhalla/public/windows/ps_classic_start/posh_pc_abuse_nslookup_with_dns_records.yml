@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Nslookup PowerShell Download Cradle
+id: 999bff6d-dc15-44c9-9f5c-e1051bfc86e1
+related:
+  - type: similar
+    id: 1b3b01c7-84e9-4072-86e5-fc285a41ff23
+status: test
+description: Detects a powershell download cradle using nslookup. This cradle uses
+    nslookup to extract payloads from DNS records.
+author: Sai Prashanth Pulisetti @pulisettis, Aishwarya Singam
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/12/10 15:25:51
+references:
+  - https://twitter.com/Alh4zr3d/status/1566489367232651264
+logsource:
+    category: ps_classic_start
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Data|contains:
+          - -q=txt http
+          - -querytype=txt http
+        Data|contains|all:
+          - powershell
+          - nslookup
+          - '[1]'
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/10/27
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

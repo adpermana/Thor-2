@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PowerShell Create Local User
+id: 243de76f-4725-4f2e-8225-a8a69b15ad61
+status: test
+description: Detects creation of a local user via PowerShell
+author: '@ROxPinTeddy'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/04/11 13:17:51
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1136.001/T1136.001.md
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: selection
+    selection:
+        ScriptBlockText|contains: New-LocalUser
+falsepositives: Legitimate user creation
+level: medium
+customer: 'demo'
+modified: 2022/12/25
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - attack.persistence
+  - attack.t1136.001
+  - DEMO

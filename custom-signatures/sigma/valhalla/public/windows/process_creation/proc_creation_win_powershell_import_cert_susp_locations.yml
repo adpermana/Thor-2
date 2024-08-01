@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Root Certificate Installed From Susp Locations
+id: 5f6a601c-2ecb-498b-9c33-660362323afa
+status: test
+description: Adversaries may install a root certificate on a compromised system to
+    avoid warnings when connecting to adversary controlled web servers.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/09 18:13:41
+references:
+  - https://www.microsoft.com/security/blog/2022/09/07/profiling-dev-0270-phosphorus-ransomware-operations/
+  - https://docs.microsoft.com/en-us/powershell/module/pki/import-certificate?view=windowsserver2022-ps
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - \AppData\Local\Temp\
+          - :\Windows\TEMP\
+          - \Desktop\
+          - \Downloads\
+          - \Perflogs\
+          - :\Users\Public\
+        CommandLine|contains|all:
+          - Import-Certificate
+          - ' -FilePath '
+          - Cert:\LocalMachine\Root
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/01/16
+tags:
+  - attack.defense_evasion
+  - attack.t1553.004
+  - DEMO

@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Process Hollowing Activity
+id: c4b890e5-8d8c-4496-8c66-c805753817cd
+status: experimental
+description: Detects when a memory process image does not match the disk image, indicative
+    of process hollowing.
+author: Christopher Peacock '@securepeacock', SCYTHE '@scythe_io', Sittikorn S
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/25 15:54:31
+references:
+  - https://twitter.com/SecurePeacock/status/1486054048390332423?s=20
+  - https://www.bleepingcomputer.com/news/microsoft/microsoft-sysmon-now-detects-malware-process-tampering-attempts/
+logsource:
+    category: process_tampering
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+    filter_main_generic:
+        Image|contains:
+          - :\Program Files (x86)
+          - :\Program Files\
+          - :\Windows\System32\wbem\WMIADAP.exe
+          - :\Windows\SysWOW64\wbem\WMIADAP.exe
+    filter_optional_edge:
+        Image|endswith: \WindowsApps\MicrosoftEdge.exe
+    filter_optional_opera:
+        Image|contains: \AppData\Local\Programs\Opera\
+        Image|endswith: \opera.exe
+    selection:
+        Type: Image is replaced
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/11/28
+tags:
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - attack.t1055.012
+  - DEMO

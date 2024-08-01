@@ -1,0 +1,40 @@
+title: WINEVT OwningPublisher Tamper
+id: aa80a436-d49c-4908-bf04-ff26014d6a4e
+related:
+    - id: 2f78da12-f7c7-430b-8b19-a28f269b77a3
+      type: similar
+status: test
+description: Detects tempering with the "OwningPublisher" key in order to disable logging of a windows event channel
+references:
+    - https://www.virustotal.com/gui/file/c5bb8f3d9fe7e449f3a7055fdba333b1cc01b7ab1dfa232956f40e27f4507e74
+author: Nasreddine Bencherchali
+date: 2022/05/18
+modified: 2023/03/29
+tags:
+    - attack.defense_evasion
+    - attack.t1562.002
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection:
+        TargetObject|contains: '\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\'
+        TargetObject|endswith: '\OwningPublisher'
+    filter_wevtutil:
+        Image|endswith: '\Windows\system32\wevtutil.exe' #FP generated during installation of manifests via wevtutil
+    filter_tiworker:
+        Image|endswith:
+            - '\TiWorker.exe'
+            - 'C:\Windows\servicing\TrustedInstaller.exe'
+        TargetObject|contains: '\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-'
+    filter_defender:
+        Details: '{11cd958a-c507-4ef3-b3f2-5fd9dfbd2c78}'
+        TargetObject|contains: '\MICROSOFT\WINDOWS\CURRENTVERSION\WINEVT\CHANNELS\MICROSOFT-WINDOWS-WINDOWS DEFENDER\'
+    filter_empty_image:
+        # This is an edge case where the process isn't captured by aurora so it shows up as an empty field
+        Image: null
+    condition: selection and not 1 of filter*
+falsepositives:
+    - Administrator disabling specific event log for troubleshooting
+    - Some system processes have been observed also modifying this registry
+level: medium

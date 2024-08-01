@@ -1,0 +1,131 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Mint Sandstorm - AsperaFaspex Suspicious Process Execution
+id: 91048c0d-5b81-4b85-a099-c9ee4fb87979
+status: test
+description: Detects suspicious execution from AsperaFaspex as seen used by Mint Sandstorm
+author: Nasreddine Bencherchali (Nextron Systems), MSTIC (idea)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/04/20 21:30:11
+references:
+  - https://www.microsoft.com/en-us/security/blog/2023/04/18/nation-state-threat-actor-mint-sandstorm-refines-tradecraft-to-attack-high-value-targets/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection_parent and (all of selection_special_child_powershell_* or
+        all of selection_special_child_lsass_* or 1 of selection_child_*)
+    selection_child_curl:
+        CommandLine|contains: http
+        Image|endswith: \curl.exe
+    selection_child_localgroup:
+        CommandLine|contains|all:
+          - localgroup Administrators
+          - /add
+    selection_child_net:
+        CommandLine|contains: net
+        CommandLine|contains|all:
+          - user
+          - /add
+    selection_child_reg:
+      - CommandLine|contains|all:
+          - reg add
+          - DisableAntiSpyware
+          - \Microsoft\Windows Defender
+      - CommandLine|contains|all:
+          - reg add
+          - DisableRestrictedAdmin
+          - CurrentControlSet\Control\Lsa
+    selection_child_script:
+        CommandLine|contains:
+          - E:jscript
+          - e:vbscript
+    selection_child_vssadmin:
+        CommandLine|contains|all:
+          - vssadmin
+          - delete
+          - shadows
+    selection_child_wbadmin:
+        CommandLine|contains|all:
+          - wbadmin
+          - delete
+          - catalog
+    selection_child_wget:
+        CommandLine|contains: http
+        Image|endswith: \wget.exe
+    selection_child_wmic_1:
+        CommandLine|contains|all:
+          - wmic
+          - process call create
+    selection_child_wmic_2:
+        CommandLine|contains|all:
+          - wmic
+          - delete
+          - shadowcopy
+    selection_parent:
+        ParentImage|contains|all:
+          - aspera
+          - \ruby
+    selection_special_child_lsass_1:
+        CommandLine|contains: lsass
+    selection_special_child_lsass_2:
+        CommandLine|contains:
+          - procdump
+          - tasklist
+          - findstr
+    selection_special_child_powershell_cli:
+      - CommandLine|contains:
+          - ' echo '
+          - -dumpmode
+          - -ssh
+          - .dmp
+          - add-MpPreference
+          - adscredentials
+          - bitsadmin
+          - certutil
+          - csvhost.exe
+          - DownloadFile
+          - DownloadString
+          - dsquery
+          - ekern.exe
+          - FromBase64String
+          - 'iex '
+          - iex(
+          - Invoke-Expression
+          - Invoke-WebRequest
+          - localgroup administrators
+          - net group
+          - net user
+          - o365accountconfiguration
+          - query session
+          - samaccountname=
+          - set-MpPreference
+          - svhost.exe
+          - System.IO.Compression
+          - System.IO.MemoryStream
+          - usoprivate
+          - usoshared
+          - whoami
+      - CommandLine|re: '[-/–][Ee^]{1,2}[ncodema^]*\s[A-Za-z0-9+/=]{15,}'
+    selection_special_child_powershell_img:
+        Image|endswith:
+          - \powershell.exe
+          - \powershell_ise.exe
+falsepositives: Unlikely
+level: critical
+customer: 'demo'
+modified: 2023/04/25
+tags:
+  - attack.execution
+  - detection.emerging_threats
+  - DEMO

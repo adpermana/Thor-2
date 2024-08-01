@@ -1,0 +1,36 @@
+title: Kimsuky TA Process Pattern
+id: eba112dc-b5db-4a47-8c65-f21465549747
+status: experimental
+description: Detects process patterns of malware infectors used by Kimsuky threat actor
+references:
+    - https://misppriv.circl.lu/events/view/105858
+    - https://app.any.run/tasks/32c6d31c-e872-4afa-9843-d6010e10b392/#
+author: Florian Roth
+date: 2022/08/31
+modified: 2022/11/04
+tags:
+   - attack.g0094
+   - attack.t1059.001
+   - attack.execution
+   - attack.t1059.003
+logsource:
+   product: windows
+   category: process_creation
+detection:
+    selection_wscript_img:
+        - Image|endswith: '\wscript.exe'
+        - OriginalFileName: 'wscript.exe'
+    selection_wscript_cli:
+        CommandLine|contains: 'e:vbscript'
+        CommandLine|endswith: '.ini'
+    selection_pwsh_img:
+        - Image|endswith: '\powershell.exe'
+        - OriginalFileName: 'PowerShell.EXE'
+    selection_pwsh_cli:
+        CommandLine|contains:
+            - '-command "iex (wget http'
+            - '=1).content; GetInfo -ur '
+    condition: all of selection_wscript_* or all of selection_pwsh_*
+falsepositives:
+    - Unknown
+level: high

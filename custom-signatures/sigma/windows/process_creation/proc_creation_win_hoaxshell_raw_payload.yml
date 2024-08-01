@@ -1,0 +1,39 @@
+title: Hoaxshell Raw Payload - ProcCreations
+id: b10153ca-605a-4a8f-85bd-4dbca64601d8
+related:
+    - id: ebec86bd-9c62-40d6-8a0c-339ff1d89f5a
+      type: similar
+status: experimental
+description: Detects the raw payload of hoaxshell, an unconventional Windows reverse shell
+author: Nasreddine Bencherchali
+references:
+    - https://github.com/t3l3machus/hoaxshell/
+date: 2022/10/20
+modified: 2022/12/28
+tags:
+    - attack.defense_evasion
+    - attack.execution
+    - attack.t1059
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        - Image|endswith:
+            - '\powershell.exe'
+            - '\pwsh.exe'
+        - OriginalFileName:
+            - 'PowerShell.EXE'
+            - 'pwsh.dll'
+    selection_cli:
+        CommandLine|contains|all:
+            - "($e+$r)"
+            - "-ErrorAction Stop -ErrorVariable e"
+            - " sleep "
+        CommandLine|contains:
+            - "Invoke-RestMethod -UseBasicParsing -Uri"
+            - "Invoke-WebRequest -UseBasicParsing -Uri"
+    condition: all of selection_*
+falsepositives:
+    - Unlikely
+level: high

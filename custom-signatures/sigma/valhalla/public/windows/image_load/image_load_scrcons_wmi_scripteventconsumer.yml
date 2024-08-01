@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: WMI ActiveScriptEventConsumers Activity Via Scrcons.EXE DLL Load
+id: b439f47d-ef52-4b29-9a2f-57d8a96cb6b8
+status: test
+description: Detects signs of the WMI script host process "scrcons.exe" loading scripting
+    DLLs which could indicates WMI ActiveScriptEventConsumers EventConsumers activity.
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/09/02 22:19:11
+references:
+  - https://twitter.com/HunterPlaybook/status/1301207718355759107
+  - https://www.mdsec.co.uk/2020/09/i-like-to-move-it-windows-lateral-movement-part-1-wmi-event-subscription/
+  - https://threathunterplaybook.com/hunts/windows/200902-RemoteWMIActiveScriptEventConsumers/notebook.html
+logsource:
+    category: image_load
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith: \scrcons.exe
+        ImageLoaded|endswith:
+          - \vbscript.dll
+          - \wbemdisp.dll
+          - \wshom.ocx
+          - \scrrun.dll
+falsepositives:
+  - Legitimate event consumers
+  - Dell computers on some versions register an event consumer that is known to cause
+    false positives when brightness is changed by the corresponding keyboard button
+level: medium
+customer: 'demo'
+modified: 2023/02/22
+tags:
+  - attack.lateral_movement
+  - attack.privilege_escalation
+  - attack.persistence
+  - attack.t1546.003
+  - DEMO

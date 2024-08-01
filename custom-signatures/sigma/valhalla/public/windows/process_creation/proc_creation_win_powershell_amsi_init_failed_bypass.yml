@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential AMSI Bypass Via .NET Reflection
+id: 30edb182-aa75-42c0-b0a9-e998bb29067c
+related:
+  - type: obsoletes
+    id: 4f927692-68b5-4267-871b-073c45f4f6fe
+status: test
+description: Detects Request to "amsiInitFailed" that can be used to disable AMSI
+    Scanning
+author: Markus Neis, @Kostastsale
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2018/08/17 16:04:41
+references:
+  - https://s3cur3th1ssh1t.github.io/Bypass_AMSI_by_manual_modification/
+  - https://www.mdsec.co.uk/2018/06/exploring-powershell-amsi-and-logging-evasion/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_1:
+        CommandLine|contains:
+          - System.Management.Automation.AmsiUtils
+          - amsiInitFailed
+    selection_2:
+        CommandLine|contains|all:
+          - '[Ref].Assembly.GetType'
+          - SetValue($null,$true)
+          - NonPublic,Static
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/02/03
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+  - DEMO

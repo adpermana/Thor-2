@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Prefetch File Deleted
+id: 0a1f9d29-6465-4776-b091-7f43b26e4c89
+status: test
+description: Detects the deletion of a prefetch file which may indicate an attempt
+    to destroy forensic evidence
+author: Cedric MAURUGEON
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/09/29 11:26:41
+references:
+  - Internal Research
+  - https://www.group-ib.com/blog/hunting-for-ttps-with-prefetch-files/
+logsource:
+    category: file_delete
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_svchost:
+        Image|endswith: :\windows\system32\svchost.exe
+        User|contains:
+          - AUTHORI
+          - AUTORI
+    selection:
+        TargetFilename|contains: :\Windows\Prefetch\
+        TargetFilename|endswith: .pf
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2024/01/25
+tags:
+  - attack.defense_evasion
+  - attack.t1070.004
+  - DEMO

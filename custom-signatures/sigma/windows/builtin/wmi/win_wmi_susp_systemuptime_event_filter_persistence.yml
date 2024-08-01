@@ -1,0 +1,31 @@
+title: Suspicious WMI System Uptime Based Event Filter Has Been Registered
+id: 53a5d94a-74f3-4e4f-9608-99392fad2d81
+status: test
+description: Detects the creation of a suspicious WMI event filter based on System uptime
+references:
+    - https://gist.github.com/infosecn1nja/d9a42a68e9d3671e1fbadee5d7dc8964
+    - https://github.com/subesp0x10/Wmi-Persistence/blob/56dd1987b49bd6b41d41ad75f1b14d26908241e4/WMI-Persistence.ps1
+    - https://github.com/n0pe-sled/WMI-Persistence/blob/ac05684b53afe3a93f89cc4a63f952f09604ef8d/WMI-Persistence.ps1
+author: Nasreddine Bencherchali
+date: 2022/11/25
+modified: 2023/03/29
+tags:
+    - attack.execution
+    - attack.t1047
+logsource:
+    product: windows
+    service: wmi
+detection:
+    selection:
+        EventID: 5861
+        Consumer|contains:
+            - 'ActiveScriptEventConsumer='
+            - 'CommandLineEventConsumer='
+        PossibleCause|contains|all:
+            - 'FROM __InstanceModificationEvent'
+            - 'Win32_PerfFormattedData_PerfOS_System'
+            - '.SystemUpTime'
+    condition: selection
+falsepositives:
+    - Unknown
+level: medium

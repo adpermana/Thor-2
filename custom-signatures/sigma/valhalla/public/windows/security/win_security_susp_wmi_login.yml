@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Successful Account Login Via WMI
+id: 5af54681-df95-4c26-854f-2565e13cfab0
+status: stable
+description: Detects successful logon attempts performed with WMI
+author: Thomas Patzke
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/12/04 14:08:31
+references:
+  - Internal Research
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: selection
+    selection:
+        EventID: "4624"
+        ProcessName|endswith: \WmiPrvSE.exe
+falsepositives:
+  - Monitoring tools
+  - Legitimate system administration
+level: low
+customer: 'demo'
+modified: 2024/01/17
+tags:
+  - attack.execution
+  - attack.t1047
+  - DEMO

@@ -1,0 +1,51 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Desktopimgdownldr Command
+id: bb58aa4a-b80b-415a-a2c0-2f65a4c81009
+status: test
+description: Detects a suspicious Microsoft desktopimgdownldr execution with parameters
+    used to download files from the Internet
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/07/03 16:09:11
+references:
+  - https://labs.sentinelone.com/living-off-windows-land-a-new-native-file-downldr/
+  - https://twitter.com/SBousseaden/status/1278977301745741825
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: ( selection1 and not selection1_filter ) or selection_reg
+    selection_reg:
+        CommandLine|contains|all:
+          - reg delete
+          - \PersonalizationCSP
+    selection1:
+        CommandLine|contains: ' /lockscreenurl:'
+    selection1_filter:
+        CommandLine|contains:
+          - .jpg
+          - .jpeg
+          - .png
+fields:
+  - CommandLine
+  - ParentCommandLine
+falsepositives: False positives depend on scripts and administrative tools used in
+    the monitored environment
+level: high
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.command_and_control
+  - attack.t1105
+  - DEMO

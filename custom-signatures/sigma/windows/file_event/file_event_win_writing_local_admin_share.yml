@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Writing Local Admin Share
+id: 4aafb0fa-bff5-4b9d-b99e-8093e659c65f
+status: test
+description: |
+    Aversaries may use to interact with a remote network share using Server Message Block (SMB).
+    This technique is used by post-exploitation frameworks.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/01 12:25:51
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1021.002/T1021.002.md#atomic-test-4---execute-command-writing-output-to-local-admin-share
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetFilename|contains|all:
+          - \\\\127.0.0
+          - \ADMIN$\
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/08/13
+tags:
+  - attack.lateral_movement
+  - attack.t1546.002
+  - DEMO

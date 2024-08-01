@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: MERCURY APT Activity
+id: a62298a3-1fe0-422f-9a68-ffbcbc5a123d
+status: test
+description: Detects suspicious command line patterns seen being used by MERCURY APT
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/26 10:41:31
+references:
+  - https://www.microsoft.com/security/blog/2022/08/25/mercury-leveraging-log4j-2-vulnerabilities-in-unpatched-systems-to-target-israeli-organizations/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection*
+    selection_base:
+        CommandLine|contains|all:
+          - -exec bypass -w 1 -enc
+          - UwB0AGEAcgB0AC0ASgBvAGIAIAAtAFMAYwByAGkAcAB0AEIAbABvAGMAawAgAHsAKABzAGEAcABzACAAKAAiAHAA
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/03/10
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - attack.g0069
+  - detection.emerging_threats
+  - DEMO

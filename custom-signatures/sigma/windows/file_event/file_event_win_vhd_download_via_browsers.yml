@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: VHD Image Download Via Browser
+id: 8468111a-ef07-4654-903b-b863a80bbc95
+status: test
+description: |
+    Detects creation of ".vhd"/".vhdx" files by browser processes.
+    Malware can use mountable Virtual Hard Disk ".vhd" files to encapsulate payloads and evade security controls.
+author: frack113, Christopher Peacock '@securepeacock', SCYTHE '@scythe_io'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/10/25 13:28:11
+references:
+  - https://redcanary.com/blog/intelligence-insights-october-2021/
+  - https://www.kaspersky.com/blog/lazarus-vhd-ransomware/36559/
+  - https://securelist.com/lazarus-on-the-hunt-for-big-game/97757/
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith:
+          - \brave.exe
+          - \chrome.exe
+          - \firefox.exe
+          - \iexplore.exe
+          - \maxthon.exe
+          - \MicrosoftEdge.exe
+          - \msedge.exe
+          - \msedgewebview2.exe
+          - \opera.exe
+          - \safari.exe
+          - \seamonkey.exe
+          - \vivaldi.exe
+          - \whale.exe
+        TargetFilename|contains: .vhd
+falsepositives: Legitimate downloads of ".vhd" files would also trigger this
+level: medium
+customer: 'demo'
+modified: 2023/05/05
+tags:
+  - attack.resource_development
+  - attack.t1587.001
+  - DEMO

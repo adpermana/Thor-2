@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Backup Catalog Deleted
+id: 9703792d-fd9a-456d-a672-ff92efe4806a
+status: test
+description: Detects backup catalog deletions
+author: Florian Roth (Nextron Systems), Tom U. @c_APT_ure (collection)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/05/12 11:42:41
+references:
+  - https://technet.microsoft.com/en-us/library/cc742154(v=ws.11).aspx
+  - https://www.hybrid-analysis.com/sample/ed01ebfbc9eb5bbea545af4d01bf5f1071661840480439c6e5babe8e080e41aa?environmentId=100
+logsource:
+    product: windows
+    service: application
+detection:
+    condition: selection
+    selection:
+        EventID: "524"
+        Provider_Name: Microsoft-Windows-Backup
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/12/25
+tags:
+  - attack.defense_evasion
+  - attack.t1070.004
+  - DEMO

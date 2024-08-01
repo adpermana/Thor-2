@@ -1,0 +1,103 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Weak Encryption Enabled and Kerberoast
+id: f6de9536-0441-4b3f-a646-f4e00f300ffd
+status: test
+description: Detects scenario where weak encryption is enabled for a user profile
+    which could be used for hash/password cracking.
+author: '@neu5ron'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/07/30 16:03:11
+references:
+  - https://adsecurity.org/?p=2053
+  - https://blog.harmj0y.net/redteaming/another-word-on-delegation/
+logsource:
+    product: windows
+    service: security
+    definition: 'Requirements: Audit Policy : Account Management > Audit User Account
+        Management, Group Policy : Computer Configuration\Windows Settings\Security
+        Settings\Advanced Audit Policy Configuration\Audit Policies\Account Management\Audit
+        User Account Management'
+detection:
+    condition: selection and ((newuac_des and not olduac_des) or (newuac_preauth and
+        not olduac_preauth) or (newuac_encrypted and not olduac_encrypted))
+    newuac_des:
+        NewUacValue|endswith:
+          - 8???
+          - 9???
+          - A???
+          - B???
+          - C???
+          - D???
+          - E???
+          - F???
+    newuac_encrypted:
+        NewUacValue|endswith:
+          - 8??
+          - 9??
+          - A??
+          - B??
+          - C??
+          - D??
+          - E??
+          - F??
+    newuac_preauth:
+        NewUacValue|endswith:
+          - 1????
+          - 3????
+          - 5????
+          - 7????
+          - 9????
+          - B????
+          - D????
+          - F????
+    olduac_des:
+        OldUacValue|endswith:
+          - 8???
+          - 9???
+          - A???
+          - B???
+          - C???
+          - D???
+          - E???
+          - F???
+    olduac_encrypted:
+        OldUacValue|endswith:
+          - 8??
+          - 9??
+          - A??
+          - B??
+          - C??
+          - D??
+          - E??
+          - F??
+    olduac_preauth:
+        OldUacValue|endswith:
+          - 1????
+          - 3????
+          - 5????
+          - 7????
+          - 9????
+          - B????
+          - D????
+          - F????
+    selection:
+        EventID: "4738"
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+  - DEMO

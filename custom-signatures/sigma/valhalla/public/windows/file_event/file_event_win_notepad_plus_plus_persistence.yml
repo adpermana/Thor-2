@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Persistence Via Notepad++ Plugins
+id: 54127bd4-f541-4ac3-afdb-ea073f63f692
+status: test
+description: Detects creation of new ".dll" files inside the plugins directory of
+    a notepad++ installation by a process other than "gup.exe". Which could indicates
+    possible persistence
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/10 17:16:01
+references:
+  - https://pentestlab.blog/2022/02/14/persistence-notepad-plugins/
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection and not 1 of filter_*
+    filter_gup:
+        Image|endswith: \Notepad++\updater\gup.exe
+    filter_install:
+        Image|contains: \AppData\Local\Temp\
+        Image|endswith:
+          - \target.exe
+          - Installer.x64.exe
+        Image|startswith: C:\Users\
+    selection:
+        TargetFilename|contains: \Notepad++\plugins\
+        TargetFilename|endswith: .dll
+falsepositives:
+  - Possible FPs during first installation of Notepad++
+  - Legitimate use of custom plugins by users in order to enhance notepad++ functionalities
+level: medium
+customer: 'demo'
+modified: 2023/01/05
+tags:
+  - attack.persistence
+  - DEMO

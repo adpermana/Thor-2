@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Disable-WindowsOptionalFeature Command PowerShell
+id: 99c4658d-2c5e-4d87-828d-7c066ca537c3
+status: test
+description: |
+    Detect built in PowerShell cmdlet Disable-WindowsOptionalFeature, Deployment Image Servicing and Management tool.
+    Similar to DISM.exe, this cmdlet is used to enumerate, install, uninstall, configure, and update features and packages in Windows images
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/10 19:25:41
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/5b67c9b141fa3918017f8fa44f2f88f0b1ecb9e1/atomics/T1562.001/T1562.001.md
+  - https://docs.microsoft.com/en-us/powershell/module/dism/disable-windowsoptionalfeature?view=windowsserver2022-ps
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: all of selection*
+    selection_cmd:
+        ScriptBlockText|contains|all:
+          - Disable-WindowsOptionalFeature
+          - -Online
+          - -FeatureName
+    selection_feature:
+        ScriptBlockText|contains:
+          - Windows-Defender-Gui
+          - Windows-Defender-Features
+          - Windows-Defender
+          - Windows-Defender-ApplicationGuard
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+  - DEMO

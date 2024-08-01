@@ -1,0 +1,30 @@
+title: Risepro Stealer Traffic
+id: ef0e8ed6-d1cb-4a38-a4d3-32a39a07baf4
+status: test
+description: Detects risepro stealer GET requests used to retrive data from the C2
+references:
+    - https://blog.sekoia.io/new-risepro-stealer-distributed-by-the-prominent-privateloader/
+author: X__Junior
+date: 2022/12/30
+modified: 2023/03/28
+tags:
+    - attack.command_and_control
+logsource:
+    category: proxy
+detection:
+    selection_main:
+        cs-method: 'GET'
+        c-uri|contains:
+           - '/pingmap.php'
+           - '/get_marks.php'
+           - '/freezeStats.php'
+           - '/get_loaders.php'
+           - '/get_grabbers.php'
+           - '/get_settings.php'
+           - '/set_file.php'
+    selection_servername:
+        c-uri|contains: '/MWTSL'
+    condition: all of selection_*
+falsepositives:
+    - Unknown
+level: high

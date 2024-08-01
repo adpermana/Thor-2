@@ -1,0 +1,56 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Script Execution From Temp Folder
+id: a6a39bdb-935c-4f0a-ab77-35f4bbf44d33
+status: test
+description: Detects a suspicious script executions from temporary folder
+author: Florian Roth (Nextron Systems), Max Altgelt (Nextron Systems), Tim Shelton
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/07/14 17:45:01
+references:
+  - https://www.microsoft.com/security/blog/2021/07/13/microsoft-discovers-threat-actor-targeting-solarwinds-serv-u-software-with-0-day-exploit/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        CommandLine|contains:
+          - ' >'
+          - Out-File
+          - ConvertTo-Json
+          - -WindowStyle hidden -Verb runAs
+          - \Windows\system32\config\systemprofile\AppData\Local\Temp\Amazon\EC2-Windows\
+    selection:
+        CommandLine|contains:
+          - \Windows\Temp
+          - \Temporary Internet
+          - \AppData\Local\Temp
+          - \AppData\Roaming\Temp
+          - '%TEMP%'
+          - '%TMP%'
+          - '%LocalAppData%\Temp'
+        Image|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+          - \mshta.exe
+          - \wscript.exe
+          - \cscript.exe
+falsepositives: Administrative scripts
+level: high
+customer: 'demo'
+modified: 2022/10/05
+tags:
+  - attack.execution
+  - attack.t1059
+  - DEMO

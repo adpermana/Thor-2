@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - PowerTool Execution
+id: a34f79a3-8e5f-4cc3-b765-de00695452c2
+status: test
+description: Detects the execution of the tool PowerTool which has the ability to
+    kill a process, delete its process file, unload drivers, and delete the driver
+    files
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/11/29 13:49:31
+references:
+  - https://thedfirreport.com/2022/11/28/emotet-strikes-again-lnk-file-leads-to-domain-wide-ransomware/
+  - https://www.trendmicro.com/en_us/research/22/i/play-ransomware-s-attack-playbook-unmasks-it-as-another-hive-aff.html
+  - https://twitter.com/gbti_sa/status/1249653895900602375?lang=en
+  - https://www.softpedia.com/get/Antivirus/Removal-Tools/ithurricane-PowerTool.shtml
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - Image|endswith:
+          - \PowerTool.exe
+          - \PowerTool64.exe
+      - OriginalFileName: PowerTool.exe
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/02/04
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+  - DEMO

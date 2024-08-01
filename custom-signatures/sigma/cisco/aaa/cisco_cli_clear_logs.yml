@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Cisco Clear Logs
+id: ceb407f6-8277-439b-951f-e4210e3ed956
+status: test
+description: Clear command history in network OS which is used for defense evasion
+author: Austin Clark
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/08/12 10:02:11
+references:
+  - https://www.cisco.com/c/en/us/td/docs/switches/datacenter/nexus5000/sw/command/reference/sysmgmt/n5k-sysmgmt-cr/n5k-sm_cmds_c.html
+  - https://www.cisco.com/c/en/us/td/docs/ios/12_2sr/12_2sra/feature/guide/srmgtint.html#wp1127609
+logsource:
+    product: cisco
+    service: aaa
+detection:
+    condition: keywords
+    keywords:
+      - clear logging
+      - clear archive
+falsepositives: Legitimate administrators may run these commands
+level: high
+customer: 'demo'
+modified: 2023/05/26
+tags:
+  - attack.defense_evasion
+  - attack.t1070.003
+  - DEMO

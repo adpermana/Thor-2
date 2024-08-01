@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Typical HiveNightmare SAM File Export
+id: 6ea858a8-ba71-4a12-b2cc-5d83312404c7
+status: test
+description: Detects files written by the different tools that exploit HiveNightmare
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/07/23 15:31:21
+references:
+  - https://github.com/GossiTheDog/HiveNightmare
+  - https://github.com/FireFart/hivenightmare/
+  - https://github.com/WiredPulse/Invoke-HiveNightmare
+  - https://twitter.com/cube0x0/status/1418920190759378944
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - TargetFilename|contains:
+          - \hive_sam_
+          - \SAM-2021-
+          - \SAM-2022-
+          - \SAM-2023-
+          - \SAM-haxx
+          - \Sam.save
+      - TargetFilename: C:\windows\temp\sam
+falsepositives: Files that accidentally contain these strings
+level: high
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.credential_access
+  - attack.t1552.001
+  - cve.2021.36934
+  - DEMO

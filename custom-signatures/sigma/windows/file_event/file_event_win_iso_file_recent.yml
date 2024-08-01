@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: ISO or Image Mount Indicator in Recent Files
+id: 4358e5a5-7542-4dcb-b9f3-87667371839b
+status: test
+description: |
+    Detects the creation of recent element file that points to an .ISO, .IMG, .VHD or .VHDX file as often used in phishing attacks.
+    This can be a false positive on server systems but on workstations users should rarely mount .iso or .img files.
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/02/11 16:57:41
+references:
+  - https://www.microsoft.com/security/blog/2021/05/27/new-sophisticated-email-based-attack-from-nobelium/
+  - https://www.trendmicro.com/vinfo/us/security/news/cybercrime-and-digital-threats/malicious-spam-campaign-uses-iso-image-files-to-deliver-lokibot-and-nanocore
+  - https://blog.emsisoft.com/en/32373/beware-new-wave-of-malware-spreads-via-iso-file-email-attachments/
+  - https://insights.sei.cmu.edu/blog/the-dangers-of-vhd-and-vhdx-files/
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetFilename|contains: \Microsoft\Windows\Recent\
+        TargetFilename|endswith:
+          - .iso.lnk
+          - .img.lnk
+          - .vhd.lnk
+          - .vhdx.lnk
+falsepositives: Cases in which a user mounts an image file for legitimate reasons
+level: medium
+customer: 'demo'
+tags:
+  - attack.initial_access
+  - attack.t1566.001
+  - DEMO

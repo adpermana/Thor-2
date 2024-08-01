@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Keylogger Activity
+id: 965e2db9-eddb-4cf6-a986-7a967df651e4
+status: test
+description: Detects PowerShell scripts that contains reference to keystroke capturing
+    functions
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/04 13:45:01
+references:
+  - https://twitter.com/ScumBots/status/1610626724257046529
+  - https://www.virustotal.com/gui/file/d4486b63512755316625230e0c9c81655093be93876e0d80732e7eeaf7d83476/content
+  - https://www.virustotal.com/gui/file/720a7ee9f2178c70501d7e3f4bcc28a4f456e200486dbd401b25af6da3b4da62/content
+  - https://learn.microsoft.com/en-us/dotnet/api/system.windows.input.keyboard.iskeydown?view=windowsdesktop-7.0
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: selection
+    selection:
+        ScriptBlockText|contains: '[Windows.Input.Keyboard]::IsKeyDown([System.Windows.Input.Key]::'
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.collection
+  - attack.credential_access
+  - attack.t1056.001
+  - DEMO

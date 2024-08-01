@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: DNS TXT Answer with Possible Execution Strings
+id: 8ae51330-899c-4641-8125-e39f2e07da72
+status: test
+description: Detects strings used in command execution in DNS TXT Answer
+author: Markus Neis
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2018/08/08 17:52:01
+references:
+  - https://twitter.com/stvemillertime/status/1024707932447854592
+  - https://github.com/samratashok/nishang/blob/414ee1104526d7057f9adaeee196d91ae447283e/Backdoors/DNS_TXT_Pwnage.ps1
+logsource:
+    category: dns
+detection:
+    condition: selection
+    selection:
+        answer|contains:
+          - IEX
+          - Invoke-Expression
+          - cmd.exe
+        record_type: TXT
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.command_and_control
+  - attack.t1071.004
+  - DEMO

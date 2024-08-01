@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Provisioning Registry Key Abuse For Binary Proxy Execution - REG
+id: 7021255e-5db3-4946-a8b9-0ba7a4644a69
+related:
+  - type: similar
+    id: 7f5d1c9a-3e83-48df-95a7-2b98aae6c13c
+  - type: similar
+    id: f9999590-1f94-4a34-a91e-951e47bedefd
+  - type: similar
+    id: 2a4b3e61-9d22-4e4a-b60f-6e8f0cde6f25
+status: experimental
+description: Detects potential abuse of the provisioning registry key for indirect
+    command execution through "Provlaunch.exe".
+author: Swachchhanda Shrawan Poudel
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/08/02 01:05:01
+references:
+  - https://lolbas-project.github.io/lolbas/Binaries/Provlaunch/
+  - https://twitter.com/0gtweet/status/1674399582162153472
+logsource:
+    category: registry_set
+    product: windows
+    definition: 'Requirements: The registry key "\SOFTWARE\Microsoft\Provisioning\Commands\"
+        and its subkey must be monitored'
+detection:
+    condition: selection
+    selection:
+        TargetObject|contains: \SOFTWARE\Microsoft\Provisioning\Commands\
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

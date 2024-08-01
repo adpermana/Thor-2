@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: DLL Sideloading Of ShellChromeAPI.DLL
+id: ee4c5d06-3abc-48cc-8885-77f1c20f4451
+related:
+  - type: similar
+    id: e173ad47-4388-4012-ae62-bd13f71c18a8
+status: test
+description: |
+    Detects processes loading the non-existent DLL "ShellChromeAPI". One known example is the "DeviceEnroller" binary in combination with the "PhoneDeepLink" flag tries to load this DLL.
+    Adversaries can drop their own renamed DLL and execute it via DeviceEnroller.exe using this parameter
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/12/01 14:55:41
+references:
+  - https://mobile.twitter.com/0gtweet/status/1564131230941122561
+  - https://strontic.github.io/xcyclopedia/library/DeviceEnroller.exe-24BEF0D6B0ECED36BB41831759FDE18D.html
+logsource:
+    category: image_load
+    product: windows
+detection:
+    condition: selection
+    selection:
+        ImageLoaded|endswith: \ShellChromeAPI.dll
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1574.001
+  - attack.t1574.002
+  - DEMO

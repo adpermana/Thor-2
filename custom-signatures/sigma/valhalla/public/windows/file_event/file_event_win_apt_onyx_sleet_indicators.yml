@@ -1,0 +1,35 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Onyx Sleet APT File Creation Indicators
+id: 2fef4fd9-7206-40d1-b4f5-ad6441d0cd9b
+status: experimental
+description: Detects file creation activity that is related to Onyx Sleet APT activity
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/10/24 15:55:31
+references:
+  - https://www.microsoft.com/en-us/security/blog/2023/10/18/multiple-north-korean-threat-actors-exploiting-the-teamcity-cve-2023-42793-vulnerability/
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetFilename|endswith: :\Windows\ADFS\bg\inetmgr.exe
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+tags:
+  - attack.execution
+  - detection.emerging_threats
+  - DEMO

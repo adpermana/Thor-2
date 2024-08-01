@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Azure DNS Zone Modified or Deleted
+id: af6925b0-8826-47f1-9324-337507a0babd
+status: test
+description: Identifies when DNS zone is modified or deleted.
+author: Austin Songer @austinsonger
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/08 14:26:51
+references:
+  - https://docs.microsoft.com/en-us/azure/role-based-access-control/resource-provider-operations#microsoftkubernetes
+logsource:
+    product: azure
+    service: activitylogs
+detection:
+    condition: selection
+    selection:
+        operationName|endswith:
+          - /WRITE
+          - /DELETE
+        operationName|startswith: MICROSOFT.NETWORK/DNSZONES
+falsepositives:
+  - DNS zone modified and deleted may be performed by a system administrator. Verify
+    whether the user identity, user agent, and/or hostname should be making changes
+    in your environment.
+  - DNS zone modification from unfamiliar users should be investigated. If known behavior
+    is causing false positives, it can be exempted from the rule.
+level: medium
+customer: 'demo'
+modified: 2022/08/23
+tags:
+  - attack.impact
+  - attack.t1565.001
+  - DEMO

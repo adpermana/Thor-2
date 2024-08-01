@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Renamed Jusched.EXE Execution
+id: edd8a48c-1b9f-4ba1-83aa-490338cd1ccb
+status: test
+description: Detects the execution of a renamed "jusched.exe" as seen used by the
+    cobalt group
+author: Markus Neis, Swisscom
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/06/04 13:29:01
+references:
+  - https://www.bitdefender.com/files/News/CaseStudies/study/262/Bitdefender-WhitePaper-An-APT-Blueprint-Gaining-New-Visibility-into-Financial-Threats-interactive.pdf
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        Image|endswith: \jusched.exe
+    selection:
+        Description:
+          - Java Update Scheduler
+          - Java(TM) Update Scheduler
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/02/03
+tags:
+  - attack.execution
+  - attack.defense_evasion
+  - attack.t1036.003
+  - DEMO

@@ -1,0 +1,128 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potentially Suspicious AccessMask Requested From LSASS
+id: 4a1b6da0-d94f-4fc3-98fc-2d9cb9e5ee76
+status: experimental
+description: Detects process handle on LSASS process with certain access mask
+author: Roberto Rodriguez, Teymur Kheirkhabarov, Dimitrios Slamaris, Mark Russinovich,
+    Aleksey Potapov, oscd.community (update)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/11/01 20:17:01
+references:
+  - https://web.archive.org/web/20230208123920/https://cyberwardog.blogspot.com/2017/03/chronicles-of-threat-hunter-hunting-for_22.html
+  - https://www.slideshare.net/heirhabarov/hunting-for-credentials-dumping-in-windows-environment
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: 1 of selection_* and not 1 of filter_main_* and not 1 of filter_optional_*
+    filter_main_aurora:
+        AccessList|contains: '%%4484'
+        ProcessName|contains: :\Windows\Temp\asgard2-agent-sc\aurora\
+        ProcessName|endswith: \aurora-agent-64.exe
+    filter_main_avira1:
+        AccessList|contains: '%%4484'
+        ProcessName|contains|all:
+          - :\Users\
+          - \AppData\Local\Temp\is-
+        ProcessName|endswith: \avira_system_speedup.tmp
+    filter_main_avira2:
+        AccessList|contains: '%%4484'
+        ProcessName|contains: :\Windows\Temp\
+        ProcessName|endswith: \avira_speedup_setup_update.tmp
+    filter_main_exact:
+        ProcessName|endswith:
+          - :\Windows\System32\taskhostw.exe
+          - :\Windows\System32\msiexec.exe
+          - :\Windows\CCM\CcmExec.exe
+    filter_main_generic:
+        ProcessName|contains: :\Program Files
+    filter_main_googleupdate:
+        AccessList|contains: '%%4484'
+        ProcessName|contains: :\Windows\SystemTemp\
+        ProcessName|endswith: \GoogleUpdate.exe
+    filter_main_scenarioengine:
+        AccessList|contains: '%%4484'
+        ProcessName|endswith: \x64\SCENARIOENGINE.EXE
+    filter_main_snmp:
+        AccessList|contains: '%%4484'
+        ProcessName|endswith: :\Windows\System32\snmp.exe
+    filter_main_specific:
+        ProcessName|contains:
+          - :\Program Files (x86)\
+          - :\Program Files\
+          - :\ProgramData\Microsoft\Windows Defender\Platform\
+          - :\Windows\SysNative\
+          - :\Windows\System32\
+          - :\Windows\SysWow64\
+          - :\Windows\Temp\asgard2-agent\
+        ProcessName|endswith:
+          - \csrss.exe
+          - \GamingServices.exe
+          - \lsm.exe
+          - \MicrosoftEdgeUpdate.exe
+          - \minionhost.exe
+          - \MRT.exe
+          - \MsMpEng.exe
+          - \perfmon.exe
+          - \procexp.exe
+          - \procexp64.exe
+          - \svchost.exe
+          - \taskmgr.exe
+          - \thor.exe
+          - \thor64.exe
+          - \vmtoolsd.exe
+          - \VsTskMgr.exe
+          - \wininit.exe
+          - \wmiprvse.exe
+          - RtkAudUService64
+    filter_main_sysmon:
+        AccessList|contains: '%%4484'
+        ProcessName|endswith: :\Windows\Sysmon64.exe
+    filter_optional_procmon:
+        AccessList|contains: '%%4484'
+        ProcessName|endswith:
+          - \procmon64.exe
+          - \procmon.exe
+    selection_1:
+        AccessMask|contains:
+          - "0x40"
+          - "0x1400"
+          - "0x100000"
+          - "0x1410"
+          - "0x1010"
+          - "0x1438"
+          - "0x143a"
+          - "0x1418"
+          - "0x1f0fff"
+          - "0x1f1fff"
+          - "0x1f2fff"
+          - "0x1f3fff"
+        EventID: "4656"
+        ObjectName|endswith: \lsass.exe
+    selection_2:
+        AccessList|contains:
+          - "4484"
+          - "4416"
+        EventID: "4663"
+        ObjectName|endswith: \lsass.exe
+falsepositives: Legitimate software accessing LSASS process for legitimate reason;
+    update the whitelist with it
+level: medium
+customer: 'demo'
+modified: 2023/12/19
+tags:
+  - attack.credential_access
+  - car.2019-04-004
+  - attack.t1003.001
+  - DEMO

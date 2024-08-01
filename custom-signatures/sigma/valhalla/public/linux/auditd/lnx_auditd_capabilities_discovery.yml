@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Linux Capabilities Discovery
+id: fe10751f-1995-40a5-aaa2-c97ccb4123fe
+status: test
+description: Detects attempts to discover the files with setuid/setgid capability
+    on them. That would allow adversary to escalate their privileges.
+author: Pawel Mazur
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/11/28 13:41:41
+references:
+  - https://man7.org/linux/man-pages/man8/getcap.8.html
+  - https://www.hackingarticles.in/linux-privilege-escalation-using-capabilities/
+  - https://mn3m.info/posts/suid-vs-capabilities/
+  - https://int0x33.medium.com/day-44-linux-capabilities-privilege-escalation-via-openssl-with-selinux-enabled-and-enforced-74d2bec02099
+logsource:
+    product: linux
+    service: auditd
+detection:
+    condition: selection
+    selection:
+        a0: getcap
+        a1: -r
+        a2: /
+        type: EXECVE
+falsepositives: Unknown
+level: low
+customer: 'demo'
+modified: 2022/12/25
+tags:
+  - attack.collection
+  - attack.privilege_escalation
+  - attack.t1123
+  - attack.t1548
+  - DEMO

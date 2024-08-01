@@ -1,0 +1,56 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: DNS Server Discovery Via LDAP Query
+id: a21bcd7e-38ec-49ad-b69a-9ea17e69509e
+status: experimental
+description: Detects DNS server discovery via LDAP query requests from uncommon applications
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/20 14:33:51
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/980f3f83fd81f37c1ca9c02dccfd1c3d9f9d0841/atomics/T1016/T1016.md#atomic-test-9---dns-server-discovery-using-nslookup
+  - https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-adts/7fcdce70-5205-44d6-9c3a-260e616a2f04
+logsource:
+    category: dns_query
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+    filter_main_defender:
+        Image|contains: :\ProgramData\Microsoft\Windows Defender\Platform\
+        Image|endswith: \MsMpEng.exe
+    filter_main_generic:
+        Image|contains:
+          - :\Program Files\
+          - :\Program Files (x86)\
+          - :\Windows\
+    filter_main_null:
+        Image: []
+    filter_main_unknown:
+        Image: <unknown process>
+    filter_optional_azure:
+        Image|startswith: C:\WindowsAzure\GuestAgent
+    filter_optional_browsers:
+        Image|endswith:
+          - \chrome.exe
+          - \firefox.exe
+          - \opera.exe
+    selection:
+        QueryName|startswith: _ldap.
+falsepositives: Likely
+level: low
+customer: 'demo'
+modified: 2023/09/18
+tags:
+  - attack.discovery
+  - attack.t1482
+  - DEMO

@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - Empire PowerShell UAC Bypass
+id: 3268b746-88d8-4cd3-bffc-30077d02c787
+status: stable
+description: Detects some Empire PowerShell UAC bypass methods
+author: Ecco
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/08/30 15:39:21
+references:
+  - https://github.com/EmpireProject/Empire/blob/e37fb2eef8ff8f5a0a689f1589f424906fe13055/data/module_source/privesc/Invoke-EventVwrBypass.ps1#L64
+  - https://github.com/EmpireProject/Empire/blob/e37fb2eef8ff8f5a0a689f1589f424906fe13055/data/module_source/privesc/Invoke-FodHelperBypass.ps1#L64
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - ' -NoP -NonI -w Hidden -c $x=$((gp HKCU:Software\Microsoft\Windows Update).Update)'
+          - ' -NoP -NonI -c $x=$((gp HKCU:Software\Microsoft\Windows Update).Update);'
+fields:
+  - CommandLine
+  - ParentCommandLine
+falsepositives: Unknown
+level: critical
+customer: 'demo'
+modified: 2023/02/21
+tags:
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - attack.t1548.002
+  - car.2019-04-001
+  - DEMO

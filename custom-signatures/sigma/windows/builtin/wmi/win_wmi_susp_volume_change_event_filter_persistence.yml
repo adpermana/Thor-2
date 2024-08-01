@@ -1,0 +1,29 @@
+title: Suspicious WMI VolumeChange Based Event Filter Has Been Registered
+id: 205da9ce-d6ee-4295-91c8-62576efdca61
+status: test
+description: Detects the creation of a suspicious WMI event filter based on volume change event such as inserting USB, creating new drives...etc
+references:
+    - https://github.com/Sw4mpf0x/PowerLurk
+author: Nasreddine Bencherchali
+date: 2022/11/24
+modified: 2023/03/29
+tags:
+    - attack.execution
+    - attack.t1047
+logsource:
+    product: windows
+    service: wmi
+detection:
+    selection:
+        EventID: 5861
+        Consumer|contains:
+            - 'ActiveScriptEventConsumer='
+            - 'CommandLineEventConsumer='
+        PossibleCause|contains|all:
+            - 'FROM __InstanceCreationEvent'
+            - 'Win32_Process'
+            - '.Name'
+    condition: selection
+falsepositives:
+    - Unknown
+level: medium

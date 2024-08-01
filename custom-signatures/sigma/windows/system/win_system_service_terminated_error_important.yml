@@ -1,0 +1,57 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Important Windows Service Terminated With Error
+id: d6b5520d-3934-48b4-928c-2aa3f92d6963
+related:
+  - type: similar
+    id: acfa2210-0d71-4eeb-b477-afab494d596c
+status: experimental
+description: Detects important or interesting Windows services that got terminated
+    for whatever reason
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/04/14 18:39:31
+references:
+  - https://www.microsoft.com/en-us/security/blog/2023/04/11/guidance-for-investigating-attacks-using-cve-2022-21894-the-blacklotus-campaign/
+logsource:
+    product: windows
+    service: system
+detection:
+    condition: all of selection_*
+    selection_eid:
+        EventID: "7023"
+        Provider_Name: Service Control Manager
+    selection_name:
+      - param1|contains:
+          - ' Antivirus'
+          - ' Firewall'
+          - Application Guard
+          - BitLocker Drive Encryption Service
+          - Encrypting File System
+          - Microsoft Defender
+          - Threat Protection
+          - Windows Event Log
+      - Binary|contains:
+          - 770069006e0064006500660065006e006400
+          - 4500760065006e0074004c006f006700
+          - 6d0070007300730076006300
+          - 530065006e0073006500
+          - "450046005300"
+          - "420044004500530056004300"
+falsepositives: Rare false positives could occur since service termination could happen
+    due to multiple reasons
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - DEMO

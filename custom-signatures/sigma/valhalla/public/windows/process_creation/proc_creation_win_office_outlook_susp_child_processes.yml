@@ -1,0 +1,68 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Outlook Child Process
+id: 208748f7-881d-47ac-a29c-07ea84bf691d
+related:
+  - type: derived
+    id: 438025f9-5856-4663-83f7-52f878a70a50
+  - type: derived
+    id: e212d415-0e93-435f-9e1a-f29005bb4723
+status: test
+description: Detects a suspicious process spawning from an Outlook process.
+author: Michael Haag, Florian Roth (Nextron Systems), Markus Neis, Elastic, FPT.EagleEye
+    Team
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/02/28 14:43:51
+references:
+  - https://www.hybrid-analysis.com/sample/465aabe132ccb949e75b8ab9c5bda36d80cf2fd503d52b8bad54e295f28bbc21?environmentId=100
+  - https://mgreen27.github.io/posts/2018/04/02/DownloadCradle.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith:
+          - \AppVLP.exe
+          - \bash.exe
+          - \cmd.exe
+          - \cscript.exe
+          - \forfiles.exe
+          - \hh.exe
+          - \mftrace.exe
+          - \msbuild.exe
+          - \msdt.exe
+          - \mshta.exe
+          - \msiexec.exe
+          - \powershell.exe
+          - \pwsh.exe
+          - \regsvr32.exe
+          - \schtasks.exe
+          - \scrcons.exe
+          - \scriptrunner.exe
+          - \sh.exe
+          - \svchost.exe
+          - \wmic.exe
+          - \wscript.exe
+        ParentImage|endswith: \OUTLOOK.EXE
+fields:
+  - CommandLine
+  - ParentCommandLine
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/02/04
+tags:
+  - attack.execution
+  - attack.t1204.002
+  - DEMO

@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: AWS CloudTrail Important Change
+id: 4db60cc0-36fb-42b7-9b58-a5b53019fb74
+status: test
+description: Detects disabling, deleting and updating of a Trail
+author: vitaliy0x1
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/01/21 14:00:21
+references:
+  - https://docs.aws.amazon.com/awscloudtrail/latest/userguide/best-practices-security.html
+logsource:
+    product: aws
+    service: cloudtrail
+detection:
+    condition: selection_source
+    selection_source:
+        eventName:
+          - StopLogging
+          - UpdateTrail
+          - DeleteTrail
+        eventSource: cloudtrail.amazonaws.com
+falsepositives: Valid change in a Trail
+level: medium
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+  - DEMO

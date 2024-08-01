@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Winlogon Helper DLL
+id: 851c506b-6b7c-4ce2-8802-c703009d03c0
+status: test
+description: |
+    Winlogon.exe is a Windows component responsible for actions at logon/logoff as well as the secure attention sequence (SAS) triggered by Ctrl-Alt-Delete.
+    Registry entries in HKLM\Software[Wow6432Node]Microsoft\Windows NT\CurrentVersion\Winlogon\ and HKCU\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\ are
+    used to manage additional helper programs and functionalities that support Winlogon. Malicious modifications to these Registry keys may cause Winlogon to
+    load and execute malicious DLLs and/or executables.
+author: Timur Zinniatullin, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/21 10:49:31
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1547.004/T1547.004.md
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: all of selection*
+    selection:
+        ScriptBlockText|contains: CurrentVersion\Winlogon
+    selection2:
+        ScriptBlockText|contains:
+          - Set-ItemProperty
+          - New-Item
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/07/07
+tags:
+  - attack.persistence
+  - attack.t1547.004
+  - DEMO

@@ -1,0 +1,67 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: LOLBIN Execution From Abnormal Drive
+id: d4ca7c59-e9e4-42d8-bf57-91a776efcb87
+related:
+  - type: similar
+    id: 5b80cf53-3a46-4adc-960b-05ec19348d74
+status: test
+description: Detects LOLBINs executing from an abnormal or uncommon drive such as
+    a mounted ISO.
+author: Christopher Peacock '@securepeacock', SCYTHE '@scythe_io', Angelo Violetti
+    - SEC Consult '@angelo_violetti', Aaron Herman
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/25 15:01:01
+references:
+  - https://thedfirreport.com/2021/12/13/diavol-ransomware/
+  - https://www.scythe.io/library/threat-emulation-qakbot
+  - https://sec-consult.com/blog/detail/bumblebee-hunting-with-a-velociraptor/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_currentdirectory:
+        CurrentDirectory|contains: C:\
+    filter_main_empty:
+        CurrentDirectory: ""
+    filter_main_null:
+        CurrentDirectory: []
+    selection:
+      - Image|endswith:
+          - \calc.exe
+          - \certutil.exe
+          - \cmstp.exe
+          - \cscript.exe
+          - \installutil.exe
+          - \mshta.exe
+          - \regsvr32.exe
+          - \rundll32.exe
+          - \wscript.exe
+      - OriginalFileName:
+          - CALC.EXE
+          - CertUtil.exe
+          - CMSTP.EXE
+          - cscript.exe
+          - installutil.exe
+          - MSHTA.EXE
+          - REGSVR32.EXE
+          - RUNDLL32.EXE
+          - wscript.exe
+falsepositives: Rare false positives could occur on servers with multiple drives.
+level: medium
+customer: 'demo'
+modified: 2023/08/29
+tags:
+  - attack.defense_evasion
+  - DEMO

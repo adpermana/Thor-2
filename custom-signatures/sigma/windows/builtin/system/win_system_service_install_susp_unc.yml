@@ -1,0 +1,27 @@
+title: New Service Uses Suspicious UNC Path
+id: 3ebd5e8f-fc47-4d6a-8d06-20eeb4e936e0
+description: Detects a service installation that uses a suspicious UNC path used in the image path value
+status: test
+author: Florian Roth (Nextron Systems)
+date: 2022/07/05
+modified: 2023/03/28
+references:
+    - Internal Research
+tags:
+    - attack.defense_evasion
+    - attack.t1027
+logsource:
+    product: windows
+    service: system
+detection:
+    selection:
+        Provider_Name: 'Service Control Manager'
+        EventID: 7045
+        ImagePath|contains:
+            - '\\\\127.0.0.1'
+            - '\\\\localhost'
+            - '\\\\ADMIN$'
+    condition: selection
+falsepositives:
+    - Unknown
+level: high

@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Atlassian Bitbucket Command Injection Via Archive API
+id: 65c0a0ab-d675-4441-bd6b-d3db226a2685
+status: test
+description: Detects attempts to exploit the Atlassian Bitbucket Command Injection
+    CVE-2022-36804
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/29 19:35:11
+references:
+  - https://twitter.com/_0xf4n9x_/status/1572052954538192901
+  - https://www.rapid7.com/blog/post/2022/09/20/cve-2022-36804-easily-exploitable-vulnerability-in-atlassian-bitbucket-server-and-data-center/
+  - https://confluence.atlassian.com/bitbucketserver/bitbucket-server-and-data-center-advisory-2022-08-24-1155489835.html
+  - https://blog.assetnote.io/2022/09/14/rce-in-bitbucket-server/
+logsource:
+    category: webserver
+detection:
+    condition: selection
+    selection:
+        cs-uri-query|contains|all:
+          - /rest/api/latest/projects/
+          - prefix=
+          - '%00--exec'
+falsepositives: Web vulnerability scanners
+level: high
+customer: 'demo'
+modified: 2023/01/02
+tags:
+  - attack.initial_access
+  - attack.t1190
+  - cve.2022.36804
+  - detection.emerging_threats
+  - DEMO

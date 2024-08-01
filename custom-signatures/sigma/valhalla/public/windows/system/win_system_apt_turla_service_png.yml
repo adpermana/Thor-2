@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Turla PNG Dropper Service
+id: 1228f8e2-7e79-4dea-b0ad-c91f1d5016c1
+status: test
+description: This method detects malicious services mentioned in Turla PNG dropper
+    report by NCC Group in November 2018
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2018/11/23 12:23:01
+references:
+  - https://www.nccgroup.trust/uk/about-us/newsroom-and-events/blogs/2018/november/turla-png-dropper-is-back/
+logsource:
+    product: windows
+    service: system
+detection:
+    condition: selection
+    selection:
+        EventID: "7045"
+        Provider_Name: Service Control Manager
+        ServiceName: WerFaultSvc
+falsepositives: Unlikely
+level: critical
+customer: 'demo'
+modified: 2021/11/30
+tags:
+  - attack.persistence
+  - attack.g0010
+  - attack.t1543.003
+  - detection.emerging_threats
+  - DEMO

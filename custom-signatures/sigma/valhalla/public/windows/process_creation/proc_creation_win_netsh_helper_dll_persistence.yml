@@ -1,0 +1,51 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Persistence Via Netsh Helper DLL
+id: 56321594-9087-49d9-bf10-524fe8479452
+related:
+  - type: similar
+    id: c90362e0-2df3-4e61-94fe-b37615814cb1
+  - type: similar
+    id: e7b18879-676e-4a0e-ae18-27039185a8e7
+status: test
+description: |
+    Detects the execution of netsh with "add helper" flag in order to add a custom helper DLL. This technique can be abused to add a malicious helper DLL that can be used as a persistence proxy that gets called when netsh.exe is executed.
+author: Victor Sergeev, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/25 16:48:31
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1546.007/T1546.007.md
+  - https://github.com/outflanknl/NetshHelperBeacon
+  - https://web.archive.org/web/20160928212230/https://www.adaptforward.com/2016/09/using-netshell-to-execute-evil-dlls-and-persist-on-a-host/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains|all:
+          - add
+          - helper
+    selection_img:
+      - OriginalFileName: netsh.exe
+      - Image|endswith: \netsh.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/11/28
+tags:
+  - attack.privilege_escalation
+  - attack.persistence
+  - attack.t1546.007
+  - attack.s0108
+  - DEMO

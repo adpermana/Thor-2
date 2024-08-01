@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Run Key from Download
+id: 9c5037d1-c568-49b3-88c7-9846a5bdc2be
+status: test
+description: Detects the suspicious RUN keys created by software located in Download
+    or temporary Outlook/Internet Explorer directories
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/01 14:32:11
+references:
+  - https://app.any.run/tasks/c5bef5b7-f484-4c43-9cf3-d5c5c7839def/
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|contains:
+          - \Downloads\
+          - \Temporary Internet Files\Content.Outlook\
+          - \Local Settings\Temporary Internet Files\
+        TargetObject|contains: \SOFTWARE\Microsoft\Windows\CurrentVersion\Run\
+falsepositives: Software installers downloaded and used by users
+level: high
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.persistence
+  - attack.t1547.001
+  - DEMO

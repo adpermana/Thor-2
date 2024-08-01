@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: NetSupport Manager Service Install
+id: 2d510d8d-912b-45c5-b1df-36faa3d8c3f4
+status: test
+description: Detects NetSupport Manager service installation on the target system.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/10/31 15:10:31
+references:
+  - http://resources.netsupportsoftware.com/resources/manualpdfs/nsm_manual_uk.pdf
+logsource:
+    product: windows
+    service: system
+detection:
+    condition: all of selection_*
+    selection_root:
+        EventID: "7045"
+        Provider_Name: Service Control Manager
+    selection_service:
+      - ImagePath|contains: \NetSupport Manager\client32.exe
+      - ServiceName: Client32
+falsepositives: Legitimate use of the tool
+level: medium
+customer: 'demo'
+tags:
+  - attack.persistence
+  - DEMO

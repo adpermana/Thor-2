@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-06-21 19:00
+# Generated for User: demo
+# Number of Rules: 3228
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: New Firewall Rule Added In Windows Firewall Exception List Via WmiPrvSE.EXE
+id: eca81e8d-09e1-4d04-8614-c91f44fd0519
+status: experimental
+description: |
+    Detects the addition of a new "Allow" firewall rule by the WMI process (WmiPrvSE.EXE).
+    This can occur if an attacker leverages PowerShell cmdlets such as "New-NetFirewallRule", or directly uses WMI CIM classes such as "MSFT_NetFirewallRule".
+author: frack113, Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/05/10 00:44:21
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1562.004/T1562.004.md#atomic-test-24---set-a-firewall-rule-using-new-netfirewallrule
+  - https://malware.news/t/the-rhysida-ransomware-activity-analysis-and-ties-to-vice-society/72170
+  - https://cybersecuritynews.com/rhysida-ransomware-attacking-windows/
+logsource:
+    product: windows
+    service: firewall-as
+detection:
+    condition: selection
+    selection:
+        Action: "3"
+        EventID:
+          - "2004"
+          - "2071"
+          - "2097"
+        ModifyingApplication|endswith: :\Windows\System32\wbem\WmiPrvSE.exe
+falsepositives: Administrator scripts or activity.
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1562.004
+  - DEMO

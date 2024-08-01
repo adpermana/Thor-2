@@ -1,0 +1,37 @@
+title: Mount ISO Files From Potential Suspicious Location
+id: 50747654-6f20-4279-9c1a-48dbee759bf8
+related:
+    - id: f51181b4-7c2c-4dc4-a435-6d396c43cb68
+      type: derived
+description: Detects when a user mounts an ISO file from a potential suspicious location
+references:
+    - https://nasbench.medium.com/finding-forensic-goodness-in-obscure-windows-event-logs-60e978ea45a3
+status: test
+author: Nasreddine Bencherchali
+date: 2022/05/30
+modified: 2023/03/29
+tags:
+    - attack.defense_evasion
+    - attack.t1553.005
+logsource:
+    product: windows
+    service: vhd
+detection:
+    selection_eid:
+        EventID: 12 # We use EID 12 because it contains more information about the mounted file
+        VhdType: 3 # ISO (We select only ISO here to avoid FPs with WSL VHD(x) files that are mounted from \AppData\Local\Packages\)
+    selection_paths:
+        - VhdFile|startswith:
+            - 'C:\Users\Public\'
+            - 'C:\Windows\Temp\'
+            - 'C:\Perflogs\'
+            - 'C:\Temp\'
+        - VhdFile|contains:
+            - '\AppData\Local\'
+            - '\AppData\Roaming\'
+            - '\Documents\'
+            - '\Downloads\'
+    condition: all of selection_*
+falsepositives:
+    - Unknown
+level: high

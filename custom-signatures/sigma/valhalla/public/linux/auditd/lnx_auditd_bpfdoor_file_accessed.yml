@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: BPFDoor Abnormal Process ID or Lock File Accessed
+id: 808146b2-9332-4d78-9416-d7e47012d83d
+status: test
+description: detects BPFDoor .lock and .pid files access in temporary file storage
+    facility
+author: Rafal Piasecki
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/10 18:01:31
+references:
+  - https://www.sandflysecurity.com/blog/bpfdoor-an-evasive-linux-backdoor-technical-analysis/
+  - https://www.elastic.co/security-labs/a-peek-behind-the-bpfdoor
+logsource:
+    product: linux
+    service: auditd
+detection:
+    condition: selection
+    selection:
+        name:
+          - /var/run/haldrund.pid
+          - /var/run/xinetd.lock
+          - /var/run/kdevrund.pid
+        type: PATH
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+tags:
+  - attack.execution
+  - attack.t1106
+  - attack.t1059
+  - DEMO

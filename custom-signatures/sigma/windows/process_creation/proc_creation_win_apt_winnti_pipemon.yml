@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Winnti Pipemon Characteristics
+id: 73d70463-75c9-4258-92c6-17500fe972f2
+status: stable
+description: Detects specific process characteristics of Winnti Pipemon malware reported
+    by ESET
+author: Florian Roth (Nextron Systems), oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/07/30 14:18:11
+references:
+  - https://www.welivesecurity.com/2020/05/21/no-game-over-winnti-group/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_1:
+        CommandLine|contains: setup0.exe -p
+    selection_2:
+        CommandLine|contains: setup.exe
+        CommandLine|endswith:
+          - -x:0
+          - -x:1
+          - -x:2
+falsepositives: Legitimate setups that use similar flags
+level: critical
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.defense_evasion
+  - attack.t1574.002
+  - attack.g0044
+  - detection.emerging_threats
+  - DEMO

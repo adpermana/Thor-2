@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Access To .Reg/.Hive Files By Uncommon Application
+id: 337a31c6-46c4-46be-886a-260d7aa78cac
+status: experimental
+description: Detects file access requests to files ending with either the ".hive"/".reg"
+    extension, usually associated with Windows Registry backups.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/09/15 18:25:21
+references:
+  - https://github.com/tccontre/Reg-Restore-Persistence-Mole
+logsource:
+    category: file_access
+    product: windows
+    definition: 'Requirements: Microsoft-Windows-Kernel-File ETW provider'
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_generic:
+        Image|contains:
+          - :\Program Files (x86)\
+          - :\Program Files\
+          - :\Windows\System32\
+          - :\Windows\SysWOW64\
+    selection:
+        FileName|endswith:
+          - .hive
+          - .reg
+falsepositives: Third party software installed in the user context might generate
+    a lot of FPs. Heavy baselining and tuning might be required.
+level: low
+customer: 'demo'
+tags:
+  - attack.t1112
+  - attack.defense_evasion
+  - DEMO

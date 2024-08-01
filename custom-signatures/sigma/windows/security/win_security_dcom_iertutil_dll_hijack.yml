@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: DCOM InternetExplorer.Application Iertutil DLL Hijack - Security
+id: c39f0c81-7348-4965-ab27-2fde35a1b641
+status: test
+description: Detects a threat actor creating a file named `iertutil.dll` in the `C:\Program
+    Files\Internet Explorer\` directory over the network for a DCOM InternetExplorer
+    DLL Hijack scenario.
+author: Roberto Rodriguez @Cyb3rWard0g, Open Threat Research (OTR)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/12 22:26:01
+references:
+  - https://threathunterplaybook.com/hunts/windows/201009-RemoteDCOMIErtUtilDLLHijack/notebook.html
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: selection and not filter
+    filter:
+        SubjectUserName|endswith: $
+    selection:
+        EventID: "5145"
+        RelativeTargetName|endswith: \Internet Explorer\iertutil.dll
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/11/26
+tags:
+  - attack.lateral_movement
+  - attack.t1021.002
+  - attack.t1021.003
+  - DEMO

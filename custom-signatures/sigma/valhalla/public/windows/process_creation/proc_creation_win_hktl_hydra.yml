@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - Hydra Password Bruteforce Execution
+id: aaafa146-074c-11eb-adc1-0242ac120002
+status: test
+description: Detects command line parameters used by Hydra password guessing hack
+    tool
+author: Vasiliy Burov
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/05 18:03:01
+references:
+  - https://github.com/vanhauser-thc/thc-hydra
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - ^USER^
+          - ^PASS^
+        CommandLine|contains|all:
+          - '-u '
+          - '-p '
+falsepositives: Software that uses the caret encased keywords PASS and USER in its
+    command line
+level: high
+customer: 'demo'
+modified: 2023/02/04
+tags:
+  - attack.credential_access
+  - attack.t1110
+  - attack.t1110.001
+  - DEMO

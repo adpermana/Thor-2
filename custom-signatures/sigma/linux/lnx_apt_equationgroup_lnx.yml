@@ -1,0 +1,75 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Equation Group Indicators
+id: 41e5c73d-9983-4b69-bd03-e13b67e9623c
+status: test
+description: Detects suspicious shell commands used in various Equation Group scripts
+    and tools
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/04/09 12:51:11
+references:
+  - https://medium.com/@shadowbrokerss/dont-forget-your-base-867d304a94b1
+logsource:
+    product: linux
+detection:
+    condition: keywords
+    keywords:
+      - 'chown root*chmod 4777 '
+      - cp /bin/sh .;chown
+      - chmod 4777 /tmp/.scsi/dev/bin/gsh
+      - chown root:root /tmp/.scsi/dev/bin/
+      - chown root:root x;
+      - /bin/telnet locip locport < /dev/console | /bin/sh
+      - /tmp/ratload
+      - 'ewok -t '
+      - 'xspy -display '
+      - cat > /dev/tcp/127.0.0.1/80 <<END
+      - rm -f /current/tmp/ftshell.latest
+      - 'ghost_* -v '
+      - ' --wipe > /dev/null'
+      - ping -c 2 *; grep * /proc/net/arp >/tmp/gx
+      - iptables * OUTPUT -p tcp -d 127.0.0.1 --tcp-flags RST RST -j DROP;
+      - '> /var/log/audit/audit.log; rm -f .'
+      - cp /var/log/audit/audit.log .tmp
+      - sh >/dev/tcp/* <&1 2>&1
+      - ncat -vv -l -p * <
+      - nc -vv -l -p * <
+      - < /dev/console | uudecode && uncompress
+      - sendmail -osendmail;chmod +x sendmail
+      - /usr/bin/wget -O /tmp/a http* && chmod 755 /tmp/cron
+      - chmod 666 /var/run/utmp~
+      - chmod 700 nscd crond
+      - cp /etc/shadow /tmp/.
+      - </dev/console |uudecode > /dev/null 2>&1 && uncompress
+      - chmod 700 jp&&netstat -an|grep
+      - uudecode > /dev/null 2>&1 && uncompress -f * && chmod 755
+      - chmod 700 crond
+      - wget http*; chmod +x /tmp/sendmail
+      - chmod 700 fp sendmail pt
+      - chmod 755 /usr/vmsys/bin/pipe
+      - chmod -R 755 /usr/vmsys
+      - chmod 755 $opbin/*tunnel
+      - chmod 700 sendmail
+      - chmod 0700 sendmail
+      - /usr/bin/wget http*sendmail;chmod +x sendmail;
+      - '&& telnet * 2>&1 </dev/console'
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.execution
+  - attack.g0020
+  - attack.t1059.004
+  - DEMO

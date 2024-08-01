@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: User Removed From Group With CA Policy Modification Access
+id: 665e2d43-70dc-4ccc-9d27-026c9dd7ed9c
+status: test
+description: Monitor and alert on group membership removal of groups that have CA
+    policy modification access
+author: Mark Morowczynski '@markmorow', Thomas Detzner '@tdetzner'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/04 20:47:01
+references:
+  - https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/security-operations-infrastructure#conditional-access
+logsource:
+    product: azure
+    service: auditlogs
+detection:
+    condition: selection
+    selection:
+        properties.message: Remove member from group
+falsepositives: User removed from the group is approved
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.persistence
+  - attack.t1548
+  - attack.t1556
+  - DEMO

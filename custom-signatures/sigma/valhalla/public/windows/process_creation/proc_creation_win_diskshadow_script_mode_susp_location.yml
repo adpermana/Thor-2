@@ -1,0 +1,64 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Diskshadow Script Mode - Execution From Potential Suspicious Location
+id: fa1a7e52-3d02-435b-81b8-00da14dd66c1
+related:
+  - type: similar
+    id: 1dde5376-a648-492e-9e54-4241dd9b0c7f
+  - type: similar
+    id: 9f546b25-5f12-4c8d-8532-5893dcb1e4b8
+  - type: similar
+    id: 56b1dde8-b274-435f-a73a-fb75eb81262a
+  - type: similar
+    id: 0c2f8629-7129-4a8a-9897-7e0768f13ff2
+status: experimental
+description: Detects execution of "Diskshadow.exe" in script mode using the "/s" flag
+    where the script is located in a potentially suspicious location.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/09/15 00:13:21
+references:
+  - https://bohops.com/2018/03/26/diskshadow-the-return-of-vss-evasion-persistence-and-active-directory-database-extraction/
+  - https://www.ired.team/offensive-security/credential-access-and-credential-dumping/ntds.dit-enumeration
+  - https://medium.com/@cyberjyot/lolbin-execution-via-diskshadow-f6ff681a27a4
+  - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/diskshadow
+  - https://www.lifars.com/wp-content/uploads/2022/01/GriefRansomware_Whitepaper-2.pdf
+  - https://www.zscaler.com/blogs/security-research/technical-analysis-crytox-ransomware
+  - https://research.checkpoint.com/2022/evilplayout-attack-against-irans-state-broadcaster/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains|windash: '-s '
+    selection_img:
+      - OriginalFileName: diskshadow.exe
+      - Image|endswith: \diskshadow.exe
+    selection_paths:
+        CommandLine|contains:
+          - :\Temp\
+          - :\Windows\Temp\
+          - \AppData\Local\
+          - \AppData\Roaming\
+          - \ProgramData\
+          - \Users\Public\
+falsepositives: False positives may occur if you execute the script from one of the
+    paths mentioned in the rule. Apply additional filters that fits your org needs.
+level: medium
+customer: 'demo'
+modifier: 2024/03/05
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious File Characteristics Due to Missing Fields
+id: 9637e8a5-7131-4f7f-bdc7-2b05d8670c43
+status: test
+description: Detects Executables in the Downloads folder without FileVersion,Description,Product,Company
+    likely created with py2exe
+author: Markus Neis, Sander Wiebing
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2018/11/22 20:03:31
+references:
+  - https://securelist.com/muddywater/88059/
+  - https://www.virustotal.com/#/file/276a765a10f98cda1a38d3a31e7483585ca3722ecad19d784441293acf1b7beb/detection
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: (selection1 or selection2 or selection3) and folder
+    folder:
+        Image|contains: \Downloads\
+    selection1:
+        Description: \?
+        FileVersion: \?
+    selection2:
+        Description: \?
+        Product: \?
+    selection3:
+        Company: \?
+        Description: \?
+fields:
+  - CommandLine
+  - ParentCommandLine
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.execution
+  - attack.t1059.006
+  - DEMO

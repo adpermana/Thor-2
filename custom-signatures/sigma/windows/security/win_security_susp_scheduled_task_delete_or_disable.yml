@@ -1,0 +1,64 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Important Scheduled Task Deleted/Disabled
+id: 7595ba94-cf3b-4471-aa03-4f6baa9e5fad
+related:
+  - type: similar
+    id: dbc1f800-0fe0-4bc0-9c66-292c2abe3f78
+  - type: similar
+    id: 9ac94dc8-9042-493c-ba45-3b5e7c86b980
+  - type: similar
+    id: 9e3cb244-bdb8-4632-8c90-6079c8f4f16d
+status: test
+description: Detects when adversaries stop services or processes by deleting or disabling
+    their respective scheduled tasks in order to conduct data destructive activities
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/12/05 16:50:41
+references:
+  - https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4699
+  - https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4701
+logsource:
+    product: windows
+    service: security
+    definition: The Advanced Audit Policy setting Object Access > Audit Other Object
+        Access Events has to be configured to allow this detection. We also recommend
+        extracting the Command field from the embedded XML in the event data.
+detection:
+    condition: selection and not 1 of filter_*
+    filter_sys_username:
+        EventID: "4699"
+        SubjectUserName|endswith: $
+        TaskName|contains: \Windows\Windows Defender\
+    selection:
+        EventID:
+          - "4699"
+          - "4701"
+        TaskName|contains:
+          - \Windows\SystemRestore\SR
+          - \Windows\Windows Defender\
+          - \Windows\BitLocker
+          - \Windows\WindowsBackup\
+          - \Windows\WindowsUpdate\
+          - \Windows\UpdateOrchestrator\Schedule
+          - \Windows\ExploitGuard
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/03/13
+tags:
+  - attack.execution
+  - attack.privilege_escalation
+  - attack.persistence
+  - attack.t1053.005
+  - DEMO

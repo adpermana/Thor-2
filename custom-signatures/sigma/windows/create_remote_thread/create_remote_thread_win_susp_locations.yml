@@ -1,0 +1,41 @@
+title: Remote Thread Creation From Suspicious Location
+id: c15510af-507e-46f3-9714-2e24314a06d2
+status: test
+description: Detects a remote thread creation by suspicious source images in suspicious locations to system processes
+references:
+   - Internal Research
+author: Nasreddine Bencherchali
+date: 2022/07/07
+modified: 2023/03/29
+tags:
+    - attack.defense_evasion
+    - attack.privilege_escalation
+    - attack.t1055.003
+logsource:
+   product: windows
+   category: create_remote_thread
+detection:
+    selection_source:
+        - SourceImage|contains:
+            - 'C:\Users\Public'
+            - '\Downloads\'
+            - '\Desktop\'
+            - '\Microsoft\Windows\Start Menu\Programs\Startup\'
+            - 'C:\Windows\TEMP\'
+            - '\AppData\Local\Temp'
+        - SourceImage|startswith:
+            # Processes started from mounted drives (for example ISO files)
+            - 'D:\'
+            - 'E:\'
+    selection_target:
+        TargetImage|startswith: 'C:\Windows\'
+    filter_asgard_agent:
+        SourceImage|startswith: 'C:\Windows\Temp\asgard2-agent'  # also matches asgard2-agent-sc
+    filter_ms_mprecovery:  # Microsoft Malware Protection Recovery
+        SourceImage|startswith: 'C:\Windows\Temp\'
+        SourceImage|endswith: '\MpRecovery.exe'
+        TargetImage: 'C:\Windows\System32\conhost.exe'
+    condition: all of selection_* and not 1 of filter_*
+falsepositives:
+    - Some false positives could be generated during installation of software or from software installed on other partitions on the systems
+level: high

@@ -1,0 +1,32 @@
+title: Conti Dropped Files
+id: 1f669f1b-cd96-42fe-bbbb-f1c028dee5c2
+status: test
+description: Detects the creation of known suspicious file names based on the conti leaks
+author: Nasreddine Bencherchali
+references:
+    - https://github.com/Res260/conti_202202_leak_procedures/blob/main/03_what_to_exfiltrate.txt
+    - https://github.com/Res260/conti_202202_leak_procedures/blob/main/15_scrape_users.txt
+    - https://github.com/silence-is-best/files/blob/main/translate_f.pdf
+date: 2022/05/15
+modified: 2023/03/29
+tags:
+    - attack.execution
+    - attack.persistence
+logsource:
+  category: file_event
+  product: windows
+detection:
+    selection:
+        TargetFilename|endswith:
+            - '\ProgramData\found_shares.txt'
+            - '\ProgramData\sheet.txt'
+            - '\ProgramData\sh.txt'
+            - '\ProgramData\shda.txt'
+            - '\ProgramData\pshashes.txt'
+            - '\ProgramData\hashes.txt'
+            - '\ProgramData\asrephashes.txt'
+            - '\ProgramData\2.dll'
+    condition: selection
+falsepositives:
+    - Unknown
+level: critical

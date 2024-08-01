@@ -1,0 +1,55 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Search-ms and WebDAV Suspicious Indicators in URL
+id: 5039f3d2-406a-4c1a-9350-7a5a85dc84c2
+status: experimental
+description: Detects URL pattern used by search(-ms)/WebDAV initial access campaigns.
+author: Micah Babinski
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/08/21 18:21:21
+references:
+  - https://www.trellix.com/en-us/about/newsroom/stories/research/beyond-file-search-a-novel-method.html
+  - https://micahbabinski.medium.com/search-ms-webdav-and-chill-99c5b23ac462
+logsource:
+    category: proxy
+detection:
+    condition: all of selection_* and not 1 of filter_main_*
+    filter_main_local_ips:
+        dst_ip|cidr:
+          - 127.0.0.0/8
+          - 10.0.0.0/8
+          - 172.16.0.0/12
+          - 192.168.0.0/16
+          - ::1/128
+          - fe80::/10
+          - fc00::/7
+    selection_search_ms:
+        c-uri|contains|all:
+          - search
+          - :query=
+          - webdav
+    selection_search_term:
+        c-uri|contains:
+          - agreement
+          - invoice
+          - notice
+          - payment
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/08/25
+tags:
+  - attack.initial_access
+  - attack.t1584
+  - attack.t1566
+  - DEMO

@@ -1,0 +1,58 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: File Was Not Allowed To Run
+id: 401e5d00-b944-11ea-8f9a-00163ecd60ae
+status: test
+description: Detect run not allowed files. Applocker is a very useful tool, especially
+    on servers where unprivileged users have access. For example terminal servers.
+    You need configure applocker and log collect to receive these events.
+author: Pushkarev Dmitry
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/06/28 12:34:01
+references:
+  - https://docs.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/applocker/what-is-applocker
+  - https://docs.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/applocker/using-event-viewer-with-applocker
+  - https://nxlog.co/documentation/nxlog-user-guide/applocker.html
+logsource:
+    product: windows
+    service: applocker
+detection:
+    condition: selection
+    selection:
+        EventID:
+          - "8004"
+          - "8007"
+          - "8022"
+          - "8025"
+fields:
+  - PolicyName
+  - RuleId
+  - RuleName
+  - TargetUser
+  - TargetProcessId
+  - FilePath
+  - FileHash
+  - Fqbn
+falsepositives: Need tuning applocker or add exceptions in SIEM
+level: medium
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.execution
+  - attack.t1204.002
+  - attack.t1059.001
+  - attack.t1059.003
+  - attack.t1059.005
+  - attack.t1059.006
+  - attack.t1059.007
+  - DEMO

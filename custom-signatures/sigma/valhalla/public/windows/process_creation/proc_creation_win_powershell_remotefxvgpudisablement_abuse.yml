@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: RemoteFXvGPUDisablement Abuse Via AtomicTestHarnesses
+id: a6fc3c46-23b8-4996-9ea2-573f4c4d88c5
+related:
+  - type: similar
+    id: f65e22f9-819e-4f96-9c7b-498364ae7a25
+  - type: similar
+    id: 38a7625e-b2cb-485d-b83d-aff137d859f4
+  - type: similar
+    id: cacef8fc-9d3d-41f7-956d-455c6e881bc5
+status: test
+description: Detects calls to the AtomicTestHarnesses "Invoke-ATHRemoteFXvGPUDisablementCommand"
+    which is designed to abuse the "RemoteFXvGPUDisablement.exe" binary to run custom
+    PowerShell code via module load-order hijacking.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/07/13 20:10:11
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218/T1218.md
+  - https://github.com/redcanaryco/AtomicTestHarnesses/blob/7e1e4da116801e3d6fcc6bedb207064577e40572/TestHarnesses/T1218_SignedBinaryProxyExecution/InvokeRemoteFXvGPUDisablementCommand.ps1
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - Invoke-ATHRemoteFXvGPUDisablementCommand
+          - Invoke-ATHRemoteFXvGPUDisableme
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/05/09
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

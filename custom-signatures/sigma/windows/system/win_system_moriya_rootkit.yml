@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Moriya Rootkit - System
+id: 25b9c01c-350d-4b95-bed1-836d04a4f324
+status: test
+description: Detects the use of Moriya rootkit as described in the securelist's Operation
+    TunnelSnake report
+author: Bhabesh Raj
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/05/06 11:59:51
+references:
+  - https://securelist.com/operation-tunnelsnake-and-moriya-rootkit/101831
+logsource:
+    product: windows
+    service: system
+detection:
+    condition: selection
+    selection:
+        EventID: "7045"
+        Provider_Name: Service Control Manager
+        ServiceName: ZzNetSvc
+falsepositives: Unknown
+level: critical
+customer: 'demo'
+modified: 2022/11/29
+tags:
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1543.003
+  - DEMO

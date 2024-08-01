@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: USB Device Plugged
+id: 1a4bd6e3-4c6e-405d-a9a3-53a116e341d4
+status: test
+description: Detects plugged/unplugged USB devices
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/11/09 10:27:01
+references:
+  - https://df-stream.com/2014/01/the-windows-7-event-log-and-usb-device/
+  - https://www.techrepublic.com/article/how-to-track-down-usb-flash-drive-usage-in-windows-10s-event-viewer/
+logsource:
+    product: windows
+    service: driver-framework
+    definition: Requires enabling and collection of the Microsoft-Windows-DriverFrameworks-UserMode/Operational
+        eventlog
+detection:
+    condition: selection
+    selection:
+        EventID:
+          - "2003"
+          - "2100"
+          - "2102"
+falsepositives: Legitimate administrative activity
+level: low
+customer: 'demo'
+modified: 2021/11/30
+tags:
+  - attack.initial_access
+  - attack.t1200
+  - DEMO

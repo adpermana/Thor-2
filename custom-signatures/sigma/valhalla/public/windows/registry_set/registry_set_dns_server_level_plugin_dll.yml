@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: New DNS ServerLevelPluginDll Installed
+id: e61e8a88-59a9-451c-874e-70fcc9740d67
+related:
+  - type: derived
+    id: cbe51394-cd93-4473-b555-edf0144952d9
+  - type: derived
+    id: f63b56ee-3f79-4b8a-97fb-5c48007e8573
+status: experimental
+description: Detects the installation of a DNS plugin DLL via ServerLevelPluginDll
+    parameter in registry, which can be used to execute code in context of the DNS
+    server (restart required)
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/05/08 15:58:51
+references:
+  - https://medium.com/@esnesenon/feature-not-bug-dnsadmin-to-dc-compromise-in-one-line-a0f779b8dc83
+  - https://blog.3or.de/hunting-dns-server-level-plugin-dll-injection.html
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetObject|endswith: \services\DNS\Parameters\ServerLevelPluginDll
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.defense_evasion
+  - attack.t1574.002
+  - attack.t1112
+  - DEMO

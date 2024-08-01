@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Stop Windows Service Via PowerShell Stop-Service
+id: c49c5062-0966-4170-9efd-9968c913a6cf
+related:
+  - type: obsoletes
+    id: eb87818d-db5d-49cc-a987-d5da331fbd90
+status: test
+description: Detects the stopping of a Windows service via the PowerShell Cmdlet "Stop-Service"
+author: Jakob Weinzettl, oscd.community, Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/03/05 18:39:11
+references:
+  - https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/stop-service?view=powershell-7.4
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains: 'Stop-Service '
+    selection_sc_net_img:
+      - OriginalFileName:
+          - PowerShell.EXE
+          - pwsh.dll
+      - Image|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+falsepositives: There are many legitimate reasons to stop a service. This rule isn't
+    looking for any suspicious behaviour in particular. Filter legitimate activity
+    accordingly
+level: low
+customer: 'demo'
+tags:
+  - attack.impact
+  - attack.t1489
+  - DEMO

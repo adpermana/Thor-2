@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Persistence Via Sudoers Files
+id: ddb26b76-4447-4807-871f-1b035b2bfa5d
+status: test
+description: Detects creation of sudoers file or files in "sudoers.d" directory which
+    can be used a potential method to persiste privileges for a specific user.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/05 13:43:31
+references:
+  - https://github.com/h3xduck/TripleCross/blob/1f1c3e0958af8ad9f6ebe10ab442e75de33e91de/apps/deployer.sh
+logsource:
+    category: file_event
+    product: linux
+detection:
+    condition: selection
+    selection:
+        TargetFilename|startswith: /etc/sudoers.d/
+falsepositives: Creation of legitimate files in sudoers.d folder part of administrator
+    work
+level: medium
+customer: 'demo'
+modified: 2022/12/31
+tags:
+  - attack.persistence
+  - attack.t1053.003
+  - DEMO

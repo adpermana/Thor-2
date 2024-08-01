@@ -1,0 +1,28 @@
+title: Impacket WmiPersist FilterToConsumerBinding Creation
+id: ee1805b5-1882-45c2-8968-9f5c134d5f40
+status: test
+description: Detects the creation of an WMI event filter calling the "__TimerEvent" class with a TimerID prefix used by Impacket Wmipersist script
+references:
+    - https://github.com/SecureAuthCorp/impacket/blob/3c6713e309cae871d685fa443d3e21b7026a2155/examples/wmipersist.py#L147
+author: Nasreddine Bencherchali
+date: 2022/11/22
+modified: 2023/03/29
+tags:
+    - attack.execution
+    - attack.t1047
+logsource:
+    product: windows
+    service: wmi
+detection:
+    selection:
+        EventID: 5861
+        Consumer|contains:
+            - 'ActiveScriptEventConsumer='
+            - 'CommandLineEventConsumer='
+        PossibleCause|contains:
+            - 'Select * from __TimerEvent where TimerID = "TI_'
+            - 'Select * from __TimerEvent where TimerID = \"TI_'
+    condition: selection
+falsepositives:
+    - FP could occure with WMI event filters using the same prefix
+level: high

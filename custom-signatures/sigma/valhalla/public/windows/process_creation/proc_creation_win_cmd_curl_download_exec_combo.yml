@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Curl Download And Execute Combination
+id: 21dd6d38-2b18-4453-9404-a0fe4a0cc288
+status: test
+description: Adversaries can use curl to download payloads remotely and execute them.
+    Curl is included by default in Windows 10 build 17063 and later.
+author: Sreeman, Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/01/13 15:42:31
+references:
+  - https://medium.com/@reegun/curl-exe-is-the-new-rundll32-exe-lolbin-3f79c5f35983
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains|all:
+          - 'curl '
+          - http
+          - -o
+          - '&'
+        CommandLine|contains|windash: ' -c '
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2024/03/05
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - attack.command_and_control
+  - attack.t1105
+  - DEMO

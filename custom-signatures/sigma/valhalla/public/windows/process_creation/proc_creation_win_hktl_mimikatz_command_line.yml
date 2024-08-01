@@ -1,0 +1,69 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - Mimikatz Execution
+id: a642964e-bead-4bed-8910-1bb4d63e3b4d
+status: test
+description: Detection well-known mimikatz command line arguments
+author: Teymur Kheirkhabarov, oscd.community, David ANDRE (additional keywords), Tim
+    Shelton
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/22 13:32:41
+references:
+  - https://www.slideshare.net/heirhabarov/hunting-for-credentials-dumping-in-windows-environment
+  - https://tools.thehacker.recipes/mimikatz/modules
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_function_names:
+        CommandLine|contains:
+          - ::aadcookie
+          - ::detours
+          - ::memssp
+          - ::mflt
+          - ::ncroutemon
+          - ::ngcsign
+          - ::printnightmare
+          - ::skeleton
+          - ::preshutdown
+          - ::mstsc
+          - ::multirdp
+    selection_module_names:
+        CommandLine|contains:
+          - 'rpc::'
+          - 'token::'
+          - 'crypto::'
+          - 'dpapi::'
+          - 'sekurlsa::'
+          - 'kerberos::'
+          - 'lsadump::'
+          - 'privilege::'
+          - 'process::'
+          - 'vault::'
+    selection_tools_name:
+        CommandLine|contains:
+          - DumpCreds
+          - mimikatz
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/02/21
+tags:
+  - attack.credential_access
+  - attack.t1003.001
+  - attack.t1003.002
+  - attack.t1003.004
+  - attack.t1003.005
+  - attack.t1003.006
+  - DEMO

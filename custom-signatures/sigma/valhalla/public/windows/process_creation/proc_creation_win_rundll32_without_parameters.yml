@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Rundll32 Execution Without Parameters
+id: 5bb68627-3198-40ca-b458-49f973db8752
+status: test
+description: Detects rundll32 execution without parameters as observed when running
+    Metasploit windows/smb/psexec exploit module
+author: Bartlomiej Czyz, Relativity
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/01/31 15:55:01
+references:
+  - https://bczyz1.github.io/2021/01/30/psexec.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine:
+          - rundll32.exe
+          - rundll32
+fields:
+  - ComputerName
+  - SubjectUserName
+  - CommandLine
+  - Image
+  - ParentImage
+falsepositives: False positives may occur if a user called rundll32 from CLI with
+    no options
+level: high
+customer: 'demo'
+modified: 2023/02/28
+tags:
+  - attack.lateral_movement
+  - attack.t1021.002
+  - attack.t1570
+  - attack.execution
+  - attack.t1569.002
+  - DEMO

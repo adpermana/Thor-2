@@ -1,0 +1,48 @@
+title: Possible Process Injection Into System Processes
+id: 18ca6c23-467c-46d0-ac00-385839be54cd
+status: experimental
+description: Detects cmd or powershell processes with suspicious arguments being children of system processes. This could be a sign of process injection
+author: Nasreddine Bencherchali
+references:
+    - https://thedfirreport.com/2022/11/14/bumblebee-zeros-in-on-meterpreter/
+date: 2022/11/14
+modified: 2022/12/20
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        ParentImage|endswith:
+            - '\svchost.exe'
+            - '\dllhost.exe'
+            - '\notepad.exe'
+            - '\lsass.exe'
+            - '\winlogon.exe'
+            - '\services.exe'
+            - '\csrss.exe'
+            - '\RuntimeBroker.exe'
+            - '\wininit.exe'
+            - '\calc.exe'
+        CommandLine|contains:
+            - 'cmd.exe /c'
+            - 'cmd.exe /k'
+            - 'cmd.exe /r'
+            - 'powershell.exe -c'
+            - 'powershell.exe /c'
+            - 'powershell.exe -enc'
+            - 'powershell.exe /enc'
+            - 'powershell.exe /ec'
+            - 'powershell.exe -ec'
+            - 'pwsh.exe -c'
+            - 'pwsh.exe /c'
+            - 'pwsh.exe -enc'
+            - 'pwsh.exe /enc'
+            - 'pwsh.exe /ec'
+            - 'pwsh.exe -ec'
+    filter_schedule:
+        Image|endswith: '\svchost.exe'
+        ParentCommandLine|contains: '-s Schedule'
+    condition: selection and not 1 of filter_*
+falsepositives:
+    - Unknown
+level: high

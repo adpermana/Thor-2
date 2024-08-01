@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PowerShell Decompress Commands
+id: 1ddc1472-8e52-4f7d-9f11-eab14fc171f5
+related:
+  - type: derived
+    id: 81fbdce6-ee49-485a-908d-1a728c5dcb09
+status: test
+description: A General detection for specific decompress commands in PowerShell logs.
+    This could be an adversary decompressing files.
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/05/02 14:12:41
+references:
+  - https://github.com/OTRF/detection-hackathon-apt29/issues/8
+  - https://github.com/OTRF/ThreatHunter-Playbook/blob/2d4257f630f4c9770f78d0c1df059f891ffc3fec/docs/evals/apt29/detections/4.A.3_09F29912-8E93-461E-9E89-3F06F6763383.md
+logsource:
+    category: ps_module
+    product: windows
+    definition: 0ad03ef1-f21b-4a79-8ce8-e6900c54b65b
+detection:
+    condition: selection_4103
+    selection_4103:
+        Payload|contains: Expand-Archive
+falsepositives: Unknown
+level: informational
+customer: 'demo'
+modified: 2022/12/25
+tags:
+  - attack.defense_evasion
+  - attack.t1140
+  - DEMO

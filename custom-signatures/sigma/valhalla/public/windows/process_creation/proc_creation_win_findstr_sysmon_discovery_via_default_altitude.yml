@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Sysmon Discovery Via Default Driver Altitude Using Findstr.EXE
+id: 37db85d1-b089-490a-a59a-c7b6f984f480
+status: test
+description: Detects usage of "findstr" with the argument "385201". Which could indicate
+    potential discovery of an installed Sysinternals Sysmon service using the default
+    driver altitude (even if the name is changed).
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/12/16 22:05:01
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1518.001/T1518.001.md#atomic-test-5---security-software-discovery---sysmon-service
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains: ' 385201'
+    selection_img:
+      - Image|endswith:
+          - \find.exe
+          - \findstr.exe
+      - OriginalFileName:
+          - FIND.EXE
+          - FINDSTR.EXE
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/11/14
+tags:
+  - attack.discovery
+  - attack.t1518.001
+  - DEMO

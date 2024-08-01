@@ -1,0 +1,60 @@
+title: Grant Overpermissive Permissions To Files Or Shares
+id: 0f9de3a8-ff08-433b-821a-fa241c811a36
+status: experimental
+description: Detects the granting of overly permissive such as "FULL CONTROL" permissions to files or shares to groups such as "Everyone"
+references:
+    - https://www.microsoft.com/en-us/security/blog/2022/10/18/defenders-beware-a-case-for-post-ransomware-investigations/
+    - https://social.technet.microsoft.com/Forums/ie/en-US/e16b7a68-7464-40e9-a479-4f6deceb62d6/net-share-with-permissions?forum=winserverfiles
+author: Nasreddine Bencherchali
+date: 2022/11/09
+modified: 2022/12/16
+tags:
+    - attack.defense_evasion
+    - attack.t1222.001
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_other_img:
+        - Image|endswith:
+            - '\cacls.exe'
+            - '\icacls.exe'
+        - OriginalFileName:
+            - 'CACLS.exe'
+            - 'iCACLS.exe'
+    selection_other_cli:
+        CommandLine|contains:
+            - '/grant'
+            - ' /g '
+    selection_other_permissions:
+        # Add more suspicious permissions
+        CommandLine|contains:
+            # Example 1 (grant full control to Everyone on a folder using SID): ICACLS foldername /GRANT *S-1-1-0:F /T
+            # Example 2 (grant full control to Everyone on a folder using GroupName): ICACLS foldername /GRANT Everyone:F /T
+            - 'Everyone:F'
+            - 'S-1-1-0:F'
+    selection_net_img:
+        - Image|endswith:
+            - '\net.exe'
+            - '\net1.exe'
+        - OriginalFileName:
+            - 'net.exe'
+            - 'net1.exe'
+    selection_net_cli:
+        CommandLine|contains|all:
+            - ' share '
+            - '/grant:'
+    selection_net_permissions:
+        # Add more suspicious permissions
+        CommandLine|contains:
+            # Example: net share [C-Z]=[C-Z]:\ /grant:everyone,FULL
+            - 'EVERYONE,FULL'
+            - 'EVERYONE,CHANGE'
+    condition: all of selection_other_* or all of selection_net_*
+fields:
+    - ComputerName
+    - User
+    - CommandLine
+falsepositives:
+    - Rare FP could occur with some scripts and administrators
+level: high

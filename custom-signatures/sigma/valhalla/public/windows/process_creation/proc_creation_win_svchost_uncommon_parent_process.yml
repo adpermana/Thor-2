@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Uncommon Svchost Parent Process
+id: 01d2e2a1-5f09-44f7-9fc1-24faa7479b6d
+status: test
+description: Detects an uncommon svchost parent process
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/08/15 14:26:31
+references:
+  - Internal Research
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_generic:
+        ParentImage|endswith:
+          - \Mrt.exe
+          - \MsMpEng.exe
+          - \ngen.exe
+          - \rpcnet.exe
+          - \services.exe
+          - \TiWorker.exe
+    filter_main_parent_empty:
+        ParentImage:
+          - '-'
+          - ""
+    filter_main_parent_null:
+        ParentImage: []
+    selection:
+        Image|endswith: \svchost.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/06/28
+tags:
+  - attack.defense_evasion
+  - attack.t1036.005
+  - DEMO

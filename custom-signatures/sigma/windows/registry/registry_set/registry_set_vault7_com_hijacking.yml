@@ -1,0 +1,26 @@
+title: Vault7 COM Hijacking Trick
+id: 775b67d9-3346-4c2a-b324-df69de1868c8
+description: Detects known Vault7 COM hijacking technique
+status: test
+date: 2022/05/20
+modified: 2023/03/29
+author: Nasreddine Bencherchali
+references:
+    - https://github.com/nettitude/Invoke-PowerThIEf/blob/master/Invoke-PowerThIEf.ps1
+    - https://medium.com/falconforce/introducing-falcon-friday-1f972d65ce1b
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection:
+        TargetObject|contains: '\Software\Classes\CLSID\'
+        TargetObject|endswith: '\ShellFolder\Attributes'
+        Details: 'DWORD (0xf090013d)'
+    condition: selection
+falsepositives:
+    - Unknown
+level: critical
+tags:
+    - attack.persistence
+    - attack.privilege_escalation
+    - attack.t1546.015

@@ -1,0 +1,70 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Internet Explorer Autorun Keys Modification
+id: a80f662f-022f-4429-9b8c-b1a41aaa6688
+related:
+  - type: obsoletes
+    id: 17f878b8-9968-4578-b814-c4217fc5768c
+status: test
+description: Detects modification of autostart extensibility point (ASEP) in registry.
+author: Victor Sergeev, Daniil Yugoslavskiy, Gleb Sukhodolskiy, Timur Zinniatullin,
+    oscd.community, Tim Shelton, frack113 (split)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/25 17:43:01
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1547.001/T1547.001.md
+  - https://docs.microsoft.com/en-us/sysinternals/downloads/autoruns
+  - https://gist.github.com/GlebSukhodolskiy/0fc5fa5f482903064b448890db1eaf9d
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: ie and ie_details and not 1 of filter_*
+    filter_empty:
+        Details: (Empty)
+    filter_extensions:
+        TargetObject|contains:
+          - \Extensions\{2670000A-7350-4f3c-8081-5663EE0C6C49}
+          - \Extensions\{31D09BA0-12F5-4CCE-BE8A-2923E76605DA}
+          - \Extensions\{789FE86F-6FC4-46A1-9849-EDE0DB0C95CA}
+          - \Extensions\{A95fe080-8f5d-11d2-a20b-00aa003c157a}
+    filter_toolbar:
+        TargetObject|endswith:
+          - \Toolbar\ShellBrowser\ITBar7Layout
+          - \Toolbar\ShowDiscussionButton
+          - \Toolbar\Locked
+    ie:
+        TargetObject|contains:
+          - \Software\Wow6432Node\Microsoft\Internet Explorer
+          - \Software\Microsoft\Internet Explorer
+    ie_details:
+        TargetObject|contains:
+          - \Toolbar
+          - \Extensions
+          - \Explorer Bars
+fields:
+  - SecurityID
+  - ObjectName
+  - OldValueType
+  - NewValueType
+falsepositives:
+  - Legitimate software automatically (mostly, during installation) sets up autorun
+    keys for legitimate reason
+  - Legitimate administrator sets up autorun keys for legitimate reason
+level: medium
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.persistence
+  - attack.t1547.001
+  - DEMO

@@ -1,0 +1,59 @@
+title: Unsuspected Children Of Svchost Process
+id: a5d77fd3-de80-4b40-bd75-b38975330ad3
+status: experimental
+description: Detects children of svchost processes with specific commandlines that are known to not have children
+references:
+    - https://twitter.com/SBousseaden/status/1432646570294616064
+author: Nasreddine Bencherchali
+date: 2022/06/27
+modified: 2023/06/15
+tags:
+    - attack.execution
+    - attack.t1559.001
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        ParentImage|endswith: '\svchost.exe'
+        ParentCommandLine|contains:
+            - ' -k LocalSystemNetworkRestricted -p -s WdiSystemHost'
+            - ' -k LocalService -p -s LicenseManager'
+            - ' -k LocalSystemNetworkRestricted -p -s StorSvc'
+            - ' -k LocalService -p -s CDPSvc'
+            - ' -k ClipboardSvcGroup -p -s cbdhsvc'
+            - ' -k LocalService -p -s BthAvctpSvc'
+            - ' -k LocalService -p -s SstpSvc'
+            - ' -k LocalService -p -s WdiServiceHost'
+            - ' -k imgsvc'
+            - ' -k LocalSystemNetworkRestricted -p -s TrkWks'
+            - ' -k netsvcs -p -s WpnService'
+            - ' -k netsvcs -p -s IKEEXT'
+            - ' -k NetworkServiceNetworkRestricted -p -s PolicyAgent'
+            - ' -k NetworkService -p -s CryptSvc'
+            - ' -k LocalService -p -s netprofm'
+            - ' -k netsvcs -p -s ProfSvc'
+            - ' -k appmodel -p -s StateRepository'
+            #- ' -k appmodel -p -s camsvc' # Too many FPs (cmd, conhost, MpCmdRun)
+            - ' -k NetworkService -p -s LanmanWorkstation'
+            - ' -k NetworkService -p -s NlaSvc'
+            - ' -k LocalServiceNetworkRestricted -p -s EventLog'
+            - ' -k LocalSystemNetworkRestricted -p -s hidserv'
+            - ' -k LocalSystemNetworkRestricted -p -s DisplayEnhancementService'
+            - ' -k netsvcs -p -s ShellHWDetection'
+            - ' -k apphost -s AppHostSvc'
+            - ' -k LocalSystemNetworkRestricted -p -s fhsvc'
+            - ' -k LocalSystemNetworkRestricted -p -s CscService'
+            - ' -k netsvcs -p -s PushToInstall'
+    filter_apphost:
+        ParentCommandLine|contains: ' -k apphost -s AppHostSvc'
+        Image|endswith: '\conhost.exe'
+    filter_imgsvc:
+        ParentCommandLine|contains: ' -k imgsvc'
+        Image|endswith: '\conhost.exe'
+    filter_null:  # occurs if there is misbehaviour in Aurora parent/child mapping
+        Image: null
+    condition: selection and not 1 of filter*
+falsepositives:
+    - Unlikely
+level: high

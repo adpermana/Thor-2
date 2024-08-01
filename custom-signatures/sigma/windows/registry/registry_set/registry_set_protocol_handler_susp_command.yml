@@ -1,0 +1,40 @@
+title: Suspicious Command In Protocol Handler Shell Open
+id: fe0e3995-53d8-4d88-a3e4-a5571390defb
+description: Detects suspicious commands added to the "\shell\open\command" for protocol handlers
+status: test
+date: 2022/06/06
+modified: 2023/03/29
+author: Nasreddine Bencherchali
+references:
+    - https://www.uptycs.com/blog/warzonerat-can-now-evade-with-process-hollowing
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection:
+        TargetObject|endswith: '\shell\open\command\(Default)'
+        Details|contains:
+            - 'cmd /c'
+            - 'cmd /r'
+            - 'cmd.exe /c'
+            - 'cmd.exe /r'
+            - 'powershell '
+            - 'powershell.exe '
+            - 'pwsh '
+            - 'pwsh.exe '
+            - 'wscript '
+            - 'wscript.exe '
+            - 'cscript '
+            - 'cscript.exe '
+            - 'mshta '
+            - 'mshta.exe '
+            - 'wmic '
+            - 'wmic.exe '
+            - '%comspec%'
+    condition: selection
+falsepositives:
+    - Unknown
+level: high
+tags:
+    - attack.defense_evasion
+    - attack.t1112

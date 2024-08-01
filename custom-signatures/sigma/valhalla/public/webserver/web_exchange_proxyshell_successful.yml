@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Successful Exchange ProxyShell Attack
+id: 992be1eb-e5da-437e-9a54-6d13b57bb4d8
+status: test
+description: Detects URP patterns and status codes that indicate a successful ProxyShell
+    exploitation attack against Exchange servers
+author: Florian Roth (Nextron Systems), Rich Warren
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/09 16:00:51
+references:
+  - https://youtu.be/5mqid-7zp8k?t=2231
+  - https://blog.orange.tw/2021/08/proxylogon-a-new-attack-surface-on-ms-exchange-part-1.html
+  - https://peterjson.medium.com/reproducing-the-proxyshell-pwn2own-exploit-49743a4ea9a1
+logsource:
+    category: webserver
+detection:
+    condition: selection_auto and selection_uri and selection_success
+    selection_auto:
+        cs-uri-query|contains: /autodiscover.json
+    selection_success:
+        sc-status:
+          - "200"
+          - "301"
+    selection_uri:
+        cs-uri-query|contains:
+          - /powershell
+          - /mapi/nspi
+          - /EWS
+          - X-Rps-CAT
+falsepositives: Unknown
+level: critical
+customer: 'demo'
+modified: 2023/01/02
+tags:
+  - attack.initial_access
+  - detection.emerging_threats
+  - DEMO

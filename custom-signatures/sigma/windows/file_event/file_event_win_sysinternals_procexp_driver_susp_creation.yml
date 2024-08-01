@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Process Explorer Driver Creation By Non-Sysinternals Binary
+id: de46c52b-0bf8-4936-a327-aace94f94ac6
+status: experimental
+description: |
+    Detects creation of the Process Explorer drivers by processes other than Process Explorer (procexp) itself.
+    Hack tools or malware may use the Process Explorer driver to elevate privileges, drops it to disk for a few moments, runs a service using that driver and removes it afterwards.
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/05 21:42:41
+references:
+  - https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer
+  - https://github.com/Yaxser/Backstab
+  - https://www.elastic.co/security-labs/stopping-vulnerable-driver-attacks
+  - https://news.sophos.com/en-us/2023/04/19/aukill-edr-killer-malware-abuses-process-explorer-driver/
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_process_explorer:
+        Image|endswith:
+          - \procexp.exe
+          - \procexp64.exe
+    selection:
+        TargetFilename|contains: \PROCEXP
+        TargetFilename|endswith: .sys
+falsepositives: Some false positives may occur with legitimate renamed process explorer
+    binaries
+level: high
+customer: 'demo'
+tags:
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1068
+  - DEMO

@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Network Connection Initiated By Regsvr32.EXE
+id: c7e91a02-d771-4a6d-a700-42587e0b1095
+status: test
+description: Detects a network connection initiated by "Regsvr32.exe"
+author: Dmitriy Lifanov, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/25 17:11:41
+references:
+  - https://pentestlab.blog/2017/05/11/applocker-bypass-regsvr32/
+  - https://oddvar.moe/2017/12/13/applocker-case-study-how-insecure-is-it-really-part-1/
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith: \regsvr32.exe
+        Initiated: "true"
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/09/18
+tags:
+  - attack.execution
+  - attack.t1559.001
+  - attack.defense_evasion
+  - attack.t1218.010
+  - DEMO

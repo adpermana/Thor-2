@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PUA - WebBrowserPassView Execution
+id: d0dae994-26c6-4d2d-83b5-b3c8b79ae513
+status: test
+description: Detects the execution of WebBrowserPassView.exe. A password recovery
+    tool that reveals the passwords stored by the following Web browsers, Internet
+    Explorer (Version 4.0 - 11.0), Mozilla Firefox (All Versions), Google Chrome,
+    Safari, and Opera
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/20 14:47:11
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/40b77d63808dd4f4eafb83949805636735a1fd15/atomics/T1555.003/T1555.003.md
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - Description: Web Browser Password Viewer
+      - Image|endswith: \WebBrowserPassView.exe
+falsepositives: Legitimate use
+level: medium
+customer: 'demo'
+modified: 2023/02/14
+tags:
+  - attack.credential_access
+  - attack.t1555.003
+  - DEMO

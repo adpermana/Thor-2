@@ -1,0 +1,61 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potentially Suspicious Cabinet File Expansion
+id: 9f107a84-532c-41af-b005-8d12a607639f
+status: test
+description: Detects the expansion or decompression of cabinet files from potentially
+    suspicious or uncommon locations, e.g. seen in Iranian MeteorExpress related attacks
+author: Bhabesh Raj, X__Junior (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/07/30 18:14:31
+references:
+  - https://labs.sentinelone.com/meteorexpress-mysterious-wiper-paralyzes-iranian-trains-with-epic-troll
+  - https://blog.malwarebytes.com/threat-intelligence/2021/08/new-variant-of-konni-malware-used-in-campaign-targetting-russia/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection_cmd and 1 of selection_folders_* and not 1 of filter_optional_*
+    filter_optional_dell:
+        CommandLine|contains: C:\ProgramData\Dell\UpdateService\Temp\
+        ParentImage: C:\Program Files (x86)\Dell\UpdateService\ServiceShell.exe
+    selection_cmd:
+        CommandLine|contains|windash: '-F:'
+        Image|endswith: \expand.exe
+    selection_folders_1:
+        CommandLine|contains:
+          - :\Perflogs\
+          - :\Users\Public\
+          - \Temporary Internet
+          - :\ProgramData
+          - \AppData\Local\Temp
+          - \AppData\Roaming\Temp
+          - :\Windows\Temp
+    selection_folders_2:
+      - CommandLine|contains|all:
+          - :\Users\
+          - \Favorites\
+      - CommandLine|contains|all:
+          - :\Users\
+          - \Favourites\
+      - CommandLine|contains|all:
+          - :\Users\
+          - \Contacts\
+falsepositives: System administrator Usage
+level: medium
+customer: 'demo'
+modified: 2024/03/05
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - SecurityXploded Execution
+id: 7679d464-4f74-45e2-9e01-ac66c5eb041a
+status: stable
+description: Detects the execution of SecurityXploded Tools
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2018/12/19 15:35:41
+references:
+  - https://securityxploded.com/
+  - https://cyberx-labs.com/blog/gangnam-industrial-style-apt-campaign-targets-korean-industrial-companies/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - Company: SecurityXploded
+      - Image|endswith: PasswordDump.exe
+      - OriginalFileName|endswith: PasswordDump.exe
+falsepositives: Unlikely
+level: critical
+customer: 'demo'
+modified: 2023/02/04
+tags:
+  - attack.credential_access
+  - attack.t1555
+  - DEMO

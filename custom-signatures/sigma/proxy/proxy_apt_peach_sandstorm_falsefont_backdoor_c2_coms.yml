@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Peach Sandstorm APT C2 Communication Activity
+id: b8225208-81d0-4715-a822-12bcdd583e0f
+status: experimental
+description: Detects potential C2 communication activity related to Peach Sandstorm
+    APT
+author: X__Junior (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/01/15 20:14:51
+references:
+  - https://twitter.com/MsftSecIntel/status/1737895710169628824
+  - https://www.virustotal.com/gui/file/364275326bbfc4a3b89233dabdaf3230a3d149ab774678342a40644ad9f8d614/details
+logsource:
+    category: proxy
+detection:
+    condition: selection
+    selection:
+        c-uri|endswith:
+          - /api/Core/Command/Init
+          - /api/Core/Command/Restart
+        cs-method: GET
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.command_and_control
+  - detection.emerging_threats
+  - DEMO

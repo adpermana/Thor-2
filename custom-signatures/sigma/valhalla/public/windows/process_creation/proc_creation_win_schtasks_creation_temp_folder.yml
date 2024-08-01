@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Scheduled Task Creation Involving Temp Folder
+id: 39019a4e-317f-4ce3-ae63-309a8c6b53c5
+status: test
+description: Detects the creation of scheduled tasks that involves a temporary folder
+    and runs only once
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/03/11 20:55:41
+references:
+  - https://discuss.elastic.co/t/detection-and-response-for-hafnium-activity/266289/3
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains|all:
+          - ' /create '
+          - ' /sc once '
+          - \Temp\
+        Image|endswith: \schtasks.exe
+fields:
+  - CommandLine
+  - ParentCommandLine
+falsepositives:
+  - Administrative activity
+  - Software installation
+level: high
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.execution
+  - attack.persistence
+  - attack.t1053.005
+  - DEMO

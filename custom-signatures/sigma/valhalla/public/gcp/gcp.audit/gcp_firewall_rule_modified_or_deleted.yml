@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Google Cloud Firewall Modified or Deleted
+id: fe513c69-734c-4d4a-8548-ac5f609be82b
+status: test
+description: Detects  when a firewall rule is modified or deleted in Google Cloud
+    Platform (GCP).
+author: Austin Songer @austinsonger
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/13 16:35:11
+references:
+  - https://cloud.google.com/kubernetes-engine/docs/how-to/audit-logging
+  - https://developers.google.com/resources/api-libraries/documentation/compute/v1/java/latest/com/google/api/services/compute/Compute.Firewalls.html
+logsource:
+    product: gcp
+    service: gcp.audit
+detection:
+    condition: selection
+    selection:
+        gcp.audit.method_name:
+          - v*.Compute.Firewalls.Delete
+          - v*.Compute.Firewalls.Patch
+          - v*.Compute.Firewalls.Update
+          - v*.Compute.Firewalls.Insert
+falsepositives:
+  - Firewall rules being modified or deleted may be performed by a system administrator.
+    Verify that the firewall configuration change was expected.
+  - Exceptions can be added to this rule to filter expected behavior.
+level: medium
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.defense_evasion
+  - attack.t1562
+  - DEMO

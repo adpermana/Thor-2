@@ -1,0 +1,24 @@
+title: Clear Windows Eventlog Using ClearLog Method
+id: 6d98b9a8-cbf2-4c51-8f4b-436fcf4c95cb
+status: test
+description: Detects PowerShell scripts that clears the windows event log using the "EventLogSession.ClearLog" method
+date: 2022/05/14
+modified: 2023/03/29
+tags:
+    - attack.defense_evasion
+    - attack.t1070.001
+references:
+    - https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.eventing.reader.eventlogsession.clearlog?view=dotnet-plat-ext-6.0
+    - https://www.virustotal.com/gui/file/14868afcb4c4752e6c6ab8ed526d14be0b7cec2e88e654ddffb50aa13cf69dc8/
+author: Nasreddine Bencherchali
+logsource:
+    product: windows
+    category: ps_script
+    definition: Script Block Logging must be enabled
+detection:
+    selection:
+        ScriptBlockText|contains: "[System.Diagnostics.Eventing.Reader.EventLogSession]::GlobalSession.ClearLog("
+    condition: selection
+falsepositives:
+    - Unknown
+level: high

@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Use of CSharp Interactive Console
+id: a9e416a8-e613-4f8b-88b8-a7d1d1af2f61
+status: test
+description: Detects the execution of CSharp interactive console by PowerShell
+author: Michael R. (@nahamike01)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/03/08 17:40:31
+references:
+  - https://redcanary.com/blog/detecting-attacks-leveraging-the-net-framework/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith: \csi.exe
+        OriginalFileName: csi.exe
+        ParentImage|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+          - \powershell_ise.exe
+falsepositives: Possible depending on environment. Pair with other factors such as
+    net connections, command-line args, etc.
+level: high
+customer: 'demo'
+modified: 2022/07/14
+tags:
+  - attack.execution
+  - attack.t1127
+  - DEMO

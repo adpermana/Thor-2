@@ -1,0 +1,59 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PrinterNightmare Mimikatz Driver Name
+id: ba6b9e43-1d45-4d3c-a504-1043a64c8469
+status: test
+description: Detects static QMS 810 and mimikatz driver name used by Mimikatz as exploited
+    in CVE-2021-1675 and CVE-2021-34527
+author: Markus Neis, @markus_neis, Florian Roth
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/07/04 16:01:01
+references:
+  - https://github.com/gentilkiwi/mimikatz/commit/c21276072b3f2a47a21e215a46962a17d54b3760
+  - https://www.lexjansen.com/sesug/1993/SESUG93035.pdf
+  - https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-rprn/4464eaf0-f34f-40d5-b970-736437a21913
+  - https://nvd.nist.gov/vuln/detail/cve-2021-1675
+  - https://nvd.nist.gov/vuln/detail/cve-2021-34527
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    condition: selection or selection_alt or (selection_print and selection_kiwi)
+    selection:
+        TargetObject|contains:
+          - \Control\Print\Environments\Windows x64\Drivers\Version-3\QMS 810\
+          - \Control\Print\Environments\Windows x64\Drivers\Version-3\mimikatz
+    selection_alt:
+        TargetObject|contains|all:
+          - legitprinter
+          - \Control\Print\Environments\Windows
+    selection_kiwi:
+        TargetObject|contains:
+          - Gentil Kiwi
+          - mimikatz printer
+          - Kiwi Legit Printer
+    selection_print:
+        TargetObject|contains:
+          - \Control\Print\Environments
+          - \CurrentVersion\Print\Printers
+falsepositives: Legitimate installation of printer driver QMS 810, Texas Instruments
+    microLaser printer (unlikely)
+level: critical
+customer: 'demo'
+modified: 2023/06/12
+tags:
+  - attack.execution
+  - attack.t1204
+  - cve.2021.1675
+  - cve.2021.34527
+  - DEMO

@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Msxsl.EXE Execution
+id: 9e50a8b3-dd05-4eb8-9153-bdb6b79d50b0
+status: test
+description: |
+    Detects the execution of the MSXSL utility. This can be used to execute Extensible Stylesheet Language (XSL) files. These files are commonly used to describe the processing and rendering of data within XML files.
+    Adversaries can abuse this functionality to execute arbitrary files while potentially bypassing application whitelisting defenses.
+author: Timur Zinniatullin, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/21 10:57:51
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1220/T1220.md
+  - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Msxsl/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith: \msxsl.exe
+falsepositives: Msxsl is not installed by default and is deprecated, so unlikely on
+    most systems.
+level: medium
+customer: 'demo'
+modified: 2023/11/09
+tags:
+  - attack.defense_evasion
+  - attack.t1220
+  - DEMO

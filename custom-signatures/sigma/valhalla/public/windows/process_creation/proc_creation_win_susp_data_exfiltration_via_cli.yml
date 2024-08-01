@@ -1,0 +1,81 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Data Exfiltration Activity Via CommandLine Tools
+id: 7d1aaf3d-4304-425c-b7c3-162055e0b3ab
+status: experimental
+description: Detects the use of various CLI utilities exfiltrating data via web requests
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/02 21:24:01
+references:
+  - https://www.sentinelone.com/blog/living-off-windows-defender-lockbit-ransomware-sideloads-cobalt-strike-through-microsoft-security-tool/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: (selection_iwr or all of selection_curl* or selection_wget) and payloads
+    payloads:
+      - CommandLine|contains:
+          - Get-Content
+          - GetBytes
+          - hostname
+          - ifconfig
+          - ipconfig
+          - net view
+          - netstat
+          - nltest
+          - qprocess
+          - sc query
+          - systeminfo
+          - tasklist
+          - ToBase64String
+          - whoami
+      - CommandLine|contains|all:
+          - 'type '
+          - ' > '
+          - ' C:\'
+    selection_curl:
+        CommandLine|contains: --ur
+        Image|endswith: \curl.exe
+    selection_curl_data:
+        CommandLine|contains:
+          - ' -d '
+          - ' --data '
+    selection_iwr:
+        CommandLine|contains:
+          - Invoke-WebRequest
+          - 'iwr '
+          - 'wget '
+          - 'curl '
+        CommandLine|contains|all:
+          - ' -ur'
+          - ' -me'
+          - ' -b'
+          - ' POST '
+        Image|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+          - \cmd.exe
+    selection_wget:
+        CommandLine|contains:
+          - --post-data
+          - --post-file
+        Image|endswith: \wget.exe
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/07/27
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

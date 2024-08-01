@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Use of Pcalua For Execution
+id: 0955e4e1-c281-4fb9-9ee1-5ee7b4b754d2
+related:
+  - type: obsoletes
+    id: fa47597e-90e9-41cd-ab72-c3b74cfb0d02
+status: test
+description: Detects execition of commands and binaries from the context of The program
+    compatibility assistant (Pcalua.exe). This can be used as a LOLBIN in order to
+    bypass application whitelisting.
+author: Nasreddine Bencherchali (Nextron Systems), E.M. Anhaus (originally from Atomic
+    Blue Detections, Endgame), oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/14 12:53:51
+references:
+  - https://lolbas-project.github.io/lolbas/Binaries/Pcalua/
+  - https://pentestlab.blog/2020/07/06/indirect-command-execution/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains: ' -a'
+        Image|endswith: \pcalua.exe
+falsepositives: Legitimate use by a via a batch script or by an administrator.
+level: medium
+customer: 'demo'
+modified: 2023/01/04
+tags:
+  - attack.execution
+  - attack.t1059
+  - DEMO

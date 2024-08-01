@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: VsCode Powershell Profile Modification
+id: 3a9fa2ec-30bc-4ebd-b49e-7c9cff225502
+related:
+  - type: similar
+    id: b5b78988-486d-4a80-b991-930eff3ff8bf
+status: test
+description: Detects the creation or modification of a vscode related powershell profile
+    which could indicate suspicious activity as the profile can be used as a mean
+    of persistence
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/24 16:16:01
+references:
+  - https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_profiles?view=powershell-7.2
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetFilename|endswith: \Microsoft.VSCode_profile.ps1
+falsepositives: Legitimate use of the profile by developers or administrators
+level: medium
+customer: 'demo'
+modified: 2023/01/06
+tags:
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1546.013
+  - DEMO

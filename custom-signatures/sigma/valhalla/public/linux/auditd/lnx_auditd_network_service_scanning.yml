@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Linux Network Service Scanning - Auditd
+id: 3761e026-f259-44e6-8826-719ed8079408
+related:
+  - type: derived
+    id: 3e102cd9-a70d-4a7a-9508-403963092f31
+status: test
+description: Detects enumeration of local or remote network services.
+author: Alejandro Ortuno, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/21 16:03:21
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1046/T1046.md
+logsource:
+    product: linux
+    service: auditd
+    definition: Configure these rules https://github.com/Neo23x0/auditd/blob/e181243a7c708e9d579557d6f80e0ed3d3483b89/audit.rules#L182-L183
+detection:
+    condition: selection
+    selection:
+        exe|endswith:
+          - /telnet
+          - /nmap
+          - /netcat
+          - /nc
+          - /ncat
+          - /nc.openbsd
+        key: network_connect_4
+        type: SYSCALL
+falsepositives: Legitimate administration activities
+level: low
+customer: 'demo'
+modified: 2023/09/26
+tags:
+  - attack.discovery
+  - attack.t1046
+  - DEMO

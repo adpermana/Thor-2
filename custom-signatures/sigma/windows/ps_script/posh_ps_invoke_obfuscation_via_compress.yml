@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Invoke-Obfuscation COMPRESS OBFUSCATION - PowerShell
+id: 20e5497e-331c-4cd5-8d36-935f6e2a9a07
+status: test
+description: Detects Obfuscated Powershell via COMPRESS OBFUSCATION
+author: Timur Zinniatullin, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/18 18:24:11
+references:
+  - https://github.com/SigmaHQ/sigma/issues/1009
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: selection_4104
+    selection_4104:
+        ScriptBlockText|contains:
+          - system.io.compression.deflatestream
+          - system.io.streamreader
+        ScriptBlockText|contains|all:
+          - new-object
+          - text.encoding]::ascii
+        ScriptBlockText|endswith: readtoend
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/11/29
+tags:
+  - attack.defense_evasion
+  - attack.t1027
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

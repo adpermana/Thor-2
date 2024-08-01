@@ -1,0 +1,28 @@
+title: Mstsc Connection Over Non-Standard Port Via RDP File
+id: 02db096f-4aef-4738-8f70-5801a8d8888b
+status: test
+description: Detects Mstsc.exe initiating a connection over a Non-Standard port via a local ".rdp" file
+references:
+    - https://blog.thickmints.dev/mintsights/detecting-rogue-rdp/
+    - https://www.blackhillsinfosec.com/rogue-rdp-revisiting-initial-access-methods/
+author: Nasreddine Bencherchali (Nextron Systems)
+date: 2023/04/18
+tags:
+    - attack.lateral_movement
+    - attack.defense_evasion
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection:
+        Image|endswith: '\mstsc.exe'
+        CommandLine|endswith:
+            - '.rdp'
+            - '.rdp"'
+        Initiated: 'true'
+    filter_main_port:
+        DestinationPort: 3389
+    condition: selection and not 1 of filter_main_*
+falsepositives:
+    - Unlikely
+level: high

@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Product Class Reconnaissance Via Wmic.EXE
+id: e568650b-5dcd-4658-8f34-ded0b1e13992
+status: test
+description: Detects the execution of WMIC in order to get a list of firewall and
+    antivirus products
+author: Michael Haag, Florian Roth (Nextron Systems), juju4, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/02/14 19:12:31
+references:
+  - https://github.com/albertzsigovits/malware-notes/blob/c820c7fea76cf76a861b28ebc77e06100e20ec29/Ransomware/Maze.md
+  - https://www.hybrid-analysis.com/sample/4be06ecd234e2110bd615649fe4a6fa95403979acf889d7e45a78985eb50acf9?environmentId=1
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains:
+          - AntiVirusProduct
+          - FirewallProduct
+    selection_img:
+      - Image|endswith: \wmic.exe
+      - OriginalFileName: wmic.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/03/07
+tags:
+  - attack.execution
+  - attack.t1047
+  - car.2016-03-002
+  - DEMO

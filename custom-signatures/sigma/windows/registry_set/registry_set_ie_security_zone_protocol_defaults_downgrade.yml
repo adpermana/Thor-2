@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: IE ZoneMap Setting Downgraded To MyComputer Zone For HTTP Protocols
+id: 3fd4c8d7-8362-4557-a8e6-83b29cc0d724
+related:
+  - type: similar
+    id: 10344bb3-7f65-46c2-b915-2d00d47be5b0
+status: experimental
+description: |
+    Detects changes to Internet Explorer's (IE / Windows Internet properties) ZoneMap configuration of the "HTTP" and "HTTPS" protocols to point to the "My Computer" zone. This allows downloaded files from the Internet to be granted the same level of trust as files stored locally.
+author: Nasreddine Bencherchali (Nextron Systems), Michael Haag (idea)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/09/05 22:59:31
+references:
+  - https://twitter.com/M_haggis/status/1699056847154725107
+  - https://twitter.com/JAMESWT_MHT/status/1699042827261391247
+  - https://learn.microsoft.com/en-us/troubleshoot/developer/browsers/security-privacy/ie-security-zones-registry-entries
+  - https://www.virustotal.com/gui/file/339ff720c74dc44265b917b6d3e3ba0411d61f3cd3c328e9a2bae81592c8a6e5/content
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Details|contains: DWORD (0x00000000)
+        TargetObject|contains: \Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\ProtocolDefaults
+        TargetObject|endswith:
+          - \http
+          - \https
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - DEMO

@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-06-21 19:00
+# Generated for User: demo
+# Number of Rules: 3228
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Launch Agent/Daemon Execution Via Launchctl
+id: ae9d710f-dcd1-4f75-a0a5-93a73b5dda0e
+status: experimental
+description: Detects the execution of programs as Launch Agents or Launch Daemons
+    using launchctl on macOS.
+author: Pratinav Chandra
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/05/13 17:11:51
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1569.001/T1569.001.md
+  - https://www.sentinelone.com/labs/20-common-tools-techniques-used-by-macos-threat-actors-malware/
+  - https://www.welivesecurity.com/2020/07/16/mac-cryptocurrency-trading-application-rebranded-bundled-malware/
+  - https://www.trendmicro.com/en_us/research/18/d/new-macos-backdoor-linked-to-oceanlotus-found.html
+  - https://www.loobins.io/binaries/launchctl/
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - submit
+          - load
+          - start
+        Image|endswith: /launchctl
+falsepositives: Legitimate administration activities is expected to trigger false
+    positives. Investigate the command line being passed to determine if the service
+    or launch agent are suspicious.
+level: medium
+customer: 'demo'
+tags:
+  - attack.execution
+  - attack.persistence
+  - attack.t1569.001
+  - attack.t1543.001
+  - attack.t1543.004
+  - DEMO

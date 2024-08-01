@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Vim GTFOBin Abuse - Linux
+id: 7ab8f73a-fcff-428b-84aa-6a5ff7877dea
+status: test
+description: Detects usage of "vim" and it's siblings as a GTFOBin to execute and
+    proxy command and binary execution
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/12/28 11:47:01
+references:
+  - https://gtfobins.github.io/gtfobins/vim/
+  - https://gtfobins.github.io/gtfobins/rvim/
+  - https://gtfobins.github.io/gtfobins/vimdiff/
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains:
+          - :!/
+          - ':py '
+          - ':lua '
+          - /bin/sh
+          - /bin/bash
+          - /bin/dash
+          - /bin/zsh
+          - /bin/fish
+    selection_img:
+        CommandLine|contains:
+          - ' -c '
+          - ' --cmd'
+        Image|endswith:
+          - /vim
+          - /rvim
+          - /vimdiff
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.discovery
+  - attack.t1083
+  - DEMO

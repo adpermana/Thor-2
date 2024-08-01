@@ -1,0 +1,30 @@
+title: Base64 Encoded Binary Inside Powershell Script
+id: be82d513-3192-4973-aa51-02595b84348f
+status: test
+description: Detects scripts containing an encoded binary with "MZ" header being decoded
+author: Nasreddine Bencherchali
+references:
+    - https://github.com/S3cur3Th1sSh1t/Creds/blob/master/PowershellScripts/Invoke-ConPtyShell2.ps1
+    - https://www.virustotal.com/gui/file/98bfc135b785cfff0a984d0eb368d0ecde4953885b30b393cad9e413d76f4c25/
+date: 2022/05/25
+modified: 2023/03/29
+tags:
+    - attack.defense_evasion
+logsource:
+    product: windows
+    category: ps_script
+    definition: Script Block Logging must be enabled
+detection:
+    selection_base64:
+        ScriptBlockText|contains: '::FromBase64String'
+    selection_mz:
+        ScriptBlockText|contains:
+            - 'TVqQAAMAAAAEAAAA' # MZ..........
+            - 'TVpQAAIAAAAEAA8A'
+            - 'TVqAAAEAAAAEABAA'
+            - 'TVoAAAAAAAAAAAAA'
+            - 'TVpTAQEAAAAEAAAA'
+    condition: all of selection_*
+falsepositives:
+    - Unlikely
+level: high

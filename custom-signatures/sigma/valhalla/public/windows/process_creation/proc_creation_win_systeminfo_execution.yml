@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Execution of Systeminfo
+id: 0ef56343-059e-4cb6-adc1-4c3c967c5e46
+status: test
+description: Detects usage of the "systeminfo" command to retrieve information
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/01 15:28:11
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1082/T1082.md#atomic-test-1---system-information-discovery
+  - https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/systeminfo
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - Image|endswith: \systeminfo.exe
+      - OriginalFileName: sysinfo.exe
+falsepositives: Unknown
+level: low
+customer: 'demo'
+modified: 2022/07/14
+tags:
+  - attack.discovery
+  - attack.t1082
+  - DEMO

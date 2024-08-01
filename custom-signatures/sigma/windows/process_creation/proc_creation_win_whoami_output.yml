@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Whoami.EXE Execution With Output Option
+id: c30fb093-1109-4dc8-88a8-b30d11c95a5d
+status: experimental
+description: Detects the execution of "whoami.exe" with the "/FO" flag to choose CSV
+    as output format or with redirection options to export the results to a file for
+    later use.
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/02/28 16:10:31
+references:
+  - https://brica.de/alerts/alert/public/1247926/agent-tesla-keylogger-delivered-inside-a-power-iso-daa-archive/
+  - https://app.any.run/tasks/7eaba74e-c1ea-400f-9c17-5e30eee89906/
+  - https://www.youtube.com/watch?v=DsJ9ByX84o4&t=6s
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_main_* or selection_special
+    selection_main_cli:
+        CommandLine|contains:
+          - ' /FO CSV'
+          - ' -FO CSV'
+    selection_main_img:
+      - Image|endswith: \whoami.exe
+      - OriginalFileName: whoami.exe
+    selection_special:
+        CommandLine|contains: whoami*>
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/12/04
+tags:
+  - attack.discovery
+  - attack.t1033
+  - car.2016-03-001
+  - DEMO

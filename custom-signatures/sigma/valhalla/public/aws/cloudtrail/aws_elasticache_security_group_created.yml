@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: AWS ElastiCache Security Group Created
+id: 4ae68615-866f-4304-b24b-ba048dfa5ca7
+status: test
+description: Detects when an ElastiCache security group has been created.
+author: Austin Songer @austinsonger
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/07/24 15:46:21
+references:
+  - https://github.com/elastic/detection-rules/blob/598f3d7e0a63221c0703ad9a0ea7e22e7bc5961e/rules/integrations/aws/persistence_elasticache_security_group_creation.toml
+logsource:
+    product: aws
+    service: cloudtrail
+detection:
+    condition: selection
+    selection:
+        eventName: CreateCacheSecurityGroup
+        eventSource: elasticache.amazonaws.com
+falsepositives: A ElastiCache security group may be created by a system or network
+    administrator. Verify whether the user identity, user agent, and/or hostname should
+    be making changes in your environment. Security group creations from unfamiliar
+    users or hosts should be investigated. If known behavior is causing false positives,
+    it can be exempted from the rule.
+level: low
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.persistence
+  - attack.t1136
+  - attack.t1136.003
+  - DEMO

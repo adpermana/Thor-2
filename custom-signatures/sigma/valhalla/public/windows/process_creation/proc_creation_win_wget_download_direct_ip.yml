@@ -1,0 +1,75 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious File Download From IP Via Wget.EXE
+id: 17f0c0a8-8bd5-4ee0-8c5f-a342c0199f35
+status: experimental
+description: Detects potentially suspicious file downloads directly from IP addresses
+    using Wget.exe
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/07/27 17:07:11
+references:
+  - https://www.gnu.org/software/wget/manual/wget.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_ext:
+        CommandLine|endswith:
+          - .ps1
+          - .ps1'
+          - .ps1"
+          - .dat
+          - .dat'
+          - .dat"
+          - .msi
+          - .msi'
+          - .msi"
+          - .bat
+          - .bat'
+          - .bat"
+          - .exe
+          - .exe'
+          - .exe"
+          - .vbs
+          - .vbs'
+          - .vbs"
+          - .vbe
+          - .vbe'
+          - .vbe"
+          - .hta
+          - .hta'
+          - .hta"
+          - .dll
+          - .dll'
+          - .dll"
+          - .psm1
+          - .psm1'
+          - .psm1"
+    selection_flag:
+      - CommandLine|re: \s-O\s
+      - CommandLine|contains: --output-document
+    selection_http:
+        CommandLine|contains: http
+    selection_img:
+      - Image|endswith: \wget.exe
+      - OriginalFileName: wget.exe
+    selection_ip:
+        CommandLine|re: ://[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.execution
+  - DEMO

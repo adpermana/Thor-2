@@ -1,0 +1,49 @@
+title: Suspicious WMI Queries In PowerShell Scripts
+id: dbde9ec6-72c3-46b7-8e72-761187dd34d9
+related:
+    - id: de3e71f0-e077-4580-8fbc-1de2f432e4ee
+      type: similar
+status: test
+description: Detects known suspicious WMI queries used in malicious powershell scripts
+author: Nasreddine Bencherchali
+references:
+    - https://www.mandiant.com/resources/unc2165-shifts-to-evade-sanctions
+    - https://github.com/S3cur3Th1sSh1t/WinPwn
+    - https://github.com/S3cur3Th1sSh1t/creds
+date: 2022/05/27
+modified: 2023/03/29
+tags:
+    - attack.execution
+    - attack.t1059.001
+logsource:
+    product: windows
+    category: ps_script
+    definition: Script Block Logging must be enabled
+detection:
+    selection_command:
+        ScriptBlockText|contains:
+            - 'Get-WmiObject '
+            - 'gwmi '
+            - 'Invoke-WmiMethod '
+            - 'iwmi '
+    selection_filter:
+        ScriptBlockText|contains:
+            - ' -Class CIM_ProcessExecutable'
+            - ' -Query "Select * from Win32_Process"'
+            - ' -Class Win32_Process '
+            - ' -Path Win32_Process '
+            - ' -Class Win32_ComputerSystem '
+            - ' -class Win32_Service '
+            - ' Win32_Service -ComputerName '
+            - 'Win32_ShadowCopy'
+            - 'Get-CimInstance Win32_StartupCommand'
+            - ' -EnableAllPrivileges '
+            - ' -Impersonation 3'
+            - 'StdRegProv'
+            - ' Win32_NTDomain'
+    filter_ms_copyright:
+        ScriptBlockText|contains: '2008, Microsoft Corporation. All rights reserved.'
+    condition: all of selection* and not 1 of filter_*
+falsepositives:
+    - Unknown
+level: medium

@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Scripting/CommandLine Process Spawned Regsvr32
+id: ab37a6ec-6068-432b-a64e-2c7bf95b1d22
+related:
+  - type: obsoletes
+    id: 8e2b24c9-4add-46a0-b4bb-0057b4e6187d
+status: experimental
+description: Detects various command line and scripting engines/processes such as
+    "PowerShell", "Wscript", "Cmd", etc. spawning a "regsvr32" instance.
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/26 18:09:21
+references:
+  - https://web.archive.org/web/20171001085340/https://subt0x10.blogspot.com/2017/04/bypass-application-whitelisting-script.html
+  - https://app.any.run/tasks/34221348-072d-4b70-93f3-aa71f6ebecad/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_rpcproxy:
+        CommandLine|endswith: ' /s C:\Windows\System32\RpcProxy\RpcProxy.dll'
+        ParentImage: C:\Windows\System32\cmd.exe
+    selection:
+        Image|endswith: \regsvr32.exe
+        ParentImage|endswith:
+          - \cmd.exe
+          - \cscript.exe
+          - \mshta.exe
+          - \powershell_ise.exe
+          - \powershell.exe
+          - \pwsh.exe
+          - \wscript.exe
+falsepositives:
+  - Legitimate ".bat", ".hta", ".ps1" or ".vbs" scripts leverage legitimately often.
+    Apply additional filter and exclusions as necessary
+  - Some legitimate Windows services
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1218.010
+  - DEMO

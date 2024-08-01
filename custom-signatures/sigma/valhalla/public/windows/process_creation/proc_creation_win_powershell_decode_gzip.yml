@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Gzip Archive Decode Via PowerShell
+id: 98767d61-b2e8-4d71-b661-e36783ee24c1
+status: test
+description: Detects attempts of decoding encoded Gzip archives via PowerShell.
+author: Hieu Tran
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/03/13 14:43:31
+references:
+  - https://www.zscaler.com/blogs/security-research/onenote-growing-threat-malware-distribution
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains|all:
+          - GZipStream
+          - ::Decompress
+falsepositives: Legitimate administrative scripts may use this functionality. Use
+    "ParentImage" in combination with the script names and allowed users and applications
+    to filter legitimate executions
+level: medium
+customer: 'demo'
+tags:
+  - attack.command_and_control
+  - attack.t1132.001
+  - DEMO

@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Obfuscated Ordinal Call Via Rundll32
+id: 43fa5350-db63-4b8f-9a01-789a427074e1
+status: experimental
+description: Detects execution of "rundll32" with potential obfuscated ordinal calls
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/17 17:45:51
+references:
+  - Internal Research
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains:
+          - '#+'
+          - '#-'
+    selection_img:
+      - Image|endswith: \rundll32.exe
+      - OriginalFileName: RUNDLL32.EXE
+      - CommandLine|contains: rundll32
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - DEMO

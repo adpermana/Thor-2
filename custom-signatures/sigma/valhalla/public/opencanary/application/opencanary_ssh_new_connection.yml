@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: OpenCanary - SSH New Connection Attempt
+id: cd55f721-5623-4663-bd9b-5229cab5237d
+status: experimental
+description: Detects instances where an SSH service on an OpenCanary node has had
+    a connection attempt.
+author: Security Onion Solutions
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/03/08 15:47:21
+references:
+  - https://opencanary.readthedocs.io/en/latest/starting/configuration.html#services-configuration
+  - https://github.com/thinkst/opencanary/blob/a0896adfcaf0328cfd5829fe10d2878c7445138e/opencanary/logger.py#L52
+logsource:
+    category: application
+    product: opencanary
+detection:
+    condition: selection
+    selection:
+        logtype: "4000"
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+tags:
+  - attack.initial_access
+  - attack.lateral_movement
+  - attack.persistence
+  - attack.t1133
+  - attack.t1021
+  - attack.t1078
+  - DEMO

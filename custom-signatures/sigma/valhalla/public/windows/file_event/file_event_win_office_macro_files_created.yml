@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Office Macro File Creation
+id: 91174a41-dc8f-401b-be89-7bfc140612a0
+related:
+  - type: similar
+    id: 0e29e3a7-1ad8-40aa-b691-9f82ecd33d66
+status: test
+description: Detects the creation of a new office macro files on the systems
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/23 12:37:51
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1566.001/T1566.001.md
+  - https://docs.microsoft.com/en-us/deployoffice/compat/office-file-format-reference
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetFilename|endswith:
+          - .docm
+          - .dotm
+          - .xlsm
+          - .xltm
+          - .potm
+          - .pptm
+falsepositives: Very common in environments that rely heavily on macro documents
+level: low
+customer: 'demo'
+tags:
+  - attack.initial_access
+  - attack.t1566.001
+  - DEMO

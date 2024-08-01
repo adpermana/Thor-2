@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: DLL Load By System Process From Suspicious Locations
+id: 9e9a9002-56c4-40fd-9eff-e4b09bfa5f6c
+status: experimental
+description: Detects when a system process (i.e. located in system32, syswow64, etc.)
+    loads a DLL from a suspicious location or a location with permissive permissions
+    such as "C:\Users\Public"
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/17 19:23:01
+references:
+  - https://github.com/hackerhouse-opensource/iscsicpl_bypassUAC (Idea)
+logsource:
+    category: image_load
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|startswith: C:\Windows\
+        ImageLoaded|startswith:
+          - C:\Users\Public\
+          - C:\PerfLogs\
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/09/18
+tags:
+  - attack.defense_evasion
+  - attack.t1070
+  - DEMO

@@ -1,0 +1,53 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Persistence Via COM Hijacking From Suspicious Locations
+id: 3d968d17-ffa4-4bc0-bfdc-f139de76ce77
+status: experimental
+description: Detects potential COM object hijacking where the "Server" (In/Out) is
+    pointing to a suspicious or unsuale location
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/28 23:07:11
+references:
+  - https://www.microsoft.com/security/blog/2022/07/27/untangling-knotweed-european-private-sector-offensive-actor-using-0-day-exploits/
+    (idea)
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Details|contains:
+          - \AppData\Local\Temp\
+          - \Desktop\
+          - \Downloads\
+          - \Microsoft\Windows\Start Menu\Programs\Startup\
+          - \System32\spool\drivers\color\
+          - \Users\Public\
+          - \Windows\Temp\
+          - '%appdata%'
+          - '%temp%'
+          - '%tmp%'
+        TargetObject|contains: \CLSID\
+        TargetObject|endswith:
+          - \InprocServer32\(Default)
+          - \LocalServer32\(Default)
+falsepositives: Probable legitimate applications. If you find these please add them
+    to an exclusion list
+level: high
+customer: 'demo'
+modified: 2023/09/28
+tags:
+  - attack.persistence
+  - attack.t1546.015
+  - DEMO

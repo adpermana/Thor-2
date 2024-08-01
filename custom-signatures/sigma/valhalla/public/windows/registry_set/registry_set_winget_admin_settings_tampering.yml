@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Winget Admin Settings Modification
+id: 6db5eaf9-88f7-4ed9-af7d-9ef2ad12f236
+status: experimental
+description: Detects changes to the AppInstaller (winget) admin settings. Such as
+    enabling local manifest installations or disabling installer hash checks
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/04/17 15:09:01
+references:
+  - https://github.com/nasbench/Misc-Research/tree/b9596e8109dcdb16ec353f316678927e507a5b8d/LOLBINs/Winget
+  - https://github.com/microsoft/winget-cli/blob/02d2f93807c9851d73eaacb4d8811a76b64b7b01/src/AppInstallerCommonCore/Public/winget/AdminSettings.h#L13
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith: \winget.exe
+        TargetObject|endswith: \LocalState\admin_settings
+        TargetObject|startswith: \REGISTRY\A\
+falsepositives: The event doesn't contain information about the type of change. False
+    positives are expected with legitimate changes
+level: low
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.defense_evasion
+  - attack.persistence
+  - DEMO

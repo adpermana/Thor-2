@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Remote Service Activity via SVCCTL Named Pipe
+id: 586a8d6b-6bfe-4ad9-9d78-888cd2fe50c3
+status: test
+description: Detects remote service activity via remote access to the svcctl named
+    pipe
+author: Samir Bousseaden
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/04/03 17:14:01
+references:
+  - https://blog.menasec.net/2019/03/threat-hunting-26-remote-windows.html
+logsource:
+    product: windows
+    service: security
+    definition: The advanced audit policy setting "Object Access > Audit Detailed
+        File Share" must be configured for Success/Failure
+detection:
+    condition: selection
+    selection:
+        Accesses|contains: WriteData
+        EventID: "5145"
+        RelativeTargetName: svcctl
+        ShareName: \\\\\*\\IPC$
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/08/11
+tags:
+  - attack.lateral_movement
+  - attack.persistence
+  - attack.t1021.002
+  - DEMO

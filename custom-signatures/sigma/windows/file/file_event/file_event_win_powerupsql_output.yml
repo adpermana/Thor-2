@@ -1,0 +1,35 @@
+title: PowerUpSQL Output Files
+id: 795fd373-9a7f-4b36-8d6a-f995216ecf85
+status: test
+description: Detects output file dropped by the PowerUpSQL framework based on default naming schema from source code
+author: Nasreddine Bencherchali
+references:
+    - https://github.com/NetSPI/PowerUpSQL/blob/master/PowerUpSQL.ps1
+date: 2022/05/14
+modified: 2023/03/29
+tags:
+    - attack.discovery
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection_specific:
+        TargetFilename|contains: 'PowerUpSQL_Audit_Results_'
+    selection_more_generic:
+        TargetFilename|endswith:
+            - '.csv'
+            - '.xml'
+        TargetFilename|contains:
+            - '_Database_stored_procedure'
+            - '_Database_stored_procedur_CLR'
+            - '_Database_CLR_stored_procedure_CLR'
+            - '_Server_triggers_dml'
+            - '_Server_triggers_ddl'
+            - '_Server_Audit_Database_Specifications'
+            - '_Server_Audit__Server_Specifications'
+            - '_Server_Agent_Job'
+            - '_Server_OleDbProvders'
+    condition: 1 of selection*
+falsepositives:
+    - Tools or users that create files with similar names
+level: high

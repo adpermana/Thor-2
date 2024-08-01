@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Esentutl Steals Browser Information
+id: 6a69f62d-ce75-4b57-8dce-6351eb55b362
+status: test
+description: One way Qbot steals sensitive information is by extracting browser data
+    from Internet Explorer and Microsoft Edge by using the built-in utility esentutl.exe
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/02/13 15:37:41
+references:
+  - https://thedfirreport.com/2022/02/07/qbot-likes-to-move-it-move-it/
+  - https://redcanary.com/threat-detection-report/threats/qbot/
+  - https://thedfirreport.com/2022/10/31/follina-exploit-leads-to-domain-compromise/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection*
+    selection_flag:
+        CommandLine|contains|windash: -r
+    selection_img:
+      - Image|endswith: \esentutl.exe
+      - OriginalFileName: esentutl.exe
+    selection_webcache:
+        CommandLine|contains: \Windows\WebCache
+falsepositives: Legitimate use
+level: medium
+customer: 'demo'
+modified: 2024/03/05
+tags:
+  - attack.collection
+  - attack.t1005
+  - DEMO

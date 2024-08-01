@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious PFX File Creation
+id: dca1b3e8-e043-4ec8-85d7-867f334b5724
+status: test
+description: A general detection for processes creating PFX files. This could be an
+    indicator of an adversary exporting a local certificate to a PFX file.
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/05/02 13:16:21
+references:
+  - https://github.com/OTRF/detection-hackathon-apt29/issues/14
+  - https://github.com/OTRF/ThreatHunter-Playbook/blob/2d4257f630f4c9770f78d0c1df059f891ffc3fec/docs/evals/apt29/detections/6.B.1_6392C9F1-D975-4F75-8A70-433DEDD7F622.md
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection and not 1 of filter*
+    filter:
+        TargetFilename|contains|all:
+          - \Templates\Windows\Windows_TemporaryKey.pfx
+          - \CMake\
+    selection:
+        TargetFilename|endswith: .pfx
+falsepositives: System administrators managing certififcates.
+level: medium
+customer: 'demo'
+modified: 2022/07/07
+tags:
+  - attack.credential_access
+  - attack.t1552.004
+  - DEMO

@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential DLL Sideloading Via ClassicExplorer32.dll
+id: caa02837-f659-466f-bca6-48bde2826ab4
+status: test
+description: Detects potential DLL sideloading using ClassicExplorer32.dll from the
+    Classic Shell software
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/12/13 19:06:51
+references:
+  - https://blogs.blackberry.com/en/2022/12/mustang-panda-uses-the-russian-ukrainian-war-to-attack-europe-and-asia-pacific-targets
+  - https://app.any.run/tasks/6d8cabb0-dcda-44b6-8050-28d6ce281687/
+logsource:
+    category: image_load
+    product: windows
+detection:
+    condition: selection_classicexplorer and not filter_classicexplorer
+    filter_classicexplorer:
+        ImageLoaded|startswith: C:\Program Files\Classic Shell\
+    selection_classicexplorer:
+        ImageLoaded|endswith: \ClassicExplorer32.dll
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1574.001
+  - attack.t1574.002
+  - DEMO

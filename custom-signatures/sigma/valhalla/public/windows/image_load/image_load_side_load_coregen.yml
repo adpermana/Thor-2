@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential DLL Sideloading Using Coregen.exe
+id: 0fa66f66-e3f6-4a9c-93f8-4f2610b00171
+status: test
+description: Detect usage of DLL "coregen.exe" (Microsoft CoreCLR Native Image Generator)
+    binary to sideload arbitrary DLLs.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/12/31 17:08:01
+references:
+  - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Coregen/
+logsource:
+    category: image_load
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        ImageLoaded|startswith:
+          - C:\Windows\System32\
+          - C:\Windows\SysWOW64\
+          - C:\Program Files\Microsoft Silverlight\
+          - C:\Program Files (x86)\Microsoft Silverlight\
+    selection:
+        Image|endswith: \coregen.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - attack.t1055
+  - DEMO

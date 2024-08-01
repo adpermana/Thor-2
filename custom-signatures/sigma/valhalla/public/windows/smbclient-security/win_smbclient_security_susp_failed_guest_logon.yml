@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Rejected SMB Guest Logon From IP
+id: 71886b70-d7b4-4dbf-acce-87d2ca135262
+status: test
+description: Detect Attempt PrintNightmare (CVE-2021-1675) Remote code execution in
+    Windows Spooler Service
+author: Florian Roth (Nextron Systems), KevTheHermit, fuzzyf10w
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/06/30 16:48:31
+references:
+  - https://twitter.com/KevTheHermit/status/1410203844064301056
+  - https://github.com/hhlxf/PrintNightmare
+  - https://github.com/afwu/PrintNightmare
+logsource:
+    product: windows
+    service: smbclient-security
+detection:
+    condition: selection
+    selection:
+        EventID: "31017"
+        ServerName|startswith: \1
+        UserName: ""
+fields:
+  - Computer
+  - User
+falsepositives: Account fallback reasons (after failed login with specific account)
+level: medium
+customer: 'demo'
+modified: 2023/01/02
+tags:
+  - attack.credential_access
+  - attack.t1110.001
+  - DEMO

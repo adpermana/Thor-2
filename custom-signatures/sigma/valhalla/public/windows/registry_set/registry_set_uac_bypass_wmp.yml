@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: UAC Bypass Using Windows Media Player - Registry
+id: 5f9db380-ea57-4d1e-beab-8a2d33397e93
+status: test
+description: Detects the pattern of UAC Bypass using Windows Media Player osksupport.dll
+    (UACMe 32)
+author: Christian Burkard (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/23 18:02:31
+references:
+  - https://github.com/hfiref0x/UACME
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Details: Binary Data
+        TargetObject|endswith: \SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility
+            Assistant\Store\C:\Program Files\Windows Media Player\osk.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - attack.t1548.002
+  - DEMO

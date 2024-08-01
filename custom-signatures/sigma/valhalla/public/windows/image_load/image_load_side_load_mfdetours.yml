@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Mfdetours.DLL Sideloading
+id: d2605a99-2218-4894-8fd3-2afb7946514d
+status: experimental
+description: Detects potential DLL sideloading of "mfdetours.dll". While using "mftrace.exe"
+    it can be abused to attach to an arbitrary process and force load any DLL named
+    "mfdetours.dll" from the current directory of execution.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/08/03 15:18:21
+references:
+  - Internal Research
+logsource:
+    category: image_load
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_legit_path:
+        ImageLoaded|contains: :\Program Files (x86)\Windows Kits\10\bin\
+    selection:
+        ImageLoaded|endswith: \mfdetours.dll
+falsepositives: Unlikely
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - attack.t1574.001
+  - attack.t1574.002
+  - DEMO

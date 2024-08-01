@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Creation TXT File in User Desktop
+id: caf02a0a-1e1c-4552-9b48-5e070bd88d11
+status: test
+description: Ransomware create txt file in the user Desktop
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/12/26 17:22:01
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1486/T1486.md#atomic-test-5---purelocker-ransom-note
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith: \cmd.exe
+        TargetFilename|contains|all:
+          - \Users\
+          - \Desktop\
+        TargetFilename|endswith: .txt
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.impact
+  - attack.t1486
+  - DEMO

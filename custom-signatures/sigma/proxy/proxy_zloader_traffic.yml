@@ -1,0 +1,29 @@
+title: Zloader Traffic
+id: d2d60893-5d7b-4cca-91e6-735be5883a22
+status: test
+description: Detects Zloader GET requests used to retrive data from the C2
+references:
+    - https://medium.com/walmartglobaltech/revisiting-batloader-c2-structure-52f46ff9893a
+author: X__Junior
+date: 2022/11/16
+modified: 2023/03/28
+tags:
+    - attack.command_and_control
+logsource:
+    category: proxy
+detection:
+    selection_main:
+        cs-method: 'GET'
+        c-uri|contains:
+            - '/processingSetRequestBat' # Could be /processingSetRequestBat1/, /processingSetRequestBat2/...etc.
+            - '/processingSetRequestBot/'
+            - '/processingSetRequestCoba/'
+            - '/processingSetRequestDownload/'
+            - '/processingSetRequestAtera/'
+            - '/processingSetRequestStealer/'
+    selection_servername:
+        c-uri|contains: '/?servername='
+    condition: all of selection_*
+falsepositives:
+    - Unknown
+level: high

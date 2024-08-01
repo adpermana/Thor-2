@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious AppX Package Installation Attempt
+id: 898d5fc9-fbc3-43de-93ad-38e97237c344
+status: test
+description: Detects an appx package installation with the error code "0x80073cff"
+    which indicates that the package didn't meet the signing requirements and could
+    be suspicious
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/11 17:51:31
+references:
+  - Internal Research
+  - https://www.sentinelone.com/labs/inside-malicious-windows-apps-for-malware-deployment/
+  - https://learn.microsoft.com/en-us/windows/win32/appxpkg/troubleshooting
+  - https://news.sophos.com/en-us/2021/11/11/bazarloader-call-me-back-attack-abuses-windows-10-apps-mechanism/
+logsource:
+    product: windows
+    service: appxdeployment-server
+detection:
+    condition: selection
+    selection:
+        ErrorCode: "0x80073cff"
+        EventID: "401"
+falsepositives: Legitimate AppX packages not signed by MS used part of an enterprise
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - DEMO

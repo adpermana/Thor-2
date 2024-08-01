@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Tamper Windows Defender Remove-MpPreference
+id: 07e3cb2c-0608-410d-be4b-1511cb1a0448
+related:
+  - type: similar
+    id: ae2bdd58-0681-48ac-be7f-58ab4e593458
+status: test
+description: Detects attempts to remove Windows Defender configurations using the
+    'MpPreference' cmdlet
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/05 17:29:21
+references:
+  - https://techcommunity.microsoft.com/t5/core-infrastructure-and-security/windows-10-controlled-folder-access-event-search/ba-p/2326088
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_remove:
+        CommandLine|contains: Remove-MpPreference
+    selection_tamper:
+        CommandLine|contains:
+          - '-ControlledFolderAccessProtectedFolders '
+          - '-AttackSurfaceReductionRules_Ids '
+          - '-AttackSurfaceReductionRules_Actions '
+          - '-CheckForSignaturesBeforeRunningScan '
+falsepositives: Legitimate PowerShell scripts
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+  - DEMO

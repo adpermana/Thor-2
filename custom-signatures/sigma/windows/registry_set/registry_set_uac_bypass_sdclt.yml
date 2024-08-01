@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: UAC Bypass via Sdclt
+id: 5b872a46-3b90-45c1-8419-f675db8053aa
+status: experimental
+description: Detects the pattern of UAC Bypass using registry key manipulation of
+    sdclt.exe (e.g. UACMe 53)
+author: Omer Yampel, Christian Burkard (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/03/17 10:54:11
+references:
+  - https://enigma0x3.net/2017/03/17/fileless-uac-bypass-using-sdclt-exe/
+  - https://github.com/hfiref0x/UACME
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: 1 of selection*
+    selection1:
+        TargetObject|endswith: Software\Classes\exefile\shell\runas\command\isolatedCommand
+    selection2:
+        Details|re: -1[0-9]{3}\\Software\\Classes\\
+        TargetObject|endswith: Software\Classes\Folder\shell\open\command\SymbolicLinkValue
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - attack.t1548.002
+  - car.2019-04-001
+  - DEMO

@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious OpenSSH Daemon Error
+id: e76b413a-83d0-4b94-8e4c-85db4a5b8bdc
+status: test
+description: Detects suspicious SSH / SSHD error messages that indicate a fatal or
+    suspicious error that could be caused by exploiting attempts
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/06/30 14:08:51
+references:
+  - https://github.com/openssh/openssh-portable/blob/c483a5c0fb8e8b8915fad85c5f6113386a4341ca/ssherr.c
+  - https://github.com/ossec/ossec-hids/blob/1ecffb1b884607cb12e619f9ab3c04f530801083/etc/rules/sshd_rules.xml
+logsource:
+    product: linux
+    service: sshd
+detection:
+    condition: keywords
+    keywords:
+      - unexpected internal error
+      - unknown or unsupported key type
+      - invalid certificate signing key
+      - invalid elliptic curve value
+      - incorrect signature
+      - error in libcrypto
+      - unexpected bytes remain after decoding
+      - 'fatal: buffer_get_string: bad string'
+      - 'Local: crc32 compensation attack'
+      - bad client public DH value
+      - Corrupted MAC on input
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.initial_access
+  - attack.t1190
+  - DEMO

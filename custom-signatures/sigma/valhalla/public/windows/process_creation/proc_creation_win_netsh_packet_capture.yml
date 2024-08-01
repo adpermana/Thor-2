@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: New Network Trace Capture Started Via Netsh.EXE
+id: d3c3861d-c504-4c77-ba55-224ba82d0118
+status: test
+description: Detects the execution of netsh with the "trace" flag in order to start
+    a network capture
+author: Kutepov Anton, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/24 17:49:21
+references:
+  - https://blogs.msdn.microsoft.com/canberrapfe/2012/03/30/capture-a-network-trace-without-installing-anything-capture-a-network-trace-of-a-reboot/
+  - https://klausjochem.me/2016/02/03/netsh-the-cyber-attackers-tool-of-choice/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains|all:
+          - trace
+          - start
+    selection_img:
+      - Image|endswith: \netsh.exe
+      - OriginalFileName: netsh.exe
+falsepositives: Legitimate administration activity
+level: medium
+customer: 'demo'
+modified: 2023/02/13
+tags:
+  - attack.discovery
+  - attack.credential_access
+  - attack.t1040
+  - DEMO

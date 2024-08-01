@@ -1,0 +1,110 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Windows Filtering Platform Blocked Connection From EDR Agent Binary
+id: bacf58c6-e199-4040-a94f-95dea0f1e45a
+status: experimental
+description: |
+    Detects a Windows Filtering Platform (WFP) blocked connection event involving common Endpoint Detection and Response (EDR) agents.
+    Adversaries may use WFP filters to prevent Endpoint Detection and Response (EDR) agents from reporting security events.
+author: '@gott_cyber'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/01/08 23:19:11
+references:
+  - https://github.com/netero1010/EDRSilencer
+  - https://github.com/amjcyber/EDRNoiseMaker
+  - https://ghoulsec.medium.com/misc-series-4-forensics-on-edrsilencer-events-428b20b3f983
+logsource:
+    product: windows
+    service: security
+    definition: 'Requirements: Audit Filtering Platform Connection needs to be enabled'
+detection:
+    condition: selection
+    selection:
+        Application|endswith:
+          - \AmSvc.exe
+          - \cb.exe
+          - \CETASvc.exe
+          - \CNTAoSMgr.exe
+          - \CrAmTray.exe
+          - \CrsSvc.exe
+          - \CSFalconContainer.exe
+          - \CSFalconService.exe
+          - \CybereasonAV.exe
+          - \CylanceSvc.exe
+          - \cyserver.exe
+          - \CyveraService.exe
+          - \CyvrFsFlt.exe
+          - \EIConnector.exe
+          - \elastic-agent.exe
+          - \elastic-endpoint.exe
+          - \EndpointBasecamp.exe
+          - \ExecutionPreventionSvc.exe
+          - \filebeat.exe
+          - \fortiedr.exe
+          - \hmpalert.exe
+          - \hurukai.exe
+          - \LogProcessorService.exe
+          - \mcsagent.exe
+          - \mcsclient.exe
+          - \MsMpEng.exe
+          - \MsSense.exe
+          - \Ntrtscan.exe
+          - \PccNTMon.exe
+          - \QualysAgent.exe
+          - \RepMgr.exe
+          - \RepUtils.exe
+          - \RepUx.exe
+          - \RepWAV.exe
+          - \RepWSC.exe
+          - \sedservice.exe
+          - \SenseCncProxy.exe
+          - \SenseIR.exe
+          - \SenseNdr.exe
+          - \SenseSampleUploader.exe
+          - \SentinelAgent.exe
+          - \SentinelAgentWorker.exe
+          - \SentinelBrowserNativeHost.exe
+          - \SentinelHelperService.exe
+          - \SentinelServiceHost.exe
+          - \SentinelStaticEngine.exe
+          - \SentinelStaticEngineScanner.exe
+          - \sfc.exe
+          - \sophos ui.exe
+          - \sophosfilescanner.exe
+          - \sophosfs.exe
+          - \sophoshealth.exe
+          - \sophosips.exe
+          - \sophosLivequeryservice.exe
+          - \sophosnetfilter.exe
+          - \sophosntpservice.exe
+          - \sophososquery.exe
+          - \sspservice.exe
+          - \TaniumClient.exe
+          - \TaniumCX.exe
+          - \TaniumDetectEngine.exe
+          - \TMBMSRV.exe
+          - \TmCCSF.exe
+          - \TmListen.exe
+          - \TmWSCSvc.exe
+          - \Traps.exe
+          - \winlogbeat.exe
+          - \WSCommunicator.exe
+          - \xagt.exe
+        EventID: "5157"
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1562
+  - DEMO

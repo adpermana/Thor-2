@@ -1,0 +1,53 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: ShimCache Flush
+id: b0524451-19af-4efa-a46f-562a977f792e
+status: stable
+description: Detects actions that clear the local ShimCache and remove forensic evidence
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/02/01 09:55:51
+references:
+  - https://medium.com/@blueteamops/shimcache-flush-89daff28d15e
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: ( selection1a and selection1b ) or ( selection2a and selection2b )
+    selection1a:
+        CommandLine|contains|all:
+          - rundll32
+          - apphelp.dll
+    selection1b:
+        CommandLine|contains:
+          - ShimFlushCache
+          - '#250'
+    selection2a:
+        CommandLine|contains|all:
+          - rundll32
+          - kernel32.dll
+    selection2b:
+        CommandLine|contains:
+          - BaseFlushAppcompatCache
+          - '#46'
+fields:
+  - Image
+  - CommandLine
+  - ParentCommandLine
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1112
+  - DEMO

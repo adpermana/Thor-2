@@ -1,0 +1,57 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Exploitation Attempt Of CVE-2023-46214 Using Public POC Code
+id: ba5268de-4dd4-4d5c-8a90-2b5e6dc1aff8
+related:
+  - type: derived
+    id: 04017cd5-621e-4ec4-a762-1f042fe3d3e5
+status: experimental
+description: |
+    Detects exploitation attempt of CVE-2023-46214, a remote code execution (RCE) in Splunk Enterprise through insecure XML parsing using known public proof of concept code
+author: Lars B. P. Frydenskov(Trifork Security)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/11/27 19:39:41
+references:
+  - https://github.com/nathan31337/Splunk-RCE-poc/
+  - https://blog.hrncirik.net/cve-2023-46214-analysis
+  - https://advisory.splunk.com/advisories/SVD-2023-1104
+logsource:
+    category: webserver
+detection:
+    condition: selection_method_and_response and 1 of selection_uri_*
+    selection_method_and_response:
+        cs-method: POST
+        sc-status:
+          - "200"
+          - "302"
+    selection_uri_search:
+        cs-uri-query|contains|all:
+          - /opt/splunk/var/run/splunk/dispatch/
+          - /shell.xsl
+        cs-uri-stem|contains|all:
+          - /api/search/jobs
+          - /results
+    selection_uri_upload:
+        cs-uri-query|contains|all:
+          - NO_BINARY_CHECK=1
+          - input.path=shell.xsl
+        cs-uri-stem|contains: /splunkd/__upload/indexing/preview
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+tags:
+  - cve.2023.46214
+  - detection.emerging_threats
+  - attack.lateral_movement
+  - attack.t1210
+  - DEMO

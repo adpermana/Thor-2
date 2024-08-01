@@ -1,0 +1,37 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Triple Cross eBPF Rootkit Execve Hijack
+id: 0326c3c8-7803-4a0f-8c5c-368f747f7c3e
+status: test
+description: Detects execution of a the file "execve_hijack" which is used by the
+    Triple Cross rootkit as a way to elevate privileges
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/05 15:54:11
+references:
+  - https://github.com/h3xduck/TripleCross/blob/1f1c3e0958af8ad9f6ebe10ab442e75de33e91de/src/helpers/execve_hijack.c#L275
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains: execve_hijack
+        Image|endswith: /sudo
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - DEMO

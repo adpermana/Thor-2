@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: DirLister Execution
+id: b4dc61f5-6cce-468e-a608-b48b469feaa2
+status: test
+description: Detect the usage of "DirLister.exe" a utility for quickly listing folder
+    or drive contents. It was seen used by BlackCat ransomware to create a list of
+    accessible directories and files.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/20 11:15:41
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/40b77d63808dd4f4eafb83949805636735a1fd15/atomics/T1083/T1083.md
+  - https://news.sophos.com/en-us/2022/07/14/blackcat-ransomware-attacks-not-merely-a-byproduct-of-bad-luck/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - OriginalFileName: DirLister.exe
+      - Image|endswith: \dirlister.exe
+falsepositives: Legitimate use by users
+level: low
+customer: 'demo'
+modified: 2023/02/04
+tags:
+  - attack.discovery
+  - attack.t1083
+  - DEMO

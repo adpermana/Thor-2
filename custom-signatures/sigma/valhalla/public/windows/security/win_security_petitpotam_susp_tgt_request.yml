@@ -1,0 +1,53 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PetitPotam Suspicious Kerberos TGT Request
+id: 6a53d871-682d-40b6-83e0-b7c1a6c4e3a5
+status: test
+description: |
+    Detect suspicious Kerberos TGT requests.
+    Once an attacer obtains a computer certificate by abusing Active Directory Certificate Services in combination with PetitPotam, the next step would be to leverage the certificate for malicious purposes.
+    One way of doing this is to request a Kerberos Ticket Granting Ticket using a tool like Rubeus.
+    This request will generate a 4768 event with some unusual fields depending on the environment.
+    This analytic will require tuning, we recommend filtering Account_Name to the Domain Controller computer accounts.
+author: Mauricio Velazco, Michael Haag
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/09/02 17:15:11
+references:
+  - https://github.com/topotam/PetitPotam
+  - https://isc.sans.edu/forums/diary/Active+Directory+Certificate+Services+ADCS+PKI+domain+admin+vulnerability/27668/
+  - https://github.com/splunk/security_content/blob/develop/detections/endpoint/petitpotam_suspicious_kerberos_tgt_request.yml
+logsource:
+    product: windows
+    service: security
+    definition: The advanced audit policy setting "Account Logon > Kerberos Authentication
+        Service" must be configured for Success/Failure
+detection:
+    condition: selection and not 1 of filter_*
+    filter_local:
+        IpAddress: ::1
+    filter_thumbprint:
+        CertThumbprint: ""
+    selection:
+        CertThumbprint|contains: '*'
+        EventID: "4768"
+        TargetUserName|endswith: $
+falsepositives: False positives are possible if the environment is using certificates
+    for authentication. We recommend filtering Account_Name to the Domain Controller
+    computer accounts.
+level: high
+customer: 'demo'
+modified: 2022/10/05
+tags:
+  - attack.credential_access
+  - attack.t1187
+  - DEMO

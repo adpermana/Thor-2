@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Shim Database Patching Activity
+id: bf344fea-d947-4ef4-9192-34d008315d3a
+status: experimental
+description: Detects installation of new shim databases that try to patch sections
+    of known processes for potential process injection or persistence.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/08/01 17:16:01
+references:
+  - https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/pillowmint-fin7s-monkey-thief/
+  - https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetObject|contains: \SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Custom\
+        TargetObject|endswith:
+          - \csrss.exe
+          - \dllhost.exe
+          - \explorer.exe
+          - \RuntimeBroker.exe
+          - \services.exe
+          - \sihost.exe
+          - \svchost.exe
+          - \taskhostw.exe
+          - \winlogon.exe
+          - \WmiPrvSe.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/12/06
+tags:
+  - attack.persistence
+  - attack.t1546.011
+  - DEMO

@@ -1,0 +1,51 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potentially Suspicious DMP/HDMP File Creation
+id: aba15bdd-657f-422a-bab3-ac2d2a0d6f1c
+related:
+  - type: similar
+    id: 3a525307-d100-48ae-b3b9-0964699d7f97
+status: experimental
+description: Detects the creation of a file with the ".dmp"/".hdmp" extension by a
+    shell or scripting application such as "cmd", "powershell", etc. Often created
+    by software during a crash. Memory dumps can sometimes contain sensitive information
+    such as credentials. It's best to determine the source of the crash.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/09/07 17:32:21
+references:
+  - https://learn.microsoft.com/en-us/windows/win32/wer/collecting-user-mode-dumps
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith:
+          - \cmd.exe
+          - \cscript.exe
+          - \mshta.exe
+          - \powershell.exe
+          - \pwsh.exe
+          - \wscript.exe
+        TargetFilename|endswith:
+          - .dmp
+          - .dump
+          - .hdmp
+falsepositives: Some administrative PowerShell or VB scripts might have the ability
+    to collect dumps and move them to other folders which might trigger a false positive.
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - DEMO

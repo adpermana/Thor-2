@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: CobaltStrike Load by Rundll32
+id: ae9c6a7c-9521-42a6-915e-5aaa8689d529
+status: test
+description: Rundll32 can be use by Cobalt Strike with StartW function to load DLLs
+    from the command line.
+author: Wojciech Lesicki
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/06/01 13:21:21
+references:
+  - https://www.cobaltstrike.com/help-windows-executable
+  - https://redcanary.com/threat-detection-report/
+  - https://thedfirreport.com/2020/10/18/ryuk-in-5-hours/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection*
+    selection_params:
+        CommandLine|contains: .dll
+        CommandLine|endswith:
+          - ' StartW'
+          - ',StartW'
+    selection_rundll:
+      - Image|endswith: \rundll32.exe
+      - OriginalFileName: RUNDLL32.EXE
+      - CommandLine|contains:
+          - rundll32.exe
+          - 'rundll32 '
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/09/16
+tags:
+  - attack.defense_evasion
+  - attack.t1218.011
+  - DEMO

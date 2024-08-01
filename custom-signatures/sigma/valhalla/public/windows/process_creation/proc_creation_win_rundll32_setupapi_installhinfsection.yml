@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Rundll32 Setupapi.dll Activity
+id: 285b85b1-a555-4095-8652-a8a4106af63f
+status: test
+description: setupapi.dll library provide InstallHinfSection function for processing
+    INF files. INF file may contain instructions allowing to create values in the
+    registry, modify files and install drivers. This technique could be used to obtain
+    persistence via modifying one of Run or RunOnce registry keys, run process or
+    use other DLLs chain calls (see references) InstallHinfSection function in setupapi.dll
+    calls runonce.exe executable regardless of actual content of INF file.
+author: Konstantin Grishchenko, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/07 16:58:31
+references:
+  - https://lolbas-project.github.io/lolbas/Libraries/Setupapi/
+  - https://gist.githubusercontent.com/bohops/0cc6586f205f3691e04a1ebf1806aabd/raw/baf7b29891bb91e76198e30889fbf7d6642e8974/calc_exe.inf
+  - https://raw.githubusercontent.com/huntresslabs/evading-autoruns/master/shady.inf
+  - https://twitter.com/Z3Jpa29z/status/1313742350292746241?s=20
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith: \runonce.exe
+        ParentCommandLine|contains|all:
+          - setupapi.dll
+          - InstallHinfSection
+        ParentImage|endswith: \rundll32.exe
+fields:
+  - ComputerName
+  - User
+  - CommandLine
+  - ParentCommandLine
+falsepositives: Scripts and administrative tools that use INF files for driver installation
+    with setupapi.dll
+level: medium
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.defense_evasion
+  - attack.t1218.011
+  - DEMO

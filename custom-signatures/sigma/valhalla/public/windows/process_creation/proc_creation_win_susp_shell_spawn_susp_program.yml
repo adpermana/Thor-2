@@ -1,0 +1,84 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Windows Shell/Scripting Processes Spawning Suspicious Programs
+id: 3a6586ad-127a-4d3b-a677-1e6eacdf8fde
+status: test
+description: Detects suspicious child processes of a Windows shell and scripting processes
+    such as wscript, rundll32, powershell, mshta...etc.
+author: Florian Roth (Nextron Systems), Tim Shelton
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2018/04/06 22:59:31
+references:
+  - https://mgreen27.github.io/posts/2018/04/02/DownloadCradle.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_*
+    filter_amazon:
+        ParentCommandLine|contains:
+          - \Program Files\Amazon\WorkSpacesConfig\Scripts\setup-scheduledtask.ps1
+          - \Program Files\Amazon\WorkSpacesConfig\Scripts\set-selfhealing.ps1
+          - \Program Files\Amazon\WorkSpacesConfig\Scripts\check-workspacehealth.ps1
+          - \nessus_
+    filter_ccmcache:
+        CurrentDirectory|contains: \ccmcache\
+    filter_nessus:
+        CommandLine|contains: \nessus_
+    filter_sccm_install:
+        CommandLine|contains|all:
+          - C:\MEM_Configmgr_
+          - \SMSSETUP\BIN\
+          - \autorun.hta
+          - '{1E460BD7-F1C3-4B2E-88BF-4E770A288AF5}'
+        Image|endswith: \mshta.exe
+        ParentCommandLine|contains|all:
+          - C:\MEM_Configmgr_
+          - \splash.hta
+          - '{1E460BD7-F1C3-4B2E-88BF-4E770A288AF5}'
+        ParentImage|endswith: \mshta.exe
+    selection:
+        Image|endswith:
+          - \schtasks.exe
+          - \nslookup.exe
+          - \certutil.exe
+          - \bitsadmin.exe
+          - \mshta.exe
+        ParentImage|endswith:
+          - \mshta.exe
+          - \powershell.exe
+          - \pwsh.exe
+          - \rundll32.exe
+          - \cscript.exe
+          - \wscript.exe
+          - \wmiprvse.exe
+          - \regsvr32.exe
+fields:
+  - CommandLine
+  - ParentCommandLine
+  - CurrentDirectory
+  - Image
+  - ParentImage
+falsepositives:
+  - Administrative scripts
+  - Microsoft SCCM
+level: high
+customer: 'demo'
+modified: 2023/05/23
+tags:
+  - attack.execution
+  - attack.defense_evasion
+  - attack.t1059.005
+  - attack.t1059.001
+  - attack.t1218
+  - DEMO

@@ -1,0 +1,53 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious RunAs-Like Flag Combination
+id: 50d66fb0-03f8-4da0-8add-84e77d12a020
+status: test
+description: Detects suspicious command line flags that let the user set a target
+    user and command as e.g. seen in PsExec-like tools
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/11/11 16:02:31
+references:
+  - https://www.trendmicro.com/en_us/research/22/k/hack-the-real-box-apt41-new-subgroup-earth-longzhi.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection*
+    selection_command:
+        CommandLine|contains:
+          - ' -c cmd'
+          - ' -c "cmd'
+          - ' -c powershell'
+          - ' -c "powershell'
+          - ' --command cmd'
+          - ' --command powershell'
+          - ' -c whoami'
+          - ' -c wscript'
+          - ' -c cscript'
+    selection_user:
+        CommandLine|contains:
+          - ' -u system '
+          - ' --user system '
+          - ' -u NT'
+          - ' -u "NT'
+          - ' -u ''NT'
+          - ' --system '
+          - ' -u administrator '
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.privilege_escalation
+  - DEMO

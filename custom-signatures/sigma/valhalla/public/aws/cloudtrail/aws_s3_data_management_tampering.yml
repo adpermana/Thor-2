@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: AWS S3 Data Management Tampering
+id: 78b3756a-7804-4ef7-8555-7b9024a02e2d
+status: test
+description: Detects when a user tampers with S3 data management in Amazon Web Services.
+author: Austin Songer @austinsonger
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/07/24 13:51:51
+references:
+  - https://github.com/elastic/detection-rules/pull/1145/files
+  - https://docs.aws.amazon.com/AmazonS3/latest/API/API_Operations.html
+  - https://docs.aws.amazon.com/AmazonS3/latest/API/API_PutBucketLogging.html
+  - https://docs.aws.amazon.com/AmazonS3/latest/API/API_PutBucketWebsite.html
+  - https://docs.aws.amazon.com/AmazonS3/latest/API/API_PutBucketEncryption.html
+  - https://docs.aws.amazon.com/AmazonS3/latest/userguide/setting-repl-config-perm-overview.html
+  - https://docs.aws.amazon.com/AmazonS3/latest/API/API_RestoreObject.html
+logsource:
+    product: aws
+    service: cloudtrail
+detection:
+    condition: selection
+    selection:
+        eventName:
+          - PutBucketLogging
+          - PutBucketWebsite
+          - PutEncryptionConfiguration
+          - PutLifecycleConfiguration
+          - PutReplicationConfiguration
+          - ReplicateObject
+          - RestoreObject
+        eventSource: s3.amazonaws.com
+falsepositives: A S3 configuration change may be done by a system or network administrator.
+    Verify whether the user identity, user agent, and/or hostname should be making
+    changes in your environment. S3 configuration change from unfamiliar users or
+    hosts should be investigated. If known behavior is causing false positives, it
+    can be exempted from the rule.
+level: low
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.exfiltration
+  - attack.t1537
+  - DEMO

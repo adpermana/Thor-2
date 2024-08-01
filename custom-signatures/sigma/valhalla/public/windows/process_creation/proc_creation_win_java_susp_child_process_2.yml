@@ -1,0 +1,51 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Shell Process Spawned by Java.EXE
+id: dff1e1cc-d3fd-47c8-bfc2-aeb878a754c0
+related:
+  - type: similar
+    id: 0d34ed8b-1c12-4ff2-828c-16fc860b766d
+status: test
+description: Detects shell spawned from Java host process, which could be a sign of
+    exploitation (e.g. log4j exploitation)
+author: Andreas Hunkeler (@Karneades), Nasreddine Bencherchali
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/12/17 14:14:21
+references:
+  - https://www.lunasec.io/docs/blog/log4j-zero-day/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_build:
+        CommandLine|contains: build
+        ParentImage|contains: build
+    selection:
+        Image|endswith:
+          - \bash.exe
+          - \cmd.exe
+          - \powershell.exe
+          - \pwsh.exe
+        ParentImage|endswith: \java.exe
+falsepositives:
+  - Legitimate calls to system binaries
+  - Company specific internal usage
+level: medium
+customer: 'demo'
+modified: 2024/01/18
+tags:
+  - attack.initial_access
+  - attack.persistence
+  - attack.privilege_escalation
+  - DEMO

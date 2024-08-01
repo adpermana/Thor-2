@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: APT29 2018 Phishing Campaign CommandLine Indicators
+id: 7453575c-a747-40b9-839b-125a0aae324b
+related:
+  - type: obsoletes
+    id: 033fe7d6-66d1-4240-ac6b-28908009c71f
+status: stable
+description: Detects indicators of APT 29 (Cozy Bear) phishing-campaign as reported
+    by mandiant
+author: Florian Roth (Nextron Systems), @41thexplorer
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2018/11/20 18:23:21
+references:
+  - https://twitter.com/DrunkBinary/status/1063075530180886529
+  - https://www.microsoft.com/security/blog/2018/12/03/analysis-of-cyberattack-on-u-s-think-tanks-non-profits-public-sector-by-unidentified-attackers/
+  - https://www.mandiant.com/resources/blog/not-so-cozy-an-uncomfortable-examination-of-a-suspected-apt29-phishing-campaign
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - CommandLine|contains: -noni -ep bypass $
+      - CommandLine|contains|all:
+          - cyzfc.dat,
+          - PointFunctionCall
+falsepositives: Unlikely
+level: critical
+customer: 'demo'
+modified: 2023/03/08
+tags:
+  - attack.execution
+  - attack.t1218.011
+  - detection.emerging_threats
+  - DEMO

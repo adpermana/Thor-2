@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Windows Defender Tampering Via Wmic.EXE
+id: 51cbac1e-eee3-4a90-b1b7-358efb81fa0a
+status: test
+description: Detects potential tampering with Windows Defender settings such as adding
+    exclusion using wmic
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/12/11 18:37:11
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/5c1e6f1b4fafd01c8d1ece85f510160fc1275fbf/atomics/T1562.001/T1562.001.md
+  - https://www.bleepingcomputer.com/news/security/gootkit-malware-bypasses-windows-defender-by-setting-path-exclusions/
+  - https://www.bleepingcomputer.com/news/security/iobit-forums-hacked-to-spread-ransomware-to-its-members/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains: /Namespace:\\\\root\\Microsoft\\Windows\\Defender
+    selection_img:
+      - OriginalFileName: wmic.exe
+      - Image|endswith: \WMIC.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/02/14
+tags:
+  - attack.credential_access
+  - attack.t1546.008
+  - DEMO

@@ -1,0 +1,51 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Manage-bde.wsf Abuse To Proxy Execution
+id: c363385c-f75d-4753-a108-c1a8e28bdbda
+status: test
+description: Detects potential abuse of the "manage-bde.wsf" script as a LOLBIN to
+    proxy execution
+author: oscd.community, Natalia Shornikova, Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/13 18:46:41
+references:
+  - https://lolbas-project.github.io/lolbas/Scripts/Manage-bde/
+  - https://gist.github.com/bohops/735edb7494fe1bd1010d67823842b712
+  - https://twitter.com/bohops/status/980659399495741441
+  - https://twitter.com/JohnLaTwC/status/1223292479270600706
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1216/T1216.md
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_wscript_* or (selection_parent and not selection_filter_cmd)
+    selection_filter_cmd:
+        Image|endswith: \cmd.exe
+    selection_parent:
+        ParentCommandLine|contains: manage-bde.wsf
+        ParentImage|endswith:
+          - \cscript.exe
+          - \wscript.exe
+    selection_wscript_cli:
+        CommandLine|contains: manage-bde.wsf
+    selection_wscript_img:
+      - Image|endswith: \wscript.exe
+      - OriginalFileName: wscript.exe
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/02/03
+tags:
+  - attack.defense_evasion
+  - attack.t1216
+  - DEMO

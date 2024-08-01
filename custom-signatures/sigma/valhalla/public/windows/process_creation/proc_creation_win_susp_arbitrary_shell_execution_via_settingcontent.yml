@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Arbitrary Shell Command Execution Via Settingcontent-Ms
+id: 24de4f3b-804c-4165-b442-5a06a2302c7e
+status: test
+description: The .SettingContent-ms file type was introduced in Windows 10 and allows
+    a user to create "shortcuts" to various Windows 10 setting pages. These files
+    are simply XML and contain paths to various Windows 10 settings binaries.
+author: Sreeman
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/03/13 20:40:11
+references:
+  - https://posts.specterops.io/the-tale-of-settingcontent-ms-files-f1ea253e4d39
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        CommandLine|contains: immersivecontrolpanel
+    selection:
+        CommandLine|contains: .SettingContent-ms
+fields:
+  - ParentProcess
+  - CommandLine
+  - ParentCommandLine
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/04/14
+tags:
+  - attack.t1204
+  - attack.t1566.001
+  - attack.execution
+  - attack.initial_access
+  - DEMO

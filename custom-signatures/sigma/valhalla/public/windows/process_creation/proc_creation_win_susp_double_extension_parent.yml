@@ -1,0 +1,77 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Parent Double Extension File Execution
+id: 5e6a80c8-2d45-4633-9ef4-fa2671a39c5c
+related:
+  - type: derived
+    id: 1cdd9a09-06c9-4769-99ff-626e2b3991b8
+status: test
+description: Detect execution of suspicious double extension files in ParentCommandLine
+author: frack113, Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/06 19:11:31
+references:
+  - https://www.virustotal.com/gui/file/7872d8845a332dce517adae9c3389fde5313ff2fed38c2577f3b498da786db68/behavior
+  - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/bluebottle-banks-targeted-africa
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - ParentImage|endswith:
+          - .doc.lnk
+          - .docx.lnk
+          - .xls.lnk
+          - .xlsx.lnk
+          - .ppt.lnk
+          - .pptx.lnk
+          - .rtf.lnk
+          - .pdf.lnk
+          - .txt.lnk
+          - .doc.js
+          - .docx.js
+          - .xls.js
+          - .xlsx.js
+          - .ppt.js
+          - .pptx.js
+          - .rtf.js
+          - .pdf.js
+          - .txt.js
+      - ParentCommandLine|contains:
+          - .doc.lnk
+          - .docx.lnk
+          - .xls.lnk
+          - .xlsx.lnk
+          - .ppt.lnk
+          - .pptx.lnk
+          - .rtf.lnk
+          - .pdf.lnk
+          - .txt.lnk
+          - .doc.js
+          - .docx.js
+          - .xls.js
+          - .xlsx.js
+          - .ppt.js
+          - .pptx.js
+          - .rtf.js
+          - .pdf.js
+          - .txt.js
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/02/28
+tags:
+  - attack.defense_evasion
+  - attack.t1036.007
+  - DEMO

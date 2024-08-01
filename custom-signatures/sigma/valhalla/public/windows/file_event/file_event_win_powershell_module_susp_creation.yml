@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Suspicious PowerShell Module File Created
+id: e8a52bbd-bced-459f-bd93-64db45ce7657
+status: experimental
+description: Detects the creation of a new PowerShell module in the first folder of
+    the module directory structure "\WindowsPowerShell\Modules\malware\malware.psm1".
+    This is somewhat an uncommon practice as legitimate modules often includes a version
+    folder.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/09 19:37:41
+references:
+  - Internal Research
+  - https://learn.microsoft.com/en-us/powershell/scripting/developer/module/understanding-a-windows-powershell-module?view=powershell-7.3
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetFilename|endswith:
+          - \\WindowsPowerShell\\Modules\\*\.ps
+          - \\WindowsPowerShell\\Modules\\*\.dll
+falsepositives: False positive rate will vary depending on the environments. Additional
+    filters might be required to make this logic usable in production.
+level: medium
+customer: 'demo'
+tags:
+  - attack.persistence
+  - DEMO

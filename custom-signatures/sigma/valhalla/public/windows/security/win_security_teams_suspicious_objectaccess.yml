@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Teams Application Related ObjectAcess Event
+id: 25cde13e-8e20-4c29-b949-4e795b76f16f
+status: test
+description: Detects an access to authentication tokens and accounts of Microsoft
+    Teams desktop application.
+author: '@SerkinValery'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/16 20:26:21
+references:
+  - https://www.bleepingcomputer.com/news/security/microsoft-teams-stores-auth-tokens-as-cleartext-in-windows-linux-macs/
+  - https://www.vectra.ai/blogpost/undermining-microsoft-teams-security-by-mining-tokens
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: selection and not filter
+    filter:
+        ProcessName|contains: \Microsoft\Teams\current\Teams.exe
+    selection:
+        EventID: "4663"
+        ObjectName|contains:
+          - \Microsoft\Teams\Cookies
+          - \Microsoft\Teams\Local Storage\leveldb
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.credential_access
+  - attack.t1528
+  - DEMO

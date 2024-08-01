@@ -1,0 +1,62 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Rundll32 Internet Connection
+id: cdc8da7d-c303-42f8-b08c-b4ab47230263
+status: test
+description: Detects a rundll32 that communicates with public IP addresses
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/11/04 13:25:11
+references:
+  - https://www.hybrid-analysis.com/sample/759fb4c0091a78c5ee035715afe3084686a8493f39014aea72dae36869de9ff6?environmentId=100
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_app_sdb:
+        CommandLine|endswith: \system32\PcaSvc.dll,PcaPatchSdbTask
+    filter_main_azure_managed:
+        SourceHostname|endswith: .internal.cloudapp.net
+    filter_main_local_ranges:
+        DestinationIp|cidr:
+          - 127.0.0.0/8
+          - 10.0.0.0/8
+          - 172.16.0.0/12
+          - 192.168.0.0/16
+          - 169.254.0.0/16
+          - ::1/128
+          - fe80::/10
+          - fc00::/7
+    filter_main_ms_ranges:
+        DestinationIp|cidr:
+          - 20.0.0.0/8
+          - 51.103.0.0/16
+          - 51.104.0.0/16
+          - 51.105.0.0/16
+    filter_main_svchost_update_processes:
+        DestinationPort: "443"
+        ParentImage: C:\Windows\System32\svchost.exe
+    selection:
+        Image|endswith: \rundll32.exe
+        Initiated: "true"
+falsepositives: Communication to other corporate systems that use IP addresses from
+    public address spaces
+level: medium
+customer: 'demo'
+modified: 2024/03/13
+tags:
+  - attack.defense_evasion
+  - attack.t1218.011
+  - attack.execution
+  - DEMO

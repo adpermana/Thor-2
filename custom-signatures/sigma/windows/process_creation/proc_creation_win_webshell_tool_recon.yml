@@ -1,0 +1,66 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Webshell Tool Reconnaissance Activity
+id: f64e5c19-879c-4bae-b471-6d84c8339677
+status: test
+description: |
+    Detects processes spawned from web servers (PHP, Tomcat, IIS, etc.) that perform reconnaissance looking for the existence of popular scripting tools (perl, python, wget) on the system via the help commands
+author: Cian Heasley, Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/07/22 16:04:51
+references:
+  - https://ragged-lab.blogspot.com/2020/07/webshells-automating-reconnaissance.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_webserver_* and selection_recon
+    selection_recon:
+        CommandLine|contains:
+          - perl --help
+          - perl -h
+          - python --help
+          - python -h
+          - python3 --help
+          - python3 -h
+          - wget --help
+    selection_webserver_characteristics_tomcat1:
+        ParentImage|contains:
+          - -tomcat-
+          - \tomcat
+        ParentImage|endswith:
+          - \java.exe
+          - \javaw.exe
+    selection_webserver_characteristics_tomcat2:
+        CommandLine|contains:
+          - CATALINA_HOME
+          - catalina.jar
+        ParentImage|endswith:
+          - \java.exe
+          - \javaw.exe
+    selection_webserver_image:
+        ParentImage|endswith:
+          - \caddy.exe
+          - \httpd.exe
+          - \nginx.exe
+          - \php-cgi.exe
+          - \w3wp.exe
+          - \ws_tomcatservice.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/11/09
+tags:
+  - attack.persistence
+  - attack.t1505.003
+  - DEMO

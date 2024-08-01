@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-06-21 19:00
+# Generated for User: demo
+# Number of Rules: 3228
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Download/Upload Activity Using Type Command
+id: aa0b3a82-eacc-4ec3-9150-b5a9a3e3f82f
+status: test
+description: Detects usage of the "type" command to download/upload data from WebDAV
+    server
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/12/14 20:05:21
+references:
+  - https://mr0range.com/a-new-lolbin-using-the-windows-type-command-to-upload-download-files-81d7b6179e22
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_download:
+        CommandLine|contains|all:
+          - type \\\\
+          - ' > '
+    selection_upload:
+        CommandLine|contains|all:
+          - 'type '
+          - ' > \\\\'
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.command_and_control
+  - attack.t1105
+  - DEMO

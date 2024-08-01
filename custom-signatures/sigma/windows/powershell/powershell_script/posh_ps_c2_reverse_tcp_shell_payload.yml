@@ -1,0 +1,27 @@
+title: C2 - ReverseTCPShell Payload - ScriptBlock Logging
+id: 1049aab4-d936-4cff-9284-28035cfb7c6e
+status: test
+description: Detects PowerShell payload used by ReverseTCPShell C2 via PowerShell ScriptBlock logging
+references:
+    - https://github.com/ZHacker13/ReverseTCPShell
+author: Nasreddine Bencherchali (Nextron Systems)
+date: 2023/04/03
+tags:
+    - attack.execution
+    - attack.t1059.001
+logsource:
+    product: windows
+    category: ps_script
+    definition: bade5735-5ab0-4aa7-a642-a11be0e40872
+detection:
+    selection:
+        ScriptBlockText|contains|all:
+            - '::CreateInstance'
+            - 'FromBase64String'
+            - 'SecureStringToBSTR'
+            - '))));While('
+            - '::PtrToStringAuto('
+    condition: selection
+falsepositives:
+    - Unlikely
+level: high

@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Recon Activity via SASec
+id: 0a3ff354-93fc-4273-8a03-1078782de5b7
+status: test
+description: Detects remote RPC calls to read information about scheduled tasks via
+    SASec
+author: Sagie Dulce, Dekel Paz
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/01 12:05:51
+references:
+  - https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-tsch/d1058a28-7e02-4948-8b8d-4a347fa64931
+  - https://github.com/jsecurity101/MSRPC-to-ATTACK/blob/ddd4608fe8684fcf2fcf9b48c5f0b3c28097f8a3/documents/MS-TSCH.md
+  - https://github.com/zeronetworks/rpcfirewall
+  - https://zeronetworks.com/blog/stopping-lateral-movement-via-the-rpc-firewall/
+logsource:
+    category: application
+    product: rpc_firewall
+    definition: 'Requirements: install and apply the RPC Firewall to all processes
+        with "audit:true action:block uuid:378e52b0-c0a9-11cf-822d-00aa0051e40f"'
+detection:
+    condition: selection and not filter
+    filter:
+        OpNum:
+          - "0"
+          - "1"
+    selection:
+        EventID: "3"
+        EventLog: RPCFW
+        InterfaceUuid: 378e52b0-c0a9-11cf-822d-00aa0051e40f
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/11/17
+tags:
+  - attack.discovery
+  - DEMO

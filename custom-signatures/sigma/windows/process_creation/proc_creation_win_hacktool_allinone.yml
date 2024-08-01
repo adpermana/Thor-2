@@ -1,0 +1,27 @@
+title: CN Hacktool AllInOne
+id: 82d461fc-40ec-41bc-bec3-682f0a3bf3e0
+description: Detects hacktool named AllinOne used by Chinese threat actors
+status: experimental
+references:
+    - https://www.trendmicro.com/en_us/research/22/k/hack-the-real-box-apt41-new-subgroup-earth-longzhi.html
+author: Florian Roth
+date: 2022/11/11
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_commandline:
+        CommandLine|contains: 
+            - '.exe -u system -c cmd.exe'
+            - '3389 -t:200'
+            - '-t:200 -v -b'
+            - '.exe -S -listen '
+            - ' -Clone Administrator '
+            - ' -P -tran '
+    selection_imphash:
+        - Imphash: '1029897b2fec08d4affb497799dbb73c'
+        - Hashes: 'IMPHASH=1029897B2FEC08D4AFFB497799DBB73C'
+    condition: 1 of selection*
+falsepositives:
+    - Unknown
+level: high

@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Wmiexec Default Output File
+id: 8d5aca11-22b3-4f22-b7ba-90e60533e1fb
+status: test
+description: Detects the creation of the default output filename used by the wmiexec
+    tool
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/02 13:08:01
+references:
+  - https://www.crowdstrike.com/blog/how-to-detect-and-prevent-impackets-wmiexec/
+  - https://github.com/fortra/impacket/blob/f4b848fa27654ca95bc0f4c73dbba8b9c2c9f30a/examples/wmiexec.py
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - TargetFilename|re: \\Windows\\__1\d{9}\.\d{1,7}$
+      - TargetFilename|re: C:\\__1\d{9}\.\d{1,7}$
+      - TargetFilename|re: D:\\__1\d{9}\.\d{1,7}$
+falsepositives: Unlikely
+level: critical
+customer: 'demo'
+modified: 2023/03/08
+tags:
+  - attack.lateral_movement
+  - attack.t1047
+  - DEMO

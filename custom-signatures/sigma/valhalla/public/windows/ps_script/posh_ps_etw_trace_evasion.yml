@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Disable of ETW Trace - Powershell
+id: 115fdba9-f017-42e6-84cf-d5573bf2ddf8
+related:
+  - type: derived
+    id: a238b5d0-ce2d-4414-a676-7a531b3d13d6
+status: test
+description: Detects usage of powershell cmdlets to disable or remove ETW trace sessions
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/28 14:04:21
+references:
+  - https://medium.com/palantir/tampering-with-windows-event-tracing-background-offense-and-defense-4be7ac62ac63
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: 1 of selection*
+    selection_pwsh_remove:
+        ScriptBlockText|contains: 'Remove-EtwTraceProvider '
+    selection_pwsh_set:
+        ScriptBlockText|contains|all:
+          - 'Set-EtwTraceProvider '
+          - "0x11"
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/11/25
+tags:
+  - attack.defense_evasion
+  - attack.t1070
+  - attack.t1562.006
+  - car.2016-04-002
+  - DEMO

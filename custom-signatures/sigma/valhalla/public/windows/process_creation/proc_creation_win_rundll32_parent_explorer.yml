@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Rundll32 Spawned Via Explorer.EXE
+id: 1723e720-616d-4ddc-ab02-f7e3685a4713
+status: experimental
+description: Detects execution of "rundll32.exe" with a parent process of Explorer.exe.
+    This has been observed by variants of Raspberry Robin, as first reported by Red
+    Canary.
+author: CD_ROM_
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/05/21 14:12:11
+references:
+  - https://redcanary.com/blog/raspberry-robin/
+  - https://thedfirreport.com/2022/09/26/bumblebee-round-two/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_* and not 1 of filter_main_*
+    filter_main_generic:
+      - CommandLine|contains: ' C:\Windows\System32\'
+      - CommandLine|endswith: ' -localserver 22d8c27b-47a1-48d1-ad08-7da7abd79617'
+    selection_img:
+      - Image|endswith: \rundll32.exe
+      - OriginalFileName: RUNDLL32.EXE
+    selection_parent:
+        ParentImage|endswith: \explorer.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/08/31
+tags:
+  - attack.defense_evasion
+  - DEMO

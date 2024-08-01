@@ -1,0 +1,128 @@
+title: Potential Suspicious TLD DNS Query
+id: 2dba593d-6d16-4b24-83d9-dbcc580ef7a7
+related:
+    - id: 76dd4be0-085e-44cf-a0b2-b0005d067361
+      type: derived
+status: test
+description: Detects DNS resolution of a possible suspicious top level domain.
+references:
+    - https://unit42.paloaltonetworks.com/top-level-domains-cybercrime/
+    - Internal Research
+author: Nasreddine Bencherchali (Nextron Systems)
+date: 2022/02/20
+modified: 2023/03/29
+tags:
+    - attack.command_and_control
+    - attack.t1090.003
+logsource:
+    product: windows
+    category: dns_query
+detection:
+    selection:
+        QueryName|endswith:
+            # List taken from rule - 00d0b5ab-1f55-4120-8e83-487c0a7baf19 and VT results
+            - '.accountant'
+            - '.am'
+            - '.asia'
+            - '.biz'
+            - '.cc'
+            - '.cf'
+            - '.click'
+            - '.club'
+            - '.cm'
+            - '.country'
+            - '.cricket'
+            - '.date'
+            - '.ddns.net'
+            - '.download'
+            - '.faith'
+            - '.ga'
+            - '.gb'
+            - '.gdn'
+            - '.ge'
+            - '.gq'
+            - '.info'
+            - '.kim'
+            - '.kz'
+            - '.life'
+            #- '.link'
+            - '.loan'
+            #- '.me'
+            - '.men'
+            - '.ml'
+            - '.mobi'
+            - '.mom'
+            - '.monster'
+            #- '.ms' # FPs with various Microsoft products
+            - '.mx'
+            - '.name'
+            - '.no-ip.org'
+            - '.nu'
+            - '.online'
+            - '.party'
+            - '.ph'
+            - '.pk'
+            - '.pw'
+            - '.quest'
+            - '.racing'
+            - '.ren'
+            - '.review'
+            - '.ro'
+            - '.science'
+            - '.space'
+            - '.st'
+            - '.store'
+            - '.stream'
+            - '.study'
+            - '.su'
+            - '.tc'
+            #- '.tech'
+            - '.tk'
+            - '.to'
+            - '.top'
+            - '.trade'
+            - '.tt'
+            #- '.tv'
+            - '.vip'
+            - '.vn'
+            - '.win'
+            - '.ws'
+            - '.xin'
+            - '.xyz'
+            #- '.zip'
+    filter_optional_browsers_chrome:
+        Image:
+            - 'C:\Program Files\Google\Chrome\Application\chrome.exe'
+            - 'C:\Program Files (x86)\Google\Chrome\Application\chrome.exe'
+    filter_optional_browsers_firefox:
+        Image:
+            - 'C:\Program Files\Mozilla Firefox\firefox.exe'
+            - 'C:\Program Files (x86)\Mozilla Firefox\firefox.exe'
+    filter_optional_browsers_msedge_1:
+        Image:
+            - 'C:\Program Files\Microsoft\Edge\Application\msedge.exe'
+            - 'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe'
+    filter_optional_browsers_msedge_2:
+        Image|startswith:
+            - 'C:\Program Files\Microsoft\EdgeCore\'
+            - 'C:\Program Files (x86)\Microsoft\EdgeCore\'
+        Image|endswith: '\msedge.exe'
+    filter_optional_browsers_msedge_3:
+        Image|endswith: '\microsoftedge.exe'
+    filter_optional_browsers_opera:
+        Image|endswith: '\opera.exe'
+    filter_optional_browsers_brave:
+        Image|endswith: '\brave.exe'
+    filter_main_unknown:
+        Image: '<unknown process>'
+    filter_main_null:
+        Image: null
+    filter_optional_defender:
+        Image|startswith:
+            - 'C:\ProgramData\Microsoft\Windows Defender\Platform\'
+            - 'C:\Program Files\Windows Defender\'
+            - 'C:\Program Files\Microsoft Security Client\'
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+falsepositives:
+    - False positives are expected with some browsers and 3rd party applications. Apply additional filers to fit your internal policy
+level: medium

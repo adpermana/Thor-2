@@ -1,0 +1,74 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Lazarus Group Activity
+id: 24c4d154-05a4-4b99-b57d-9b977472443a
+related:
+  - type: obsoletes
+    id: 7b49c990-4a9a-4e65-ba95-47c9cc448f6e
+status: test
+description: Detects different process execution behaviors as described in various
+    threat reports on Lazarus group activity
+author: Florian Roth (Nextron Systems), wagga
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/12/23 12:02:01
+references:
+  - https://securelist.com/lazarus-covets-covid-19-related-intelligence/99906/
+  - https://www.hvs-consulting.de/lazarus-report/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_generic:
+        CommandLine|contains:
+          - reg.exe save hklm\sam %temp%\~reg_sam.save
+          - 1q2w3e4r@#$@#$@#$
+          - ' -hp1q2w3e4 '
+          - '.dat data03 10000 -p '
+    selection_netstat:
+        CommandLine|contains|all:
+          - 'netstat -aon | find '
+          - ESTA
+          - ' > %temp%\~'
+    selection_network_discovery:
+        CommandLine|contains|all:
+          - .255 10 C:\ProgramData\IBM\
+          - .DAT
+    selection_persistence:
+        CommandLine|contains:
+          - C:\ProgramData\
+          - C:\RECYCLER\
+        CommandLine|contains|all:
+          - ' /c '
+          - ' -p 0x'
+    selection_rundll32:
+        CommandLine|contains:
+          - .bin,
+          - .tmp,
+          - .dat,
+          - .io,
+          - .ini,
+          - .db,
+        CommandLine|contains|all:
+          - 'rundll32 '
+          - C:\ProgramData\
+falsepositives: Unlikely
+level: critical
+customer: 'demo'
+modified: 2023/03/10
+tags:
+  - attack.g0032
+  - attack.execution
+  - attack.t1059
+  - detection.emerging_threats
+  - DEMO

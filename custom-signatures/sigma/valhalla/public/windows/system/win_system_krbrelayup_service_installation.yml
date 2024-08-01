@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: KrbRelayUp Service Installation
+id: e97d9903-53b2-41fc-8cb9-889ed4093e80
+status: test
+description: Detects service creation from KrbRelayUp tool used for privilege escalation
+    in Windows domain environments where LDAP signing is not enforced (the default
+    settings)
+author: Sittikorn S, Tim Shelton
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/05/11 14:27:21
+references:
+  - https://github.com/Dec0ne/KrbRelayUp
+logsource:
+    product: windows
+    service: system
+detection:
+    condition: selection
+    selection:
+        EventID: "7045"
+        ServiceName: KrbSCM
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/10/05
+tags:
+  - attack.privilege_escalation
+  - attack.t1543
+  - DEMO

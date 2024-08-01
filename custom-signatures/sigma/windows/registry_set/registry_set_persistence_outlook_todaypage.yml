@@ -1,0 +1,52 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Persistence Via Outlook Today Pages
+id: 487bb375-12ef-41f6-baae-c6a1572b4dd1
+status: experimental
+description: Detects potential persistence activity via outlook today pages. An attacker
+    can set a custom page to execute arbitrary code and link to it via the registry
+    key "UserDefinedUrl".
+author: Tobias Michalski (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/06/10 17:57:51
+references:
+  - https://speakerdeck.com/heirhabarov/hunting-for-persistence-via-microsoft-exchange-server-or-outlook?slide=74
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection_main and 1 of selection_value_* and not 1 of filter_*
+    filter_office:
+        Image|endswith: \OfficeClickToRun.exe
+        Image|startswith:
+          - C:\Program Files\Common Files\Microsoft Shared\ClickToRun\
+          - C:\Program Files\Common Files\Microsoft Shared\ClickToRun\Updates\
+    selection_main:
+        TargetObject|contains|all:
+          - Software\Microsoft\Office\
+          - \Outlook\Today\
+    selection_value_stamp:
+        Details: DWORD (0x00000001)
+        TargetObject|endswith: Stamp
+    selection_value_user_defined:
+        TargetObject|endswith: UserDefinedUrl
+fields:
+  - Details
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.persistence
+  - attack.t1112
+  - DEMO

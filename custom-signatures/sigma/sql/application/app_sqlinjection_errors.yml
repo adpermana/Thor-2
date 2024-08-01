@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious SQL Error Messages
+id: 8a670c6d-7189-4b1c-8017-a417ca84a086
+status: test
+description: Detects SQL error messages that indicate probing for an injection attack
+author: Bjoern Kimminich
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/11/27 13:40:11
+references:
+  - http://www.sqlinjection.net/errors
+logsource:
+    category: application
+    product: sql
+    definition: 'Requirements: application error logs must be collected (with LOG_LEVEL
+        ERROR and above)'
+detection:
+    condition: keywords
+    keywords:
+      - quoted string not properly terminated
+      - You have an error in your SQL syntax
+      - Unclosed quotation mark
+      - 'near "*": syntax error'
+      - SELECTs to the left and right of UNION do not have the same number of result
+        columns
+falsepositives: A syntax error in MySQL also occurs in non-dynamic (safe) queries
+    if there is an empty in() clause, that may often be the case.
+level: high
+customer: 'demo'
+modified: 2023/02/12
+tags:
+  - attack.initial_access
+  - attack.t1190
+  - DEMO

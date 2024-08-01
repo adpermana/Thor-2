@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: SQL Client Tools PowerShell Session Detection
+id: a746c9b8-a2fb-4ee5-a428-92bee9e99060
+status: test
+description: |
+    This rule detects execution of a PowerShell code through the sqltoolsps.exe utility, which is included in the standard set of utilities supplied with the Microsoft SQL Server Management studio.
+    Script blocks are not logged in this case, so this utility helps to bypass protection mechanisms based on the analysis of these logs.
+author: Agro (@agro_sev) oscd.communitly
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/13 17:45:21
+references:
+  - https://github.com/LOLBAS-Project/LOLBAS/blob/8283d8d91552213ded165fd36deb6cb9534cb443/yml/OtherMSBinaries/Sqltoolsps.yml
+  - https://twitter.com/pabraeken/status/993298228840992768
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        ParentImage|endswith: \smss.exe
+    selection:
+      - Image|endswith: \sqltoolsps.exe
+      - ParentImage|endswith: \sqltoolsps.exe
+      - OriginalFileName: \sqltoolsps.exe
+falsepositives: Direct PS command execution through SQLToolsPS.exe is uncommon, childprocess
+    sqltoolsps.exe spawned by smss.exe is a legitimate action.
+level: medium
+customer: 'demo'
+modified: 2022/02/25
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - attack.defense_evasion
+  - attack.t1127
+  - DEMO

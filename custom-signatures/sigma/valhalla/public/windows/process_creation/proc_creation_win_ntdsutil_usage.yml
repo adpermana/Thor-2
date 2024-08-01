@@ -1,0 +1,37 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Invocation of Active Directory Diagnostic Tool (ntdsutil.exe)
+id: 2afafd61-6aae-4df4-baed-139fa1f4c345
+status: test
+description: Detects execution of ntdsutil.exe, which can be used for various attacks
+    against the NTDS database (NTDS.DIT)
+author: Thomas Patzke
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/01/16 22:04:31
+references:
+  - https://jpcertcc.github.io/ToolAnalysisResultSheet/details/ntdsutil.htm
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith: \ntdsutil.exe
+falsepositives: NTDS maintenance
+level: medium
+customer: 'demo'
+modified: 2022/03/11
+tags:
+  - attack.credential_access
+  - attack.t1003.003
+  - DEMO

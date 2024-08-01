@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious UltraVNC Execution
+id: 871b9555-69ca-4993-99d3-35a59f9f3599
+status: test
+description: Detects suspicious UltraVNC command line flag combination that indicate
+    a auto reconnect upon execution, e.g. startup (as seen being used by Gamaredon
+    threat group)
+author: Bhabesh Raj
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/03/04 13:53:41
+references:
+  - https://web.archive.org/web/20220224045756/https://www.ria.ee/sites/default/files/content-editors/kuberturve/tale_of_gamaredon_infection.pdf
+  - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/shuckworm-gamaredon-espionage-ukraine
+  - https://unit42.paloaltonetworks.com/unit-42-title-gamaredon-group-toolset-evolution
+  - https://uvnc.com/docs/uvnc-viewer/52-ultravnc-viewer-commandline-parameters.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains|all:
+          - '-autoreconnect '
+          - '-connect '
+          - '-id:'
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/03/09
+tags:
+  - attack.lateral_movement
+  - attack.g0047
+  - attack.t1021.005
+  - DEMO

@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Loaded Module Enumeration Via Tasklist.EXE
+id: 34275eb8-fa19-436b-b959-3d9ecd53fa1f
+status: experimental
+description: |
+    Detects the enumeration of a specific DLL or EXE being used by a binary via "tasklist.exe".
+    This is often used by attackers in order to find the specific process identifier (PID) that is using the DLL in question.
+    In order to dump the process memory or perform other nefarious actions.
+author: Swachchhanda Shrawan Poudel
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/02/12 16:48:51
+references:
+  - https://www.n00py.io/2021/05/dumping-plaintext-rdp-credentials-from-svchost-exe/
+  - https://pentestlab.blog/tag/svchost/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_flags:
+        CommandLine|contains|windash: -m
+    selection_img:
+      - Image|endswith: \tasklist.exe
+      - OriginalFileName: tasklist.exe
+    selection_module:
+        CommandLine|contains: rdpcorets.dll
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2024/03/13
+tags:
+  - attack.t1003
+  - DEMO

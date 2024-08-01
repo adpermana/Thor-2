@@ -1,0 +1,47 @@
+title: Odbcconf.EXE Suspicious DLL Load
+id: 39f46dcb-0f7e-4eff-ad64-ac733d4af956
+related:
+    - id: a197a8cc-f894-49ec-9bc4-38fd1cf49818  # Odbcad32.EXE Suspicious DLL Load
+      type: similar
+status: experimental
+description: Detects DLL load activity by "Odbcconf" where the DLL is located in a potentially suspicious location.
+references:
+    - Internal Research
+author: Nasreddine Bencherchali (Nextron Systems)
+date: 2023/05/22
+tags:
+    - attack.defense_evasion
+    - attack.t1218.008
+logsource:
+    product: windows
+    category: image_load
+detection:
+    selection:
+        Image|endswith: '\odbcconf.exe'
+        # Note: Add more suspicious locations
+        ImageLoaded|contains:
+            - ':\PerfLogs\'
+            - ':\Temp\'
+            - ':\Users\Public\'
+            - ':\Windows\Registration\CRMLog'
+            - ':\Windows\System32\com\dmp\'
+            - ':\Windows\System32\FxsTmp\'
+            - ':\Windows\System32\Microsoft\Crypto\RSA\MachineKeys\'
+            - ':\Windows\System32\spool\drivers\color\'
+            - ':\Windows\System32\spool\PRINTERS\'
+            - ':\Windows\System32\spool\SERVERS\'
+            - ':\Windows\System32\Tasks_Migrated\'
+            - ':\Windows\System32\Tasks\Microsoft\Windows\SyncCenter\'
+            - ':\Windows\SysWOW64\com\dmp\'
+            - ':\Windows\SysWOW64\FxsTmp\'
+            - ':\Windows\SysWOW64\Tasks\Microsoft\Windows\PLA\System\'
+            - ':\Windows\SysWOW64\Tasks\Microsoft\Windows\SyncCenter\'
+            - ':\Windows\Tasks\'
+            - ':\Windows\Temp\'
+            - ':\Windows\Tracing\'
+            - '\AppData\Local\Temp\'
+            - '\AppData\Roaming\'
+    condition: selection
+falsepositives:
+    - Unlikely
+level: high

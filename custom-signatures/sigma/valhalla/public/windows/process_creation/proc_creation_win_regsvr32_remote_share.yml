@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Regsvr32 Execution From Remote Share
+id: 88a87a10-384b-4ad7-8871-2f9bf9259ce5
+status: test
+description: Detects REGSVR32.exe to execute DLL hosted on remote shares
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/10/31 18:20:41
+references:
+  - https://thedfirreport.com/2022/10/31/follina-exploit-leads-to-domain-compromise/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains: ' \\\\'
+    selection_img:
+      - Image|endswith: \regsvr32.exe
+      - OriginalFileName: \REGSVR32.EXE
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1218.010
+  - DEMO

@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Application Whitelisting Bypass via Dxcap.exe
+id: 60f16a96-db70-42eb-8f76-16763e333590
+status: test
+description: Detects execution of of Dxcap.exe
+author: Beyu Denis, oscd.community, Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/26 18:05:31
+references:
+  - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Dxcap/
+  - https://twitter.com/harr0ey/status/992008180904419328
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection*
+    selection_cli:
+        CommandLine|contains: ' -c '
+    selection_img:
+      - Image|endswith: \DXCap.exe
+      - OriginalFileName: DXCap.exe
+falsepositives: Legitimate execution of dxcap.exe by legitimate user
+level: medium
+customer: 'demo'
+modified: 2022/06/09
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

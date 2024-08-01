@@ -1,0 +1,60 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: NTDS.DIT Creation By Uncommon Process
+id: 11b1ed55-154d-4e82-8ad7-83739298f720
+related:
+  - type: similar
+    id: 4e7050dd-e548-483f-b7d6-527ab4fa784d
+status: test
+description: Detects creation of a file named "ntds.dit" (Active Directory Database)
+    by an uncommon process or a process located in a suspicious directory
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/11 15:09:51
+references:
+  - https://stealthbits.com/blog/extracting-password-hashes-from-the-ntds-dit-file/
+  - https://adsecurity.org/?p=2398
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection_ntds and 1 of selection_process_*
+    selection_ntds:
+        TargetFilename|endswith: \ntds.dit
+    selection_process_img:
+        Image|endswith:
+          - \cmd.exe
+          - \cscript.exe
+          - \mshta.exe
+          - \powershell.exe
+          - \pwsh.exe
+          - \regsvr32.exe
+          - \rundll32.exe
+          - \wscript.exe
+          - \wsl.exe
+          - \wt.exe
+    selection_process_paths:
+        Image|contains:
+          - \AppData\
+          - \Temp\
+          - \Public\
+          - \PerfLogs\
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/07/14
+tags:
+  - attack.credential_access
+  - attack.t1003.002
+  - attack.t1003.003
+  - DEMO

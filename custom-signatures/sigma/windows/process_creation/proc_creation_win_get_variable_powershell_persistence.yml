@@ -1,0 +1,22 @@
+title: Potential Persistence Via Powershell Search Order Hijacking
+id: 6e8811ee-90ba-441e-8486-5653e68b2299
+status: experimental
+description: Detects possible exploitation of a powershell search hijacking vulnerability where the attacker can drop a binary to %APPDATA%\Local\Microsoft\WindowsApps and names it Get-Variable.exe and it'll get executed during powershell setp/execution
+references:
+    - https://www.malwarebytes.com/blog/threat-intelligence/2022/04/colibri-loader-combines-task-scheduler-and-powershell-in-clever-persistence-technique
+author: Nasreddine Bencherchali
+date: 2022/10/06
+modified: 2023/02/03
+tags:
+    - attack.persistence
+    - attack.defense_evasion
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: '\WindowsApps\Get-Variable.exe'
+    condition: selection
+falsepositives:
+    - Unlikely
+level: high

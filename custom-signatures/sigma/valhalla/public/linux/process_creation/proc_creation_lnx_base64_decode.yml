@@ -1,0 +1,37 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Decode Base64 Encoded Text
+id: e2072cab-8c9a-459b-b63c-40ae79e27031
+status: test
+description: Detects usage of base64 utility to decode arbitrary base64-encoded text
+author: Daniil Yugoslavskiy, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/19 12:18:41
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1027/T1027.md
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains: -d
+        Image|endswith: /base64
+falsepositives: Legitimate activities
+level: low
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.defense_evasion
+  - attack.t1027
+  - DEMO

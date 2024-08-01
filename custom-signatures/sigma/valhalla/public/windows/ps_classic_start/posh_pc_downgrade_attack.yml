@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PowerShell Downgrade Attack - PowerShell
+id: 6331d09b-4785-4c13-980f-f96661356249
+status: test
+description: Detects PowerShell downgrade attack by comparing the host versions with
+    the actually used engine version 2.0
+author: Florian Roth (Nextron Systems), Lee Holmes (idea), Harish Segar (improvements)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/03/22 16:25:41
+references:
+  - http://www.leeholmes.com/blog/2017/03/17/detecting-and-preventing-powershell-downgrade-attacks/
+logsource:
+    category: ps_classic_start
+    product: windows
+detection:
+    condition: selection and not filter_main
+    filter_main:
+        Data|contains: HostVersion=2.
+    selection:
+        Data|contains: EngineVersion=2.
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/10/27
+tags:
+  - attack.defense_evasion
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

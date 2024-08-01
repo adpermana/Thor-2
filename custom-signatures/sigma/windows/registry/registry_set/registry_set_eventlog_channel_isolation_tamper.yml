@@ -1,0 +1,31 @@
+title: Disable WINEVT Channel Via Isolation Registry Value
+id: 8cf6e9f8-c5c4-444d-bc72-88e2e9e4bbd6
+description: Detects tempering with the "Isolation" registry key in order to disable logging of a windows event channel. Setting the value of "Isolation" for a value above 2 will disable the related channel
+status: test
+date: 2022/07/04
+modified: 2023/03/29
+author: Nasreddine Bencherchali, frack113
+references:
+    - https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.eventing.reader.eventlogisolation?view=dotnet-plat-ext-6.0
+    - https://docs.microsoft.com/en-us/windows/win32/eventlog/eventlog-key
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection:
+        TargetObject|contains: '\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\'
+        TargetObject|endswith: '\Isolation'
+    filter:
+        Details:
+            - 'DWORD (0x00000000)'
+            - 'DWORD (0x00000001)'
+            - 'DWORD (0x00000002)'
+    filter_empty:
+        Details: null  # SystemTraceProvider-Registry events don't have a Details field
+    condition: selection and not 1 of filter*
+falsepositives:
+    - Unlikely
+level: high
+tags:
+    - attack.defense_evasion
+    - attack.t1562.002

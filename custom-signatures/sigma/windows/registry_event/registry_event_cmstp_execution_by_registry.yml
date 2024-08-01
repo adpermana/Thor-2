@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: CMSTP Execution Registry Event
+id: b6d235fc-1d38-4b12-adbe-325f06728f37
+status: stable
+description: Detects various indicators of Microsoft Connection Manager Profile Installer
+    execution
+author: Nik Seetharaman
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2018/07/16 13:47:41
+references:
+  - https://web.archive.org/web/20190720093911/http://www.endurant.io/cmstp/detecting-cmstp-enabled-code-execution-and-uac-bypass-with-sysmon/
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetObject|contains: \cmmgr32.exe
+fields:
+  - CommandLine
+  - ParentCommandLine
+  - Details
+falsepositives: Legitimate CMSTP use (unlikely in modern enterprise environments)
+level: high
+customer: 'demo'
+modified: 2020/12/23
+tags:
+  - attack.defense_evasion
+  - attack.execution
+  - attack.t1218.003
+  - attack.g0069
+  - car.2019-04-001
+  - DEMO

@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potentially Suspicious Event Viewer Child Process
+id: be344333-921d-4c4d-8bb8-e584cf584780
+related:
+  - type: derived
+    id: 7c81fec3-1c1d-43b0-996a-46753041b1b6
+status: test
+description: Detects uncommon or suspicious child processes of "eventvwr.exe" which
+    might indicate a UAC bypass attempt
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/03/19 19:15:11
+references:
+  - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
+  - https://www.hybrid-analysis.com/sample/e122bc8bf291f15cab182a5d2d27b8db1e7019e4e96bb5cdbd1dfe7446f3f51f?environmentId=100
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_generic:
+        Image|endswith:
+          - :\Windows\System32\mmc.exe
+          - :\Windows\System32\WerFault.exe
+          - :\Windows\SysWOW64\WerFault.exe
+    selection:
+        ParentImage|endswith: \eventvwr.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/09/28
+tags:
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - attack.t1548.002
+  - car.2019-04-001
+  - DEMO

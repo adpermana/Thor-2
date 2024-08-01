@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PUA - RunXCmd Execution
+id: 93199800-b52a-4dec-b762-75212c196542
+status: test
+description: Detects the use of the RunXCmd tool to execute commands with System or
+    TrustedInstaller accounts
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/24 11:32:01
+references:
+  - https://www.d7xtech.com/free-software/runx/
+  - https://www.winhelponline.com/blog/run-program-as-system-localsystem-account-windows/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_account:
+        CommandLine|contains:
+          - ' /account=system '
+          - ' /account=ti '
+    selection_exec:
+        CommandLine|contains: /exec=
+fields:
+  - CommandLine
+  - ParentCommandLine
+falsepositives: Legitimate use by administrators
+level: high
+customer: 'demo'
+modified: 2023/02/14
+tags:
+  - attack.execution
+  - attack.t1569.002
+  - attack.s0029
+  - DEMO

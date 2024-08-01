@@ -1,0 +1,85 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Direct Syscall of NtOpenProcess
+id: 3f3f3506-1895-401b-9cc3-e86b16e630d0
+status: experimental
+description: Detects potential calls to NtOpenProcess directly from NTDLL.
+author: Christian Burkard (Nextron Systems), Tim Shelton (FP)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/07/28 16:58:21
+references:
+  - https://medium.com/falconforce/falconfriday-direct-system-calls-and-cobalt-strike-bofs-0xff14-741fa8e1bdd6
+logsource:
+    category: process_access
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+    filter_main_generic:
+        SourceImage|contains:
+          - :\Program Files (x86)\
+          - :\Program Files\
+          - :\Windows\System32\
+          - :\Windows\SysWOW64\
+          - :\Windows\WinSxS\
+        TargetImage|contains:
+          - :\Program Files (x86)\
+          - :\Program Files\
+          - :\Windows\System32\
+          - :\Windows\SysWOW64\
+          - :\Windows\WinSxS\
+    filter_main_kerneltrace_edge:
+        Provider_Name: Microsoft-Windows-Kernel-Audit-API-Calls
+    filter_main_vcredist:
+        SourceImage|endswith: vcredist_x64.exe
+        TargetImage|endswith: vcredist_x64.exe
+    filter_optional_adobe_acrobat:
+        SourceImage|contains: :\Program Files\Adobe\Acrobat DC\Acrobat\
+        SourceImage|endswith: \AcroCEF.exe
+        TargetImage|contains: :\Program Files\Adobe\Acrobat DC\Acrobat\
+        TargetImage|endswith: \AcroCEF.exe
+    filter_optional_amazon:
+        SourceImage|endswith: AmazonSSMAgentSetup.exe
+        TargetImage|endswith: AmazonSSMAgentSetup.exe
+    filter_optional_cylance:
+        SourceImage|endswith: :\Windows\Explorer.EXE
+        TargetImage|endswith: :\Program Files\Cylance\Desktop\CylanceUI.exe
+    filter_optional_discord:
+        TargetImage|contains: \AppData\Local\Discord\
+        TargetImage|endswith: \Discord.exe
+    filter_optional_evernote:
+        TargetImage|endswith: \Evernote\Evernote.exe
+    filter_optional_teams:
+        SourceImage|endswith: \AppData\Local\Microsoft\Teams\current\Teams.exe
+        TargetImage|endswith: \AppData\Local\Microsoft\Teams\current\Teams.exe
+    filter_optional_vmware:
+        SourceImage|endswith: setup64.exe
+        TargetImage|endswith: :\Windows\system32\systeminfo.exe
+    filter_optional_vscode:
+        SourceImage|endswith: \AppData\Local\Programs\Microsoft VS Code\Code.exe
+        TargetImage|endswith: \AppData\Local\Programs\Microsoft VS Code\Code.exe
+    filter_optional_yammer:
+        GrantedAccess: "0x1000"
+        SourceImage|contains: \AppData\Local\yammerdesktop\app-
+        SourceImage|endswith: \Yammer.exe
+        TargetImage|contains: \AppData\Local\yammerdesktop\app-
+        TargetImage|endswith: \Yammer.exe
+    selection:
+        CallTrace|startswith: UNKNOWN
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/12/13
+tags:
+  - attack.execution
+  - attack.t1106
+  - DEMO

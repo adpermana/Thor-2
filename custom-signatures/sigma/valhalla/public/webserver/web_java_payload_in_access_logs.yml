@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Java Payload Strings
+id: 583aa0a2-30b1-4d62-8bf3-ab73689efe6c
+status: test
+description: Detects possible Java payloads in web access logs
+author: frack113, Harjot Singh, "@cyb3rjy0t" (update)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/04 11:18:21
+references:
+  - https://www.rapid7.com/blog/post/2022/06/02/active-exploitation-of-confluence-cve-2022-26134/
+  - https://www.rapid7.com/blog/post/2021/09/02/active-exploitation-of-confluence-server-cve-2021-26084/
+  - https://github.com/httpvoid/writeups/blob/62d3751945289d088ccfdf4d0ffbf61598a2cd7d/Confluence-RCE.md
+  - https://twitter.com/httpvoid0x2f/status/1532924261035384832
+  - https://medium.com/geekculture/text4shell-exploit-walkthrough-ebc02a01f035
+logsource:
+    category: webserver
+detection:
+    condition: keywords
+    keywords:
+      - '%24%7B%28%23a%3D%40'
+      - ${(#a=@
+      - '%24%7B%40java'
+      - ${@java
+      - u0022java
+      - '%2F%24%7B%23'
+      - /${#
+      - new+java.
+      - getRuntime().exec(
+      - getRuntime%28%29.exec%28
+falsepositives: Legitimate apps
+level: high
+customer: 'demo'
+modified: 2023/01/19
+tags:
+  - cve.2022.26134
+  - cve.2021.26084
+  - attack.initial_access
+  - attack.t1190
+  - DEMO

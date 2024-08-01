@@ -1,0 +1,51 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Abuse of Service Permissions to Hide Services Via Set-Service - PS
+id: 953945c5-22fe-4a92-9f8a-a9edc1e522da
+related:
+  - type: similar
+    id: 514e4c3a-c77d-4cde-a00f-046425e2301e
+status: test
+description: Detects usage of the "Set-Service" powershell cmdlet to configure a new
+    SecurityDescriptor that allows a service to be hidden from other utilities such
+    as "sc.exe", "Get-Service"...etc. (Works only in powershell 7)
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/10/17 22:28:51
+references:
+  - https://twitter.com/Alh4zr3d/status/1580925761996828672
+  - https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/set-service?view=powershell-7.2
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: selection
+    selection:
+        ScriptBlockText|contains:
+          - '-SecurityDescriptorSddl '
+          - '-sd '
+        ScriptBlockText|contains|all:
+          - 'Set-Service '
+          - DCLCWPDTSD
+falsepositives:
+  - Rare intended use of hidden services
+  - Rare FP could occur due to the non linearity of the ScriptBlockText log
+level: high
+customer: 'demo'
+tags:
+  - attack.persistence
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - attack.t1574.011
+  - DEMO

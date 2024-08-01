@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential ACTINIUM Persistence Activity
+id: e1118a8f-82f5-44b3-bb6b-8a284e5df602
+status: test
+description: Detects specific process parameters as used by ACTINIUM scheduled task
+    persistence creation.
+author: Andreas Hunkeler (@Karneades)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/02/07 16:07:21
+references:
+  - https://www.microsoft.com/security/blog/2022/02/04/actinium-targets-ukrainian-organizations
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains|all:
+          - schtasks
+          - create
+          - wscript
+          - ' /e:vbscript'
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/03/18
+tags:
+  - attack.persistence
+  - attack.t1053
+  - attack.t1053.005
+  - detection.emerging_threats
+  - DEMO

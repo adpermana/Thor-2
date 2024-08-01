@@ -1,0 +1,55 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Persistence Via Event Viewer Events.asp
+id: a1e11042-a74a-46e6-b07c-c4ce8ecc239b
+status: test
+description: Detects potential registry persistence technique using the Event Viewer
+    "Events.asp" technique
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/02/17 19:01:21
+references:
+  - https://twitter.com/nas_bench/status/1626648985824788480
+  - https://admx.help/?Category=Windows_7_2008R2&Policy=Microsoft.Policies.InternetCommunicationManagement::EventViewer_DisableLinks
+  - https://www.hexacorn.com/blog/2019/02/15/beyond-good-ol-run-key-part-103/
+  - https://github.com/redcanaryco/atomic-red-team/blob/f296668303c29d3f4c07e42bdd2b28d8dd6625f9/atomics/T1112/T1112.md
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection and not 1 of filter_*
+    filter_cleaner:
+        Details: (Empty)
+    filter_default_redirect_program:
+        Details: '%%SystemRoot%%\PCHealth\HelpCtr\Binaries\HelpCtr.exe'
+        Image|endswith: C:\WINDOWS\system32\svchost.exe
+        TargetObject|endswith: \Microsoft\Windows NT\CurrentVersion\Event Viewer\MicrosoftRedirectionProgram
+    filter_default_redirect_program_cli:
+        Details: -url hcp://services/centers/support?topic=%%s
+        Image|endswith: C:\WINDOWS\system32\svchost.exe
+        TargetObject|endswith: \Microsoft\Windows NT\CurrentVersion\Event Viewer\MicrosoftRedirectionProgramCommandLineParameters
+    filter_url:
+        Details: http://go.microsoft.com/fwlink/events.asp
+    selection:
+        TargetObject|contains:
+          - \Microsoft\Windows NT\CurrentVersion\Event Viewer\MicrosoftRedirectionProgram
+          - \Microsoft\Windows NT\CurrentVersion\Event Viewer\MicrosoftRedirectionURL
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/03/05
+tags:
+  - attack.persistence
+  - attack.defense_evasion
+  - attack.t1112
+  - DEMO

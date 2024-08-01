@@ -1,0 +1,22 @@
+title: PowerShell Script Execution Blocked By Antivirus
+id: bcfec1eb-d7d2-4492-829c-4acdcb4da879
+status: test
+description: Detects blocked powershell script executions by antivirus product.
+references:
+    - Internal Research
+author: Nasreddine Bencherchali (Nextron Systems)
+date: 2023/04/03
+tags:
+    - attack.execution
+    - attack.t1059.001
+logsource:
+    product: windows
+    category: ps_module
+    definition: 0ad03ef1-f21b-4a79-8ce8-e6900c54b65b
+detection:
+    selection:
+        Payload|contains: 'This script contains malicious content and has been blocked by your antivirus software'
+    condition: selection
+falsepositives:
+    - Unlikely
+level: high

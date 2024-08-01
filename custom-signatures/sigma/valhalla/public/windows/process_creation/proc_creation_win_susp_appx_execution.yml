@@ -1,0 +1,61 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potentially Suspicious Windows App Activity
+id: f91ed517-a6ba-471d-9910-b3b4a398c0f3
+status: experimental
+description: Detects potentially suspicious child process of applications launched
+    from inside the WindowsApps directory. This could be a sign of a rogue ".appx"
+    package installation/execution
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/12 17:50:11
+references:
+  - https://news.sophos.com/en-us/2021/11/11/bazarloader-call-me-back-attack-abuses-windows-10-apps-mechanism/
+  - https://www.sentinelone.com/labs/inside-malicious-windows-apps-for-malware-deployment/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection_parent and 1 of selection_susp_* and not 1 of filter_optional_*
+    filter_optional_terminal:
+        Image|endswith:
+          - \powershell.exe
+          - \cmd.exe
+          - \pwsh.exe
+        ParentImage|contains: :\Program Files\WindowsApps\Microsoft.WindowsTerminal
+        ParentImage|endswith: \WindowsTerminal.exe
+    selection_parent:
+        ParentImage|contains: C:\Program Files\WindowsApps\
+    selection_susp_cli:
+        CommandLine|contains:
+          - cmd /c
+          - Invoke-
+          - Base64
+    selection_susp_img:
+        Image|endswith:
+          - \cmd.exe
+          - \cscript.exe
+          - \mshta.exe
+          - \powershell.exe
+          - \pwsh.exe
+          - \regsvr32.exe
+          - \rundll32.exe
+          - \wscript.exe
+falsepositives: Legitimate packages that make use of external binaries such as Windows
+    Terminal
+level: medium
+customer: 'demo'
+modified: 2023/08/31
+tags:
+  - attack.defense_evasion
+  - DEMO

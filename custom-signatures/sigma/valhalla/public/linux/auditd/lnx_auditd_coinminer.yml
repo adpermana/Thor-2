@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Possible Coin Miner CPU Priority Param
+id: 071d5e5a-9cef-47ec-bc4e-a42e34d8d0ed
+status: test
+description: Detects command line parameter very often used with coin miners
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/10/09 15:41:21
+references:
+  - https://xmrig.com/docs/miner/command-line-options
+logsource:
+    product: linux
+    service: auditd
+detection:
+    condition: 1 of cmd*
+    cmd1:
+        a1|startswith: --cpu-priority
+    cmd2:
+        a2|startswith: --cpu-priority
+    cmd3:
+        a3|startswith: --cpu-priority
+    cmd4:
+        a4|startswith: --cpu-priority
+    cmd5:
+        a5|startswith: --cpu-priority
+    cmd6:
+        a6|startswith: --cpu-priority
+    cmd7:
+        a7|startswith: --cpu-priority
+falsepositives: Other tools that use a --cpu-priority flag
+level: critical
+customer: 'demo'
+modified: 2022/12/25
+tags:
+  - attack.privilege_escalation
+  - attack.t1068
+  - DEMO

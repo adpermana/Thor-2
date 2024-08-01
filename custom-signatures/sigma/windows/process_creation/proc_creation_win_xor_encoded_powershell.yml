@@ -1,0 +1,32 @@
+title: XOR Encoded PowerShell Execution
+id: 7c247b43-062d-4af7-9e4c-9f53a8a3afea
+status: experimental
+description: Detects execution of binary XOR encoded PowerShell code from the CommandLine
+references:
+    - https://twitter.com/0xToxin/status/1559619321952976899
+    - https://twitter.com/ankit_anubhav/status/1557383863046791168
+author: X__Junior
+date: 2022/11/28
+tags:
+    - attack.execution
+    - attack.t1059
+logsource:
+    product: windows
+    category: process_creation
+detection:
+    selection:
+        # example : powershell.exe icm -ScriptBlock{0x3D -bxor 14}
+        Image|endswith:
+            - '\powershell.exe'
+            - '\pwsh.exe'
+        CommandLine|contains|all:
+            - ' -ScriptBlock'
+            - '0x'
+            - ' -bxor'
+        CommandLine|contains:
+            - ' icm'
+            - 'Invoke-Command'
+    condition: selection
+falsepositives:
+    - Unknown
+level: medium

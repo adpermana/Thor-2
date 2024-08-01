@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Windows Firewall Profile Disabled
+id: 488b44e7-3781-4a71-888d-c95abfacf44d
+related:
+  - type: similar
+    id: 12f6b752-042d-483e-bf9c-915a6d06ad75
+status: test
+description: Detects when a user disables the Windows Firewall via a Profile to help
+    evade defense.
+author: Austin Songer @austinsonger
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/10/12 14:49:41
+references:
+  - https://docs.microsoft.com/en-us/powershell/module/netsecurity/set-netfirewallprofile?view=windowsserver2019-ps
+  - https://www.tutorialspoint.com/how-to-get-windows-firewall-profile-settings-using-powershell
+  - http://powershellhelp.space/commands/set-netfirewallrule-psv5.php
+  - http://woshub.com/manage-windows-firewall-powershell/
+  - https://www.elastic.co/guide/en/security/current/windows-firewall-disabled-via-powershell.html
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: all of selection*
+    selection_args:
+        ScriptBlockText|contains|all:
+          - 'Set-NetFirewallProfile '
+          - ' -Enabled '
+          - ' False'
+    selection_opt:
+        ScriptBlockText|contains:
+          - ' -All '
+          - Public
+          - Domain
+          - Private
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/12/30
+tags:
+  - attack.defense_evasion
+  - attack.t1562.004
+  - DEMO

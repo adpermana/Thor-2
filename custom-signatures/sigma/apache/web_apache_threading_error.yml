@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Apache Threading Error
+id: e9a2b582-3f6a-48ac-b4a1-6849cdc50b3c
+status: test
+description: Detects an issue in apache logs that reports threading related errors
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/01/22 11:47:01
+references:
+  - https://github.com/hannob/apache-uaf/blob/da40f2be3684c8095ec6066fa68eb5c07a086233/README.md
+logsource:
+    service: apache
+    definition: 'Requirements: Must be able to collect the error.log file'
+detection:
+    condition: keywords
+    keywords: '__pthread_tpp_change_priority: Assertion `new_prio == -1 || (new_prio
+        >= fifo_min_prio && new_prio <= fifo_max_prio)'
+falsepositives: 3rd party apache modules - https://bz.apache.org/bugzilla/show_bug.cgi?id=46185
+level: medium
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.initial_access
+  - attack.lateral_movement
+  - attack.t1190
+  - attack.t1210
+  - DEMO

@@ -1,0 +1,66 @@
+title: Remove Logging Related Registry Keys
+id: e8741562-b57e-45cf-ac92-364c07944538
+description: Detects the removal of known keys and values related to logging
+status: test
+date: 2022/08/19
+modified: 2023/03/29
+author: Nasreddine Bencherchali
+references:
+    - Internal Research
+logsource:
+    category: registry_delete
+    product: windows
+detection:
+    selection:
+        EventType: DeleteValue
+        TargetObject|contains:
+            - '\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Publishers'
+            - '\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels'
+            - '\SYSTEM\CurrentControlSet\Control\WMI\Autologger'
+            - '\SYSTEM\CurrentControlSet\Control\WMI\Security'
+    filter_sgrmbroker:
+        Image|endswith: '\SgrmBroker.exe'
+        User|contains: # covers many language settings
+            - 'AUTHORI'
+            - 'AUTORI'
+    filter_tiworker:
+        Image|startswith: 'C:\Windows\WinSxS\'
+        Image|endswith: '\TiWorker.exe'
+    filter_taskhostw:
+        Image: 'C:\Windows\System32\taskhostw.exe'
+        TargetObject|endswith:
+            - '\Microsoft\Windows\CurrentVersion\WINEVT\Publishers\{08466062-aed4-4834-8b04-cddb414504e5}\ChannelReferences\0\Timestamp'  # Microsoft-Windows-Security-Audit-Configuration-Client
+            - '\Microsoft\Windows\CurrentVersion\WINEVT\Publishers\{2a576b87-09a7-520e-c21a-4942f0271d67}\SharedFolder'  # Microsoft-Antimalware-Scan-Interface
+    filter_svchost:
+        Image: 'C:\Windows\System32\svchost.exe'
+        TargetObject|contains:
+            - '\Microsoft\Windows\CurrentVersion\WINEVT\Publishers\{2a576b87-09a7-520e-c21a-4942f0271d67}\SharedFolder'  # Microsoft-Antimalware-Scan-Interface
+            - '\Microsoft\Windows\CurrentVersion\WINEVT\Publishers\{cb017cd2-1f37-4e65-82bc-3e91f6a37559}\'  # VolSnap
+            - '\Microsoft\Windows\CurrentVersion\WINEVT\Publishers\{2bcfefe5-5026-536b-1686-b249cb49cae3}\' # Microsoft-Windows-WinQuic
+            - '\Microsoft\Windows\CurrentVersion\WINEVT\Publishers\{73370bd6-85e5-430b-b60a-fea1285808a7}\' # Microsoft-Windows-CertificateServicesClient
+            - '\Microsoft\Windows\CurrentVersion\WINEVT\Publishers\{7839bb2a-2ea3-4eca-a00f-b558ba678bec}\MicrosoftCorporationII.WindowsSubsystemForLinux'
+    filter_office:
+        Image|startswith: 'C:\Program Files'
+        Image|endswith:
+            - '\Microsoft Office\root\Integration\Integrator.exe'
+            - '\Common Files\microsoft shared\ClickToRun\OfficeClickToRun.exe'
+    filter_mpsigstub:
+        Image|startswith: 'C:\Windows\Temp\'
+        Image|endswith: '\MpSigStub.exe'
+        TargetObject|contains: '\Microsoft\Windows\CurrentVersion\WINEVT\Publishers\{43d1a55c-76d6-4f7e-995c-64c711e5cafe}\ChannelReferences\AllFlights'
+    filter_explorer:
+        Image: 'C:\Windows\explorer.exe'
+        TargetObject|contains: '\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-DirectComposition\'
+    filter_ngen:
+        Image|startswith: 'C:\Windows\Microsoft.NET\Framework\'
+        Image|endswith: '\ngen.exe'
+        TargetObject|contains:
+            - '\Microsoft\Windows\CurrentVersion\WINEVT\Publishers\{19d2c934-ee9b-49e5-aaeb-9cce721d2c65}\'  # Microsoft-Windows-OLEACC
+            - '\Microsoft\Windows\CurrentVersion\WINEVT\Publishers\{1a9443d4-b099-44d6-8eb1-829b9c2fe290}\'  # Microsoft-Windows-PCI
+    condition: selection and not 1 of filter_*
+falsepositives:
+    - Legitimate removal of providers of os or third party software during uninstallation process
+level: high
+tags:
+    - attack.defense_evasion
+    - attack.t1562.001

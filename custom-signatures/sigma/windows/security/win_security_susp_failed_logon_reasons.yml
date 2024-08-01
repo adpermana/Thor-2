@@ -1,0 +1,52 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Account Tampering - Suspicious Failed Logon Reasons
+id: 9eb99343-d336-4020-a3cd-67f3819e68ee
+status: test
+description: This method uses uncommon error codes on failed logons to determine suspicious
+    activity and tampering with accounts that have been disabled or somehow restricted.
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/02/19 19:18:31
+references:
+  - https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4625
+  - https://twitter.com/SBousseaden/status/1101431884540710913
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: selection and not filter
+    filter:
+        SubjectUserSid: S-1-0-0
+    selection:
+        EventID:
+          - "4625"
+          - "4776"
+        Status:
+          - "0xC0000072"
+          - "0xC000006F"
+          - "0xC0000070"
+          - "0xC0000413"
+          - "0xC000018C"
+          - "0xC000015B"
+falsepositives: User using a disabled account
+level: medium
+customer: 'demo'
+modified: 2022/06/29
+tags:
+  - attack.persistence
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - attack.initial_access
+  - attack.t1078
+  - DEMO

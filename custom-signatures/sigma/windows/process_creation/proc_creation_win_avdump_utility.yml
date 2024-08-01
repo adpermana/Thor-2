@@ -1,0 +1,33 @@
+title: Suspicious Usage of AvDump Utility
+id: 1caf0168-8a87-41d8-a7f9-d024b1cb2824
+status: experimental
+description: Detects the execution of the AvDump utility bundled with AVG and Avast to dump process memory
+references:
+    - https://twitter.com/jas502n/status/1330225568051245057
+    - https://twitter.com/nas_bench/status/1479505039379124239
+author: Nasreddine Bencherchali
+date: 2022/05/06
+modified: 2023/03/13
+tags:
+    - attack.credential_access
+    - attack.t1003.001
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_image:
+        - Image|endswith: '\AvDump.exe'
+        - OriginalFileName: 'avDump.exe'
+    selection_cli:
+        CommandLine|contains|all:
+            - '--pid '
+            - '--dump_level '
+            - '--dump_file '
+    filter_parent:
+        ParentImage|startswith:
+            - 'C:\Program Files\Avast Software\Avast\'
+            - 'C:\Program Files\AVG\Antivirus\'
+    condition: 1 of selection* and not 1 of filter_*
+falsepositives:
+    - Legitimate cases in which the process dump tool is used (e.g. Avast, AVG)
+level: high

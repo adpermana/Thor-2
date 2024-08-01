@@ -1,0 +1,81 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Process Patterns NTDS.DIT Exfil
+id: 8bc64091-6875-4881-aaf9-7bd25b5dda08
+status: test
+description: Detects suspicious process patterns used in NTDS.DIT exfiltration
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/03/11 16:46:31
+references:
+  - https://www.ired.team/offensive-security/credential-access-and-credential-dumping/ntds.dit-enumeration
+  - https://www.n00py.io/2022/03/manipulating-user-passwords-without-mimikatz/
+  - https://pentestlab.blog/tag/ntds-dit/
+  - https://github.com/samratashok/nishang/blob/414ee1104526d7057f9adaeee196d91ae447283e/Gather/Copy-VSS.ps1
+  - https://github.com/zcgonvh/NTDSDumpEx
+  - https://github.com/rapid7/metasploit-framework/blob/d297adcebb5c1df6fe30b12ca79b161deb71571c/data/post/powershell/NTDSgrab.ps1
+  - https://blog.talosintelligence.com/2022/08/recent-cyber-attack.html?m=1
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection* or all of set1*
+    selection_oneliner_1:
+        CommandLine|contains|all:
+          - ac i ntds
+          - create full
+    selection_onliner_2:
+        CommandLine|contains|all:
+          - '/c copy '
+          - \windows\ntds\ntds.dit
+    selection_onliner_3:
+        CommandLine|contains|all:
+          - activate instance ntds
+          - create full
+    selection_powershell:
+        CommandLine|contains|all:
+          - powershell
+          - ntds.dit
+    selection_tool:
+      - Image|endswith:
+          - \NTDSDump.exe
+          - \NTDSDumpEx.exe
+      - CommandLine|contains|all:
+          - ntds.dit
+          - system.hiv
+      - CommandLine|contains: NTDSgrab.ps1
+    set1_selection_image_folder:
+      - ParentImage|contains:
+          - \apache
+          - \tomcat
+          - \AppData\
+          - \Temp\
+          - \Public\
+          - \PerfLogs\
+      - Image|contains:
+          - \apache
+          - \tomcat
+          - \AppData\
+          - \Temp\
+          - \Public\
+          - \PerfLogs\
+    set1_selection_ntds_dit:
+        CommandLine|contains: ntds.dit
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/11/10
+tags:
+  - attack.credential_access
+  - attack.t1003.003
+  - DEMO

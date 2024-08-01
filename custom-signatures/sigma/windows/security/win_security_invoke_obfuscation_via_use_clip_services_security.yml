@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Invoke-Obfuscation Via Use Clip - Security
+id: 1a0a2ff1-611b-4dac-8216-8a7b47c618a6
+related:
+  - type: derived
+    id: 63e3365d-4824-42d8-8b82-e56810fefa0c
+status: test
+description: Detects Obfuscated Powershell via use Clip.exe in Scripts
+author: Nikita Nazarov, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/09 16:42:41
+references:
+  - https://github.com/SigmaHQ/sigma/issues/1009
+logsource:
+    product: windows
+    service: security
+    definition: The 'System Security Extension' audit subcategory need to be enabled
+        to log the EID 4697
+detection:
+    condition: selection
+    selection:
+        EventID: "4697"
+        ServiceFileName|contains: (Clipboard|i
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/11/29
+tags:
+  - attack.defense_evasion
+  - attack.t1027
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Remote Access Tool - ScreenConnect Server Web Shell Execution
+id: b19146a3-25d4-41b4-928b-1e2a92641b1b
+status: experimental
+description: Detects potential web shell execution from the ScreenConnect server process.
+author: Jason Rathbun (Blackpoint Cyber)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/02/26 21:36:41
+references:
+  - https://blackpointcyber.com/resources/blog/breaking-through-the-screen/
+  - https://www.connectwise.com/company/trust/security-bulletins/connectwise-screenconnect-23.9.8
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith:
+          - \cmd.exe
+          - \csc.exe
+        ParentImage|endswith: \ScreenConnect.Service.exe
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+tags:
+  - attack.initial_access
+  - attack.t1190
+  - DEMO

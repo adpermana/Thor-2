@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: DNS Query to External Service Interaction Domains
+id: aff715fa-4dd5-497a-8db3-910bea555566
+status: test
+description: Detects suspicious DNS queries to external service interaction domains
+    often used for out-of-band interactions after successful RCE
+author: Florian Roth (Nextron Systems), Matt Kelly (list of domains)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/07 18:47:31
+references:
+  - https://twitter.com/breakersall/status/1533493587828260866
+logsource:
+    category: dns
+detection:
+    condition: selection
+    selection:
+        query|contains:
+          - .interact.sh
+          - .oast.pro
+          - .oast.live
+          - .oast.site
+          - .oast.online
+          - .oast.fun
+          - .oast.me
+          - .burpcollaborator.net
+          - .oastify.com
+          - .canarytokens.com
+          - .requestbin.net
+          - .dnslog.cn
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.initial_access
+  - attack.t1190
+  - attack.reconnaissance
+  - attack.t1595.002
+  - DEMO

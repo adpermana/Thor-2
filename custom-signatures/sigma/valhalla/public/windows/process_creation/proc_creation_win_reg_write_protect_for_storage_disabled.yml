@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Write Protect For Storage Disabled
+id: 75f7a0e2-7154-4c4d-9eae-5cdb4e0a5c13
+status: test
+description: |
+    Detects applications trying to modify the registry in order to disable any write-protect property for storage devices.
+    This could be a precursor to a ransomware attack and has been an observed technique used by cypherpunk group.
+author: Sreeman
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/06/11 14:53:21
+references:
+  - https://www.manageengine.com/products/desktop-central/os-imaging-deployment/media-is-write-protected.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains|all:
+          - \System\CurrentControlSet\Control
+          - Write Protection
+          - "0"
+          - storage
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2024/01/18
+tags:
+  - attack.defense_evasion
+  - attack.t1562
+  - DEMO

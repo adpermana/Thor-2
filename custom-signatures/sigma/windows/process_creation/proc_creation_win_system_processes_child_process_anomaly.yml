@@ -1,0 +1,65 @@
+title: Unsuspected Children Of System Processes
+id: 151f46a6-f06d-42e5-bb68-59dcde7786ea
+status: experimental
+description: Detects system processes that should not spawn child processes of themselves. This behaviour could be indicative of processes masquarading as system processes, process injection or exploitation attempts.
+references:
+    - Internal Research
+author: Nasreddine Bencherchali
+date: 2023/02/06
+modified: 2023/02/28
+tags:
+    - attack.defense_evasion
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    #selection_main:
+    #    ParentImage|contains:
+    #        - '\System32\'
+    #        - '\SysWOW64\'
+    #    Image|contains:
+    #        - '\System32\'
+    #        - '\SysWOW64\'
+    selection_process_svchost:
+        ParentImage|endswith: '\svchost.exe'
+        Image|endswith: '\svchost.exe'
+    selection_process_calc:
+        ParentImage|endswith: '\calc.exe'
+        Image|endswith: '\calc.exe'
+    selection_process_winlogon:
+        ParentImage|endswith: '\winlogon.exe'
+        Image|endswith: '\winlogon.exe'
+    selection_process_services:
+        ParentImage|endswith: '\services.exe'
+        Image|endswith: '\services.exe'
+    selection_process_csrss:
+        ParentImage|endswith: '\csrss.exe'
+        Image|endswith: '\csrss.exe'
+    selection_process_taskhostw:
+        ParentImage|endswith: '\taskhostw.exe'
+        Image|endswith: '\taskhostw.exe'
+    selection_process_taskhost:
+        ParentImage|endswith: '\taskhost.exe'
+        Image|endswith: '\taskhost.exe'
+    selection_process_notepad:
+        ParentImage|endswith: '\notepad.exe'
+        Image|endswith: '\notepad.exe'
+    selection_process_sihost:
+        ParentImage|endswith: '\sihost.exe'
+        Image|endswith: '\sihost.exe'
+    selection_process_runtimebroker:
+        ParentImage|endswith: '\RuntimeBroker.exe'
+        Image|endswith: '\RuntimeBroker.exe'
+    selection_process_dllhost:
+        ParentImage|endswith: '\dllhost.exe'
+        Image|endswith: '\dllhost.exe'
+    selection_process_dashost:
+        ParentImage|endswith: '\dashost.exe'
+        Image|endswith: '\dashost.exe'
+    selection_process_dismhost:
+        ParentImage|endswith: '\dismhost.exe'
+        Image|endswith: '\dismhost.exe'
+    condition: 1 of selection_process_* #and selection_main
+falsepositives:
+    - Unlikely
+level: high

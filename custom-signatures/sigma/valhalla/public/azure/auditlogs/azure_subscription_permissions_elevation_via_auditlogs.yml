@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-06-21 19:00
+# Generated for User: demo
+# Number of Rules: 3228
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Azure Subscription Permission Elevation Via AuditLogs
+id: ca9bf243-465e-494a-9e54-bf9fc239057d
+status: test
+description: |
+    Detects when a user has been elevated to manage all Azure Subscriptions.
+    This change should be investigated immediately if it isn't planned.
+    This setting could allow an attacker access to Azure subscriptions in your environment.
+author: Austin Songer @austinsonger
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/11/26 20:20:01
+references:
+  - https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/security-operations-privileged-accounts#assignment-and-elevation
+logsource:
+    product: azure
+    service: auditlogs
+detection:
+    condition: selection
+    selection:
+        Category: Administrative
+        OperationName: Assigns the caller to user access admin
+falsepositives: If this was approved by System Administrator.
+level: high
+customer: 'demo'
+modified: 2022/12/25
+tags:
+  - attack.initial_access
+  - attack.t1078
+  - DEMO

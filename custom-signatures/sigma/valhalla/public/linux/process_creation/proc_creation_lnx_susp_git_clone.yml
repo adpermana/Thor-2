@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Git Clone - Linux
+id: cfec9d29-64ec-4a0f-9ffe-0fdb856d5446
+status: test
+description: Detects execution of "git" in order to clone a remote repository that
+    contain suspicious keywords which might be suspicious
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/03 13:08:11
+references:
+  - https://gist.githubusercontent.com/MichaelKoczwara/12faba9c061c12b5814b711166de8c2f/raw/e2068486692897b620c25fde1ea258c8218fe3d3/history.txt
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    condition: all of selection_*
+    selection_img:
+        CommandLine|contains: ' clone '
+        Image|endswith: /git
+    selection_keyword:
+        CommandLine|contains:
+          - exploit
+          - Vulns
+          - vulnerability
+          - RCE
+          - RemoteCodeExecution
+          - Invoke-
+          - CVE-
+          - poc-
+          - ProofOfConcept
+          - proxyshell
+          - log4shell
+          - eternalblue
+          - eternal-blue
+          - MS17-
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/01/05
+tags:
+  - attack.reconnaissance
+  - attack.t1593.003
+  - DEMO

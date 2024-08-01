@@ -1,0 +1,56 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - Default PowerSploit/Empire Scheduled Task Creation
+id: 56c217c3-2de2-479b-990f-5c109ba8458f
+status: test
+description: Detects the creation of a schtask via PowerSploit or Empire Default Configuration.
+author: Markus Neis, @Karneades
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2018/03/06 21:48:11
+references:
+  - https://github.com/0xdeadbeefJERKY/PowerSploit/blob/8690399ef70d2cad10213575ac67e8fa90ddf7c3/Persistence/Persistence.psm1
+  - https://github.com/EmpireProject/Empire/blob/08cbd274bef78243d7a8ed6443b8364acd1fc48b/lib/modules/powershell/persistence/userland/schtasks.py
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - /SC ONLOGON
+          - /SC DAILY /ST
+          - /SC ONIDLE
+          - /SC HOURLY
+        CommandLine|contains|all:
+          - /Create
+          - powershell.exe -NonI
+          - /TN Updater /TR
+        Image|endswith: \schtasks.exe
+        ParentImage|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/03/03
+tags:
+  - attack.execution
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.s0111
+  - attack.g0022
+  - attack.g0060
+  - car.2013-08-001
+  - attack.t1053.005
+  - attack.t1059.001
+  - DEMO

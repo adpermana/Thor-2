@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Legitimate Application Dropped Executable
+id: f0540f7e-2db3-4432-b9e0-3965486744bc
+status: experimental
+description: Detects programs on a Windows system that should not write executables
+    to disk
+author: frack113, Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/21 17:08:11
+references:
+  - https://github.com/Neo23x0/sysmon-config/blob/3f808d9c022c507aae21a9346afba4a59dd533b9/sysmonconfig-export-block.xml#L1326
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith:
+          - \eqnedt32.exe
+          - \wordpad.exe
+          - \wordview.exe
+          - \certutil.exe
+          - \certoc.exe
+          - \CertReq.exe
+          - \Desktopimgdownldr.exe
+          - \esentutl.exe
+          - \mshta.exe
+          - \AcroRd32.exe
+          - \RdrCEF.exe
+          - \hh.exe
+          - \finger.exe
+        TargetFilename|endswith:
+          - .exe
+          - .dll
+          - .ocx
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/06/22
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

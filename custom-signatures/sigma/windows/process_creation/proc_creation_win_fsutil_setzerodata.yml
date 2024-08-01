@@ -1,0 +1,28 @@
+title: Potential File Content Deletion Using Fsutil
+id: ceaa373d-14e6-4f08-876e-aa0057b9b379
+status: experimental
+description: Detects usage of the “fsutil“ utility to zero out the contents of a file or files. Often time this technique used by ransomware in order to delete the content of files on the system
+references:
+    - https://github.com/albertzsigovits/malware-notes/blob/c820c7fea76cf76a861b28ebc77e06100e20ec29/Ransomware/Lockbit.md
+author: Nasreddine Bencherchali
+date: 2023/01/18
+tags:
+    - attack.defense_evasion
+    - attack.t1218
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        - Image|endswith: '\fsutil.exe'
+        - OriginalFileName: 'fsutil.exe'
+    selection_cli:
+        CommandLine|contains|all:
+            - 'file'
+            - 'setzerodata' # Sets a range (specified by offset and length) of the file to zeroes, which empties the file. If the file is a sparse file, the underlying allocation units are decommitted.
+            - 'offset'
+            - 'length'
+    condition: all of selection_*
+falsepositives:
+    - Unlikely
+level: medium

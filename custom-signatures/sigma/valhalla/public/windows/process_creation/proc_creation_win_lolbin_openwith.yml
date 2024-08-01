@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: OpenWith.exe Executes Specified Binary
+id: cec8e918-30f7-4e2d-9bfa-a59cc97ae60f
+status: test
+description: The OpenWith.exe executes other binary
+author: Beyu Denis, oscd.community (rule), @harr0ey (idea)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/12 16:06:11
+references:
+  - https://github.com/LOLBAS-Project/LOLBAS/blob/4db780e0f0b2e2bb8cb1fa13e09196da9b9f1834/yml/LOLUtilz/OSBinaries/Openwith.yml
+  - https://twitter.com/harr0ey/status/991670870384021504
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains: /c
+        Image|endswith: \OpenWith.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

@@ -1,0 +1,28 @@
+title: Truebot Teleport Exfiltration Tool
+id: 7ea931c0-7f34-4ac7-9251-0adb782f4ff6
+status: experimental
+description: Detects execution of an exfiltration tool dubbed "Teleport" used by "Truebot"
+author: Nasreddine Bencherchali
+references:
+    - https://blog.talosintelligence.com/breaking-the-silence-recent-truebot-activity/
+date: 2022/12/14
+tags:
+    - attack.exfiltration
+    - attack.t1041
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains|all:
+            - ' /RH:' # Server host name to upload to
+            - ' /RP:' # Server port number to upload to
+            - ' /MX:' # File mask to exclude
+            - ' /P:' # Directory prefix
+        CommandLine|contains:
+            - ' /d:'
+            - ' /ds:'
+    condition: selection
+falsepositives:
+    - Unlikely
+level: critical

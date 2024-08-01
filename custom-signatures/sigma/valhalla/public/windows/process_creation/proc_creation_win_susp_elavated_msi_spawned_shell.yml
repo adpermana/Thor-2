@@ -1,0 +1,51 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Always Install Elevated MSI Spawned Cmd And Powershell
+id: 1e53dd56-8d83-4eb4-a43e-b790a05510aa
+status: test
+description: Detects Windows Installer service (msiexec.exe) spawning "cmd" or "powershell"
+author: Teymur Kheirkhabarov (idea), Mangatas Tondang (rule), oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/13 19:45:31
+references:
+  - https://image.slidesharecdn.com/kheirkhabarovoffzonefinal-181117201458/95/hunting-for-privilege-escalation-in-windows-environment-50-638.jpg
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_img:
+      - Image|endswith:
+          - \cmd.exe
+          - \powershell.exe
+          - \pwsh.exe
+      - OriginalFileName:
+          - Cmd.Exe
+          - PowerShell.EXE
+          - pwsh.dll
+    selection_parent:
+        ParentImage|contains|all:
+          - \Windows\Installer\
+          - msi
+        ParentImage|endswith: tmp
+fields:
+  - Image
+  - ParentImage
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/10/20
+tags:
+  - attack.privilege_escalation
+  - attack.t1548.002
+  - DEMO

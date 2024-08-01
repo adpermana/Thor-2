@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Registry Persistence Mechanisms in Recycle Bin
+id: 277efb8f-60be-4f10-b4d3-037802f37167
+status: test
+description: Detects persistence registry keys for Recycle Bin
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/11/18 18:15:31
+references:
+  - https://github.com/vxunderground/VXUG-Papers/blob/751edb8d50f95bd7baa730adf2c6c3bb1b034276/The%20Persistence%20Series/Persistence%20via%20Recycle%20Bin/Persistence_via_Recycle_Bin.pdf
+  - https://persistence-info.github.io/Data/recyclebin.html
+  - https://www.hexacorn.com/blog/2018/05/28/beyond-good-ol-run-key-part-78-2/
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_create:
+        EventType: RenameKey
+        NewName|contains: \CLSID\{645FF040-5081-101B-9F08-00AA002F954E}\shell\open
+    selection_set:
+        EventType: SetValue
+        TargetObject|contains: \CLSID\{645FF040-5081-101B-9F08-00AA002F954E}\shell\open\command\(Default)
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/12/06
+tags:
+  - attack.persistence
+  - attack.t1547
+  - DEMO

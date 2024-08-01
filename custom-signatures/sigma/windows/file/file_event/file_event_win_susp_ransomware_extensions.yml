@@ -1,0 +1,589 @@
+title: Suspicious Creation Of File With Ransomware Extensions
+id: edd858a6-405d-4e0e-adc2-86ea8151e2d4
+status: test
+description: Detects the creation of files with an extension known to be used by ransomware
+author: Nasreddine Bencherchali
+references:
+    - https://www.file-extensions.org/filetype/extension/name/ransomware-encrypted-files
+    - https://raw.githubusercontent.com/eshlomo1/Ransomware-NOTE/main/ransomware-extension-list.txt
+date: 2022/11/14
+modified: 2023/06/22
+logsource:
+    product: windows
+    category: file_event
+detection:
+    selection:
+        - TargetFilename|endswith:
+            - '_crypt_.rar' # RarCrypt
+            - '_encrypted' # Crypt130 ransomware
+            - '-Locked' # EvilNominatus ransomware
+            - '.___xratteamLucked'
+            - '.__AiraCropEncrypted!'
+            - '._AiraCropEncrypted' # AiraCrop Ransomware affecte file
+            - '._locked' # Trigona ransomware
+            - '.[Enc]' # DcDcrypt ransomware
+            - '.@PIPIKAKI' # Pipikaki ransomware
+            - '.0.locked' # WaspLocker  ransomware
+            - '.0mega' # 0mega  ransomware
+            - '.0x0'
+            - '.1999'
+            - '.1cbu1' # Princess Locker ransomware affected file
+            - '.1txt' # Enigma ransomware affected file
+            - '.2ed2'
+            - '.31392E30362E32303136_'
+            - '.725'
+            - '.726'
+            - '.73i87A' # Xorist Ransomware affected data
+            - '.777'
+            - '.7h9r'
+            - '.7zipper'
+            - '.8c7f'
+            - '.8lock8'
+            - '.911'
+            - '.a19'
+            - '.a5zfn' # Alma Locker ransomware affected data
+            - '.aaa'
+            - '.abc' # TeslaCrypt ransomware encrypted data
+            #- '.ace' # ace ransomware, also related to archive type
+            - '.acepy' # Acepy  ransomware
+            - '.adk' # Angry Duck ransomware affected file
+            - '.adr'
+            - '.aes_ni_0day'
+            - '.aes_ni_gov'
+            - '.aes_ni'
+            - '.AES'
+            - '.AES256'
+            - '.aesir' # Locky ransomware affected file
+            - '.AFD'
+            - '.aga'
+            - '.alcatraz' # Alcatraz Locker ransomware affected file
+            - '.Aleta'
+            - '.alice' # Alice ransomware
+            - '.Alphaware' # Alphaware  ransomware
+            - '.amba'
+            - '.amnesia'
+            - '.ampkcz' # ONYX ransomware
+            - '.angelamerkel' # Angela Merkel ransomware affected file
+            - '.AngleWare' # HiddenTear/MafiaWare (variant) ransomware affected file
+            - '.antihacker2017' # Xorist (variant) Ransomware affected file
+            - '.ap19'
+            - '.arena'
+            - '.args' # ESXi-hacked ransomware
+            - '.atlas' # Atlas ransomware affected file
+            - '.avos2 ' #avosLocker
+            - '.axx' # AxCrypt encrypted data
+            - '.B6E1'
+            - '.BarRax' # BarRax (HiddenTear variant) ransomware affected file
+            - '.barrel' # MonaLisa ransomware
+            - '.bart.zip'
+            - '.bart'
+            - '.basta' # blackbasta ransomware
+            - '.better_call_saul'
+            - '.bianlian' # BianLian ransomware
+            - '.bip'
+            - '.BISAMWARE' # Bisamware  ransomware
+            - '.bitcrypt' #BitCrypt  ransomware
+            - '.bitcrypt2' # BitCrypt 2.0  ransomware
+            - '.bitkangoroo'
+            - '.bitstak' # Bitstak ransomware affected data
+            - '.Black' # BlackHunt Ransomware
+            - '.blackbytent' # black byte NT ransomware
+            - '.blacksuit' # blacksuit ransomware
+            - '.bleep'
+            - '.bleepYourFiles'
+            - '.bloc'
+            - '.blocatto'
+            - '.block'
+            - '.blockZ' # BlockZ  ransomware
+            - '.bluesky' # BlueSky  ransomware
+            - '.braincrypt' # Braincrypt ransomware affected file
+            - '.breaking_bad' # Files1147@gmail(.)com ransomware affected data
+            - '.bript' # BadEncriptor ransomware affected file
+            - '.btc-help-you'
+            - '.btc' # Jigsaw Ransomware affected data
+            - '.btcbtcbtc'
+            - '.buthi'
+            - '.C_I_0P' # clop ransomware
+            - '.cancer'
+            - '.canihelpyou'
+            - '.cbf'
+            - '.cbtl' # Troldesh ransomware
+            - '.CCBDFHCHFD' # no escape ransomware
+            - '.ccc' # TeslaCrypt or Cryptowall encrypted data
+            - '.CCCRRRPPP' # Unlock92 ransomware affected data
+            - '.cerber' # Cerber ransomware affected data
+            - '.cerber2' # Cerber 2 ransomware affected file
+            - '.cerber3' # Cerber 3 ransomware affected data
+            - '.checkdiskenced'
+            - '.checkmate' # CheckMate  ransomware
+            - '.Cheers' # Cheerscrypt ransomware
+            - '.chifrator@qq_com'
+            - '.CHIP'
+            - '.chsch' # ransomboggs ransomware
+            - '.cifgksaffsfyghd'
+            - '.clf'
+            - '.cnc'
+            - '.coded' # Anubis ransomware affected file
+            - '.coffee' # Chinese Coffee  ransomware
+            - '.comrade' # Comrade ransomware affected file
+            - '.conficker' # Conficker ransomware affected file
+            - '.conti' # conti ransomware
+            - '.Cooper' # Cooper  ransomware
+            - '.corona' # Corona ransomware
+            - '.coverton' # Coverton ransomware affected data
+            - '.covid-19' # Phishing / ransomware file
+            - '.covid19' # Phishing / ransomware file
+            - '.crab' # GandCrab ransomware affected data
+            - '.crashed'
+            - '.crime'
+            - '.crinf' # DecryptorMax or CryptInfinite ransomware affected data
+            - '.criptiko'
+            - '.criptokod'
+            - '.cripttt'
+            - '.crjoker' # CryptoJoker ransomware affected data
+            - '.crlk' # CrossLock  ransomware
+            - '.crptrgr' # CryptoRoger ransomware affected data
+            - '.CRRRT'
+            - '.cry_'
+            - '.cry' # CryLocker ransomware affected data
+            - '.cryeye' # DoubleLocker ransomware affected data
+            - '.cryp1' # CryptXXX ransomware affected data
+            - '.crypt' # Scatter ransomware affected data
+            - '.crypt38'
+            - '.crypt658' # RedAlert ransomware
+            - '.crypte' # Jigsaw (variant) ransomware affected file
+            - '.crypted_file'
+            - '.crypted' # Nemucod ransomware affected file
+            - '.crypted000007' # Troldesh ransomware
+            - '.crypted000078' # Troldesh ransomware
+            - '.crypto'
+            - '.cryptolocker' # CryptoLocker encrypted file
+            - '.CRYPTOSHIEL'
+            - '.CRYPTOSHIELD'
+            - '.CryptoTorLocker2015!'
+            - '.cryptowall' # Encrypted file by Cryptowall ransomware
+            - '.cryptowin'
+            - '.crypz' # CryptXXX ransomware affected data
+            - '.CrySiS'
+            - '.ctb1'
+            - '.ctb2'
+            - '.ctbl'
+            - '.czvxce' # Coverton ransomware affected file
+            - '.d0nut' # Donut ransomware
+            - '.d3ad' # D3adCrypt  ransomware
+            - '.d4nk' # PyL33T ransomware affected file
+            - '.da_vinci_code'
+            - '.dale' # Chip ransomware affected file
+            - '.damacrypt' # Datastor2021 ransomware
+            - '.damage' # Damage ransomware affected file
+            - '.darkcry'
+            - '.darkness' # Rakhni ransomware affected data
+            - '.darkside' # darkside ransomware
+            - '.databankasi ' # DataBankasi ransomware
+            - '.dCrypt' # DummyLocker ransomware affected file
+            - '.deadbolt' # Deadbolt ransomware affected file
+            - '.dec' # Raptor  ransomware, also related to magic the gathering software
+            - '.decrypt2017' # Globe 3 ransomware affected file
+            - '.ded'
+            - '.deria'
+            - '.derp' # Derp ransomware renamed file
+            - '.Dexter' # Troldesh (variant) ransomware affected file
+            - '.dharma' # CrySiS ransomware affected file
+            - '.diablo6'
+            - '.disappeared'
+            - '.domino'
+            - '.doomed'
+            - '.dxxd' # DXXD ransomware affected file
+            - '.dyatel@qq_com'
+            - '.EAF' # EAF ransomware
+            - '.EBF' # Xorist-Vandev Ransomware
+            - '.ecc' # Cryptolocker or TeslaCrypt virus encrypted file
+            - '.edgel' # EdgeLocker ransomware affected file
+            - '.encedRSA'
+            - '.encfilesos@aol.com' # EncFileSOS  ransomware
+            - '.enciphered' # Malware (ransomware) encoded data
+            - '.encmywork'
+            - '.ENCODED' # Codemanager ransomware
+            - '.encoderpass'
+            - '.encr' # FileLocker ransomware affected file
+            - '.encrypt'
+            - '.encrypted' # Donald Trump ransomware affected file
+            - '.encryptedAES'
+            - '.encryptedJB' # Hermetic ransomware
+            - '.encryptedped'
+            - '.encryptedRSA'
+            - '.encryptedyourfiles'
+            - '.enigma' # Coverton ransomware affected data
+            - '.epic'
+            - '.evillock' # Evil-JS (variant) ransomware affected file
+            - '.exotic' # Exotic ransomware affected file
+            - '.exte'
+            - '.exx' # Alpha Crypt encrypted data
+            - '.ezz' # Alpha Crypt virus encrypted data
+            - '.FACKOFF!' #  RedEnergy stealer (not to be confused with the australian company Red Energy)
+            - '.fantom' # Fantom ransomware affected data
+            - '.farattack' # Far Attack Ransomware
+            - '.fear'
+            - '.FenixIloveyou!!'
+            - '.file0locked' # Evil ransomware affected file
+            - '.filegofprencrp'
+            - '.fileiscryptedhard'
+            - '.filerec' # Filerec  ransomware
+            - '.filesencrypted' # medusalocker
+            - '.filock'
+            - '.firecrypt'
+            - '.flyper'
+            - '.freeukraine' # StopWarInUkraine Ransowmare
+            - '.frtrss'
+            - '.fs_invade' #EN_Ransom ransomware
+            - '.fs0ciety'
+            - '.Fuck_You'
+            - '.fuck'
+            - '.fucked' # Manifestus ransomware affected file
+            - '.FuckYourData'
+            - '.fun' # Jigsaw (variant) ransomware affected file
+            - '.GAGUP' # babuk ransomware
+            - '.GAZPROM' # GAZPROM Ransomware (not to be confused with GAZPROM company)
+            - '.gdwill' # GoodWill  ransomware
+            - '.gefickt' # Jigsaw (variant) ransomware affected file
+            - '.gembok'
+            - '.globe' # Globe ransomware affected file
+            - '.goforhelp'
+            - '.good' # Scatter ransomware affected data
+            - '.grt' # Karmen HiddenTear (variant) ransomware affected file
+            - '.gruzin@qq_com'
+            - '.gryphon'
+            - '.gws'
+            - '.h0lyenc' # HolyGhost ransomware
+            - '.H3LL' # Bitmessage ransomware
+            - '.ha3' # El-Polocker affected file
+            - '.hairullah@inbox.lv'
+            - '.hakunamatata'
+            - '.hannah'
+            - '.happyday'
+            - '.happydayzz'
+            - '.happydayzzz'
+            - '.hardbit' # hardbit ransomware
+            - '.haters'
+            - '.hb15'
+            - '.heisenberg' # Troldesh ransomware
+            - '.help'
+            - '.helpdecrypt@ukr_net'
+            - '.helpmeencedfiles' # Samas/SamSam ransomware affected file
+            - '.herbst' # Herbst ransomware affacted data
+            - '.him0m' # Bitmessage ransomware
+            #- '.hive' # hive ransomware
+            - '.hnumkhotep' # Globe 3 ransomware affected file
+            - '.howcanihelpusir'
+            - '.hush' # Jigsaw ransomware affected file
+            - '.iaufkakfhsaraf'
+            - '.iFire' # IceFire ransomware
+            - '.ifuckedyou' # SerbRansom ransomware affected file
+            - '.iloveworld'
+            - '.infected'
+            - '.ipYgh'
+            - '.isis'
+            - '.iswr' # iswr ransomware
+            - '.iwanthelpuuu'
+            - '.jaff'
+            - '.JUST'
+            - '.justbtcwillhelpyou'
+            - '.karma'
+            - '.kb15'
+            - '.keepcalm'
+            - '.kekpop' # Kekpop ransomware
+            - '.kencf'
+            - '.kernel_complete' # KeRanger OS X ransomware data
+            - '.kernel_pid' # KeRanger OS X ransomware data
+            - '.kernel_time' # KeRanger OS X ransomware
+            - '.keybtc@inbox_com' # KeyBTC ransomware affected data
+            - '.KEYH0LES'
+            - '.KEYHOLES'
+            - '.KEYZ'
+            - '.killedXXX'
+            - '.kimcilware' # KimcilWare ransomware affected data
+            - '.kirked'
+            - '.kk'
+            - '.kkk' # Jigsaw Ransomware affected data
+            - '.kolobocheg@aol.com_' # Kolobo ransomware
+            - '.korrektor'
+            - '.kostya' # Kostya ransomware affected file
+            - '.kr3'
+            - '.krab' # GandCrab v4 ransomware affected data
+            - '.kraken' # Rakhni ransomware affected file
+            - '.kratos' # KratosCrypt ransomware affected data
+            - '.kyra' # Globe ransomware affected file
+            - '.L0cked'
+            - '.lambda_l0cked'
+            - '.lcked' # Jigsaw (variant) ransomware affected file
+            - '.LeChiffre' # LeChiffre ransomware affected data
+            - '.legion' # Legion ransomware affected data
+            - '.lesli' # CryptoMix ransomware affected file
+            - '.letmetrydecfiles'
+            - '.lilith' # Lilith  ransomware
+            - '.lock93' # Lock93 ransomware affected file
+            - '.lockbit'
+            - '.Locked-by-Mafia'
+            - '.locked-mafiaware'
+            - '.locked' # FSHealth  ransomware
+            - '.locklock' # LockLock ransomware affected data
+            - '.locky' # Locky ransomware affected data
+            - '.lol!'
+            - '.loli' # LOLI RanSomeWare ransomware affected file
+            - '.loprt'
+            - '.lovewindows' # Globe (variant) ransomware affected file
+            - '.lukitus'
+            - '.Luna' # luna ransomware
+            - '.m9SRob' # HsHarada  ransomware
+            - '.madebyadam' # Roga ransomware affected file
+            - '.magic_software_syndicate' # Troldesh ransomware
+            - '.magic' # Magic ransomware affected data
+            - '.maktub'
+            - '.malki'
+            - '.mallox' # mallox ransomware
+            - '.mamai10' # medusa
+            - '.maori' # maori ransomware
+            - '.maya' # HiddenTear (variant) ransomware affected file
+            - '.mcrgnx' # GwisinLocker  ransomware
+            - '.medusastealer' # Medusa Stealer  ransomware
+            - '.MEOW' # Meow ransomware
+            - '.merry' # Merry X-Mas ransomware affected file
+            - '.micro' # TeslaCrypt 3.0 ransomware encrypted data
+            - '.mole' # CryptoMix (variant) ransomware affected data
+            - '.MRCR1' # Merry X-Mas ransomware affected file
+            - '.n3ww4v3' # N3ww4v3 ransomware
+            - '.nalog@qq_com'
+            - '.NB65' # NB65 ransomware
+            - '.nekochan' # MonaLisa ransomware
+            - '.nemo-hacks.at.sigaint.org'
+            - '.NEVADA' # NEVADA rasnomware
+            - '.nightsky' # NightSky ransomware
+            - '.no_more_ransom'
+            - '.nochance'
+            - '.NOKOYAWA' # NOKOYAWA Ransomware
+            - '.nolvalid'
+            - '.noproblemwedecfiles' # Samas/SamSam ransomware affected file
+            - '.notfoundrans'
+            - '.nuclear55' # Nuke ransomware affected file
+            - '.obleep'
+            - '.octo' # Octocrypt ransomware
+            - '.odcodc' # ODCODC ransomware affected file
+            - '.odin' # Locky ransomware affected file
+            - '.OMG!'
+            - '.one-we_can-help_you'
+            - '.onelock' # GlobeImposter ransomware
+            - '.onion.to._'
+            - '.onion' # Dharma ransomware affected data
+            - '.only-we_can-help_you'
+            - '.oops' # Marlboro ransomware affected file
+            - '.oor'
+            - '.openforyou@india.com'
+            - '.oplata@qq_com'
+            - '.oplata@qq.com'
+            - '.oshit'
+            - '.osiris' # Locky (variant) ransomware affected data
+            - '.otherinformation'
+            - '.oxr'
+            - '.p.redkrypt' # RedKrypt ransomware
+            - '.p5tkjw' # Xorist Ransomware affected data
+            - '.pablukcrypt'
+            - '.padcrypt' # PadCrypt ransomware affected data
+            - '.pandora' # Pandora  ransomware
+            - '.paybtcs'
+            - '.paym' # Jigsaw Ransomware affected data
+            - '.paymrss' # Jigsaw Ransomware affected file
+            - '.payms' # Jigsaw Ransomware affected file
+            - '.paymst' # Jigsaw Ransomware affected file
+            - '.paymts' # Jigsaw Ransomware affected file
+            - '.payransom'
+            - '.payrms' # Jigsaw Ransomware affected file
+            - '.payrmts'
+            - '.pays' # Jigsaw Ransomware affected data
+            - '.paytounlock'
+            - '.pdcr' # PadCrypt Ransomware script
+            - '.pec' # PEC 2017 ransomware affected file
+            - '.PEGS1' # Merry X-Mas ransomware affected file
+            - '.perl'
+            - '.phntm' # Phantom ransomware
+            - '.pizda@qq_com'
+            - '.PLAGUE17' # Plague17 (2014-2016) ransomware
+            - '.play ' # Play ransomware
+            - '.PoAr2w' # Xorist Ransomware affected file
+            - '.porno'
+            - '.potato' # Potato ransomware affected file
+            - '.powerfulldecrypt' # Samas/SamSam ransomware affected file
+            - '.powned'
+            - '.pr0tect'
+            - '.problem' # Problem  ransomware
+            - '.Proxima' # Proxima ransomware
+            - '.pubg' # PUBG ransomware affected data
+            - '.purge' # Globe ransomware affected file
+            - '.putinwillburninhell' #  AntiWar  ransomware
+            - '.puuuk' # Monty  ransomware
+            - '.pzdc' # Scatter ransomware affected data
+            - '.QUIETPLACE' # mimic-ransomware
+            - '.R.i.P'
+            - '.R16m01d05' # Ransomware affected data
+            - '.r3store'
+            - '.R4A'
+            - '.r5a' # 7ev3n ransomware affected file
+            - '.rad'
+            - '.RADAMANT'
+            - '.raid10' # Globe [variant] ransomware affected file
+            - '.RARE1' # Merry X-Mas ransomware affected file
+            - '.razy' # Razy ransomware affected data
+            - '.rdm' # Radamant ransomware affected file
+            - '.rdmk'
+            - '.realfs0ciety@sigaint.org.fs0ciety' # Fsociety ransomware affected file
+            - '.rec_rans' # rancoz-ransomware
+            - '.reco' # STOP/DJVU ransomware file
+            - '.REDTM' # RedTeam ransomware
+            - '.rekt' # RektLocker ransomware affected data
+            - '.relock@qq_com'
+            - '.Remember_you_got_only_24_hours_to_make_the_payment_if_you_dont_pay_prize_will_triple_Mortal_Kombat_Ransomware' # Mortal Kombat Ransomware
+            - '.remind'
+            - '.remk' # STOP Ransomware variant
+            - '.rever' # Rever  ransomware
+            - '.reyptson'
+            - '.rhysida' # rhysida ransomware
+            - '.rip' # KillLocker ransomware affected file
+            - '.RMCM1' # Merry X-Mas ransomware affected file
+            - '.rmd Zeta' # ransomware affected file
+            - '.rmd'
+            - '.rnsmwr' # Gremit ransomware affected file
+            - '.rokku' # Rokku ransomware affected data
+            - '.royal' # Royal ransomware
+            - '.rrk' # Radamant v2 ransomware affected file
+            - '.rsa1024' # Xorist-Vandev Ransomware
+            - '.RSNSlocked'
+            - '.RSplited'
+            - '.ruby' # Ruby ransomware affected file
+            - '.ryp'
+            - '.sage' # Sage ransomware affected data
+            - '.salsa222'
+            - '.sanction'
+            - '.scl'
+            - '.SecureCrypted' # Apocalypse ransomware affected file
+            - '.serp' # Serpent (variant) ransomware affected file
+            - '.serpent' # Serpent ransomware affected file
+            - '.sexy' # PayDay ransomware affected files
+            - '.shino'
+            - '.shit' # Locky ransomware affected file
+            - '.sifreli'
+            - '.Silent'
+            - '.somnia' # https://cert.gov.ua/article/2724253
+            - '.spora' # Spora ransomware affected file
+            - '.sport'
+            - '.stn' # Satan ransomware affected file
+            - '.stop' # Stop24/7 ransomware
+            - '.SUPERCRYPT ' # SuperCrypt ransomware
+            - '.supercrypt'
+            - '.surprise' # Surprise ransomware affected data
+            - '.szf' # SZFLocker ransomware affected data
+            - '.t5019'
+            - '.TheTrumpLockerf'
+            - '.TheTrumpLockerfp'
+            - '.theworldisyours' # Samas/SamSam ransomware affected file
+            - '.thor' # Locky ransomware affected file
+            - '.torchwood' # Torchwood ransomware
+            - '.toxcrypt'
+            - '.trap' # Trap ransomware
+            - '.trmt'
+            - '.troyancoder@qq_com'
+            - '.trun'
+            - '.tusk' # Crimson Walrus ransomware
+            - '.txd0t'
+            - '.txlck' # TxLocker  ransomware
+            - '.tzu'
+            - '.TZW' # TZW Ransomware
+            - '.uk-dealer@sigaint.org'
+            - '.unavailable' # Al-Namrood ransomware affected file
+            - '.unlockvt@india.com'
+            - '.v-society' # ViceSociety ransomware
+            - '.vbransom' # VBRansom 7 ransomware affected file
+            - '.vector_' # vector-ransomware
+            - '.vekanhelpu'
+            - '.velikasrbija'
+            - '.venusf' # Venus Locker ransomware affected file
+            - '.Venusp'
+            - '.versiegelt'
+            - '.VforVendetta' # Samsam (variant) ransomware affected file
+            - '.ViceSociety' # ViceSociety ransomware
+            - '.viki'
+            - '.vindows' # Vindows Locker ransomware affected file
+            - '.visioncrypt'
+            - '.vscrypt'
+            - '.vvv' # TeslaCrypt 3.0 ransomware encrypted data
+            - '.vxlock' # vxLock ransomware affected file
+            - '.wallet' # Globe 3 (variant) ransomware affected file
+            - '.wcry' # WannaCry ransomware affected file
+            - '.weareyourfriends'
+            - '.weencedufiles'
+            - '.wflx' # WildFire ransomware affected file
+            - '.Where_my_files.txt'
+            - '.Whereisyourfiles' # Samas/SamSam ransomware affected file
+            - '.windows10' # Shade ransomware affected data
+            - '.wlu'
+            - '.wncry' # Wana Decrypt0r 2.0 ransomware affected data
+            - '.wncrypt'
+            - '.wnry'
+            - '.wnx'
+            - '.wowreadfordecryp'
+            - '.wowwhereismyfiles'
+            - '.WsIR' # WsIR  ransomware
+            - '.wuciwug'
+            - '.xbtl' # Troldesh ransomware
+            - '.xcri'
+            - '.xort'
+            - '.xrnt'
+            - '.xrtn'
+            - '.xtbl'
+            - '.xxx' # TeslaCrypt 3.0 ransomware encrypted file
+            - '.xxyyzzr' # Money Message ransomware
+            - '.xyz' # TeslaCrypt ransomware encrypted data
+            - '.ya.ru'
+            - '.yourransom'
+            - '.ytbl' # Troldesh (variant) ransomware affected file
+            - '.Z81928819'
+            - '.zc3791'
+            - '.zcrypt' # ZCRYPT ransomware affected data
+            - '.zendr4'
+            - '.zeon' # Zeon ransomware
+            - '.zepto' # Locky ransomware affected data
+            - '.zorro' # Zorro ransomware affected file
+            - '.zXz'
+            - '.zyklon' # ZYKLON ransomware affected data
+            - '.zzz' # TeslaCrypt 2.x ransomware
+            - '.zzzzz' # Locky ransomware affected file
+            # - '.02'
+            # - '.code'  # FP with vs code
+            # - '.DONE' # Done ransomware - FP Found
+            # - '.lock' # Unlocker  ransomware - FP Found
+            # - '.locked' # Various ransomware affected data
+            # - '.ROOT' # rootFinder Ransomware - FP Found
+            # - '.ttt' # TeslaCrypt 3.0 ransomware encrypted data - FP with 7zip
+            # - '.vault' # VaultCrypt ransomware
+            # - '.www'
+            # - '.xdata'
+            #- '.enc' # TorrentLocker ransomware affected file // Caused FP with 'encoding' files
+            #- '.info' # PizzaCrypts Ransomware affected data
+        - TargetFilename|contains:
+            - '._read_thi$_file'
+            - '.cryptolocker'
+            - '.GSupport'
+            - '.hydracrypt'
+            - '.nochance'
+            - '.nuclear'
+            - '.r16m'
+            #- '.omg' # Seen used by legitimate powershell scripts. Example: \AppData\Local\Temp\__PSScriptPolicyTest_av2g3xaq.omg.ps1
+    filter_crypto:
+        TargetFilename|contains: 'java.xml.'
+        TargetFilename|endswith: '.crypto'
+    filter_legitimate_software:
+        Image|startswith:
+            - 'C:\Program Files\'
+            - 'C:\Program Files (x86)\'
+    condition: selection and not 1 of filter_*
+falsepositives:
+    - Unknown
+level: high

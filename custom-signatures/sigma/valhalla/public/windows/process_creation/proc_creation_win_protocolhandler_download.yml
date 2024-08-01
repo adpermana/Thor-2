@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: File Download Using ProtocolHandler.exe
+id: 104cdb48-a7a8-4ca7-a453-32942c6e5dcb
+status: test
+description: |
+    Detects usage of "ProtocolHandler" to download files. Downloaded files will be located in the cache folder (for example - %LOCALAPPDATA%\Microsoft\Windows\INetCache\IE)
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/07/13 16:23:41
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218/T1218.md
+  - https://lolbas-project.github.io/lolbas/OtherMSBinaries/ProtocolHandler/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains:
+          - ftp://
+          - http://
+          - https://
+    selection_img:
+      - Image|endswith: \protocolhandler.exe
+      - OriginalFileName: ProtocolHandler.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/11/09
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

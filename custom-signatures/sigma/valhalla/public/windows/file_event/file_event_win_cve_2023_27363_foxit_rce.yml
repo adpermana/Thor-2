@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential CVE-2023-27363 Exploitation - HTA File Creation By FoxitPDFReader
+id: 9cae055f-e1d2-4f81-b8a5-1986a68cdd84
+status: experimental
+description: Detects suspicious ".hta" file creation in the startup folder by Foxit
+    Reader. This can be an indication of CVE-2023-27363 exploitation.
+author: Gregory
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/10/11 23:20:51
+references:
+  - https://github.com/j00sean/SecBugs/tree/ff72d553f75d93e1a0652830c0f74a71b3f19c46/CVEs/CVE-2023-27363
+  - https://www.zerodayinitiative.com/advisories/ZDI-23-491/
+  - https://www.tarlogic.com/blog/cve-2023-27363-foxit-reader/
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith: \FoxitPDFReader.exe
+        TargetFilename|contains: \Microsoft\Windows\Start Menu\Programs\Startup\
+        TargetFilename|endswith: .hta
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.persistence
+  - attack.t1505.001
+  - cve.2023.27363
+  - detection.emerging_threats
+  - DEMO

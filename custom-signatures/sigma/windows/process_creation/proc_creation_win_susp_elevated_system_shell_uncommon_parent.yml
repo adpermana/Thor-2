@@ -1,0 +1,76 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Elevated System Shell Spawned From Uncommon Parent Location
+id: 178e615d-e666-498b-9630-9ed363038101
+related:
+  - type: similar
+    id: 61065c72-5d7d-44ef-bf41-6a36684b545f
+status: experimental
+description: Detects when a shell program such as the Windows command prompt or PowerShell
+    is launched with system privileges from a uncommon parent location.
+author: frack113, Tim Shelton (update fp)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/12/05 21:32:41
+references:
+  - https://github.com/Wh04m1001/SysmonEoP
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_* and not 1 of filter_main_* and not 1 of filter_optional_*
+    filter_main_generic:
+        ParentImage|contains:
+          - :\Program Files (x86)\
+          - :\Program Files\
+          - :\ProgramData\
+          - :\Windows\System32\
+          - :\Windows\SysWOW64\
+          - :\Windows\Temp\
+          - :\Windows\WinSxS\
+    filter_main_parent_empty:
+        ParentImage: ""
+    filter_main_parent_null:
+        ParentImage: []
+    filter_optional_asgard:
+        CommandLine|contains: :\WINDOWS\system32\cmd.exe /c "
+        CurrentDirectory|contains: :\WINDOWS\Temp\asgard2-agent\
+    filter_optional_ibm_spectrumprotect:
+        CommandLine|contains: :\IBM\SpectrumProtect\webserver\scripts\
+        ParentImage|contains: :\IBM\SpectrumProtect\webserver\scripts\
+    filter_optional_manageengine:
+        Image|endswith: \cmd.exe
+        ParentImage|endswith: :\ManageEngine\ADManager Plus\pgsql\bin\postgres.exe
+    selection_shell:
+      - Image|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+          - \cmd.exe
+      - OriginalFileName:
+          - PowerShell.EXE
+          - pwsh.dll
+          - Cmd.Exe
+    selection_user:
+        LogonId: "0x3e7"
+        User|contains:
+          - AUTHORI
+          - AUTORI
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/11/23
+tags:
+  - attack.privilege_escalation
+  - attack.defense_evasion
+  - attack.execution
+  - attack.t1059
+  - DEMO

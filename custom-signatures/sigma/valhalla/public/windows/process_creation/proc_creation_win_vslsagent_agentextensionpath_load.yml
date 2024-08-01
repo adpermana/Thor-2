@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Vsls-Agent Command With AgentExtensionPath Load
+id: 43103702-5886-11ed-9b6a-0242ac120002
+status: test
+description: Detects Microsoft Visual Studio vsls-agent.exe lolbin execution with
+    a suspicious library load using the --agentExtensionPath parameter
+author: bohops
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/10/30 21:25:11
+references:
+  - https://twitter.com/bohops/status/1583916360404729857
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        CommandLine|contains: Microsoft.VisualStudio.LiveShare.Agent.
+    selection:
+        CommandLine|contains: --agentExtensionPath
+        Image|endswith: \vsls-agent.exe
+fields:
+  - CommandLine
+  - ParentCommandLine
+falsepositives: False positives depend on custom use of vsls-agent.exe
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

@@ -1,0 +1,24 @@
+title: AllowProtectedRenames Registry Value Enabled
+id: 79661feb-c156-425c-b799-8bc196f0a2dc
+status: experimental
+description: Detect enabling of the "AllowProtectedRenames" registry value. Which gives a program the ability to replace protected files.
+references:
+    - https://www.trendmicro.com/en_us/research/21/j/purplefox-adds-new-backdoor-that-uses-websockets.html
+    - https://www.wilderssecurity.com/threads/allowprotectedrenames.84322/
+    - https://devblogs.microsoft.com/scripting/determine-pending-reboot-statuspowershell-style-part-1/
+author: Nasreddine Bencherchali (Nextron Systems)
+date: 2023/02/01
+tags:
+    - attack.defense_evasion
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection:
+        EventType: SetValue
+        TargetObject|endswith: '\CurrentControlSet\Control\Session Manager\AllowProtectedRenames'
+        Details: DWORD (0x00000001)
+    condition: selection
+falsepositives:
+    - Windows Updates
+level: medium

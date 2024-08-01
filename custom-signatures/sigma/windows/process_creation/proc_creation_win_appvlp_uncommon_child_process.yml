@@ -1,0 +1,56 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Uncommon Child Process Of Appvlp.EXE
+id: 9c7e131a-0f2c-4ae0-9d43-b04f4e266d43
+status: test
+description: |
+    Detects uncommon child processes of Appvlp.EXE
+    Appvlp or the Application Virtualization Utility is included with Microsoft Office. Attackers are able to abuse "AppVLP" to execute shell commands.
+    Normally, this binary is used for Application Virtualization, but it can also be abused to circumvent the ASR file path rule folder
+    or to mark a file as a system file.
+author: Sreeman
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/03/13 15:05:11
+references:
+  - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Appvlp/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+    filter_main_generic:
+        Image|endswith:
+          - :\Windows\SysWOW64\rundll32.exe
+          - :\Windows\System32\rundll32.exe
+    filter_optional_office_msoasb:
+        Image|contains: :\Program Files\Microsoft Office
+        Image|endswith: \msoasb.exe
+    filter_optional_office_msouc:
+        Image|contains: :\Program Files\Microsoft Office
+        Image|endswith: \MSOUC.EXE
+    filter_optional_office_skype:
+        Image|contains|all:
+          - :\Program Files\Microsoft Office
+          - \SkypeSrv\
+        Image|endswith: \SKYPESERVER.EXE
+    selection:
+        ParentImage|endswith: \appvlp.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/11/09
+tags:
+  - attack.t1218
+  - attack.defense_evasion
+  - attack.execution
+  - DEMO

@@ -1,0 +1,27 @@
+title: Call VBS From PowerShell Using MSScriptControl COM Object
+id: 0e0ae618-7e4e-4712-bb92-f5cfe9adb21b
+status: test
+description: Detects PowerShell scripts that call the MSScriptControl COM Object to execute VBScript
+author: Nasreddine Bencherchali
+references:
+    - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/russia-ukraine-shuckworm
+date: 2022/09/12
+modified: 2023/03/29
+tags:
+    - attack.defense_evasion
+    - attack.execution
+logsource:
+    product: windows
+    category: ps_script
+    definition: Script Block Logging must be enabled
+detection:
+    selection:
+        ScriptBlockText|contains|all:
+            - 'MSScriptControl.ScriptControl.1'
+            - '.Language'
+            - 'VBScript'
+            - '.AddCode('
+    condition: selection
+falsepositives:
+    - Rare legitimate use of the COM object via code
+level: medium

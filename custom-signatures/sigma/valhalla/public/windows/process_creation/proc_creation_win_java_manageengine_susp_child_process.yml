@@ -1,0 +1,71 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Child Process Of Manage Engine ServiceDesk
+id: cea2b7ea-792b-405f-95a1-b903ea06458f
+status: experimental
+description: Detects suspicious child processes of the "Manage Engine ServiceDesk
+    Plus" Java web service
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/18 19:47:41
+references:
+  - https://www.horizon3.ai/manageengine-cve-2022-47966-technical-deep-dive/
+  - https://github.com/horizon3ai/CVE-2022-47966/blob/3a51c6b72ebbd87392babd955a8fbeaee2090b35/CVE-2022-47966.py
+  - https://blog.viettelcybersecurity.com/saml-show-stopper/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_net:
+        CommandLine|contains: ' stop'
+        Image|endswith:
+          - \net.exe
+          - \net1.exe
+    selection:
+        Image|endswith:
+          - \AppVLP.exe
+          - \bash.exe
+          - \bitsadmin.exe
+          - \calc.exe
+          - \certutil.exe
+          - \cscript.exe
+          - \curl.exe
+          - \forfiles.exe
+          - \mftrace.exe
+          - \mshta.exe
+          - \net.exe
+          - \net1.exe
+          - \notepad.exe
+          - \powershell.exe
+          - \pwsh.exe
+          - \query.exe
+          - \reg.exe
+          - \schtasks.exe
+          - \scrcons.exe
+          - \sh.exe
+          - \systeminfo.exe
+          - \whoami.exe
+          - \wmic.exe
+          - \wscript.exe
+        ParentImage|contains|all:
+          - \ManageEngine\ServiceDesk\
+          - \java.exe
+falsepositives: Legitimate sub processes started by Manage Engine ServiceDesk Pro
+level: high
+customer: 'demo'
+modified: 2023/08/29
+tags:
+  - attack.command_and_control
+  - attack.t1102
+  - DEMO

@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Renamed ProcDump Execution
+id: 4a0b2c7e-7cb2-495d-8b63-5f268e7bfd67
+related:
+  - type: obsoletes
+    id: 03795938-1387-481b-9f4c-3f6241e604fe
+status: test
+description: Detects the execution of a renamed ProcDump executable often used by
+    attackers or malware
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/11/18 13:00:21
+references:
+  - https://docs.microsoft.com/en-us/sysinternals/downloads/procdump
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: (selection_org or all of selection_args_*) and not filter
+    filter:
+        Image|endswith:
+          - \procdump.exe
+          - \procdump64.exe
+    selection_args_ma:
+        CommandLine|contains:
+          - ' -ma '
+          - ' /ma '
+    selection_args_other:
+        CommandLine|contains:
+          - ' -accepteula '
+          - ' /accepteula '
+    selection_org:
+        OriginalFileName: procdump
+falsepositives:
+  - Procdump illegaly bundled with legitimate software
+  - Administrators who rename binaries (should be investigated)
+level: high
+customer: 'demo'
+modified: 2022/12/08
+tags:
+  - attack.defense_evasion
+  - attack.t1036.003
+  - DEMO

@@ -1,0 +1,61 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Sticky Key Like Backdoor Execution
+id: 2fdefcb3-dbda-401e-ae23-f0db027628bc
+related:
+  - type: derived
+    id: baca5663-583c-45f9-b5dc-ea96a22ce542
+status: test
+description: Detects the usage and installation of a backdoor that uses an option
+    to register a malicious debugger for built-in tools that are accessible in the
+    login screen
+author: Florian Roth (Nextron Systems), @twjackomo, Jonhnathan Ribeiro, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2018/03/15 14:53:01
+references:
+  - https://learn.microsoft.com/en-us/archive/blogs/jonathantrull/detecting-sticky-key-backdoors
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - sethc.exe
+          - utilman.exe
+          - osk.exe
+          - Magnify.exe
+          - Narrator.exe
+          - DisplaySwitch.exe
+        Image|endswith:
+          - \cmd.exe
+          - \cscript.exe
+          - \mshta.exe
+          - \powershell.exe
+          - \pwsh.exe
+          - \regsvr32.exe
+          - \rundll32.exe
+          - \wscript.exe
+          - \wt.exe
+        ParentImage|endswith: \winlogon.exe
+falsepositives: Unlikely
+level: critical
+customer: 'demo'
+modified: 2023/03/07
+tags:
+  - attack.privilege_escalation
+  - attack.persistence
+  - attack.t1546.008
+  - car.2014-11-003
+  - car.2014-11-008
+  - DEMO

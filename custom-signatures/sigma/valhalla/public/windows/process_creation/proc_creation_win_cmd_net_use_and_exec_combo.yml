@@ -1,0 +1,52 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious File Execution From Internet Hosted WebDav Share
+id: f0507c0f-a3a2-40f5-acc6-7f543c334993
+status: test
+description: Detects the execution of the "net use" command to mount a WebDAV server
+    and then immediately execute some content in it. As seen being used in malicious
+    LNK files
+author: pH-T (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/01 21:27:11
+references:
+  - https://twitter.com/ShadowChasing1/status/1552595370961944576
+  - https://www.virustotal.com/gui/file/a63376ee1dba76361df73338928e528ca5b20171ea74c24581605366dcaa0104/behavior
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_base:
+        CommandLine|contains|all:
+          - ' net use http'
+          - '& start /b '
+          - \DavWWWRoot\
+    selection_ext:
+        CommandLine|contains:
+          - '.exe '
+          - '.dll '
+          - '.bat '
+          - '.vbs '
+          - '.ps1 '
+    selection_img:
+      - Image|contains: \cmd.exe
+      - OriginalFileName: Cmd.EXE
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/02/21
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

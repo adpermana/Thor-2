@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Network Sniffing - Linux
+id: f4d3748a-65d1-4806-bd23-e25728081d01
+status: test
+description: |
+    Network sniffing refers to using the network interface on a system to monitor or capture information sent over a wired or wireless connection.
+    An adversary may place a network interface into promiscuous mode to passively access data in transit over the network, or use span ports to capture a larger amount of data.
+author: Timur Zinniatullin, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/21 12:12:31
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1040/T1040.md
+logsource:
+    product: linux
+    service: auditd
+detection:
+    condition: 1 of selection_*
+    selection_1:
+        a0: tcpdump
+        a1: -c
+        a3|contains: -i
+        type: execve
+    selection_2:
+        a0: tshark
+        a1: -c
+        a3: -i
+        type: execve
+falsepositives: Legitimate administrator or user uses network sniffing tool for legitimate
+    reasons.
+level: low
+customer: 'demo'
+modified: 2022/12/18
+tags:
+  - attack.credential_access
+  - attack.discovery
+  - attack.t1040
+  - DEMO

@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: GatherNetworkInfo.VBS Reconnaissance Script Output
+id: f92a6f1e-a512-4a15-9735-da09e78d7273
+related:
+  - type: similar
+    id: 575dce0c-8139-4e30-9295-1ee75969f7fe
+  - type: similar
+    id: 07aa184a-870d-413d-893a-157f317f6f58
+status: test
+description: Detects creation of files which are the results of executing the built-in
+    reconnaissance script "C:\Windows\System32\gatherNetworkInfo.vbs".
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/02/08 19:30:01
+references:
+  - https://posts.slayerlabs.com/living-off-the-land/#gathernetworkinfovbs
+  - https://www.mandiant.com/resources/blog/trojanized-windows-installers-ukrainian-government
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetFilename|endswith:
+          - \Hotfixinfo.txt
+          - \netiostate.txt
+          - \sysportslog.txt
+          - \VmSwitchLog.evtx
+        TargetFilename|startswith: C:\Windows\System32\config
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.discovery
+  - DEMO

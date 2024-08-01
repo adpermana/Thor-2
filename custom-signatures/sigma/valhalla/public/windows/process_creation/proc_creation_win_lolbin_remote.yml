@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Use of Remote.exe
+id: 4eddc365-79b4-43ff-a9d7-99422dc34b93
+status: test
+description: Remote.exe is part of WinDbg in the Windows SDK and can be used for AWL
+    bypass and running remote files.
+author: Christopher Peacock @SecurePeacock, SCYTHE @scythe_io
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/02 10:21:01
+references:
+  - https://blog.thecybersecuritytutor.com/Exeuction-AWL-Bypass-Remote-exe-LOLBin/
+  - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Remote/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - Image|endswith: \remote.exe
+      - OriginalFileName: remote.exe
+falsepositives: Approved installs of Windows SDK with Debugging Tools for Windows
+    (WinDbg).
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1127
+  - DEMO

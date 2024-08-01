@@ -1,0 +1,112 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Relevant Anti-Virus Signature Keywords In Application Log
+id: 78bc5783-81d9-4d73-ac97-59f6db4f72a8
+status: test
+description: Detects potentially highly relevant antivirus events in the application
+    log based on known virus signature names and malware keywords.
+author: Florian Roth (Nextron Systems), Arnim Rupp
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/02/19 21:03:01
+references:
+  - https://www.virustotal.com/gui/file/13828b390d5f58b002e808c2c4f02fdd920e236cc8015480fa33b6c1a9300e31
+  - https://www.virustotal.com/gui/file/15b57c1b68cd6ce3c161042e0f3be9f32d78151fe95461eedc59a79fc222c7ed
+  - https://www.virustotal.com/gui/file/5092b2672b4cb87a8dd1c2e6047b487b95995ad8ed5e9fc217f46b8bfb1b8c01
+logsource:
+    product: windows
+    service: application
+detection:
+    condition: keywords and not 1 of filter_optional_*
+    filter_optional_generic:
+      - Keygen
+      - Crack
+      - anti_ransomware_service.exe
+      - cyber-protect-service.exe
+    filter_optional_information:
+        Level: "4"
+    filter_optional_restartmanager:
+        Provider_Name: Microsoft-Windows-RestartManager
+    keywords:
+      - Adfind
+      - ASP/BackDoor
+      - ATK/
+      - Backdoor.ASP
+      - Backdoor.Cobalt
+      - Backdoor.JSP
+      - Backdoor.PHP
+      - Blackworm
+      - Brutel
+      - BruteR
+      - Chopper
+      - Cobalt
+      - COBEACON
+      - Cometer
+      - CRYPTES
+      - Cryptor
+      - Destructor
+      - DumpCreds
+      - Exploit.Script.CVE
+      - FastReverseProxy
+      - Filecoder
+      - GrandCrab
+      - HackTool
+      - 'HKTL:'
+      - HKTL.
+      - HKTL/
+      - HTool
+      - IISExchgSpawnCMD
+      - Impacket
+      - JSP/BackDoor
+      - Keylogger
+      - Koadic
+      - Krypt
+      - Lazagne
+      - Metasploit
+      - Meterpreter
+      - MeteTool
+      - Mimikatz
+      - Mpreter
+      - Nighthawk
+      - Packed.Generic.347
+      - PentestPowerShell
+      - Phobos
+      - PHP/BackDoor
+      - PowerSploit
+      - PowerSSH
+      - PshlSpy
+      - PSWTool
+      - PWCrack
+      - PWDump
+      - Ransom
+      - Rozena
+      - Ryzerlo
+      - Sbelt
+      - Seatbelt
+      - SecurityTool
+      - SharpDump
+      - Sliver
+      - Splinter
+      - Swrort
+      - Tescrypt
+      - TeslaCrypt
+      - Valyria
+      - Webshell
+falsepositives: Some software piracy tools (key generators, cracks) are classified
+    as hack tools
+level: high
+customer: 'demo'
+modified: 2023/11/22
+tags:
+  - attack.resource_development
+  - attack.t1588
+  - DEMO

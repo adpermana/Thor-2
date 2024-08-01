@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Shim Database Persistence via Sdbinst.EXE
+id: 517490a7-115a-48c6-8862-1a481504d5a8
+related:
+  - type: similar
+    id: 18ee686c-38a3-4f65-9f44-48a077141f42
+status: test
+description: |
+    Detects installation of a new shim using sdbinst.exe.
+    Adversaries may establish persistence and/or elevate privileges by executing malicious content triggered by application shims
+author: Markus Neis
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/01/16 19:15:01
+references:
+  - https://www.mandiant.com/resources/blog/fin7-shim-databases-persistence
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_* and not 1 of filter_optional_*
+    filter_optional_iis:
+        CommandLine|contains:
+          - :\Program Files (x86)\IIS Express\iisexpressshim.sdb
+          - :\Program Files\IIS Express\iisexpressshim.sdb
+        ParentImage|endswith: \msiexec.exe
+    selection_cli:
+        CommandLine|contains: .sdb
+    selection_img:
+      - Image|endswith: \sdbinst.exe
+      - OriginalFileName: sdbinst.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/12/06
+tags:
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1546.011
+  - DEMO

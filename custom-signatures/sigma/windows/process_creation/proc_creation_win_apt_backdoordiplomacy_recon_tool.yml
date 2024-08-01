@@ -1,0 +1,27 @@
+title: Potential Backdoor Diplomacy Recon Activity
+id: d646fd83-ae7d-4dba-914b-9bebe9aeb5b4
+status: experimental
+description: Detects suspicious command line flags related to recon tool seen used by the Backdoor Diplomacy APT group
+author: pH-T
+references:
+    - https://www.bitdefender.com/files/News/CaseStudies/study/426/Bitdefender-PR-Whitepaper-BackdoorDiplomacy-creat6507-en-EN.pdf
+    - https://www.virustotal.com/gui/file/ba757a4d3560e18c198110ac2f3d610a9f4ffb378f29fd29cd91a66e2529a67c
+date: 2023/02/14
+tags:
+    - attack.reconnaissance
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains|all:
+            - '/ping'
+            - '/domain'
+        CommandLine|contains:
+            - '/getsessionpc'
+            - '/getcomdat'
+            - '/psexec'
+    condition: selection
+falsepositives:
+    - Unknown
+level: high

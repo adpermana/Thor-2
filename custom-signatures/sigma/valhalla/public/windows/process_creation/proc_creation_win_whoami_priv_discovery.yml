@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Security Privileges Enumeration Via Whoami.EXE
+id: 97a80ec7-0e2f-4d05-9ef4-65760e634f6b
+status: test
+description: Detects a whoami.exe executed with the /priv command line flag instructing
+    the tool to show all current user privileges. This is often used after a privilege
+    escalation attempt.
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/05/05 18:07:41
+references:
+  - https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/whoami
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains:
+          - ' /priv'
+          - ' -priv'
+    selection_img:
+      - Image|endswith: \whoami.exe
+      - OriginalFileName: whoami.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/02/28
+tags:
+  - attack.privilege_escalation
+  - attack.discovery
+  - attack.t1033
+  - DEMO

@@ -1,0 +1,26 @@
+title: Enigma Stealer Traffic
+id: 80b713e2-fd02-4cfe-8ade-4fff588e150c
+status: experimental
+description: Detects Enigma stealer GET requests used to retrieve data from the C2
+references:
+    - https://tria.ge/230121-rb7qlsch55/behavioral2
+    - https://twitter.com/suyog41/status/1616429686950854658
+author: X__Junior
+date: 2023/01/23
+tags:
+    - attack.command_and_control
+logsource:
+    category: proxy
+detection:
+    selection:
+        # example: GET /errlog002/gate.php?hwid=e32e1c79-b88e-4709-94fb-81034ca3398e&filename=main.cpp&nStr=1&desc=Loader%20start.%20ver:%2010.0.19041;%20x64.%20.Net%20ver:%202.03.03.54.0%20client4.0%20full4.8
+        cs-method: 'GET'
+        c-uri|contains|all:
+            - '.php?hwid='
+            - '&filename='
+            - 'desc=Loader start. ver:'
+            - '.Net ver:'
+    condition: selection
+falsepositives:
+    - Unknown
+level: high

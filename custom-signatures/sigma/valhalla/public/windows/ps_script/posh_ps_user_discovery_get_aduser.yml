@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: User Discovery And Export Via Get-ADUser Cmdlet - PowerShell
+id: c2993223-6da8-4b1a-88ee-668b8bf315e9
+related:
+  - type: similar
+    id: 1114e048-b69c-4f41-bc20-657245ae6e3f
+status: test
+description: Detects usage of the Get-ADUser cmdlet to collect user information and
+    output it to a file
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/11/17 20:57:21
+references:
+  - http://blog.talosintelligence.com/2022/09/lazarus-three-rats.html
+  - https://www.microsoft.com/en-us/security/blog/2022/10/18/defenders-beware-a-case-for-post-ransomware-investigations/
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: selection
+    selection:
+        ScriptBlockText|contains:
+          - ' > '
+          - ' | Select '
+          - Out-File
+          - Set-Content
+          - Add-Content
+        ScriptBlockText|contains|all:
+          - 'Get-ADUser '
+          - ' -Filter \*'
+falsepositives: Legitimate admin scripts may use the same technique, it's better to
+    exclude specific computers or users who execute these commands or scripts often
+level: medium
+customer: 'demo'
+tags:
+  - attack.discovery
+  - attack.t1033
+  - DEMO

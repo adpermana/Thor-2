@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PowerShell Get Clipboard
+id: 4cbd4f12-2e22-43e3-882f-bff3247ffb78
+status: test
+description: A General detection for the Get-Clipboard commands in PowerShell logs.
+    This could be an adversary capturing clipboard contents.
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/05/02 12:22:11
+references:
+  - https://github.com/OTRF/detection-hackathon-apt29/issues/16
+  - https://github.com/OTRF/ThreatHunter-Playbook/blob/2d4257f630f4c9770f78d0c1df059f891ffc3fec/docs/evals/apt29/detections/7.A.2_F4609F7E-C4DB-4327-91D4-59A58C962A02.md
+logsource:
+    category: ps_module
+    product: windows
+    definition: 0ad03ef1-f21b-4a79-8ce8-e6900c54b65b
+detection:
+    condition: selection
+    selection:
+        Payload|contains: Get-Clipboard
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/01/04
+tags:
+  - attack.collection
+  - attack.t1115
+  - DEMO

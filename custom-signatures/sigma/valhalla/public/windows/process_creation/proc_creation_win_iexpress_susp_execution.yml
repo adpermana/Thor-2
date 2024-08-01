@@ -1,0 +1,52 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Self Extracting Package Creation Via Iexpress.EXE From Potentially Suspicious
+    Location
+id: b2b048b0-7857-4380-b0fb-d3f0ab820b71
+status: experimental
+description: |
+    Detects the use of iexpress.exe to create binaries via Self Extraction Directive (SED) files located in potentially suspicious locations.
+    This behavior has been observed in-the-wild by different threat actors.
+author: Joseliyo Sanchez, @Joseliyo_Jstnk, Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/02/05 04:34:41
+references:
+  - https://strontic.github.io/xcyclopedia/library/iexpress.exe-D594B2A33EFAFD0EABF09E3FDC05FCEA.html
+  - https://en.wikipedia.org/wiki/IExpress
+  - https://decoded.avast.io/janvojtesek/raspberry-robins-roshtyak-a-little-lesson-in-trickery/
+  - https://www.virustotal.com/gui/file/602f4ae507fa8de57ada079adff25a6c2a899bd25cd092d0af7e62cdb619c93c/behavior
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains: ' /n '
+    selection_img:
+      - Image|endswith: \iexpress.exe
+      - OriginalFileName: IEXPRESS.exe
+    selection_paths:
+        CommandLine|contains:
+          - :\ProgramData\
+          - :\Temp\
+          - :\Windows\System32\Tasks\
+          - :\Windows\Tasks\
+          - :\Windows\Temp\
+          - \AppData\Local\Temp\
+falsepositives: Administrators building packages using iexpress.exe
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

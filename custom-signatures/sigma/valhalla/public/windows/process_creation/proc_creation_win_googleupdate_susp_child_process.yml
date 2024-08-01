@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potentially Suspicious GoogleUpdate Child Process
+id: 84b1ecf9-6eff-4004-bafb-bae5c0e251b2
+related:
+  - type: derived
+    id: bdbab15a-3826-48fa-a1b7-723cd8f32fcc
+status: experimental
+description: Detects potentially suspicious child processes of "GoogleUpdate.exe"
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/15 19:22:31
+references:
+  - https://www.ncsc.gov.uk/static-assets/documents/malware-analysis-reports/goofy-guineapig/NCSC-MAR-Goofy-Guineapig.pdf
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_image_null:
+        Image: []
+    filter_main_known_legit:
+      - Image|contains: \Google
+      - Image|endswith:
+          - \setup.exe
+          - chrome_updater.exe
+          - chrome_installer.exe
+    selection:
+        ParentImage|endswith: \GoogleUpdate.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/05/22
+tags:
+  - attack.defense_evasion
+  - DEMO

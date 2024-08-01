@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Use of W32tm as Timer
+id: 6da2c9f5-7c53-401b-aacb-92c040ce1215
+status: test
+description: When configured with suitable command line arguments, w32tm can act as
+    a delay mechanism
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/25 10:56:41
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/d0dad62dbcae9c60c519368e82c196a3db577055/atomics/T1124/T1124.md
+  - https://blogs.blackberry.com/en/2022/05/dirty-deeds-done-dirt-cheap-russian-rat-offers-backdoor-bargains
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cmd:
+        CommandLine|contains|all:
+          - /stripchart
+          - '/computer:'
+          - '/period:'
+          - /dataonly
+          - '/samples:'
+    selection_w32tm:
+      - Image|endswith: \w32tm.exe
+      - OriginalFileName: w32time.dll
+falsepositives: Legitimate use
+level: high
+customer: 'demo'
+tags:
+  - attack.discovery
+  - attack.t1124
+  - DEMO

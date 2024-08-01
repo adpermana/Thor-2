@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Sliver C2 Default Service Installation
+id: 31c51af6-e7aa-4da7-84d4-8f32cc580af2
+status: test
+description: Detects known malicious service installation that appear in cases in
+    which a Sliver implants execute the PsExec commands
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/25 15:55:01
+references:
+  - https://github.com/BishopFox/sliver/blob/79f2d48fcdfc2bee4713b78d431ea4b27f733f30/client/command/commands.go#L1231
+  - https://www.microsoft.com/security/blog/2022/08/24/looking-for-the-sliver-lining-hunting-for-emerging-command-and-control-frameworks/
+logsource:
+    product: windows
+    service: system
+detection:
+    condition: selection_eid and 1 of selection_service_*
+    selection_eid:
+        EventID: "7045"
+        Provider_Name: Service Control Manager
+    selection_service_1:
+        ImagePath|re: ^[a-zA-Z]:\\windows\\temp\\[a-zA-Z0-9]{10}\.exe
+    selection_service_2:
+        ServiceName:
+          - Sliver
+          - Sliver implant
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.execution
+  - attack.privilege_escalation
+  - attack.t1543.003
+  - attack.t1569.002
+  - DEMO

@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: UAC Bypass WSReset
+id: 89a9a0e0-f61a-42e5-8957-b1479565a658
+status: test
+description: Detects the pattern of UAC Bypass via WSReset usable by default sysmon-config
+author: Christian Burkard (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/23 10:25:21
+references:
+  - https://lolbas-project.github.io/lolbas/Binaries/Wsreset/
+  - https://github.com/hfiref0x/UACME
+  - https://medium.com/falconforce/falconfriday-detecting-uac-bypasses-0xff16-86c2a9107abf
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith: \wsreset.exe
+        IntegrityLevel:
+          - High
+          - System
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - attack.t1548.002
+  - DEMO

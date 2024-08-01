@@ -1,0 +1,73 @@
+title: PowerShell Script With Suspicious Shortcut Creation Capability
+id: 04c01bfc-79b2-4c51-ae8a-376f9994f13a
+related:
+    - id: a6a83a6e-94d6-4ba0-b4f4-e9620461adb2
+      type: similar
+status: experimental
+description: Detects PowerShell script with shortcut creation capability via the WScript COM object, where the arguments of said shortcut use suspicious commands.
+date: 2023/06/19
+modified: 2023/07/04
+references:
+    - Internal Research
+    - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/shuckworm-russia-ukraine-military
+    - https://learn.microsoft.com/en-us/troubleshoot/windows-client/admin-development/create-desktop-shortcut-with-wsh
+author: Nasreddine Bencherchali
+tags:
+    - attack.execution
+logsource:
+    product: windows
+    category: ps_script
+    definition: Script Block Logging must be enabled
+detection:
+    selection_main:
+        ScriptBlockText|contains|all:
+            - '.Arguments'
+            - '.CreateShortcut('
+            - '.Save'
+            - '.TargetPath'
+    selection_targets:
+        ScriptBlockText|contains:
+            # Note: Add more LOLBIN binaries
+            - '\bash.exe'
+            - '\bitsadmin.exe'
+            - '\calc.exe'
+            - '\certutil.exe'
+            - '\cmd.exe'
+            - '\cmstp.exe'
+            - '\conhost.exe'
+            - '\cscript.exe'
+            - '\hh.exe'
+            - '\msbuild.exe'
+            - '\mshta.exe'
+            - '\msiexec.exe'
+            - '\notepad.exe'
+            - '\odbcconf.exe'
+            - '\powershell.exe'
+            - '\pwsh.exe'
+            - '\regsvr32.exe'
+            - '\rundll32.exe'
+            - '\wscript.exe'
+    selection_args:
+        ScriptBlockText|contains:
+            # Note: Add more suspicious combinations
+            - 'http://'
+            - 'https://'
+            - 'Invoke-Expressions'
+            - 'Invoke-WebRequest'
+            - 'Invoke-Command'
+            - 'IEX'
+            - 'IWR'
+            - 'ICM'
+            - '-ep bypass'
+            - 'style hidden'
+            - '\Temp\'
+            - '\PerfLogs\'
+            - 'vbscript:'
+            - 'javascript:'
+            - '.vbe'
+    filter_optional_chocolatey:
+        ScriptBlockText|contains: 'https://github.com/chocolatey/chocolatey'
+    condition: all of selection_* and not 1 of filter_*
+falsepositives:
+    - Unknown
+level: high

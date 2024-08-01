@@ -1,0 +1,95 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Office Autorun Keys Modification
+id: baecf8fb-edbf-429f-9ade-31fc3f22b970
+related:
+  - type: obsoletes
+    id: 17f878b8-9968-4578-b814-c4217fc5768c
+status: experimental
+description: Detects modification of autostart extensibility point (ASEP) in registry.
+author: Victor Sergeev, Daniil Yugoslavskiy, Gleb Sukhodolskiy, Timur Zinniatullin,
+    oscd.community, Tim Shelton, frack113 (split)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/25 14:34:01
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1547.001/T1547.001.md
+  - https://docs.microsoft.com/en-us/sysinternals/downloads/autoruns
+  - https://gist.github.com/GlebSukhodolskiy/0fc5fa5f482903064b448890db1eaf9d
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: office and office_details and not 1 of filter_*
+    filter_avg:
+        Image: C:\Program Files\AVG\Antivirus\RegSvr.exe
+        TargetObject|contains: \Microsoft\Office\Outlook\Addins\Antivirus.AsOutExt\
+    filter_empty:
+        Details: (Empty)
+    filter_known_addins:
+        Image|startswith:
+          - C:\Program Files\Microsoft Office\
+          - C:\Program Files (x86)\Microsoft Office\
+          - C:\Windows\System32\msiexec.exe
+          - C:\Windows\System32\regsvr32.exe
+        TargetObject|contains:
+          - \Excel\Addins\AdHocReportingExcelClientLib.AdHocReportingExcelClientAddIn.1\
+          - \Excel\Addins\ExcelPlugInShell.PowerMapConnect\
+          - \Excel\Addins\NativeShim\
+          - \Excel\Addins\NativeShim.InquireConnector.1\
+          - \Excel\Addins\PowerPivotExcelClientAddIn.NativeEntry.1\
+          - \Outlook\AddIns\AccessAddin.DC\
+          - \Outlook\AddIns\ColleagueImport.ColleagueImportAddin\
+          - \Outlook\AddIns\EvernoteCC.EvernoteContactConnector\
+          - \Outlook\AddIns\EvernoteOLRD.Connect\
+          - \Outlook\Addins\Microsoft.VbaAddinForOutlook.1\
+          - \Outlook\Addins\OcOffice.OcForms\
+          - \Outlook\Addins\\OneNote.OutlookAddin
+          - \Outlook\Addins\OscAddin.Connect\
+          - \Outlook\Addins\OutlookChangeNotifier.Connect\
+          - \Outlook\Addins\UCAddin.LyncAddin.1
+          - \Outlook\Addins\UCAddin.UCAddin.1
+          - \Outlook\Addins\UmOutlookAddin.FormRegionAddin\
+    filter_officeclicktorun:
+        Image|endswith: \OfficeClickToRun.exe
+        Image|startswith:
+          - C:\Program Files\Common Files\Microsoft Shared\ClickToRun\
+          - C:\Program Files\Common Files\Microsoft Shared\ClickToRun\Updates\
+    office:
+        TargetObject|contains:
+          - \Software\Wow6432Node\Microsoft\Office
+          - \Software\Microsoft\Office
+    office_details:
+        TargetObject|contains:
+          - \Word\Addins
+          - \PowerPoint\Addins
+          - \Outlook\Addins
+          - \Onenote\Addins
+          - \Excel\Addins
+          - \Access\Addins
+          - test\Special\Perf
+fields:
+  - SecurityID
+  - ObjectName
+  - OldValueType
+  - NewValueType
+falsepositives:
+  - Legitimate software automatically (mostly, during installation) sets up autorun
+    keys for legitimate reason
+  - Legitimate administrator sets up autorun keys for legitimate reason
+level: medium
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.persistence
+  - attack.t1547.001
+  - DEMO

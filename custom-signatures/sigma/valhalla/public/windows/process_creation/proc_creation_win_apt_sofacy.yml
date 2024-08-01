@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Sofacy Trojan Loader Activity
+id: ba778144-5e3d-40cf-8af9-e28fb1df1e20
+status: test
+description: Detects Trojan loader activity as used by APT28
+author: Florian Roth (Nextron Systems), Jonhnathan Ribeiro, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2018/03/01 13:42:31
+references:
+  - https://researchcenter.paloaltonetworks.com/2018/02/unit42-sofacy-attacks-multiple-government-entities/
+  - https://www.hybrid-analysis.com/sample/ff808d0a12676bfac88fd26f955154f8884f2bb7c534b9936510fd6296c543e8?environmentId=110
+  - https://twitter.com/ClearskySec/status/960924755355369472
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_* and not 1 of filter_main_*
+    filter_main_exclude_temp:
+        CommandLine|contains: \AppData\Local\Temp\
+    selection_extensions:
+      - CommandLine|contains: .dat",
+      - CommandLine|endswith:
+          - '.dll #1'
+          - '.dll" #1'
+          - .dll",#1
+    selection_path:
+        CommandLine|contains:
+          - '%LOCALAPPDATA%'
+          - \AppData\Local\
+        Image|endswith: \rundll32.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/05/31
+tags:
+  - attack.defense_evasion
+  - attack.execution
+  - attack.g0007
+  - attack.t1059.003
+  - attack.t1218.011
+  - car.2013-10-002
+  - detection.emerging_threats
+  - DEMO

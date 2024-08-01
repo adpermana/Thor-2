@@ -1,0 +1,57 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Non Interactive PowerShell Process Spawned
+id: f4bbd493-b796-416e-bbf2-121235348529
+status: test
+description: Detects non-interactive PowerShell activity by looking at the "powershell"
+    process with a non-user GUI process such as "explorer.exe" as a parent.
+author: Roberto Rodriguez @Cyb3rWard0g (rule), oscd.community (improvements)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/09/12 17:17:11
+references:
+  - https://web.archive.org/web/20200925032237/https://threathunterplaybook.com/notebooks/windows/02_execution/WIN-190410151110.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+    filter_main_generic:
+        ParentImage|endswith:
+          - :\Windows\explorer.exe
+          - :\Windows\System32\CompatTelRunner.exe
+          - :\Windows\SysWOW64\explorer.exe
+    filter_main_windows_update:
+        ParentImage: :\$WINDOWS.~BT\Sources\SetupHost.exe
+    filter_optional_terminal:
+        ParentImage|contains: :\Program Files\WindowsApps\Microsoft.WindowsTerminal_
+        ParentImage|endswith: \WindowsTerminal.exe
+    filter_optional_vscode:
+        ParentCommandLine|contains: ' --ms-enable-electron-run-as-node '
+        ParentImage|endswith: \AppData\Local\Programs\Microsoft VS Code\Code.exe
+    selection:
+      - Image|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+      - OriginalFileName:
+          - PowerShell.EXE
+          - pwsh.dll
+falsepositives: Likely. Many admin scripts and tools leverage PowerShell in their
+    BAT or VB scripts which may trigger this rule often. It is best to add additional
+    filters or use this to hunt for anomalies
+level: low
+customer: 'demo'
+modified: 2023/09/07
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

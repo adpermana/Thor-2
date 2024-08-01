@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Arbitrary File Download Via IMEWDBLD.EXE
+id: 863218bd-c7d0-4c52-80cd-0a96c09f54af
+related:
+  - type: derived
+    id: 8d7e392e-9b28-49e1-831d-5949c6281228
+status: experimental
+description: Detects usage of "IMEWDBLD.exe" to download arbitrary files
+author: Swachchhanda Shrawan Poudel
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/11/09 15:30:41
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1105/T1105.md#atomic-test-10---windows---powershell-download
+  - https://lolbas-project.github.io/lolbas/Binaries/IMEWDBLD/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains:
+          - http://
+          - https://
+    selection_img:
+      - Image|endswith: \IMEWDBLD.exe
+      - OriginalFileName: imewdbld.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.execution
+  - attack.t1218
+  - DEMO

@@ -1,0 +1,33 @@
+title: New Service Uses Suspicious Windows Binary
+id: 7685a5c3-d8cd-447a-b77e-da668da8d62e
+description: Detects a service installation that uses a suspicious Windows binary in the image path value
+status: test
+author: Florian Roth (Nextron Systems)
+date: 2022/07/05
+modified: 2023/03/28
+references:
+    - Internal Research
+tags:
+    - attack.defense_evasion
+    - attack.t1027
+    - attack.execution
+    - attack.t1059.001
+logsource:
+    product: windows
+    service: system
+detection:
+    selection:
+        Provider_Name: 'Service Control Manager'
+        EventID: 7045
+        ImagePath|contains:
+            - 'regsvr32'
+            - '\\cscript'
+            - '\\wscript'
+            - '\\powershell'
+            - '\\mshta'
+            - '\\certutil'
+            - '&&'
+    condition: selection
+falsepositives:
+    - Unknown
+level: high

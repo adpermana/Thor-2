@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: AWS Glue Development Endpoint Activity
+id: 4990c2e3-f4b8-45e3-bc3c-30b14ff0ed26
+status: test
+description: Detects possible suspicious glue development endpoint activity.
+author: Austin Songer @austinsonger
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/10/03 15:58:51
+references:
+  - https://rhinosecuritylabs.com/aws/aws-privilege-escalation-methods-mitigation/
+  - https://docs.aws.amazon.com/glue/latest/webapi/API_CreateDevEndpoint.html
+logsource:
+    product: aws
+    service: cloudtrail
+detection:
+    condition: selection
+    selection:
+        eventName:
+          - CreateDevEndpoint
+          - DeleteDevEndpoint
+          - UpdateDevEndpoint
+        eventSource: glue.amazonaws.com
+falsepositives:
+  - Glue Development Endpoint Activity may be performed by a system administrator.
+    Verify whether the user identity, user agent, and/or hostname should be making
+    changes in your environment.
+  - If known behavior is causing false positives, it can be exempted from the rule.
+level: low
+customer: 'demo'
+modified: 2022/12/18
+tags:
+  - attack.privilege_escalation
+  - DEMO

@@ -1,0 +1,59 @@
+title: Suspicious PowerShell Obfuscation Patterns
+id: 660ce8b3-b112-4644-84a5-fe9be9d35b3d
+status: experimental
+description: Detects PowerShell obfuscation patterns as e.g. seen in Emotet executions
+author: Florian Roth
+date: 2021/11/29
+tags:
+    - attack.execution
+    - attack.t1059.001
+    - attack.defense_evasion
+    - attack.t1027
+references:
+    - https://app.any.run/tasks/913428d9-49e1-4a3c-8dc7-c79a6829fa78/
+    - https://app.any.run/tasks/423ca803-9dfc-4ea0-8caf-4cabe95edb11/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains:
+            # 'n'+'ew-i
+            # 'ne'+'w-i
+            # 'new'+'-i
+            # 'new-'+'i
+            - 'JwBuACcAKwAnAGUAdwAtAGkA'
+            - 'cAbgAnACsAJwBlAHcALQBpA'
+            - 'nAG4AJwArACcAZQB3AC0AaQ'
+            - 'JwBuAGUAJwArACcAdwAtAGkA'
+            - 'cAbgBlACcAKwAnAHcALQBpA'
+            - 'nAG4AZQAnACsAJwB3AC0AaQ'
+            - 'JwBuAGUAdwAnACsAJwAtAGkA'
+            - 'cAbgBlAHcAJwArACcALQBpA'
+            - 'nAG4AZQB3ACcAKwAnAC0AaQ'
+            - 'JwBuAGUAdwAtACcAKwAnAGkA'
+            - 'cAbgBlAHcALQAnACsAJwBpA'
+            - 'nAG4AZQB3AC0AJwArACcAaQ'
+            # $eNV:
+            # $eNv:
+            # $EnV:
+            # $ENv:
+            - 'JABlAE4AVgA6A'
+            - 'QAZQBOAFYAOg'
+            - 'kAGUATgBWADoA'
+            - 'JABlAE4AdgA6A'
+            - 'QAZQBOAHYAOg'
+            - 'kAGUATgB2ADoA'
+            - 'JABFAG4AVgA6A'
+            - 'QARQBuAFYAOg'
+            - 'kAEUAbgBWADoA'
+            - 'JABFAE4AdgA6A'
+            - 'QARQBOAHYAOg'
+            - 'kAEUATgB2ADoA'
+    condition: selection
+fields:
+    - CommandLine
+    - ParentCommandLine
+falsepositives:
+    - Unknown
+level: high

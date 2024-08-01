@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Raccine Uninstall
+id: a31eeaed-3fd5-478e-a8ba-e62c6b3f9ecc
+status: test
+description: Detects commands that indicate a Raccine removal from an end system.
+    Raccine is a free ransomware protection tool.
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/01/21 10:39:51
+references:
+  - https://github.com/Neo23x0/Raccine
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection*
+    selection1:
+        CommandLine|contains|all:
+          - 'taskkill '
+          - RaccineSettings.exe
+    selection2:
+        CommandLine|contains|all:
+          - reg.exe
+          - delete
+          - Raccine Tray
+    selection3:
+        CommandLine|contains|all:
+          - schtasks
+          - /DELETE
+          - Raccine Rules Updater
+falsepositives: Legitimate deinstallation by administrative staff
+level: high
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+  - DEMO

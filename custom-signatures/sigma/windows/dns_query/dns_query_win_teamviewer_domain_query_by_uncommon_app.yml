@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: TeamViewer Domain Query By Non-TeamViewer Application
+id: 778ba9a8-45e4-4b80-8e3e-34a419f0b85e
+status: test
+description: Detects DNS queries to a TeamViewer domain only resolved by a TeamViewer
+    client by an image that isn't named TeamViewer (sometimes used by threat actors
+    for obfuscation)
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/30 19:53:11
+references:
+  - https://www.teamviewer.com/en-us/
+logsource:
+    category: dns_query
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_teamviewer:
+        Image|contains: TeamViewer
+    selection:
+        QueryName:
+          - taf.teamviewer.com
+          - udp.ping.teamviewer.com
+falsepositives:
+  - Unknown binary names of TeamViewer
+  - Depending on the environment the rule might require some initial tuning before
+    usage to avoid FP with third party applications
+level: medium
+customer: 'demo'
+modified: 2023/09/18
+tags:
+  - attack.command_and_control
+  - attack.t1219
+  - DEMO

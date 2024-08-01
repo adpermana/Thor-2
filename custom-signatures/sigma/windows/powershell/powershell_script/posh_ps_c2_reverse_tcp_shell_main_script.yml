@@ -1,0 +1,27 @@
+title: C2 - ReverseTCPShell Execution
+id: 78a5b5b3-6cae-4e80-ab01-4f340c2caccf
+status: test
+description: Detects the PowerShell C2 Script "ReverseTCP.ps1" part of "ReverseTCPShell"
+references:
+    - https://github.com/ZHacker13/ReverseTCPShell
+author: Nasreddine Bencherchali (Nextron Systems)
+date: 2023/04/03
+tags:
+    - attack.execution
+    - attack.t1059.001
+logsource:
+    product: windows
+    category: ps_script
+    definition: bade5735-5ab0-4aa7-a642-a11be0e40872
+detection:
+    selection:
+        ScriptBlockText|contains:
+            - 'n Character_Obfuscation'
+            - 'n Variable_Obfuscation'
+            - 'n ASCII_Obfuscation'
+            - 'n Base64_Obfuscation'
+            - 'n BXOR_Obfuscation'
+    condition: selection
+falsepositives:
+    - Unlikely
+level: high

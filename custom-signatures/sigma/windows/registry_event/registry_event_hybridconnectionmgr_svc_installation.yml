@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HybridConnectionManager Service Installation - Registry
+id: ac8866c7-ce44-46fd-8c17-b24acff96ca8
+status: test
+description: Detects the installation of the Azure Hybrid Connection Manager service
+    to allow remote code execution from Azure function.
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/04/12 20:54:21
+references:
+  - https://twitter.com/Cyb3rWard0g/status/1381642789369286662
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    condition: selection1 or selection2
+    selection1:
+        TargetObject|contains: \Services\HybridConnectionManager
+    selection2:
+        Details|contains: Microsoft.HybridConnectionManager.Listener.exe
+        EventType: SetValue
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/11/27
+tags:
+  - attack.resource_development
+  - attack.t1608
+  - DEMO

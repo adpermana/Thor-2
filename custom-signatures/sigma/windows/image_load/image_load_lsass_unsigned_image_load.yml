@@ -1,0 +1,37 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Unsigned Image Loaded Into LSASS Process
+id: 857c8db3-c89b-42fb-882b-f681c7cf4da2
+status: test
+description: Loading unsigned image (DLL, EXE) into LSASS process
+author: Teymur Kheirkhabarov, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/22 15:58:41
+references:
+  - https://www.slideshare.net/heirhabarov/hunting-for-credentials-dumping-in-windows-environment
+logsource:
+    category: image_load
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith: \lsass.exe
+        Signed: "false"
+falsepositives: Valid user connecting using RDP
+level: medium
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.credential_access
+  - attack.t1003.001
+  - DEMO

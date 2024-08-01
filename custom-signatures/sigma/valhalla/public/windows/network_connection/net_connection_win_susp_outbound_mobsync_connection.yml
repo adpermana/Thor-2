@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Microsoft Sync Center Suspicious Network Connections
+id: 9f2cc74d-78af-4eb2-bb64-9cd1d292b87b
+status: test
+description: Detects suspicious connections from Microsoft Sync Center to non-private
+    IPs.
+author: elhoim
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/04/28 20:12:01
+references:
+  - https://redcanary.com/blog/intelligence-insights-november-2021/
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_local_ranges:
+        DestinationIp|cidr:
+          - 127.0.0.0/8
+          - 10.0.0.0/8
+          - 172.16.0.0/12
+          - 192.168.0.0/16
+          - 169.254.0.0/16
+          - ::1/128
+          - fe80::/10
+          - fc00::/7
+    selection:
+        Image|endswith: \mobsync.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2024/03/12
+tags:
+  - attack.t1055
+  - attack.t1218
+  - attack.execution
+  - attack.defense_evasion
+  - DEMO

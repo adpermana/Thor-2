@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Malicious AppX Package Installation Attempts
+id: 09d3b48b-be17-47f5-bf4e-94e7e75d09ce
+status: test
+description: Detects potential installation or installation attempts of known malicious
+    appx packages
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/11 20:29:11
+references:
+  - https://www.sentinelone.com/labs/inside-malicious-windows-apps-for-malware-deployment/
+  - https://news.sophos.com/en-us/2021/11/11/bazarloader-call-me-back-attack-abuses-windows-10-apps-mechanism/
+  - https://forensicitguy.github.io/analyzing-magnitude-magniber-appx/
+logsource:
+    product: windows
+    service: appxdeployment-server
+detection:
+    condition: selection
+    selection:
+        EventID:
+          - "400"
+          - "401"
+        PackageFullName|contains: 3669e262-ec02-4e9d-bcb4-3d008b4afac9
+falsepositives: Rare occasions where a malicious package uses the exact same name
+    and version as a legtimate application
+level: medium
+customer: 'demo'
+modified: 2023/01/12
+tags:
+  - attack.defense_evasion
+  - DEMO

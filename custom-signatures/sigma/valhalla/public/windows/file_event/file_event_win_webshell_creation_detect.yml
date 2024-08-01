@@ -1,0 +1,61 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Webshell Creation On Static Website
+id: 39f1f9f2-9636-45de-98f6-a4046aa8e4b9
+status: test
+description: Detects the creation of files with certain extensions on a static web
+    site. This can be indicative of potential uploads of a web shell.
+author: Beyu Denis, oscd.community, Tim Shelton, Thurein Oo
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/22 17:52:31
+references:
+  - PT ESC rule and personal experience
+  - https://github.com/swisskyrepo/PayloadsAllTheThings/blob/c95a0a1a2855dc0cd7f7327614545fe30482a636/Upload%20Insecure%20Files/README.md
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: (all of selection_wwwroot_* or all of selection_htdocs_*) and not 1
+        of filter_main_*
+    filter_main_legitimate:
+        TargetFilename|contains: \xampp
+    filter_main_system:
+        Image: System
+    filter_main_temp:
+        TargetFilename|contains:
+          - \AppData\Local\Temp\
+          - \Windows\Temp\
+    selection_htdocs_ext:
+        TargetFilename|contains: .ph
+    selection_htdocs_path:
+        TargetFilename|contains:
+          - \www\
+          - \htdocs\
+          - \html\
+    selection_wwwroot_ext:
+        TargetFilename|contains:
+          - .ashx
+          - .asp
+          - .ph
+          - .soap
+    selection_wwwroot_path:
+        TargetFilename|contains: \inetpub\wwwroot\
+falsepositives: Legitimate administrator or developer creating legitimate executable
+    files in a web application folder
+level: medium
+customer: 'demo'
+modified: 2023/10/15
+tags:
+  - attack.persistence
+  - attack.t1505.003
+  - DEMO

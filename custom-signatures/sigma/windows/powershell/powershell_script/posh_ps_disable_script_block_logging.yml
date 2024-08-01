@@ -1,0 +1,30 @@
+title: Disable PowerShell ScriptBlockLogging
+id: fdd0de8e-57f4-43a8-a3f2-8f0d2ccf1027
+status: test
+description: Detects Request to "cachedGroupPolicySettings" to disable PowerShell ScriptBlockLogging
+author: Nasreddine Bencherchali
+references:
+    - https://github.com/S3cur3Th1sSh1t/Creds/blob/master/PowershellScripts/Disable-ScriptBlockLogging_Reflection_Working.ps1
+    - https://www.virustotal.com/gui/file/7c915c2175d98d1a2769e4daa7d76a89cf34e05ece9602af33f264cba6346dbd
+date: 2022/05/24
+modified: 2023/03/29
+tags:
+    - attack.defense_evasion
+    - attack.t1562.002
+logsource:
+    product: windows
+    category: ps_script
+    definition: Script Block Logging must be enabled
+detection:
+    selection:
+        ScriptBlockText|contains|all:
+            - 'System.Management.Automation.Utils'
+            - 'cachedGroupPolicySettings'
+        ScriptBlockText|contains: # Other variations could be added as they are discovered
+            - 'ScriptBlockLogging'
+            - "ScriptB'+'lockLogging"
+            - 'logging'
+    condition: selection
+falsepositives:
+    - Administrators setting value of "ScriptBlockLogging" via scripts
+level: high

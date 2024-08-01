@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: File Creation In Suspicious Directory By Msdt.EXE
+id: 318557a5-150c-4c8d-b70e-a9910e199857
+status: test
+description: Detects msdt.exe creating files in suspicious directories which could
+    be a sign of exploitation of either Follina or Dogwalk vulnerabilities
+author: Vadim Varganov, Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/24 18:25:51
+references:
+  - https://irsl.medium.com/the-trouble-with-microsofts-troubleshooters-6e32fc80b8bd
+  - https://msrc-blog.microsoft.com/2022/05/30/guidance-for-cve-2022-30190-microsoft-support-diagnostic-tool-vulnerability/
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith: \msdt.exe
+        TargetFilename|contains:
+          - \Desktop\
+          - \Start Menu\Programs\Startup\
+          - C:\PerfLogs\
+          - C:\ProgramData\
+          - C:\Users\Public\
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/02/23
+tags:
+  - attack.persistence
+  - attack.t1547.001
+  - cve.2022.30190
+  - DEMO

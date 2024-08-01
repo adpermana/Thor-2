@@ -1,0 +1,25 @@
+title: Registry Set Suspicious ImagePath Content
+id: 787053ad-0d56-4597-9547-1dc88b3ceddf
+description: Detects suspicious contents in the ImpagePath value for a new registered service
+status: test
+date: 2022/07/05
+modified: 2023/03/29
+author: Florian Roth
+references:
+    - Internal Research
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection:
+        TargetObject|contains|all:
+            - '\CurrentControlSet\Services\'
+            - 'ImagePath'
+        Details|contains: '&&'
+    condition: selection
+falsepositives:
+    - Unknown
+level: high
+tags:
+    - attack.defense_evasion
+    - attack.t1562.002

@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Renamed CURL.EXE Execution
+id: 7530cd3d-7671-43e3-b209-976966f6ea48
+status: experimental
+description: Detects the execution of a renamed "CURL.exe" binary based on the PE
+    metadata fields
+author: X__Junior (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/09/11 12:22:21
+references:
+  - https://twitter.com/Kostastsale/status/1700965142828290260
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_img:
+        Image|contains: \curl
+    selection:
+      - OriginalFileName: curl.exe
+      - Description: The curl executable
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/10/12
+tags:
+  - attack.execution
+  - attack.t1059
+  - attack.defense_evasion
+  - attack.t1202
+  - DEMO

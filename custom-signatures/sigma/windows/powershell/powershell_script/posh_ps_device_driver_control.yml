@@ -1,0 +1,25 @@
+title: Suspicious Device Driver Control Via IOCTL
+id: b49c5b79-5f4b-4447-8d77-d0ff70ef6d79
+status: test
+description: Detects powershell scripts that control device driver via code
+author: Nasreddine Bencherchali
+references:
+    - https://www.fuzzysecurity.com/tutorials/expDev/23.html
+date: 2022/08/18
+modified: 2023/03/29
+tags:
+    - attack.defense_evasion
+logsource:
+    product: windows
+    category: ps_script
+    definition: Script Block Logging must be enabled
+detection:
+    selection:
+        ScriptBlockText|contains|all:
+            - 'CreateFile'
+            - 'VirtualAlloc'
+            - 'DeviceIoControl'
+    condition: selection
+falsepositives:
+    - Unknown
+level: high

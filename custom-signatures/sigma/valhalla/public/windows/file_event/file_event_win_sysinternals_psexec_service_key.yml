@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PSEXEC Remote Execution File Artefact
+id: 304afd73-55a5-4bb9-8c21-0b1fc84ea9e4
+status: test
+description: Detects creation of the PSEXEC key file. Which is created anytime a PsExec
+    command is executed. It gets written to the file system and will be recorded in
+    the USN Journal on the target system
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/21 15:17:41
+references:
+  - https://aboutdfir.com/the-key-to-identify-psexec/
+  - https://twitter.com/davisrichardg/status/1616518800584704028
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetFilename|endswith: .key
+        TargetFilename|startswith: C:\Windows\PSEXEC-
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/02/23
+tags:
+  - attack.lateral_movement
+  - attack.privilege_escalation
+  - attack.execution
+  - attack.persistence
+  - attack.t1136.002
+  - attack.t1543.003
+  - attack.t1570
+  - attack.s0029
+  - DEMO

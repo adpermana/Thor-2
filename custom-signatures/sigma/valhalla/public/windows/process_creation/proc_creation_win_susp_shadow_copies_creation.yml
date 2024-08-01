@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Shadow Copies Creation Using Operating Systems Utilities
+id: b17ea6f7-6e90-447e-a799-e6c0a493d6ce
+status: test
+description: Shadow Copies creation using operating systems utilities, possible credential
+    access
+author: Teymur Kheirkhabarov, Daniil Yugoslavskiy, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/22 21:01:31
+references:
+  - https://www.slideshare.net/heirhabarov/hunting-for-credentials-dumping-in-windows-environment
+  - https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/tutorial-for-ntds-goodness-vssadmin-wmis-ntdsdit-system/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains|all:
+          - shadow
+          - create
+    selection_img:
+      - Image|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+          - \wmic.exe
+          - \vssadmin.exe
+      - OriginalFileName:
+          - PowerShell.EXE
+          - pwsh.dll
+          - wmic.exe
+          - VSSADMIN.EXE
+falsepositives: Legitimate administrator working with shadow copies, access for backup
+    purposes
+level: medium
+customer: 'demo'
+modified: 2022/11/10
+tags:
+  - attack.credential_access
+  - attack.t1003
+  - attack.t1003.002
+  - attack.t1003.003
+  - DEMO

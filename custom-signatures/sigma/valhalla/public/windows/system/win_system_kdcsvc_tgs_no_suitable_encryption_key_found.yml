@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: No Suitable Encryption Key Found For Generating Kerberos Ticket
+id: b1e0b3f5-b62e-41be-886a-daffde446ad4
+status: experimental
+description: |
+    Detects errors when a target server doesn't have suitable keys for generating kerberos tickets.
+    This issue can occur for example when a service uses a user account or a computer account that is configured for only DES encryption on a computer that is running Windows 7 which has DES encryption for Kerberos authentication disabled.
+author: '@SerkinValery'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/03/07 22:24:21
+references:
+  - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-r2-and-2008/dd348773(v=ws.10)
+  - https://learn.microsoft.com/en-us/troubleshoot/windows-server/windows-security/kdc-event-16-27-des-encryption-disabled
+logsource:
+    product: windows
+    service: system
+detection:
+    condition: selection
+    selection:
+        EventID:
+          - "16"
+          - "27"
+        Provider_Name: Microsoft-Windows-Kerberos-Key-Distribution-Center
+falsepositives: Unknown
+level: low
+customer: 'demo'
+tags:
+  - attack.credential_access
+  - attack.t1558.003
+  - DEMO

@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Azure AD Only Single Factor Authentication Required
+id: 28eea407-28d7-4e42-b0be-575d5ba60b2c
+status: test
+description: Detect when users are authenticating without MFA being required.
+author: MikeDuddington, '@dudders1'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/27 19:17:21
+references:
+  - https://docs.microsoft.com/en-gb/azure/active-directory/fundamentals/security-operations-user-accounts
+logsource:
+    product: azure
+    service: signinlogs
+detection:
+    condition: selection
+    selection:
+        AuthenticationRequirement: singleFactorAuthentication
+        Status: Success
+falsepositives: If this was approved by System Administrator.
+level: low
+customer: 'demo'
+tags:
+  - attack.initial_access
+  - attack.credential_access
+  - attack.t1078.004
+  - attack.t1556.006
+  - DEMO

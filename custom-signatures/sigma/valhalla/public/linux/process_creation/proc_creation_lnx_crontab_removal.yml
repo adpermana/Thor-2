@@ -1,0 +1,37 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Remove Scheduled Cron Task/Job
+id: c2e234de-03a3-41e1-b39a-1e56dc17ba67
+status: test
+description: |
+    Detects usage of the 'crontab' utility to remove the current crontab.
+    This is a common occurrence where cryptocurrency miners compete against each other by removing traces of other miners to hijack the maximum amount of resources possible
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/15 13:41:01
+references:
+  - https://www.trendmicro.com/en_us/research/22/i/how-malicious-actors-abuse-native-linux-tools-in-their-attacks.html
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains: ' -r'
+        Image|endswith: crontab
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - DEMO

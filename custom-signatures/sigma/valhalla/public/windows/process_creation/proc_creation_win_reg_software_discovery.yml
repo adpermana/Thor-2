@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Detected Windows Software Discovery
+id: e13f668e-7f95-443d-98d2-1816a7648a7b
+related:
+  - type: derived
+    id: 2650dd1a-eb2a-412d-ac36-83f06c4f2282
+status: test
+description: Adversaries may attempt to enumerate software for a variety of reasons,
+    such as figuring out what security measures are present or if the compromised
+    system has a version of software that is vulnerable.
+author: Nikita Nazarov, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/16 15:33:21
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1518/T1518.md
+  - https://github.com/harleyQu1nn/AggressorScripts
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains|all:
+          - query
+          - \software\
+          - /v
+          - svcversion
+        Image|endswith: \reg.exe
+falsepositives: Legitimate administration activities
+level: medium
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.discovery
+  - attack.t1518
+  - DEMO

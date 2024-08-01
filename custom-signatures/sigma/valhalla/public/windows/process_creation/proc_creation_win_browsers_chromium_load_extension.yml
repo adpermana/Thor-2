@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Chromium Browser Instance Executed With Custom Extension
+id: 88d6e60c-759d-4ac1-a447-c0f1466c2d21
+related:
+  - type: similar
+    id: 27ba3207-dd30-4812-abbf-5d20c57d474e
+status: experimental
+description: Detects a Chromium based browser process with the 'load-extension' flag
+    to start a instance with a custom extension
+author: Aedan Russell, frack113, X__Junior (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/19 21:02:41
+references:
+  - https://redcanary.com/blog/chromeloader/
+  - https://emkc.org/s/RJjuLa
+  - https://www.mandiant.com/resources/blog/lnk-between-browsers
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains: --load-extension=
+        Image|endswith:
+          - \brave.exe
+          - \chrome.exe
+          - \msedge.exe
+          - \opera.exe
+          - \vivaldi.exe
+falsepositives: Usage of Chrome Extensions in testing tools such as BurpSuite will
+    trigger this alert
+level: medium
+customer: 'demo'
+modified: 2023/11/28
+tags:
+  - attack.persistence
+  - attack.t1176
+  - DEMO

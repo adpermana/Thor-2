@@ -1,0 +1,105 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious File Download From File Sharing Domain Via Wget.EXE
+id: a0d7e4d2-bede-4141-8896-bc6e237e977c
+status: experimental
+description: Detects potentially suspicious file downloads from file sharing domains
+    using wget.exe
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/05 21:35:41
+references:
+  - https://labs.withsecure.com/publications/fin7-target-veeam-servers
+  - https://github.com/WithSecureLabs/iocs/blob/344203de742bb7e68bd56618f66d34be95a9f9fc/FIN7VEEAM/iocs.csv
+  - https://www.microsoft.com/en-us/security/blog/2024/01/17/new-ttps-observed-in-mint-sandstorm-campaign-targeting-high-profile-individuals-at-universities-and-research-orgs/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_ext:
+        CommandLine|endswith:
+          - .ps1
+          - .ps1'
+          - .ps1"
+          - .dat
+          - .dat'
+          - .dat"
+          - .msi
+          - .msi'
+          - .msi"
+          - .bat
+          - .bat'
+          - .bat"
+          - .exe
+          - .exe'
+          - .exe"
+          - .vbs
+          - .vbs'
+          - .vbs"
+          - .vbe
+          - .vbe'
+          - .vbe"
+          - .hta
+          - .hta'
+          - .hta"
+          - .dll
+          - .dll'
+          - .dll"
+          - .psm1
+          - .psm1'
+          - .psm1"
+    selection_flag:
+      - CommandLine|re: \s-O\s
+      - CommandLine|contains: --output-document
+    selection_http:
+        CommandLine|contains: http
+    selection_img:
+      - Image|endswith: \wget.exe
+      - OriginalFileName: wget.exe
+    selection_websites:
+        CommandLine|contains:
+          - .githubusercontent.com
+          - anonfiles.com
+          - cdn.discordapp.com
+          - cdn.discordapp.com/attachments/
+          - ddns.net
+          - dl.dropboxusercontent.com
+          - ghostbin.co
+          - glitch.me
+          - gofile.io
+          - hastebin.com
+          - mediafire.com
+          - mega.nz
+          - onrender.com
+          - paste.ee
+          - pastebin.com
+          - pastebin.pl
+          - pastetext.net
+          - privatlab.com
+          - privatlab.net
+          - send.exploit.in
+          - sendspace.com
+          - storage.googleapis.com
+          - storjshare.io
+          - supabase.co
+          - temp.sh
+          - transfer.sh
+          - ufile.io
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2024/02/09
+tags:
+  - attack.execution
+  - DEMO

@@ -1,0 +1,35 @@
+title: LSASS Dumping Patterns
+id: ae03b52d-fa63-472f-a4ae-5ec452522b68
+status: experimental
+description: Detects suspicious process patterns found in relation to LSASS process memory dumping
+references:
+    - https://ppn.snovvcrash.rocks/pentest/infrastructure/ad/credential-harvesting/from-memory/lsass-exe
+    - https://github.com/aas-n/spraykatz/blob/1fb3aa7eb2ee621524587d6b2ad9d9df5f3da9c9/submodules/customWmiExec/wmiexec.py#LL92C98-L92C98
+author: Florian Roth (Nextron Systems)
+date: 2023/05/18
+modified: 2023/05/19
+tags:
+    - attack.credential_access
+    - attack.t1003.001
+logsource:
+    product: windows
+    category: process_creation
+detection:
+    selection_powershell_id:
+        CommandLine|contains: '(Get-Process lsass).Id'        
+    selection_minidump:
+        CommandLine|contains|all:
+            - 'Get-Process '
+            - 'comsvcs.dll'
+    selection_tasklist_1:
+        CommandLine|contains|all:
+            - 'tasklist /fi '
+            - 'Imagename eq lsass.exe'
+    selection_tasklist_2:
+        CommandLine|contains: 'eq lsass.exe\" | find '
+    selection_physmem2profit:
+        CommandLine|contains: ' --driver winpmem'
+    condition: 1 of selection*
+falsepositives:
+    - Unknown
+level: high

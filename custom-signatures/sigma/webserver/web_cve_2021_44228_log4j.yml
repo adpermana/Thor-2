@@ -1,0 +1,67 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Log4j RCE CVE-2021-44228 Generic
+id: 5ea8faa8-db8b-45be-89b0-151b84c82702
+status: test
+description: Detects exploitation attempt against log4j RCE vulnerability reported
+    as CVE-2021-44228 (Log4Shell)
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/12/10 12:12:01
+references:
+  - https://www.lunasec.io/docs/blog/log4j-zero-day/
+  - https://news.ycombinator.com/item?id=29504755
+  - https://github.com/tangxiaofeng7/apache-log4j-poc
+  - https://gist.github.com/Neo23x0/e4c8b03ff8cdf1fa63b7d15db6e3860b
+  - https://github.com/YfryTchsGD/Log4jAttackSurface
+  - https://twitter.com/shutingrz/status/1469255861394866177?s=21
+logsource:
+    category: webserver
+detection:
+    condition: keywords and not filter
+    filter:
+      - w.nessus.org/nessus
+      - /nessus}
+    keywords:
+      - ${jndi:ldap:/
+      - ${jndi:rmi:/
+      - ${jndi:ldaps:/
+      - ${jndi:dns:/
+      - '/$%7bjndi:'
+      - '%24%7bjndi:'
+      - '$%7Bjndi:'
+      - '%2524%257Bjndi'
+      - '%2F%252524%25257Bjndi%3A'
+      - '${jndi:${lower:'
+      - ${::-j}${
+      - ${jndi:nis
+      - ${jndi:nds
+      - ${jndi:corba
+      - ${jndi:iiop
+      - 'Reference Class Name: foo'
+      - ${${env:BARFOO:-j}
+      - ${::-l}${::-d}${::-a}${::-p}
+      - ${base64:JHtqbmRp
+      - ${${env:ENV_NAME:-j}ndi${env:ENV_NAME:-:}$
+      - '${${lower:j}ndi:'
+      - '${${upper:j}ndi:'
+      - '${${::-j}${::-n}${::-d}${::-i}:'
+falsepositives: Vulnerability scanning
+level: high
+customer: 'demo'
+modified: 2022/02/06
+tags:
+  - attack.initial_access
+  - attack.t1190
+  - detection.emerging_threats
+  - DEMO

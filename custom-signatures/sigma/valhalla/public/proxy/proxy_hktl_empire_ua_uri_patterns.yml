@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - Empire UserAgent URI Combo
+id: b923f7d6-ac89-4a50-a71a-89fb846b4aa8
+status: test
+description: Detects user agent and URI paths used by empire agents
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/07/13 15:01:41
+references:
+  - https://github.com/BC-SECURITY/Empire
+logsource:
+    category: proxy
+detection:
+    condition: selection
+    selection:
+        c-useragent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like
+            Gecko
+        cs-method: POST
+        cs-uri:
+          - /admin/get.php
+          - /news.php
+          - /login/process.php
+falsepositives: Valid requests with this exact user agent to server scripts of the
+    defined names
+level: high
+customer: 'demo'
+modified: 2024/02/26
+tags:
+  - attack.defense_evasion
+  - attack.command_and_control
+  - attack.t1071.001
+  - DEMO

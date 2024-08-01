@@ -1,0 +1,22 @@
+title: Potential DiamondFox Network Activity
+id: b21f187f-c4c1-4615-b629-6519f465e742
+status: experimental
+description: Detects potential suspicious network activity related to DiamondFox
+references:
+    - https://github.com/silence-is-best/c2db
+    - http://vkremez.weebly.com/cyber-security/backdoorwin32slingup_rfn-diamondfox-bot-analysis
+    - http://documents.trendmicro.com/assets/Operation_Black%20Atlas_Technical_Brief.pdf
+author: X__Junior
+date: 2023/01/05
+tags:
+    - attack.command_and_control
+logsource:
+    category: proxy
+detection:
+    selection:
+        cs-method: 'GET'
+        c-uri|startswith: '/plugins/keylogger'
+    condition: selection
+falsepositives:
+    - Unknown
+level: medium

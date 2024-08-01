@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Communication To Ngrok Tunneling Service - Linux
+id: 19bf6fdb-7721-4f3d-867f-53467f6a5db6
+status: test
+description: Detects an executable accessing an ngrok tunneling endpoint, which could
+    be a sign of forbidden exfiltration of data exfiltration by malicious actors
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/11/03 18:31:21
+references:
+  - https://twitter.com/hakluke/status/1587733971814977537/photo/1
+  - https://ngrok.com/docs/secure-tunnels/tunnels/ssh-reverse-tunnel-agent
+logsource:
+    category: network_connection
+    product: linux
+detection:
+    condition: selection
+    selection:
+        DestinationHostname|contains:
+          - tunnel.us.ngrok.com
+          - tunnel.eu.ngrok.com
+          - tunnel.ap.ngrok.com
+          - tunnel.au.ngrok.com
+          - tunnel.sa.ngrok.com
+          - tunnel.jp.ngrok.com
+          - tunnel.in.ngrok.com
+falsepositives: Legitimate use of ngrok
+level: high
+customer: 'demo'
+tags:
+  - attack.exfiltration
+  - attack.command_and_control
+  - attack.t1567
+  - attack.t1568.002
+  - attack.t1572
+  - attack.t1090
+  - attack.t1102
+  - attack.s0508
+  - DEMO

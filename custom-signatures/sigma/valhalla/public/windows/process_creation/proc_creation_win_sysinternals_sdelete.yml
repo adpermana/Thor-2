@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential File Overwrite Via Sysinternals SDelete
+id: a4824fca-976f-4964-b334-0621379e84c4
+status: test
+description: Detects the use of SDelete to erase a file not the free space
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/06/03 19:06:01
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1485/T1485.md
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        CommandLine|contains:
+          - ' -h'
+          - ' -c'
+          - ' -z'
+          - ' /\?'
+    selection:
+        OriginalFileName: sdelete.exe
+fields:
+  - ComputerName
+  - User
+  - CommandLine
+  - ParentCommandLine
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/02/28
+tags:
+  - attack.impact
+  - attack.t1485
+  - DEMO

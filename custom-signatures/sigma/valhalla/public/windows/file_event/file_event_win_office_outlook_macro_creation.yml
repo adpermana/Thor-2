@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: New Outlook Macro Created
+id: 8c31f563-f9a7-450c-bfa8-35f8f32f1f61
+related:
+  - type: derived
+    id: 117d3d3a-755c-4a61-b23e-9171146d094c
+status: test
+description: Detects the creation of a macro file for Outlook.
+author: '@ScoubiMtl'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/04/05 12:29:31
+references:
+  - https://www.mdsec.co.uk/2020/11/a-fresh-outlook-on-mail-based-persistence/
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith: \outlook.exe
+        TargetFilename|endswith: \Microsoft\Outlook\VbaProject.OTM
+falsepositives: User genuinely creates a VB Macro for their email
+level: medium
+customer: 'demo'
+modified: 2023/02/08
+tags:
+  - attack.persistence
+  - attack.command_and_control
+  - attack.t1137
+  - attack.t1008
+  - attack.t1546
+  - DEMO

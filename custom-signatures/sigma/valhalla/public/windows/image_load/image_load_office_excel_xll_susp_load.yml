@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Microsoft Excel Add-In Loaded From Uncommon Location
+id: af4c4609-5755-42fe-8075-4effb49f5d44
+related:
+  - type: derived
+    id: c5f4b5cb-4c25-4249-ba91-aa03626e3185
+status: experimental
+description: Detects Microsoft Excel loading an Add-In (.xll) file from an uncommon
+    location
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/12 19:18:21
+references:
+  - https://www.mandiant.com/resources/blog/lnk-between-browsers
+  - https://wazuh.com/blog/detecting-xll-files-used-for-dropping-fin7-jssloader-with-wazuh/
+logsource:
+    category: image_load
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith: \excel.exe
+        ImageLoaded|contains:
+          - \Desktop\
+          - \Downloads\
+          - \Perflogs\
+          - \Temp\
+          - \Users\Public\
+          - \Windows\Tasks\
+        ImageLoaded|endswith: .xll
+falsepositives: Some tuning might be required to allow or remove certain locations
+    used by the rule if you consider them as safe locations
+level: medium
+customer: 'demo'
+tags:
+  - attack.execution
+  - attack.t1204.002
+  - DEMO

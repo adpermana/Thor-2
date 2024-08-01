@@ -1,0 +1,61 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Unusual Parent Process For Cmd.EXE
+id: 4b991083-3d0e-44ce-8fc4-b254025d8d4b
+status: experimental
+description: Detects suspicious parent process for cmd.exe
+author: Tim Rauch, Elastic (idea)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/21 14:32:11
+references:
+  - https://www.elastic.co/guide/en/security/current/unusual-parent-process-for-cmd.exe.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith: \cmd.exe
+        ParentImage|endswith:
+          - \csrss.exe
+          - \ctfmon.exe
+          - \dllhost.exe
+          - \epad.exe
+          - \FlashPlayerUpdateService.exe
+          - \GoogleUpdate.exe
+          - \jucheck.exe
+          - \jusched.exe
+          - \LogonUI.exe
+          - \lsass.exe
+          - \regsvr32.exe
+          - \SearchIndexer.exe
+          - \SearchProtocolHost.exe
+          - \SIHClient.exe
+          - \sihost.exe
+          - \slui.exe
+          - \spoolsv.exe
+          - \sppsvc.exe
+          - \taskhostw.exe
+          - \unsecapp.exe
+          - \WerFault.exe
+          - \wermgr.exe
+          - \wlanext.exe
+          - \WUDFHost.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/12/05
+tags:
+  - attack.execution
+  - attack.t1059
+  - DEMO

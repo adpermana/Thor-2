@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious OAuth App File Download Activities
+id: ee111937-1fe7-40f0-962a-0eb44d57d174
+status: test
+description: Detects when a Microsoft Cloud App Security reported when an app downloads
+    multiple files from Microsoft SharePoint or Microsoft OneDrive in a manner that
+    is unusual for the user.
+author: Austin Songer @austinsonger
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/23 17:50:21
+references:
+  - https://docs.microsoft.com/en-us/cloud-app-security/anomaly-detection-policy
+  - https://docs.microsoft.com/en-us/cloud-app-security/policy-template-reference
+logsource:
+    product: m365
+    service: threat_management
+detection:
+    condition: selection
+    selection:
+        eventName: Suspicious OAuth app file download activities
+        eventSource: SecurityComplianceCenter
+        status: success
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.exfiltration
+  - DEMO

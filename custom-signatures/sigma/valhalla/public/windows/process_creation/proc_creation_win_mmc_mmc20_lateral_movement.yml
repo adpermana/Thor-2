@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: MMC20 Lateral Movement
+id: f1f3bf22-deb2-418d-8cce-e1a45e46a5bd
+status: test
+description: Detects MMC20.Application Lateral Movement; specifically looks for the
+    spawning of the parent MMC.exe with a command line of "-Embedding" as a child
+    of svchost.exe
+author: '@2xxeformyshirt (Security Risk Advisors) - rule; Teymur Kheirkhabarov (idea)'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/03/04 11:22:31
+references:
+  - https://enigma0x3.net/2017/01/05/lateral-movement-using-the-mmc20-application-com-object/
+  - https://drive.google.com/file/d/1lKya3_mLnR3UQuCoiYruO3qgu052_iS_/view?usp=sharing
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains: -Embedding
+        Image|endswith: \mmc.exe
+        ParentImage|endswith: \svchost.exe
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.execution
+  - attack.t1021.003
+  - DEMO

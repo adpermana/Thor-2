@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Dynamic CSharp Compile Artefact
+id: e4a74e34-ecde-4aab-b2fb-9112dd01aed0
+status: test
+description: |
+    When C# is compiled dynamically, a .cmdline file will be created as a part of the process.
+    Certain processes are not typically observed compiling C# code, but can do so without touching disk.
+    This can be used to unpack a payload for execution
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/09 14:04:11
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1027.004/T1027.004.md#atomic-test-2---dynamic-c-compile
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetFilename|endswith: .cmdline
+falsepositives: Unknown
+level: low
+customer: 'demo'
+modified: 2023/02/17
+tags:
+  - attack.defense_evasion
+  - attack.t1027.004
+  - DEMO

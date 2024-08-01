@@ -1,0 +1,64 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious MSHTA Child Process
+id: 03cc0c25-389f-4bf8-b48d-11878079f1ca
+status: test
+description: Detects a suspicious process spawning from an "mshta.exe" process, which
+    could be indicative of a malicious HTA script execution
+author: Michael Haag
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/01/16 13:42:31
+references:
+  - https://www.trustedsec.com/july-2015/malicious-htas/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection*
+    selection_child:
+      - Image|endswith:
+          - \cmd.exe
+          - \powershell.exe
+          - \pwsh.exe
+          - \wscript.exe
+          - \cscript.exe
+          - \sh.exe
+          - \bash.exe
+          - \reg.exe
+          - \regsvr32.exe
+          - \bitsadmin.exe
+      - OriginalFileName:
+          - Cmd.Exe
+          - PowerShell.EXE
+          - pwsh.dll
+          - wscript.exe
+          - cscript.exe
+          - Bash.exe
+          - reg.exe
+          - REGSVR32.EXE
+          - bitsadmin.exe
+    selection_parent:
+        ParentImage|endswith: \mshta.exe
+falsepositives:
+  - Printer software / driver installations
+  - HP software
+level: high
+customer: 'demo'
+modified: 2023/02/06
+tags:
+  - attack.defense_evasion
+  - attack.t1218.005
+  - car.2013-02-003
+  - car.2013-03-001
+  - car.2014-04-003
+  - DEMO

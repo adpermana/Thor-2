@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Payload Decoded and Decrypted via Built-in Utilities
+id: 234dc5df-40b5-49d1-bf53-0d44ce778eca
+status: test
+description: Detects when a built-in utility is used to decode and decrypt a payload
+    after a macOS disk image (DMG) is executed. Malware authors may attempt to evade
+    detection and trick users into executing malicious code by encoding and encrypting
+    their payload and placing it in a disk image file. This behavior is consistent
+    with adware or malware families such as Bundlore and Shlayer.
+author: Tim Rauch (rule), Elastic (idea)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/10/17 19:32:11
+references:
+  - https://github.com/elastic/protections-artifacts/commit/746086721fd385d9f5c6647cada1788db4aea95f#diff-5d42c3d772e04f1e8d0eb60f5233bc79def1ea73105a2d8822f44164f77ef823
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains|all:
+          - /Volumes/
+          - enc
+          - -base64
+          - ' -d '
+        Image|endswith: /openssl
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.t1059
+  - attack.t1204
+  - attack.execution
+  - attack.t1140
+  - attack.defense_evasion
+  - attack.s0482
+  - attack.s0402
+  - DEMO

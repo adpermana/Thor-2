@@ -1,0 +1,71 @@
+title: Potential Scheduled Task Masquerading
+id: 2d5a1d34-f5bf-4dce-9994-bea44e768ed4
+status: experimental
+description: Detects the execution of Scheduled Tasks where the task is masquerading as a known schedule task. Threat actors achieve this by using similar naming to real existing tasks but with different actions
+references:
+    - Internal Research
+author: Nasreddine Bencherchali (Nextron Systems)
+date: 2023/02/07
+modified: 2023/02/09
+tags:
+    - attack.persistence
+    - attack.t1053.005
+logsource:
+    product: windows
+    service: taskscheduler
+    definition: 'Requirements: The "Microsoft-Windows-TaskScheduler/Operational" is disabled by default and needs to be enabled in order for this detection to trigger'
+detection:
+    selection_eid:
+        EventID: 201 # Action Completed
+    # Google Update
+    selection_google_update:
+        TaskName|contains|all:
+            - 'Google'
+            - 'Update'
+    filter_google_update:
+        ActionName|contains|all:
+            - '\Google\Update'
+            - '\GoogleUpdate.exe'
+    # Edge Update
+    selection_edge_update:
+        TaskName|contains|all:
+            - 'Microsoft'
+            - 'Edge'
+            - 'Update'
+    filter_edge_update:
+        ActionName|contains|all:
+            - '\EdgeUpdate\'
+            - '\MicrosoftEdgeUpdate.exe'
+    # OneDrive Update
+    selection_onedrive_update:
+        - TaskName|contains|all:
+            - 'OneDrive'
+            - 'Update'
+        - TaskName|contains|all:
+            - 'One Drive'
+            - 'Update'
+    filter_onedrive_update:
+        - ActionName|contains|all:
+            - '\OneDrive\'
+            - '\OneDriveStandaloneUpdater.exe'
+        - ActionName|contains|all:
+            - '\Microsoft OneDrive\'
+            - '\OneDriveStandaloneUpdater.exe'
+    # Firefox Update
+    selection_firefox_update:
+        TaskName|contains|all:
+            - 'Firefox'
+            - 'Update'
+    filter_firefox_update:
+        ActionName|contains|all:
+            - '\Mozilla Firefox\'
+            - '\firefox.exe'
+    condition: selection_eid and (
+        (selection_google_update and not filter_google_update) or
+        (selection_edge_update and not filter_edge_update) or
+        (selection_onedrive_update and not filter_onedrive_update) or
+        (selection_firefox_update and not filter_firefox_update)
+        )
+falsepositives:
+    - Unknown
+level: medium # Increase after further testing

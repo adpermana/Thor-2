@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: OpenCanary - HTTPPROXY Login Attempt
+id: 5498fc09-adc6-4804-b9d9-5cca1f0b8760
+status: experimental
+description: |
+    Detects instances where an HTTPPROXY service on an OpenCanary node has had an attempt to proxy another page.
+author: Security Onion Solutions
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/03/08 14:46:31
+references:
+  - https://opencanary.readthedocs.io/en/latest/starting/configuration.html#services-configuration
+  - https://github.com/thinkst/opencanary/blob/a0896adfcaf0328cfd5829fe10d2878c7445138e/opencanary/logger.py#L52
+logsource:
+    category: application
+    product: opencanary
+detection:
+    condition: selection
+    selection:
+        logtype: "7001"
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+tags:
+  - attack.initial_access
+  - attack.defense_evasion
+  - attack.t1090
+  - DEMO

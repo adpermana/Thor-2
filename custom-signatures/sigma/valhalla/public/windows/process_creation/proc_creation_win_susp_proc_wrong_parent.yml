@@ -1,0 +1,63 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Windows Processes Suspicious Parent Directory
+id: 96036718-71cc-4027-a538-d1587e0006a7
+status: test
+description: Detect suspicious parent processes of well-known Windows processes
+author: vburov
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/02/23 18:25:21
+references:
+  - https://securitybytes.io/blue-team-fundamentals-part-two-windows-processes-759fe15965e2
+  - https://www.carbonblack.com/2014/06/10/screenshot-demo-hunt-evil-faster-than-ever-with-carbon-black/
+  - https://www.13cubed.com/downloads/windows_process_genealogy_v2.pdf
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_*
+    filter_msmpeng:
+        ParentImage|contains:
+          - \Windows Defender\
+          - \Microsoft Security Client\
+        ParentImage|endswith: \MsMpEng.exe
+    filter_null:
+      - ParentImage: []
+      - ParentImage: '-'
+    filter_sys:
+      - ParentImage|endswith:
+          - \SavService.exe
+          - \ngen.exe
+      - ParentImage|contains:
+          - \System32\
+          - \SysWOW64\
+    selection:
+        Image|endswith:
+          - \svchost.exe
+          - \taskhost.exe
+          - \lsm.exe
+          - \lsass.exe
+          - \services.exe
+          - \lsaiso.exe
+          - \csrss.exe
+          - \wininit.exe
+          - \winlogon.exe
+falsepositives: Some security products seem to spawn these
+level: low
+customer: 'demo'
+modified: 2022/02/14
+tags:
+  - attack.defense_evasion
+  - attack.t1036.003
+  - attack.t1036.005
+  - DEMO

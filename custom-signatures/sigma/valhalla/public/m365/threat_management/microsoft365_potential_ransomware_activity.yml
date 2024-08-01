@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Microsoft 365 - Potential Ransomware Activity
+id: bd132164-884a-48f1-aa2d-c6d646b04c69
+status: test
+description: Detects when a Microsoft Cloud App Security reported when a user uploads
+    files to the cloud that might be infected with ransomware.
+author: austinsonger
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/19 17:32:51
+references:
+  - https://docs.microsoft.com/en-us/cloud-app-security/anomaly-detection-policy
+  - https://docs.microsoft.com/en-us/cloud-app-security/policy-template-reference
+logsource:
+    product: m365
+    service: threat_management
+detection:
+    condition: selection
+    selection:
+        eventName: Potential ransomware activity
+        eventSource: SecurityComplianceCenter
+        status: success
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.impact
+  - attack.t1486
+  - DEMO

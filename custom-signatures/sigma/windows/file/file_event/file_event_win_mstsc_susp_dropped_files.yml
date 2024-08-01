@@ -1,0 +1,31 @@
+title: Suspicious File Created Via Mstsc.EXE
+id: 68907fb5-0dc9-400a-8160-2165cae47157
+status: experimental
+description: Detects suspicious files created via "mstsc.exe". Could be a sign of RogueRDP technique
+references:
+    - https://www.blackhillsinfosec.com/rogue-rdp-revisiting-initial-access-methods/
+    - https://blog.thickmints.dev/mintsights/detecting-rogue-rdp/
+author: Nasreddine Bencherchali (Nextron Systems)
+date: 2023/04/18
+tags:
+    - attack.defense_evasion
+logsource:
+    product: windows
+    category: file_event
+detection:
+    selection:
+        Image|endswith: '\mstsc.exe'
+        CommandLine|contains: '.rdp'
+        TargetFilename|endswith:
+            - '.dll'
+            - '.exe'
+            - '.hta'
+            - '.lnk'
+            - '.msi'
+            - '.ps1'
+            - '.vbe'
+            - '.vbs'
+    condition: selection
+falsepositives:
+    - Unknown
+level: high

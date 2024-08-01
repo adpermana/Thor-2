@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Azure Active Directory Hybrid Health AD FS New Server
+id: 288a39fc-4914-4831-9ada-270e9dc12cb4
+status: test
+description: |
+    This detection uses azureactivity logs (Administrative category) to identify the creation or update of a server instance in an Azure AD Hybrid health AD FS service.
+    A threat actor can create a new AD Health ADFS service and create a fake server instance to spoof AD FS signing logs. There is no need to compromise an on-prem AD FS server.
+    This can be done programmatically via HTTP requests to Azure.
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research), MSTIC
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/26 19:11:51
+references:
+  - https://o365blog.com/post/hybridhealthagent/
+logsource:
+    product: azure
+    service: activitylogs
+detection:
+    condition: selection
+    selection:
+        CategoryValue: Administrative
+        OperationNameValue: Microsoft.ADHybridHealthService/services/servicemembers/action
+        ResourceId|contains: AdFederationService
+        ResourceProviderValue: Microsoft.ADHybridHealthService
+falsepositives: Legitimate AD FS servers added to an AAD Health AD FS service instance
+level: medium
+customer: 'demo'
+modified: 2023/10/11
+tags:
+  - attack.defense_evasion
+  - attack.t1578
+  - DEMO

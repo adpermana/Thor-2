@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Okta FastPass Phishing Detection
+id: ee39a9f7-5a79-4b0a-9815-d36b3cf28d3e
+status: experimental
+description: Detects when Okta FastPass prevents a known phishing site.
+author: Austin Songer @austinsonger
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/07 14:28:51
+references:
+  - https://sec.okta.com/fastpassphishingdetection
+  - https://developer.okta.com/docs/reference/api/system-log/
+  - https://developer.okta.com/docs/reference/api/event-types/
+logsource:
+    product: okta
+    service: okta
+detection:
+    condition: selection
+    selection:
+        eventtype: user.authentication.auth_via_mfa
+        outcome.reason: FastPass declined phishing attempt
+        outcome.result: FAILURE
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+tags:
+  - attack.initial_access
+  - attack.t1566
+  - DEMO

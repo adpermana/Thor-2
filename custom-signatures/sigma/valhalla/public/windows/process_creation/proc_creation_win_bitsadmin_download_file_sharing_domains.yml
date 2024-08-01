@@ -1,0 +1,82 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Download From File-Sharing Website Via Bitsadmin
+id: 8518ed3d-f7c9-4601-a26c-f361a4256a0c
+status: experimental
+description: Detects usage of bitsadmin downloading a file from a suspicious domain
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/28 21:29:41
+references:
+  - https://blog.netspi.com/15-ways-to-download-a-file/#bitsadmin
+  - https://isc.sans.edu/diary/22264
+  - https://lolbas-project.github.io/lolbas/Binaries/Bitsadmin/
+  - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/ransomware-hive-conti-avoslocker
+  - https://www.cisa.gov/uscert/ncas/alerts/aa22-321a
+  - https://www.microsoft.com/en-us/security/blog/2024/01/17/new-ttps-observed-in-mint-sandstorm-campaign-targeting-high-profile-individuals-at-universities-and-research-orgs/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_domain:
+        CommandLine|contains:
+          - .githubusercontent.com
+          - anonfiles.com
+          - cdn.discordapp.com
+          - cdn.discordapp.com/attachments/
+          - ddns.net
+          - dl.dropboxusercontent.com
+          - ghostbin.co
+          - glitch.me
+          - gofile.io
+          - hastebin.com
+          - mediafire.com
+          - mega.nz
+          - onrender.com
+          - paste.ee
+          - pastebin.com
+          - pastebin.pl
+          - pastetext.net
+          - privatlab.com
+          - privatlab.net
+          - send.exploit.in
+          - sendspace.com
+          - storage.googleapis.com
+          - storjshare.io
+          - supabase.co
+          - temp.sh
+          - transfer.sh
+          - ufile.io
+    selection_flags:
+        CommandLine|contains:
+          - ' /transfer '
+          - ' /create '
+          - ' /addfile '
+    selection_img:
+      - Image|endswith: \bitsadmin.exe
+      - OriginalFileName: bitsadmin.exe
+fields:
+  - CommandLine
+  - ParentCommandLine
+falsepositives: Some legitimate apps use this, but limited.
+level: high
+customer: 'demo'
+modified: 2024/02/09
+tags:
+  - attack.defense_evasion
+  - attack.persistence
+  - attack.t1197
+  - attack.s0190
+  - attack.t1036.003
+  - DEMO

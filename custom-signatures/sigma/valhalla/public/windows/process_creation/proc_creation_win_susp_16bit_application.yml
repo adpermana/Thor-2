@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Start of NT Virtual DOS Machine
+id: 16905e21-66ee-42fe-b256-1318ada2d770
+status: test
+description: Ntvdm.exe allows the execution of 16-bit Windows applications on 32-bit
+    Windows operating systems, as well as the execution of both 16-bit and 32-bit
+    DOS applications
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/16 13:34:31
+references:
+  - https://docs.microsoft.com/en-us/windows/compatibility/ntvdm-and-16-bit-app-support
+  - https://support.microsoft.com/fr-fr/topic/an-ms-dos-based-program-that-uses-the-ms-dos-protected-mode-interface-crashes-on-a-computer-that-is-running-windows-7-5dc739ea-987b-b458-15e4-d28d5cca63c7
+  - https://app.any.run/tasks/93fe92fa-8b2b-4d92-8c09-a841aed2e793/
+  - https://app.any.run/tasks/214094a7-0abc-4a7b-a564-1b757faed79d/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith:
+          - \ntvdm.exe
+          - \csrstub.exe
+falsepositives: Legitimate use
+level: medium
+customer: 'demo'
+modified: 2022/07/16
+tags:
+  - attack.defense_evasion
+  - DEMO

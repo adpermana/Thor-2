@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: App Role Added
+id: b04934b2-0a68-4845-8a19-bdfed3a68a7a
+status: test
+description: Detects when an app is assigned Azure AD roles, such as global administrator,
+    or Azure RBAC roles, such as subscription owner.
+author: Bailey Bercik '@baileybercik', Mark Morowczynski '@markmorow'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/19 09:23:31
+references:
+  - https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/security-operations-applications#service-principal-assigned-to-a-role
+logsource:
+    product: azure
+    service: auditlogs
+detection:
+    condition: selection
+    selection:
+        properties.message:
+          - Add member to role
+          - Add eligible member to role
+          - Add scoped member to role
+falsepositives: When the permission is legitimately needed for the app
+level: medium
+customer: 'demo'
+tags:
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1098.003
+  - DEMO

@@ -1,0 +1,53 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: GUI Input Capture - macOS
+id: 60f1ce20-484e-41bd-85f4-ac4afec2c541
+status: test
+description: Detects attempts to use system dialog prompts to capture user credentials
+author: remotephone, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/13 11:53:31
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1056.002/T1056.002.md
+  - https://scriptingosx.com/2018/08/user-interaction-from-bash-scripts/
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    condition: all of selection*
+    selection1:
+        Image: /usr/sbin/osascript
+    selection2:
+        CommandLine|contains|all:
+          - -e
+          - display
+          - dialog
+          - answer
+    selection3:
+        CommandLine|contains:
+          - admin
+          - administrator
+          - authenticate
+          - authentication
+          - credentials
+          - pass
+          - password
+          - unlock
+falsepositives: Legitimate administration tools and activities
+level: low
+customer: 'demo'
+modified: 2022/12/25
+tags:
+  - attack.credential_access
+  - attack.t1056.002
+  - DEMO

@@ -1,0 +1,22 @@
+title: Suspicious Write to Perflogs Folder
+id: 13a97273-30e9-48aa-beb5-94978ab2c787
+status: test
+description: Detects an uncommon process creating files in the Perflogs folder (used by the Windows Performance monitor). The C:\Perflogs folder is often used as staging directory by threat actors.
+author: Florian Roth
+references:
+    - https://www.easytweaks.com/safe-delete-perflogs-folder-what-is/#:~:text=What%20is%20the%20PerfLogs%20folder,boot%20partition%20(typically%20C%3A%5C).
+    - https://www.thewindowsclub.com/perflogs-folder-in-windows-10
+date: 2022/04/11
+modified: 2023/03/29
+logsource:
+    product: windows
+    category: file_event
+detection:
+    selection:
+        TargetFilename|startswith: 'C:\Perflogs\'
+    filter:
+        Image: 'C:\Windows\System32\taskhostw.exe'
+    condition: selection and not filter
+falsepositives:
+    - Unknown
+level: high

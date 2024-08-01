@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Windows Defender Submit Sample Feature Disabled
+id: 91903aba-1088-42ee-b680-d6d94fe002b0
+related:
+  - type: similar
+    id: 1321dc4e-a1fe-481d-a016-52c45f0c8b4f
+  - type: similar
+    id: a3ab73f1-bd46-4319-8f06-4b20d0617886
+  - type: similar
+    id: 801bd44f-ceed-4eb6-887c-11544633c0aa
+status: stable
+description: Detects disabling of the "Automatic Sample Submission" feature of Windows
+    Defender.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/12/06 18:21:41
+references:
+  - https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/troubleshoot-microsoft-defender-antivirus?view=o365-worldwide
+  - https://bidouillesecurity.com/disable-windows-defender-in-powershell/#DisableAntiSpyware
+logsource:
+    product: windows
+    service: windefend
+detection:
+    condition: selection
+    selection:
+        EventID: "5007"
+        NewValue|contains: \Real-Time Protection\SubmitSamplesConsent = 0x0
+falsepositives: Administrator activity (must be investigated)
+level: low
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+  - DEMO

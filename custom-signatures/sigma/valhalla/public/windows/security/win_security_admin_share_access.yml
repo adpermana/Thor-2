@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Access To ADMIN$ Network Share
+id: 098d7118-55bc-4912-a836-dc6483a8d150
+status: test
+description: Detects access to ADMIN$ network share
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/03/04 13:06:31
+references:
+  - https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-5140
+logsource:
+    product: windows
+    service: security
+    definition: 'Requirements: The advanced audit policy setting "Object Access >
+        Audit File Share" must be configured for Success/Failure'
+detection:
+    condition: selection and not 1 of filter_*
+    filter_main_computer_account:
+        SubjectUserName|endswith: $
+    selection:
+        EventID: "5140"
+        ShareName: Admin$
+falsepositives: Legitimate administrative activity
+level: low
+customer: 'demo'
+modified: 2024/01/16
+tags:
+  - attack.lateral_movement
+  - attack.t1021.002
+  - DEMO

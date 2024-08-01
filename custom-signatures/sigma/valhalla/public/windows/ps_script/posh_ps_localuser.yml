@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Powershell LocalAccount Manipulation
+id: 4fdc44df-bfe9-4fcc-b041-68f5a2d3031c
+status: test
+description: |
+    Adversaries may manipulate accounts to maintain access to victim systems.
+    Account manipulation may consist of any action that preserves adversary access to a compromised account, such as modifying credentials or permission groups
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/12/28 15:59:41
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1098/T1098.md#atomic-test-1---admin-account-manipulate
+  - https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.localaccounts/?view=powershell-5.1
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: selection
+    selection:
+        ScriptBlockText|contains:
+          - Disable-LocalUser
+          - Enable-LocalUser
+          - Get-LocalUser
+          - Set-LocalUser
+          - New-LocalUser
+          - Rename-LocalUser
+          - Remove-LocalUser
+falsepositives: Legitimate administrative script
+level: medium
+customer: 'demo'
+tags:
+  - attack.persistence
+  - attack.t1098
+  - DEMO

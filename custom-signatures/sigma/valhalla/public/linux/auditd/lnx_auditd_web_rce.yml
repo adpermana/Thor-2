@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Webshell Remote Command Execution
+id: c0d3734d-330f-4a03-aae2-65dacc6a8222
+status: test
+description: Detects possible command execution by web application/web shell
+author: Ilyas Ochkov, Beyu Denis, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/12 14:51:31
+references:
+  - Personal Experience of the Author
+logsource:
+    product: linux
+    service: auditd
+detection:
+    condition: selection
+    selection:
+        key: detect_execve_www
+        syscall: execve
+        type: SYSCALL
+falsepositives:
+  - Admin activity
+  - Crazy web applications
+level: critical
+customer: 'demo'
+modified: 2022/12/25
+tags:
+  - attack.persistence
+  - attack.t1505.003
+  - DEMO

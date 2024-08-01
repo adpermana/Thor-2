@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Windows Hotfix Updates Reconnaissance Via Wmic.EXE
+id: dfd2fcb7-8bd5-4daa-b132-5adb61d6ad45
+status: test
+description: Detects the execution of wmic with the "qfe" flag in order to obtain
+    information about installed hotfix updates on the system. This is often used by
+    pentester and attacker enumeration scripts
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/20 18:58:31
+references:
+  - https://github.com/carlospolop/PEASS-ng/blob/fa0f2e17fbc1d86f1fd66338a40e665e7182501d/winPEAS/winPEASbat/winPEAS.bat
+  - https://sushant747.gitbooks.io/total-oscp-guide/content/privilege_escalation_windows.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection*
+    selection_cli:
+        CommandLine|contains: ' qfe'
+    selection_img:
+      - OriginalFileName: wmic.exe
+      - Image|endswith: \WMIC.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/02/14
+tags:
+  - attack.execution
+  - attack.t1047
+  - DEMO

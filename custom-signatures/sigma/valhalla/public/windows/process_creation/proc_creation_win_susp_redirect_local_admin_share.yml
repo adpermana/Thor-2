@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Redirection to Local Admin Share
+id: ab9e3b40-0c85-4ba1-aede-455d226fd124
+status: test
+description: Detects a suspicious output redirection to the local admins share, this
+    technique is often found in malicious scripts or hacktool stagers
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/16 17:21:31
+references:
+  - https://www.microsoft.com/security/blog/2022/01/15/destructive-malware-targeting-ukrainian-organizations/
+  - http://blog.talosintelligence.com/2022/09/lazarus-three-rats.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_redirect:
+        CommandLine|contains: '>'
+    selection_share:
+        CommandLine|contains:
+          - \\\\127.0.0.1\\admin$\\
+          - \\\\localhost\\admin$\\
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/12/28
+tags:
+  - attack.exfiltration
+  - attack.t1048
+  - DEMO

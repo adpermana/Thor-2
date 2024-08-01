@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: ESXi Storage Information Discovery Via ESXCLI
+id: f41dada5-3f56-4232-8503-3fb7f9cf2d60
+status: experimental
+description: Detects execution of the "esxcli" command with the "storage" flag in
+    order to retrieve information about the storage status and other related information.
+    Seen used by malware such as DarkSide and LockBit.
+author: Nasreddine Bencherchali (Nextron Systems), Cedric Maurugeon
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/09/04 17:20:41
+references:
+  - https://www.trendmicro.com/en_us/research/21/e/darkside-linux-vms-targeted.html
+  - https://www.trendmicro.com/en_us/research/22/a/analysis-and-Impact-of-lockbit-ransomwares-first-linux-and-vmware-esxi-variant.html
+  - https://developer.vmware.com/docs/11743/esxi-7-0-esxcli-command-reference/namespace/esxcli_storage.html
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains:
+          - ' get'
+          - ' list'
+    selection_img:
+        CommandLine|contains: storage
+        Image|endswith: /esxcli
+falsepositives: Legitimate administration activities
+level: medium
+customer: 'demo'
+tags:
+  - attack.discovery
+  - attack.t1033
+  - attack.t1007
+  - DEMO

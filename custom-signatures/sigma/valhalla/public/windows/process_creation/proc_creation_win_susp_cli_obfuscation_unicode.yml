@@ -1,0 +1,62 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Commandline Obfuscation Using Unicode Characters
+id: e0552b19-5a83-4222-b141-b36184bb8d79
+related:
+  - type: obsoletes
+    id: 2c0d2d7b-30d6-4d14-9751-7b9113042ab9
+status: test
+description: |
+    Detects potential commandline obfuscation using unicode characters.
+    Adversaries may attempt to make an executable or file difficult to discover or analyze by encrypting, encoding, or otherwise obfuscating its contents on the system or in transit.
+author: frack113, Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/15 21:38:51
+references:
+  - https://www.wietzebeukema.nl/blog/windows-command-line-obfuscation
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1027/T1027.md#atomic-test-6---dlp-evasion-via-sensitive-data-in-vba-macro-over-http
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_other:
+        CommandLine|contains:
+          - â
+          - €
+          - £
+          - ¯
+          - ®
+          - µ
+          - ¶
+    selection_spacing_modifiers:
+        CommandLine|contains:
+          - ˣ
+          - ˪
+          - ˢ
+    selection_unicode_hyphens:
+        CommandLine|contains:
+          - ―
+          - —
+    selection_unicode_slashes:
+        CommandLine|contains:
+          - ∕
+          - ⁄
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/03/03
+tags:
+  - attack.defense_evasion
+  - attack.t1027
+  - DEMO

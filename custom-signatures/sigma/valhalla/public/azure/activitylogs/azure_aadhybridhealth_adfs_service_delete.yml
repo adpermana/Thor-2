@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Azure Active Directory Hybrid Health AD FS Service Delete
+id: 48739819-8230-4ee3-a8ea-e0289d1fb0ff
+status: test
+description: |
+    This detection uses azureactivity logs (Administrative category) to identify the deletion of an Azure AD Hybrid health AD FS service instance in a tenant.
+    A threat actor can create a new AD Health ADFS service and create a fake server to spoof AD FS signing logs.
+    The health AD FS service can then be deleted after it is not longer needed via HTTP requests to Azure.
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research), MSTIC
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/26 20:16:21
+references:
+  - https://o365blog.com/post/hybridhealthagent/
+logsource:
+    product: azure
+    service: activitylogs
+detection:
+    condition: selection
+    selection:
+        CategoryValue: Administrative
+        OperationNameValue: Microsoft.ADHybridHealthService/services/delete
+        ResourceId|contains: AdFederationService
+        ResourceProviderValue: Microsoft.ADHybridHealthService
+falsepositives: Legitimate AAD Health AD FS service instances being deleted in a tenant
+level: medium
+customer: 'demo'
+modified: 2023/10/11
+tags:
+  - attack.defense_evasion
+  - attack.t1578.003
+  - DEMO

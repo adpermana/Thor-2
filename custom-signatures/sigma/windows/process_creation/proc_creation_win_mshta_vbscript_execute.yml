@@ -1,0 +1,24 @@
+title: Vbscript Execute Using MSHTA
+id: 0b6182e6-597e-47da-8886-8ea247ac0254
+status: experimental
+description: Detects execution of VBscript Execute command via mshta to download and execute abitrary scripts and payloads
+author: Nasreddine Bencherchali
+references:
+    - https://github.com/D4Vinci/One-Lin3r/blob/master/one_lin3r/core/liners/windows/cmd/sct_dropper_mshta.py
+date: 2022/05/17
+tags:
+    - attack.defense_evasion
+    - attack.t1218.005
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains|all:
+            - 'mshta'
+            - 'vbscript:Close('
+            - 'Execute('
+    condition: selection
+falsepositives:
+    - Unknown
+level: high

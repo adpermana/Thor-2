@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Persistence Via AppCompat RegisterAppRestart Layer
+id: b86852fb-4c77-48f9-8519-eb1b2c308b59
+status: experimental
+description: |
+    Detects the setting of the REGISTERAPPRESTART compatibility layer on an application.
+    This compatibility layer allows an application to register for restart using the "RegisterApplicationRestart" API.
+    This can be potentially abused as a persistence mechanism.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/01/01 22:11:01
+references:
+  - https://github.com/nasbench/Misc-Research/blob/d114d6a5e0a437d3818e492ef9864367152543e7/Other/Persistence-Via-RegisterAppRestart-Shim.md
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Details|contains: REGISTERAPPRESTART
+        TargetObject|contains: \SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers\
+falsepositives: Legitimate applications making use of this feature for compatibility
+    reasons
+level: medium
+customer: 'demo'
+tags:
+  - attack.persistence
+  - attack.t1546.011
+  - DEMO

@@ -1,0 +1,37 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Use of TTDInject.exe
+id: b27077d6-23e6-45d2-81a0-e2b356eea5fd
+status: test
+description: Detects the executiob of TTDInject.exe, which is used by Windows 10 v1809
+    and newer to debug time travel (underlying call of tttracer.exe)
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/05/16 10:57:51
+references:
+  - https://lolbas-project.github.io/lolbas/Binaries/Ttdinject/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - Image|endswith: ttdinject.exe
+      - OriginalFileName: TTDInject.EXE
+falsepositives: Legitimate use
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1127
+  - DEMO

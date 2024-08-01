@@ -1,0 +1,124 @@
+title: Uncommon Network Connections
+id: 4c3f9e22-aacb-4848-a722-72165f60059b
+status: test
+description: Detects suspicious network connections by processes that usually do not make network connections
+author: Nasreddine Bencherchali
+references:
+    - Internal Research
+date: 2022/06/27
+modified: 2023/05/23
+tags:
+    - attack.command_and_control
+    - attack.execution
+    - attack.defense_evasion
+    - attack.t1055
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection:
+        Image|endswith: # Add additional processes that shouldn't make network connection in your env
+            # This list was initially generated based on public malleable c2 profiles (spawn_to)
+            - '\auditpol.exe'
+            - '\bginfo.exe'
+            - '\bootcfg.exe'
+            - '\calc.exe'
+            - '\cdb.exe'
+            - '\choice.exe'
+            - '\cmstp.exe'
+            - '\csi.exe'
+            - '\dllhost.exe'
+            - '\dnx.exe'
+            - '\dtdump.exe'
+            - '\expand.exe'
+            - '\fsi.exe'
+            - '\fsutil.exe'
+            - '\gpresult.exe'
+            - '\gpupdate.exe'
+            - '\iexpress.exe'
+            - '\logman.exe'
+            - '\mcbuilder'
+            - '\mfpmp.exe'
+            - '\mspaint.exe'
+            - '\mtstocom.exe'
+            - '\odbcconf.exe'
+            - '\pcaui.exe'
+            - '\powercfg.exe'
+            - '\reg.exe'
+            - '\Taskmgr.exe'
+            - '\w32tm.exe'
+            - '\winlogon.exe'
+            - '\wlanext.exe'
+            - '\WWAHost.exe'
+    filter_main__ipv4:
+        DestinationIp|startswith: # Ranges excluded based on https://github.com/SigmaHQ/sigma/blob/0f176092326ab9d1e19384d30224e5f29f760d82/rules/windows/network_connection/net_connection_win_dllhost_net_connections.yml
+            - '192.168'
+            - '172.16'
+            - '172.17'
+            - '172.18'
+            - '172.19'
+            - '172.20'
+            - '172.21'
+            - '172.22'
+            - '172.23'
+            - '172.24'
+            - '172.25'
+            - '172.26'
+            - '172.27'
+            - '172.28'
+            - '172.29'
+            - '172.30'
+            - '172.31'
+            - '10.'
+            - '127.'
+            - '169.254.'  # link-local address
+    filter_main_ipv6:
+        DestinationIp|startswith:
+            - '::1'
+            - '0:0:0:0:0:0:0:1'  # IPv6 loopback variant
+            - 'fe80:'  # link-local address
+            - 'fc'  # private address range fc00::/7
+            - 'fd'  # private address range fc00::/7
+    filter_main_msranges:
+        DestinationIp|startswith:
+            # Subnet: 20.184.0.0/13
+            - '20.184.'
+            - '20.185.'
+            - '20.186.'
+            - '20.187.'
+            - '20.188.'
+            - '20.189.'
+            - '20.190.'
+            - '20.191.'
+            - '23.79.'
+            - '51.10.'
+            # Subnet: 51.103.210.0/23
+            - '51.103.'
+            - '51.104.'
+            - '51.105.'
+            - '52.239.'
+        Image|endswith: '\dllhost.exe'
+    filter_main_svchost:
+        ParentImage: 'C:\Windows\System32\svchost.exe'
+        Image:
+            - 'C:\Windows\System32\dllhost.exe'
+            - 'C:\Windows\SysWOW64\dllhost.exe'
+            - 'C:\Windows\System32\WWAHost.exe'
+            - 'C:\Windows\SysWOW64\WWAHost.exe'
+    filter_main_sysmon:
+        # This filter is for cases we can't filter out because the Sysmon provider doesn't have the extra fields added by Aurora
+        Image:
+            - 'C:\Windows\System32\dllhost.exe'
+            - 'C:\Windows\SysWOW64\dllhost.exe'
+            - 'C:\Windows\System32\WWAHost.exe'
+            - 'C:\Windows\SysWOW64\WWAHost.exe'
+        Provider_Name: 'Microsoft-Windows-Sysmon'
+    filter_main_wwahost_tcpip_provider:
+        Image|endswith: '\WWAHost.exe'
+        ParentImage: 'C:\Program Files\Git\cmd\git.exe'
+        Provider_Name: 'Microsoft-Windows-TCPIP'
+    condition: selection and not 1 of filter_main_*
+falsepositives:
+    - Ports need to be tuned or added for specific environments or processes.
+    - Some processes might generate a lot of FPs depeding on the environment. Tune by commenting out any process that's generating a lot of noise
+level: high

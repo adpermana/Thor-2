@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Computer Account Name Change CVE-2021-42287
+id: 45eb2ae2-9aa2-4c3a-99a5-6e5077655466
+status: test
+description: Detects the renaming of an existing computer account to a account name
+    that doesn't contain a $ symbol as seen in attacks against CVE-2021-42287
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/12/22 18:37:01
+references:
+  - https://medium.com/@mvelazco/hunting-for-samaccountname-spoofing-cve-2021-42287-and-domain-controller-impersonation-f704513c8a45
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: selection and not filter
+    filter:
+        NewTargetUserName|contains: $
+    selection:
+        EventID: "4781"
+        OldTargetUserName|contains: $
+fields:
+  - EventID
+  - SubjectUserName
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/12/25
+tags:
+  - cve.2021.42287
+  - detection.emerging_threats
+  - attack.defense_evasion
+  - attack.persistence
+  - attack.t1036
+  - attack.t1098
+  - DEMO

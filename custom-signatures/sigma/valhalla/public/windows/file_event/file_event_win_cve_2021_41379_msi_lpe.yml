@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: InstallerFileTakeOver LPE CVE-2021-41379 File Create Event
+id: 3be82d5d-09fe-4d6a-a275-0d40d234d324
+status: test
+description: Detects signs of the exploitation of LPE CVE-2021-41379 that include
+    an msiexec process that creates an elevation_service.exe file
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/11/22 19:16:31
+references:
+  - https://github.com/klinix5/InstallerFileTakeOver
+  - https://www.zerodayinitiative.com/advisories/ZDI-21-1308/
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith: \msiexec.exe
+        TargetFilename|endswith: \elevation_service.exe
+        TargetFilename|startswith: C:\Program Files (x86)\Microsoft\Edge\Application
+fields:
+  - ComputerName
+  - TargetFilename
+falsepositives:
+  - Unknown
+  - Possibly some Microsoft Edge upgrades
+level: critical
+customer: 'demo'
+modified: 2022/12/25
+tags:
+  - attack.privilege_escalation
+  - attack.t1068
+  - detection.emerging_threats
+  - DEMO

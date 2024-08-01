@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: SAM Registry Hive Handle Request
+id: f8748f2c-89dc-4d95-afb0-5a2dfdbad332
+status: test
+description: Detects handles requested to SAM registry hive
+author: Roberto Rodriguez @Cyb3rWard0g
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/08/12 14:09:51
+references:
+  - https://threathunterplaybook.com/hunts/windows/190725-SAMRegistryHiveHandleRequest/notebook.html
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: selection
+    selection:
+        EventID: "4656"
+        ObjectName|endswith: \SAM
+        ObjectType: Key
+fields:
+  - ComputerName
+  - SubjectDomainName
+  - SubjectUserName
+  - ProcessName
+  - ObjectName
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.discovery
+  - attack.t1012
+  - attack.credential_access
+  - attack.t1552.002
+  - DEMO

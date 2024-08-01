@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Windows Network Access Suspicious desktop.ini Action
+id: 35bc7e28-ee6b-492f-ab04-da58fcf6402e
+status: test
+description: Detects unusual processes accessing desktop.ini remotely over network
+    share, which can be leveraged to alter how Explorer displays a folder's content
+    (i.e. renaming files) without changing them on disk.
+author: Tim Shelton (HAWK.IO)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/12/06 20:03:21
+references:
+  - https://isc.sans.edu/forums/diary/Desktopini+as+a+postexploitation+tool/25912/
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: selection
+    selection:
+        AccessList|contains:
+          - WriteData
+          - DELETE
+          - WriteDAC
+          - AppendData
+          - AddSubdirectory
+        EventID: "5145"
+        ObjectType: File
+        RelativeTargetName|endswith: \desktop.ini
+falsepositives: Read only access list authority
+level: medium
+customer: 'demo'
+modified: 2022/01/16
+tags:
+  - attack.persistence
+  - attack.t1547.009
+  - DEMO

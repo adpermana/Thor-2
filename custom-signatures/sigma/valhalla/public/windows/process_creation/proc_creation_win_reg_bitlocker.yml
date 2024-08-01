@@ -1,0 +1,51 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Reg Add BitLocker
+id: 0e0255bf-2548-47b8-9582-c0955c9283f5
+status: test
+description: Detects suspicious addition to BitLocker related registry keys via the
+    reg.exe utility
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/11/15 13:16:51
+references:
+  - https://thedfirreport.com/2021/11/15/exchange-exploit-leads-to-domain-wide-ransomware/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - EnableBDEWithNoTPM
+          - UseAdvancedStartup
+          - UseTPM
+          - UseTPMKey
+          - UseTPMKeyPIN
+          - RecoveryKeyMessageSource
+          - UseTPMPIN
+          - RecoveryKeyMessage
+        CommandLine|contains|all:
+          - REG
+          - ADD
+          - \SOFTWARE\Policies\Microsoft\FVE
+          - /v
+          - /f
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2022/09/09
+tags:
+  - attack.impact
+  - attack.t1486
+  - DEMO

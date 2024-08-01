@@ -1,0 +1,73 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - Impacket Tools Execution
+id: 4627c6ae-6899-46e2-aa0c-6ebcb1becd19
+status: test
+description: Detects the execution of different compiled Windows binaries of the impacket
+    toolset (based on names or part of their names - could lead to false positives)
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/07/24 15:02:11
+references:
+  - https://github.com/ropnop/impacket_static_binaries/releases/tag/0.9.21-dev-binaries
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - Image|contains:
+          - \goldenPac
+          - \karmaSMB
+          - \kintercept
+          - \ntlmrelayx
+          - \rpcdump
+          - \samrdump
+          - \secretsdump
+          - \smbexec
+          - \smbrelayx
+          - \wmiexec
+          - \wmipersist
+      - Image|endswith:
+          - \atexec_windows.exe
+          - \dcomexec_windows.exe
+          - \dpapi_windows.exe
+          - \findDelegation_windows.exe
+          - \GetADUsers_windows.exe
+          - \GetNPUsers_windows.exe
+          - \getPac_windows.exe
+          - \getST_windows.exe
+          - \getTGT_windows.exe
+          - \GetUserSPNs_windows.exe
+          - \ifmap_windows.exe
+          - \mimikatz_windows.exe
+          - \netview_windows.exe
+          - \nmapAnswerMachine_windows.exe
+          - \opdump_windows.exe
+          - \psexec_windows.exe
+          - \rdp_check_windows.exe
+          - \sambaPipe_windows.exe
+          - \smbclient_windows.exe
+          - \smbserver_windows.exe
+          - \sniff_windows.exe
+          - \sniffer_windows.exe
+          - \split_windows.exe
+          - \ticketer_windows.exe
+falsepositives: Legitimate use of the impacket tools
+level: high
+customer: 'demo'
+modified: 2023/02/07
+tags:
+  - attack.execution
+  - attack.t1557.001
+  - DEMO

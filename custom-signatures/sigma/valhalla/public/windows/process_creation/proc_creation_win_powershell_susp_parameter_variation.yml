@@ -1,0 +1,148 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious PowerShell Parameter Substring
+id: 36210e0d-5b19-485d-a087-c096088885f0
+status: test
+description: Detects suspicious PowerShell invocation with a parameter substring
+author: Florian Roth (Nextron Systems), Daniel Bohannon (idea), Roberto Rodriguez
+    (Fix)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/01/16 17:22:21
+references:
+  - http://www.danielbohannon.com/blog-1/2017/3/12/powershell-execution-argument-obfuscation-how-it-can-make-detection-easier
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - ' -windowstyle h '
+          - ' -windowstyl h'
+          - ' -windowsty h'
+          - ' -windowst h'
+          - ' -windows h'
+          - ' -windo h'
+          - ' -wind h'
+          - ' -win h'
+          - ' -wi h'
+          - ' -win h '
+          - ' -win hi '
+          - ' -win hid '
+          - ' -win hidd '
+          - ' -win hidde '
+          - ' -NoPr '
+          - ' -NoPro '
+          - ' -NoProf '
+          - ' -NoProfi '
+          - ' -NoProfil '
+          - ' -nonin '
+          - ' -nonint '
+          - ' -noninte '
+          - ' -noninter '
+          - ' -nonintera '
+          - ' -noninterac '
+          - ' -noninteract '
+          - ' -noninteracti '
+          - ' -noninteractiv '
+          - ' -ec '
+          - ' -encodedComman '
+          - ' -encodedComma '
+          - ' -encodedComm '
+          - ' -encodedCom '
+          - ' -encodedCo '
+          - ' -encodedC '
+          - ' -encoded '
+          - ' -encode '
+          - ' -encod '
+          - ' -enco '
+          - ' -en '
+          - ' -executionpolic '
+          - ' -executionpoli '
+          - ' -executionpol '
+          - ' -executionpo '
+          - ' -executionp '
+          - ' -execution bypass'
+          - ' -executio bypass'
+          - ' -executi bypass'
+          - ' -execut bypass'
+          - ' -execu bypass'
+          - ' -exec bypass'
+          - ' -exe bypass'
+          - ' -ex bypass'
+          - ' -ep bypass'
+          - ' /windowstyle h '
+          - ' /windowstyl h'
+          - ' /windowsty h'
+          - ' /windowst h'
+          - ' /windows h'
+          - ' /windo h'
+          - ' /wind h'
+          - ' /win h'
+          - ' /wi h'
+          - ' /win h '
+          - ' /win hi '
+          - ' /win hid '
+          - ' /win hidd '
+          - ' /win hidde '
+          - ' /NoPr '
+          - ' /NoPro '
+          - ' /NoProf '
+          - ' /NoProfi '
+          - ' /NoProfil '
+          - ' /nonin '
+          - ' /nonint '
+          - ' /noninte '
+          - ' /noninter '
+          - ' /nonintera '
+          - ' /noninterac '
+          - ' /noninteract '
+          - ' /noninteracti '
+          - ' /noninteractiv '
+          - ' /ec '
+          - ' /encodedComman '
+          - ' /encodedComma '
+          - ' /encodedComm '
+          - ' /encodedCom '
+          - ' /encodedCo '
+          - ' /encodedC '
+          - ' /encoded '
+          - ' /encode '
+          - ' /encod '
+          - ' /enco '
+          - ' /en '
+          - ' /executionpolic '
+          - ' /executionpoli '
+          - ' /executionpol '
+          - ' /executionpo '
+          - ' /executionp '
+          - ' /execution bypass'
+          - ' /executio bypass'
+          - ' /executi bypass'
+          - ' /execut bypass'
+          - ' /execu bypass'
+          - ' /exec bypass'
+          - ' /exe bypass'
+          - ' /ex bypass'
+          - ' /ep bypass'
+        Image|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/07/14
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

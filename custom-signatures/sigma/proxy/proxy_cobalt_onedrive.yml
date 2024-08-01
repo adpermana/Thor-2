@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: CobaltStrike Malleable OneDrive Browsing Traffic Profile
+id: c9b33401-cc6a-4cf6-83bb-57ddcb2407fc
+status: test
+description: Detects Malleable OneDrive Profile
+author: Markus Neis
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/11/12 20:50:11
+references:
+  - https://github.com/rsmudge/Malleable-C2-Profiles/blob/26323784672913923d20c5a638c6ca79459e8529/normal/onedrive_getonly.profile
+logsource:
+    category: proxy
+detection:
+    condition: selection and not filter
+    filter:
+        c-uri|contains: ://onedrive.live.com/
+        c-uri|startswith: http
+    selection:
+        c-uri|endswith: \?manifest=wac
+        cs-host: onedrive.live.com
+        cs-method: GET
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/08/15
+tags:
+  - attack.defense_evasion
+  - attack.command_and_control
+  - attack.t1071.001
+  - DEMO

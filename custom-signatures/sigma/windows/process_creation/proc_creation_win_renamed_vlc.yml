@@ -1,0 +1,25 @@
+title: Renamed Vlc.exe Execution
+id: 124e6ee7-db6c-499c-bceb-af5128346e1d
+status: experimental
+description: Detects renamed vlc.exe or portable version that can be used for DLL side-loading
+references:
+    - https://www.trendmicro.com/en_us/research/23/a/gootkit-loader-actively-targets-the-australian-healthcare-indust.html
+author: Nasreddine Bencherchali (Nextron Systems)
+date: 2023/02/27
+tags:
+    - attack.defense_evasion
+    - attack.t1574.002
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        OriginalFileName: 'vlc.exe'
+    filter:
+        Image|endswith:
+            - '\vlc.exe'
+            - '\vlc-cache-gen.exe'
+    condition: selection and not filter
+falsepositives:
+    - Unknown
+level: high

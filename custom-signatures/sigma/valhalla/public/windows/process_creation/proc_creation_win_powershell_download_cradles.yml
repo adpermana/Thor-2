@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PowerShell Web Download
+id: 6e897651-f157-4d8f-aaeb-df8151488385
+status: test
+description: Detects suspicious ways to download files or content using PowerShell
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/03/24 12:07:11
+references:
+  - https://github.com/VirtualAlllocEx/Payload-Download-Cradles/blob/88e8eca34464a547c90d9140d70e9866dcbc6a12/Download-Cradles.cmd
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - .DownloadString(
+          - .DownloadFile(
+          - 'Invoke-WebRequest '
+          - 'iwr '
+falsepositives: Scripts or tools that download files
+level: medium
+customer: 'demo'
+modified: 2023/01/05
+tags:
+  - attack.command_and_control
+  - attack.execution
+  - attack.t1059.001
+  - attack.t1105
+  - DEMO

@@ -1,0 +1,52 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PUA - NPS Tunneling Tool Execution
+id: 68d37776-61db-42f5-bf54-27e87072d17e
+status: test
+description: Detects the use of NPS, a port forwarding and intranet penetration proxy
+    server
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/10/08 14:17:41
+references:
+  - https://github.com/ehang-io/nps
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_cli_1:
+        CommandLine|contains|all:
+          - ' -server='
+          - ' -vkey='
+          - ' -password='
+    selection_cli_2:
+        CommandLine|contains: ' -config=npc'
+    selection_hashes:
+      - Hashes|contains:
+          - MD5=AE8ACF66BFE3A44148964048B826D005
+          - SHA1=CEA49E9B9B67F3A13AD0BE1C2655293EA3C18181
+          - SHA256=5A456283392FFCEEEACA3D3426C306EB470304637520D72FED1CC1FEBBBD6856
+      - md5: ae8acf66bfe3a44148964048b826d005
+      - sha1: cea49e9b9b67f3a13ad0be1c2655293ea3c18181
+      - sha256: 5a456283392ffceeeaca3d3426c306eb470304637520d72fed1cc1febbbd6856
+    selection_img:
+        Image|endswith: \npc.exe
+falsepositives: Legitimate use
+level: high
+customer: 'demo'
+modified: 2023/02/04
+tags:
+  - attack.command_and_control
+  - attack.t1090
+  - DEMO

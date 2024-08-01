@@ -1,0 +1,40 @@
+title: Suspicious Process Creation Via WMI
+id: fcb9a3fe-7153-47ec-bbc6-0bbc53bd0ed0
+status: test
+description: Detects the creation of a process using the WMI "Win32_Process" class with suspicious characteristics
+references:
+    - Internal Research
+author: Nasreddine Bencherchali
+date: 2022/11/22
+modified: 2023/03/29
+tags:
+    - attack.execution
+    - attack.t1047
+logsource:
+    product: windows
+    service: wmi
+detection:
+    selection_eid:
+        EventID: 23
+    selection_susp_re:
+        CommandLine|re: '(%[Aa]pp[Dd]ata%|%[Ll]ocal[Aa]pp[Dd]ata%|[Pp]rogram[Dd]ata|\\[Aa]pp[Dd]ata\\([Ll]ocal|[Rr]oaming|[Ll]ocal[Ll]ow))\\[^\\]{1,26}\.(EXE|exe|bat|BAT|msi|MSI|ps1|PS1|vbs|VBS|vbe|VBE|dll|DLL|hta|HTA)($|\s)'
+    selection_susp_paths:
+        CommandLine|contains:
+            - '\Users\Public'
+            - 'C:\Perflogs'
+            - 'C:\Windows\Temp\'
+            - '\Downloads\'
+            - '\Desktop\'
+    selection_susp_binaries:
+        CommandLine|contains:
+            - 'rundll32'
+            - 'regsvr32'
+            - 'cscript'
+            - 'wscript'
+            - 'powershell'
+            - 'pwsh'
+            - 'bitsadmin'
+    condition: selection_eid and 1 of selection_susp_*
+falsepositives:
+    - Unknown
+level: high

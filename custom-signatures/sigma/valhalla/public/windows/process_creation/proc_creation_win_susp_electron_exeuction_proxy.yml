@@ -1,0 +1,74 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potentially Suspicious Electron Application CommandLine
+id: 378a05d8-963c-46c9-bcce-13c7657eac99
+related:
+  - type: similar
+    id: f26eb764-fd89-464b-85e2-dc4a8e6e77b8
+status: experimental
+description: Detects potentially suspicious CommandLine of electron apps (teams, discord,
+    slack, etc.). This could be a sign of abuse to proxy execution through a signed
+    binary.
+author: frack113, Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/09/05 21:07:11
+references:
+  - https://positive.security/blog/ms-officecmd-rce
+  - https://lolbas-project.github.io/lolbas/Binaries/Teams/
+  - https://lolbas-project.github.io/lolbas/Binaries/Msedge/
+  - https://lolbas-project.github.io/lolbas/Binaries/msedgewebview2/
+  - https://medium.com/@MalFuzzer/one-electron-to-rule-them-all-dc2e9b263daf
+  - https://chromium.googlesource.com/chromium/chromium/+/master/content/public/common/content_switches.cc
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains:
+          - --browser-subprocess-path
+          - --gpu-launcher
+          - --renderer-cmd-prefix
+          - --utility-cmd-prefix
+    selection_img:
+      - Image|endswith:
+          - \chrome.exe
+          - \code.exe
+          - \discord.exe
+          - \GitHubDesktop.exe
+          - \keybase.exe
+          - \msedge_proxy.exe
+          - \msedge.exe
+          - \msedgewebview2.exe
+          - \msteams.exe
+          - \slack.exe
+          - \Teams.exe
+      - OriginalFileName:
+          - chrome.exe
+          - code.exe
+          - discord.exe
+          - GitHubDesktop.exe
+          - keybase.exe
+          - msedge_proxy.exe
+          - msedge.exe
+          - msedgewebview2.exe
+          - msteams.exe
+          - slack.exe
+          - Teams.exe
+falsepositives: Legitimate usage for debugging purposes
+level: medium
+customer: 'demo'
+modified: 2023/11/09
+tags:
+  - attack.execution
+  - DEMO

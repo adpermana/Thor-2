@@ -1,0 +1,66 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Unsigned DLL Loaded by Windows Utility
+id: b5de0c9a-6f19-43e0-af4e-55ad01f550af
+status: experimental
+description: |
+    Detects windows utilities loading an unsigned or untrusted DLL.
+    Adversaries often abuse those programs to proxy execution of malicious code.
+author: Swachchhanda Shrawan Poudel
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/02/28 15:46:01
+references:
+  - https://www.elastic.co/security-labs/Hunting-for-Suspicious-Windows-Libraries-for-Execution-and-Evasion
+  - https://akhere.hashnode.dev/hunting-unsigned-dlls-using-kql
+  - https://unit42.paloaltonetworks.com/unsigned-dlls/?web_view=true
+logsource:
+    category: image_load
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_sig_status:
+        SignatureStatus:
+          - errorChaining
+          - errorCode_endpoint
+          - errorExpired
+          - trusted
+    filter_main_sig_status_empty:
+        SignatureStatus:
+          - ""
+          - '-'
+    filter_main_sig_status_null:
+        SignatureStatus: []
+    filter_main_signed:
+        Signed: "true"
+    filter_main_signed_empty:
+        Signed:
+          - ""
+          - '-'
+    filter_main_signed_null:
+        Signed: []
+    selection:
+        Image|endswith:
+          - \InstallUtil.exe
+          - \RegAsm.exe
+          - \RegSvcs.exe
+          - \regsvr32.exe
+          - \rundll32.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2024/03/07
+tags:
+  - attack.t1218.011
+  - attack.t1218.010
+  - attack.defense_evasion
+  - DEMO

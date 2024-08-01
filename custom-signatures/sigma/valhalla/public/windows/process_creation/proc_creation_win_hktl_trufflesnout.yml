@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - TruffleSnout Execution
+id: 69ca006d-b9a9-47f5-80ff-ecd4d25d481a
+status: test
+description: Detects the use of TruffleSnout.exe an iterative AD discovery toolkit
+    for offensive operators, situational awareness and targeted low noise enumeration.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/20 14:43:51
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/40b77d63808dd4f4eafb83949805636735a1fd15/atomics/T1482/T1482.md
+  - https://github.com/dsnezhkov/TruffleSnout
+  - https://github.com/dsnezhkov/TruffleSnout/blob/master/TruffleSnout/Docs/USAGE.md
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - OriginalFileName: TruffleSnout.exe
+      - Image|endswith: \TruffleSnout.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/02/13
+tags:
+  - attack.discovery
+  - attack.t1482
+  - DEMO

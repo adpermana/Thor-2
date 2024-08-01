@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Admin User Remote Logon
+id: 0f63e1ef-1eb9-4226-9d54-8927ca08520a
+status: test
+description: Detect remote login by Administrator user (depending on internal pattern).
+author: juju4
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/10/29 11:55:11
+references:
+  - https://car.mitre.org/wiki/CAR-2016-04-005
+logsource:
+    product: windows
+    service: security
+    definition: 'Requirements: Identifiable administrators usernames (pattern or special
+        unique character. ex: "Admin-*"), internal policy mandating use only as secondary
+        account'
+detection:
+    condition: selection
+    selection:
+        AuthenticationPackageName: Negotiate
+        EventID: "4624"
+        LogonType: "10"
+        TargetUserName|startswith: Admin
+falsepositives: Legitimate administrative activity.
+level: low
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.lateral_movement
+  - attack.t1078.001
+  - attack.t1078.002
+  - attack.t1078.003
+  - car.2016-04-005
+  - DEMO

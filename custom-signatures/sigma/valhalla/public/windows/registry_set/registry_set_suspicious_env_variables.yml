@@ -1,0 +1,71 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Environment Variable Has Been Registered
+id: 966315ef-c5e1-4767-ba25-fce9c8de3660
+status: test
+description: Detects the creation of user-specific or system-wide environment variables
+    via the registry. Which contains suspicious commands and strings
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/12/20 19:39:41
+references:
+  - https://infosec.exchange/@sbousseaden/109542254124022664
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_details:
+      - Details:
+          - powershell
+          - pwsh
+      - Details|contains:
+          - \AppData\Local\Temp\
+          - C:\Users\Public\
+          - TVqQAAMAAAAEAAAA
+          - TVpQAAIAAAAEAA8A
+          - TVqAAAEAAAAEABAA
+          - TVoAAAAAAAAAAAAA
+          - TVpTAQEAAAAEAAAA
+          - SW52b2tlL
+          - ludm9rZS
+          - JbnZva2Ut
+          - SQBuAHYAbwBrAGUALQ
+          - kAbgB2AG8AawBlAC0A
+          - JAG4AdgBvAGsAZQAtA
+      - Details|startswith:
+          - SUVY
+          - SQBFAF
+          - SQBuAH
+          - cwBhA
+          - aWV4
+          - aQBlA
+          - R2V0
+          - dmFy
+          - dgBhA
+          - dXNpbm
+          - H4sIA
+          - Y21k
+          - cABhAH
+          - Qzpc
+          - Yzpc
+    selection_main:
+        TargetObject|contains: \Environment\
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.defense_evasion
+  - attack.persistence
+  - DEMO

@@ -1,0 +1,78 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potentially Suspicious File Download From File Sharing Domain Via PowerShell.EXE
+id: b6e04788-29e1-4557-bb14-77f761848ab8
+status: experimental
+description: Detects potentially suspicious file downloads from file sharing domains
+    using PowerShell.exe
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/02/23 02:40:11
+references:
+  - https://labs.withsecure.com/publications/fin7-target-veeam-servers
+  - https://github.com/WithSecureLabs/iocs/blob/344203de742bb7e68bd56618f66d34be95a9f9fc/FIN7VEEAM/iocs.csv
+  - https://www.microsoft.com/en-us/security/blog/2024/01/17/new-ttps-observed-in-mint-sandstorm-campaign-targeting-high-profile-individuals-at-universities-and-research-orgs/
+  - https://www.huntress.com/blog/slashandgrab-screen-connect-post-exploitation-in-the-wild-cve-2024-1709-cve-2024-1708
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_download:
+        CommandLine|contains:
+          - .DownloadString(
+          - .DownloadFile(
+          - 'Invoke-WebRequest '
+          - 'iwr '
+          - 'wget '
+    selection_img:
+      - Image|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+      - OriginalFileName:
+          - PowerShell.EXE
+          - pwsh.dll
+    selection_websites:
+        CommandLine|contains:
+          - anonfiles.com
+          - cdn.discordapp.com
+          - cdn.discordapp.com/attachments/
+          - ddns.net
+          - dl.dropboxusercontent.com
+          - ghostbin.co
+          - glitch.me
+          - gofile.io
+          - hastebin.com
+          - mediafire.com
+          - mega.nz
+          - onrender.com
+          - paste.ee
+          - pastebin.com
+          - pastebin.pl
+          - pastetext.net
+          - privatlab.com
+          - privatlab.net
+          - send.exploit.in
+          - sendspace.com
+          - storage.googleapis.com
+          - storjshare.io
+          - supabase.co
+          - temp.sh
+          - transfer.sh
+          - ufile.io
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.execution
+  - DEMO

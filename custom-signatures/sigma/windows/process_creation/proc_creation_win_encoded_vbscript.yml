@@ -1,0 +1,23 @@
+title: Encoded VBScript Execution
+id: 0a4184c7-c2fb-4ae3-8197-5b97e67d65e8
+status: experimental
+description: Detects the execution of an encoded VBScript based on command line arguments
+references:
+    - https://twitter.com/nas_bench/status/1416531281316388866
+    - https://www.trendmicro.com/vinfo/us/threat-encyclopedia/malware/worm.vbs.dunihi.aa
+author: Nasreddine Bencherchali
+date: 2022/04/30
+tags:
+    - attack.execution
+    - attack.defense_evasion
+    - attack.t1027
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains: '/e:VBScript.Encode'
+    condition: selection
+falsepositives:
+    - Unknown
+level: high

@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Hardware Model Reconnaissance Via Wmic.EXE
+id: 3e3ceccd-6c06-48b8-b5ff-ab1d25db8c1d
+status: test
+description: Detects the execution of WMIC with the "csproduct" which is used to obtain
+    information such as hardware models and vendor information
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/02/14 16:41:51
+references:
+  - https://jonconwayuk.wordpress.com/2014/01/31/wmic-csproduct-using-wmi-to-identify-make-and-model-of-hardware/
+  - https://www.uptycs.com/blog/kuraystealer-a-bandit-using-discord-webhooks
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains: csproduct
+    selection_img:
+      - Image|endswith: \wmic.exe
+      - OriginalFileName: wmic.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.execution
+  - attack.t1047
+  - car.2016-03-002
+  - DEMO

@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Ntdsutil Abuse
+id: e6e88853-5f20-4c4a-8d26-cd469fd8d31f
+status: test
+description: Detects potential abuse of ntdsutil to dump ntds.dit database
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/14 09:50:31
+references:
+  - https://twitter.com/mgreen27/status/1558223256704122882
+  - https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/jj574207(v=ws.11)
+logsource:
+    product: windows
+    service: application
+detection:
+    condition: selection
+    selection:
+        Data|contains: ntds.dit
+        EventID:
+          - "216"
+          - "325"
+          - "326"
+          - "327"
+        Provider_Name: ESENT
+falsepositives: Legitimate backup operation/creating shadow copies
+level: medium
+customer: 'demo'
+tags:
+  - attack.credential_access
+  - attack.t1003.003
+  - DEMO

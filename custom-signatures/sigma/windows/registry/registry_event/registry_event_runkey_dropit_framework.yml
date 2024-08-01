@@ -1,0 +1,22 @@
+title: Dr0p1t-Framework Default Persistence Key
+id: ed817dc6-142c-487e-b2d3-f0230c8793f4
+status: test
+description: Detects manipulation of Dr0p1t-Framework default persistence key
+author: Nasreddine Bencherchali
+references:
+    - https://github.com/D4Vinci/Dr0p1t-Framework
+date: 2022/05/17
+modified: 2023/03/29
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    selection:
+        TargetObject|endswith: 'Software\Microsoft\Windows\CurrentVersion\Run\Windows.NET service'
+    condition: selection
+falsepositives:
+    - Unknown
+level: critical
+tags:
+    - attack.persistence
+    - attack.t1547.001

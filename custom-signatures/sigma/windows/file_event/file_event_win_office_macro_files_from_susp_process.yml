@@ -1,0 +1,59 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Office Macro File Creation From Suspicious Process
+id: b1c50487-1967-4315-a026-6491686d860e
+status: test
+description: Detects the creation of a office macro file from a a suspicious process
+author: frack113, Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/23 19:03:31
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1566.001/T1566.001.md
+  - https://docs.microsoft.com/en-us/deployoffice/compat/office-file-format-reference
+logsource:
+    category: file_event
+    product: windows
+    definition: 'Requirements: The "ParentImage" field is not available by default
+        on EID 11 of Sysmon logs. To be able to use this rule to the full extent you
+        need to enriche the log with additional ParentImage data'
+detection:
+    condition: all of selection_*
+    selection_cmd:
+      - Image|endswith:
+          - \cscript.exe
+          - \mshta.exe
+          - \regsvr32.exe
+          - \rundll32.exe
+          - \wscript.exe
+      - ParentImage|endswith:
+          - \cscript.exe
+          - \mshta.exe
+          - \regsvr32.exe
+          - \rundll32.exe
+          - \wscript.exe
+    selection_ext:
+        TargetFilename|endswith:
+          - .docm
+          - .dotm
+          - .xlsm
+          - .xltm
+          - .potm
+          - .pptm
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/02/22
+tags:
+  - attack.initial_access
+  - attack.t1566.001
+  - DEMO

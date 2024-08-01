@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: New Kind of Network (NKN) Detection
+id: fa7703d6-0ee8-4949-889c-48c84bc15b6f
+status: test
+description: NKN is a networking service using blockchain technology to support a
+    decentralized network of peers. While there are legitimate uses for it, it can
+    also be used as a C2 channel. This rule looks for a DNS request to the ma>
+author: Michael Portera (@mportatoes)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/04/21 14:27:41
+references:
+  - https://github.com/nknorg/nkn-sdk-go
+  - https://unit42.paloaltonetworks.com/manageengine-godzilla-nglite-kdcsponge/
+  - https://github.com/Maka8ka/NGLite
+logsource:
+    product: zeek
+    service: dns
+detection:
+    condition: selection
+    selection:
+        query|contains|all:
+          - seed
+          - .nkn.org
+fields:
+  - id.orig_h
+  - id.resp_h
+  - answers
+falsepositives: Unknown
+level: low
+customer: 'demo'
+tags:
+  - attack.command_and_control
+  - DEMO

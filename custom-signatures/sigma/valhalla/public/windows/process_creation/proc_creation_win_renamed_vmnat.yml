@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Renamed Vmnat.exe Execution
+id: 7b4f794b-590a-4ad4-ba18-7964a2832205
+status: test
+description: Detects renamed vmnat.exe or portable version that can be used for DLL
+    side-loading
+author: elhoim
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/09 13:13:01
+references:
+  - https://twitter.com/malmoeb/status/1525901219247845376
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_*
+    filter_rename:
+        Image|endswith: vmnat.exe
+    selection:
+        OriginalFileName: vmnat.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/02/03
+tags:
+  - attack.defense_evasion
+  - attack.t1574.002
+  - DEMO

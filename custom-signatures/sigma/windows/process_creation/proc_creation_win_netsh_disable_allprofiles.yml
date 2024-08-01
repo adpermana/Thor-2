@@ -1,0 +1,30 @@
+title: Netsh Disable Firewall For All Profiles
+id: 4d5d24a3-1d70-4e17-9e73-4a9fdd33032b
+status: experimental
+description: Detects execution of netsh to disable the firewall for all profiles
+references:
+    - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/blackbyte-exbyte-ransomware
+    - https://www.techtarget.com/searchenterprisedesktop/photostory/4500257332/Top-Windows-command-line-commands/6/Check-Windows-Firewall-status-with-netsh-advfirewall-show-allprofiles
+author: Nasreddine Bencherchali
+date: 2022/11/04
+tags:
+    - attack.defense_evasion
+    - attack.t1562.004
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        - Image|endswith: '\netsh.exe'
+        - OriginalFileName: 'netsh.exe'
+    selection_cli:
+        CommandLine|contains|all:
+            # Example: cmd.exe /c netsh advfirewall set allprofiles state off
+            - ' set '
+            - ' allprofiles'
+            - ' state '
+            - ' off'
+    condition: all of selection_*
+falsepositives:
+    - Unlikely
+level: high

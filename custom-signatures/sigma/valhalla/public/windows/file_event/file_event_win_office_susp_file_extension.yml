@@ -1,0 +1,78 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: File With Uncommon Extension Created By An Office Application
+id: c7a74c80-ba5a-486e-9974-ab9e682bc5e4
+status: experimental
+description: Detects the creation of files with an executable or script extension
+    by an Office application.
+author: Vadim Khrykov (ThreatIntel), Cyb3rEng (Rule), Nasreddine Bencherchali (Nextron
+    Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/23 21:39:51
+references:
+  - https://thedfirreport.com/2021/03/29/sodinokibi-aka-revil-ransomware/
+  - https://github.com/vadim-hunter/Detection-Ideas-Rules/blob/02bcbfc2bfb8b4da601bb30de0344ae453aa1afe/Threat%20Intelligence/The%20DFIR%20Report/20210329_Sodinokibi_(aka_REvil)_Ransomware.yaml
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: all of selection* and not 1 of filter_main_* and not 1 of filter_optional_*
+    filter_main_localassembly:
+        TargetFilename|contains: \AppData\Local\assembly\tmp\
+        TargetFilename|endswith: .dll
+    filter_optional_webex:
+        Image|endswith: \winword.exe
+        TargetFilename|contains: \AppData\Local\Temp\webexdelta\
+        TargetFilename|endswith:
+          - .dll
+          - .exe
+    filter_optional_webservicecache:
+        TargetFilename|contains|all:
+          - C:\Users\
+          - \AppData\Local\Microsoft\Office\
+          - \WebServiceCache\AllUsers
+        TargetFilename|endswith: .com
+    selection1:
+        Image|endswith:
+          - \excel.exe
+          - \msaccess.exe
+          - \mspub.exe
+          - \powerpnt.exe
+          - \visio.exe
+          - \winword.exe
+    selection2:
+        TargetFilename|endswith:
+          - .bat
+          - .cmd
+          - .com
+          - .dll
+          - .exe
+          - .hta
+          - .ocx
+          - .proj
+          - .ps1
+          - .scf
+          - .scr
+          - .sys
+          - .vbe
+          - .vbs
+          - .wsf
+          - .wsh
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/06/22
+tags:
+  - attack.t1204.002
+  - attack.execution
+  - DEMO

@@ -1,0 +1,69 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Persistence Via Microsoft Office Startup Folder
+id: 0e20c89d-2264-44ae-8238-aeeaba609ece
+status: test
+description: Detects creation of Microsoft Office files inside of one of the default
+    startup folders in order to achieve persistence.
+author: Max Altgelt (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/02 21:13:01
+references:
+  - https://insight-jp.nttsecurity.com/post/102hojk/operation-restylink-apt-campaign-targeting-japanese-companies
+  - https://learn.microsoft.com/en-us/office/troubleshoot/excel/use-startup-folders
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: (all of selection_word_* or all of selection_excel_*) and not filter_main_office
+    filter_main_office:
+        Image|endswith:
+          - \WINWORD.exe
+          - \EXCEL.exe
+    selection_excel_extension:
+        TargetFilename|endswith:
+          - .xls
+          - .xlsm
+          - .xlsx
+          - .xlt
+          - .xltm
+    selection_excel_paths:
+      - TargetFilename|contains: \Microsoft\Excel\XLSTART
+      - TargetFilename|contains|all:
+          - \Office
+          - \Program Files
+          - \XLSTART
+    selection_word_extension:
+        TargetFilename|endswith:
+          - .doc
+          - .docm
+          - .docx
+          - .dot
+          - .dotm
+          - .rtf
+    selection_word_paths:
+      - TargetFilename|contains: \Microsoft\Word\STARTUP
+      - TargetFilename|contains|all:
+          - \Office
+          - \Program Files
+          - \STARTUP
+falsepositives:
+  - Loading a user environment from a backup or a domain controller
+  - Synchronization of templates
+level: high
+customer: 'demo'
+modified: 2023/06/22
+tags:
+  - attack.persistence
+  - attack.t1137
+  - DEMO

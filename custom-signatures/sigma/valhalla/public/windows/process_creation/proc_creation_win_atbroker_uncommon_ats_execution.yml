@@ -1,0 +1,76 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Uncommon  Assistive Technology Applications Execution Via AtBroker.EXE
+id: f24bcaea-0cd1-11eb-adc1-0242ac120002
+status: test
+description: Detects the start of a non built-in assistive technology applications
+    via "Atbroker.EXE".
+author: Mateusz Wydra, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/12 00:25:21
+references:
+  - http://www.hexacorn.com/blog/2016/07/22/beyond-good-ol-run-key-part-42/
+  - https://lolbas-project.github.io/lolbas/Binaries/Atbroker/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_* and not 1 of filter_main_* and not 1 of filter_optional_*
+    filter_main_builtin:
+        CommandLine|contains:
+          - animations
+          - audiodescription
+          - caretbrowsing
+          - caretwidth
+          - colorfiltering
+          - cursorindicator
+          - cursorscheme
+          - filterkeys
+          - focusborderheight
+          - focusborderwidth
+          - highcontrast
+          - keyboardcues
+          - keyboardpref
+          - livecaptions
+          - magnifierpane
+          - messageduration
+          - minimumhitradius
+          - mousekeys
+          - Narrator
+          - osk
+          - overlappedcontent
+          - showsounds
+          - soundsentry
+          - speechreco
+          - stickykeys
+          - togglekeys
+          - voiceaccess
+          - windowarranging
+          - windowtracking
+          - windowtrackingtimeout
+          - windowtrackingzorder
+    filter_optional_java:
+        CommandLine|contains: Oracle_JavaAccessBridge
+    selection_cli:
+        CommandLine|contains: start
+    selection_img:
+      - Image|endswith: \AtBroker.exe
+      - OriginalFileName: AtBroker.exe
+falsepositives: Legitimate, non-default assistive technology applications execution
+level: medium
+customer: 'demo'
+modified: 2024/03/06
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

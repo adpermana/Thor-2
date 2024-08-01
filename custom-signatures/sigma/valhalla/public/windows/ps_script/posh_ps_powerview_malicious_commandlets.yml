@@ -1,0 +1,95 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PowerView PowerShell Cmdlets - ScriptBlock
+id: dcd74b95-3f36-4ed9-9598-0490951643aa
+related:
+  - type: similar
+    id: b2317cfa-4a47-4ead-b3ff-297438c0bc2d
+status: test
+description: Detects Cmdlet names from PowerView of the PowerSploit exploitation framework.
+author: Bhabesh Raj
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/05/18 17:02:21
+references:
+  - https://powersploit.readthedocs.io/en/stable/Recon/README
+  - https://github.com/PowerShellMafia/PowerSploit/tree/master/Recon
+  - https://thedfirreport.com/2020/10/08/ryuks-return
+  - https://adsecurity.org/?p=2277
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: selection
+    selection:
+        ScriptBlockText|contains:
+          - Export-PowerViewCSV
+          - Find-DomainLocalGroupMember
+          - Find-DomainObjectPropertyOutlier
+          - Find-DomainProcess
+          - Find-DomainShare
+          - Find-DomainUserEvent
+          - Find-DomainUserLocation
+          - Find-ForeignGroup
+          - Find-ForeignUser
+          - Find-GPOComputerAdmin
+          - Find-GPOLocation
+          - Find-InterestingDomain
+          - Find-InterestingFile
+          - Find-LocalAdminAccess
+          - Find-ManagedSecurityGroups
+          - Get-CachedRDPConnection
+          - Get-DFSshare
+          - Get-DomainDFSShare
+          - Get-DomainDNSRecord
+          - Get-DomainDNSZone
+          - Get-DomainFileServer
+          - Get-DomainGPOComputerLocalGroupMapping
+          - Get-DomainGPOLocalGroup
+          - Get-DomainGPOUserLocalGroupMapping
+          - Get-LastLoggedOn
+          - Get-LoggedOnLocal
+          - Get-NetFileServer
+          - Get-NetForest
+          - Get-NetGPOGroup
+          - Get-NetProcess
+          - Get-NetRDPSession
+          - Get-RegistryMountedDrive
+          - Get-RegLoggedOn
+          - Get-WMIRegCachedRDPConnection
+          - Get-WMIRegLastLoggedOn
+          - Get-WMIRegMountedDrive
+          - Get-WMIRegProxy
+          - Invoke-ACLScanner
+          - Invoke-CheckLocalAdminAccess
+          - Invoke-EnumerateLocalAdmin
+          - Invoke-EventHunter
+          - Invoke-FileFinder
+          - Invoke-Kerberoast
+          - Invoke-MapDomainTrust
+          - Invoke-ProcessHunter
+          - Invoke-RevertToSelf
+          - Invoke-ShareFinder
+          - Invoke-UserHunter
+          - Invoke-UserImpersonation
+          - Remove-RemoteConnection
+          - Request-SPNTicket
+          - Resolve-IPAddress
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/11/22
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

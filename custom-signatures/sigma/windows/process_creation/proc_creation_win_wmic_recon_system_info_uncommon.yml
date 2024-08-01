@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Uncommon System Information Discovery Via Wmic.EXE
+id: 9d5a1274-922a-49d0-87f3-8c653483b909
+related:
+  - type: derived
+    id: d85ecdd7-b855-4e6e-af59-d9c78b5b861e
+status: experimental
+description: |
+    Detects the use of the WMI command-line (WMIC) utility to identify and display various system information,
+    including OS, CPU, GPU, and disk drive names; memory capacity; display resolution; and baseboard, BIOS,
+    and GPU driver products/versions.
+    Some of these commands were used by Aurora Stealer in late 2022/early 2023.
+author: TropChaud
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/26 19:06:31
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/a2ccd19c37d0278b4ffa8583add3cf52060a5418/atomics/T1082/T1082.md#atomic-test-25---system-information-discovery-with-wmic
+  - https://nwgat.ninja/getting-system-information-with-wmic-on-windows/
+  - https://blog.sekoia.io/aurora-a-rising-stealer-flying-under-the-radar
+  - https://blog.cyble.com/2023/01/18/aurora-a-stealer-using-shapeshifting-tactics/
+  - https://app.any.run/tasks/a6aa0057-82ec-451f-8f99-55650ca537da/
+  - https://www.virustotal.com/gui/file/d6f6bc10ae0e634ed4301d584f61418cee18e5d58ad9af72f8aa552dc4aaeca3/behavior
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_commands:
+        CommandLine|contains:
+          - LOGICALDISK get Name,Size,FreeSpace
+          - os get Caption,OSArchitecture,Version
+    selection_wmic:
+      - Description: WMI Commandline Utility
+      - OriginalFileName: wmic.exe
+      - Image|endswith: \WMIC.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/12/19
+tags:
+  - attack.discovery
+  - attack.t1082
+  - DEMO

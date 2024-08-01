@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious PowerShell Download - Powershell Script
+id: 403c2cc0-7f6b-4925-9423-bfa573bed7eb
+related:
+  - type: derived
+    id: 65531a81-a694-4e31-ae04-f8ba5bc33759
+status: test
+description: Detects suspicious PowerShell download command
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/03/05 19:24:31
+references:
+  - https://learn.microsoft.com/en-us/dotnet/api/system.net.webclient.downloadstring?view=net-8.0
+  - https://learn.microsoft.com/en-us/dotnet/api/system.net.webclient.downloadfile?view=net-8.0
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: webclient and download
+    download:
+        ScriptBlockText|contains:
+          - .DownloadFile(
+          - .DownloadFileAsync(
+          - .DownloadString(
+          - .DownloadStringAsync(
+    webclient:
+        ScriptBlockText|contains: System.Net.WebClient
+falsepositives: PowerShell scripts that download content from the Internet
+level: medium
+customer: 'demo'
+modified: 2022/12/02
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

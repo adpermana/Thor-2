@@ -1,0 +1,58 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Eventlog Cleared
+id: a62b37e0-45d3-48d9-a517-90c1a1b0186b
+related:
+  - type: obsoletes
+    id: f2f01843-e7b8-4f95-a35a-d23584476423
+  - type: derived
+    id: d99b79d2-0a6f-4f46-ad8b-260b6e17f982
+  - type: derived
+    id: 100ef69e-3327-481c-8e5c-6d80d9507556
+status: experimental
+description: One of the Windows Eventlogs has been cleared. e.g. caused by "wevtutil
+    cl" command execution
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/01/10 10:19:21
+references:
+  - https://twitter.com/deviouspolack/status/832535435960209408
+  - https://www.hybrid-analysis.com/sample/027cc450ef5f8c5f653329641ec1fed91f694e0d229928963b30f6b0d7d3a745?environmentId=100
+logsource:
+    product: windows
+    service: system
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_covered:
+        Channel:
+          - Microsoft-Windows-PowerShell/Operational
+          - Microsoft-Windows-Sysmon/Operational
+          - PowerShellCore/Operational
+          - Security
+          - System
+          - Windows PowerShell
+    selection:
+        EventID: "104"
+        Provider_Name: Microsoft-Windows-Eventlog
+falsepositives:
+  - Rollout of log collection agents (the setup routine often includes a reset of
+    the local Eventlog)
+  - System provisioning (system reset before the golden image creation)
+level: medium
+customer: 'demo'
+modified: 2023/11/15
+tags:
+  - attack.defense_evasion
+  - attack.t1070.001
+  - car.2016-04-002
+  - DEMO

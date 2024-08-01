@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Format.com FileSystem LOLBIN
+id: 9fb6b26e-7f9e-4517-a48b-8cac4a1b6c60
+status: test
+description: Detects the execution of format.com with a suspicious filesystem selection
+    that could indicate a defense evasion activity in which format.com is used to
+    load malicious DLL files or other programs
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/04 13:00:31
+references:
+  - https://twitter.com/0gtweet/status/1477925112561209344
+  - https://twitter.com/wdormann/status/1478011052130459653?s=20
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter*
+    filter:
+        CommandLine|contains:
+          - /fs:FAT
+          - /fs:exFAT
+          - /fs:NTFS
+          - /fs:UDF
+          - /fs:ReFS
+    selection:
+        CommandLine|contains: '/fs:'
+        Image|endswith: \format.com
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - DEMO

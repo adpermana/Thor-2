@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Malicious IP Address Sign-In Suspicious
+id: 36440e1c-5c22-467a-889b-593e66498472
+status: experimental
+description: Indicates sign-in from a malicious IP address known to be malicious at
+    time of sign-in.
+author: Mark Morowczynski '@markmorow', Gloria Lee, '@gleeiamglo'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/09/07 16:05:31
+references:
+  - https://learn.microsoft.com/en-us/azure/active-directory/identity-protection/concept-identity-protection-risks#malicious-ip-address
+  - https://learn.microsoft.com/en-us/azure/active-directory/architecture/security-operations-user-accounts#unusual-sign-ins
+logsource:
+    product: azure
+    service: riskdetection
+detection:
+    condition: selection
+    selection:
+        riskEventType: suspiciousIPAddress
+falsepositives: We recommend investigating the sessions flagged by this detection
+    in the context of other sign-ins from the user.
+level: high
+customer: 'demo'
+tags:
+  - attack.t1090
+  - attack.command_and_control
+  - DEMO

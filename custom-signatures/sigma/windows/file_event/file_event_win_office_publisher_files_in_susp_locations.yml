@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Publisher Attachment File Dropped In Suspicious Location
+id: 3d2a2d59-929c-4b78-8c1a-145dfe9e07b1
+status: test
+description: Detects creation of files with the ".pub" extension in suspicious or
+    uncommon locations. This could be a sign of attackers abusing Publisher documents
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/02/08 20:52:41
+references:
+  - https://twitter.com/EmericNasi/status/1623224526220804098
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetFilename|contains:
+          - \AppData\Local\Temp\
+          - \Users\Public\
+          - \Windows\Temp\
+          - C:\Temp\
+        TargetFilename|endswith: .pub
+falsepositives: Legitimate usage of ".pub" files from those locations
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - DEMO

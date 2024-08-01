@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Raw Paste Service Access
+id: 5468045b-4fcc-4d1a-973c-c9c9578edacb
+status: test
+description: Detects direct access to raw pastes in different paste services often
+    used by malware in their second stages to download malicious code in encrypted
+    or encoded form
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/12/05 12:09:41
+references:
+  - https://www.virustotal.com/gui/domain/paste.ee/relations
+logsource:
+    category: proxy
+detection:
+    condition: selection
+    selection:
+        c-uri|contains:
+          - .paste.ee/r/
+          - .pastebin.com/raw/
+          - .hastebin.com/raw/
+          - .ghostbin.co/paste/*/raw/
+          - pastetext.net/
+          - pastebin.pl/
+          - paste.ee/
+falsepositives: User activity (e.g. developer that shared and copied code snippets
+    and used the raw link instead of just copy & paste)
+level: high
+customer: 'demo'
+modified: 2023/01/19
+tags:
+  - attack.command_and_control
+  - attack.t1071.001
+  - attack.t1102.001
+  - attack.t1102.003
+  - attack.defense_evasion
+  - DEMO

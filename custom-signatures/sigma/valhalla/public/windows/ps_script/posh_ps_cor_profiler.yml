@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Registry-Free Process Scope COR_PROFILER
+id: 23590215-4702-4a70-8805-8dc9e58314a2
+status: test
+description: |
+    Adversaries may leverage the COR_PROFILER environment variable to hijack the execution flow of programs that load the .NET CLR.
+    The COR_PROFILER is a .NET Framework feature which allows developers to specify an unmanaged (or external of .NET) profiling DLL to be loaded into each .NET process that loads the Common Language Runtime (CLR).
+    These profiliers are designed to monitor, troubleshoot, and debug managed code executed by the .NET CLR.
+    (Citation: Microsoft Profiling Mar 2017)
+    (Citation: Microsoft COR_PROFILER Feb 2013)
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/12/30 15:53:11
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1574.012/T1574.012.md#atomic-test-3---registry-free-process-scope-cor_profiler
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: selection
+    selection:
+        ScriptBlockText|contains|all:
+          - $env:COR_ENABLE_PROFILING
+          - $env:COR_PROFILER
+          - $env:COR_PROFILER_PATH
+falsepositives: Legitimate administrative script
+level: medium
+customer: 'demo'
+tags:
+  - attack.persistence
+  - attack.t1574.012
+  - DEMO

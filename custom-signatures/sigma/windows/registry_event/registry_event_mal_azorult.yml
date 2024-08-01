@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Registry Entries For Azorult Malware
+id: f7f9ab88-7557-4a69-b30e-0a8f91b3a0e7
+status: test
+description: Detects the presence of a registry key created during Azorult execution
+author: Trent Liffick
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/05/08 15:39:21
+references:
+  - https://www.trendmicro.com/vinfo/us/threat-encyclopedia/malware/trojan.win32.azoruit.a
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        EventID:
+          - "12"
+          - "13"
+        TargetObject|contains: SYSTEM\
+        TargetObject|endswith: \services\localNETService
+fields:
+  - Image
+  - TargetObject
+  - TargetDetails
+falsepositives: Unknown
+level: critical
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.execution
+  - attack.t1112
+  - DEMO

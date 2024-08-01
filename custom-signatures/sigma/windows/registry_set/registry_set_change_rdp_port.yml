@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Changing RDP Port to Non Standard Number
+id: 509e84b9-a71a-40e0-834f-05470369bd1e
+status: test
+description: |
+    Remote desktop is a common feature in operating systems.
+    It allows a user to log into an interactive session with a system desktop graphical user interface on a remote system.
+    Microsoft refers to its implementation of the Remote Desktop Protocol (RDP) as Remote Desktop Services (RDS).
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/01 16:00:21
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1021.001/T1021.001.md#atomic-test-1---rdp-to-domaincontroller
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        Details: DWORD (0x00000d3d)
+    selection:
+        TargetObject: HKLM\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp\PortNumber
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.persistence
+  - attack.t1547.010
+  - DEMO

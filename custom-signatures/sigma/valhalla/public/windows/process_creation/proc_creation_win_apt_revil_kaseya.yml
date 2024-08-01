@@ -1,0 +1,61 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: REvil Kaseya Incident Malware Patterns
+id: 5de632bc-7fbd-4c8a-944a-fce55c59eae5
+status: test
+description: Detects process command line patterns and locations used by REvil group
+    in Kaseya incident (can also match on other malware)
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/07/03 15:58:41
+references:
+  - https://community.sophos.com/b/security-blog/posts/active-ransomware-attack-on-kaseya-customers
+  - https://www.joesandbox.com/analysis/443736/0/html
+  - https://doublepulsar.com/kaseya-supply-chain-attack-delivers-mass-ransomware-event-to-us-companies-76e4ec6ec64b
+  - https://therecord.media/revil-ransomware-executes-supply-chain-attack-via-malicious-kaseya-update/
+  - https://blog.truesec.com/2021/07/04/kaseya-supply-chain-attack-targeting-msps-to-deliver-revil-ransomware/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection*
+    selection1:
+        CommandLine|contains:
+          - C:\Windows\cert.exe
+          - del /q /f c:\kworking\agent.crt
+          - Kaseya VSA Agent Hot-fix
+          - \AppData\Local\Temp\MsMpEng.exe
+          - rmdir /s /q %SystemDrive%\inetpub\logs
+          - del /s /q /f %SystemDrive%\\*.log
+          - c:\kworking1\agent.exe
+          - c:\kworking1\agent.crt
+    selection2:
+        Image:
+          - C:\Windows\MsMpEng.exe
+          - C:\Windows\cert.exe
+          - C:\kworking\agent.exe
+          - C:\kworking1\agent.exe
+    selection3:
+        CommandLine|contains|all:
+          - del /s /q /f
+          - WebPages\Errors\webErrorLog.txt
+falsepositives: Unknown
+level: critical
+customer: 'demo'
+modified: 2022/05/20
+tags:
+  - attack.execution
+  - attack.t1059
+  - attack.g0115
+  - detection.emerging_threats
+  - DEMO

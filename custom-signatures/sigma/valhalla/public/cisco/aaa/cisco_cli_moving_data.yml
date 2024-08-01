@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-06-21 19:00
+# Generated for User: demo
+# Number of Rules: 3228
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Cisco Stage Data
+id: 5e51acb2-bcbe-435b-99c6-0e3cd5e2aa59
+status: test
+description: Various protocols maybe used to put data on the device for exfil or infil
+author: Austin Clark
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/08/12 09:59:51
+logsource:
+    product: cisco
+    service: aaa
+detection:
+    condition: keywords
+    keywords:
+      - tftp
+      - rcp
+      - puts
+      - copy
+      - configure replace
+      - archive tar
+fields:
+  - CmdSet
+falsepositives: Generally used to copy configs or IOS images
+level: low
+customer: 'demo'
+modified: 2023/01/04
+tags:
+  - attack.collection
+  - attack.lateral_movement
+  - attack.command_and_control
+  - attack.exfiltration
+  - attack.t1074
+  - attack.t1105
+  - attack.t1560.001
+  - DEMO

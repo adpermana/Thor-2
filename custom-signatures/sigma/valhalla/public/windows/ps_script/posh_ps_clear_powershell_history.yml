@@ -1,0 +1,55 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Clear PowerShell History - PowerShell
+id: 26b692dc-1722-49b2-b496-a8258aa6371d
+related:
+  - type: derived
+    id: dfba4ce1-e0ea-495f-986e-97140f31af2d
+status: test
+description: Detects keywords that could indicate clearing PowerShell history
+author: Ilyas Ochkov, Jonhnathan Ribeiro, Daniil Yugoslavskiy, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/25 15:38:41
+references:
+  - https://gist.github.com/hook-s3c/7363a856c3cdbadeb71085147f042c1a
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: 1 of selection_* or all of selection1*
+    selection_2:
+        ScriptBlockText|contains|all:
+          - Set-PSReadlineOption
+          - –HistorySaveStyle
+          - SaveNothing
+    selection_3:
+        ScriptBlockText|contains|all:
+          - Set-PSReadlineOption
+          - -HistorySaveStyle
+          - SaveNothing
+    selection1a:
+        ScriptBlockText|contains:
+          - del
+          - Remove-Item
+          - rm
+    selection1b:
+        ScriptBlockText|contains: (Get-PSReadlineOption).HistorySavePath
+falsepositives: Legitimate PowerShell scripts
+level: medium
+customer: 'demo'
+modified: 2022/12/02
+tags:
+  - attack.defense_evasion
+  - attack.t1070.003
+  - DEMO

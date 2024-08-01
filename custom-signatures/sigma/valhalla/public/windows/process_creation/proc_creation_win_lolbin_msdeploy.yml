@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Execute Files with Msdeploy.exe
+id: 646bc99f-6682-4b47-a73a-17b1b64c9d34
+status: test
+description: Detects file execution using the msdeploy.exe lolbin
+author: Beyu Denis, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/18 14:15:51
+references:
+  - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Msdeploy/
+  - https://twitter.com/pabraeken/status/995837734379032576
+  - https://twitter.com/pabraeken/status/999090532839313408
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains|all:
+          - verb:sync
+          - -source:RunCommand
+          - -dest:runCommand
+        Image|endswith: \msdeploy.exe
+fields:
+  - ComputerName
+  - User
+  - CommandLine
+  - ParentCommandLine
+falsepositives: System administrator Usage
+level: medium
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

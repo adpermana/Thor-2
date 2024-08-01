@@ -1,0 +1,39 @@
+title: Suspicious WMI Process Based Event Filter Has Been Registered
+id: c9b1b34d-2a5c-44a7-9030-1be3b269fa8b
+status: test
+description: Detects the creation of a suspicious WMI event filter based on specific a process trigger
+references:
+    - https://github.com/xan7r/Misc/blob/9071927a8fc2c31fc5e89f2184405a594c7127ae/WMILogonBackdoor.ps1
+    - https://github.com/rapid7/metasploit-framework/blob/0aa0884e2607c5ea65531d4485aa0291554a8af2/modules/exploits/windows/local/wmi_persistence.rb
+    - https://github.com/mdsecactivebreach/WMIPersistence/blob/41e49845c1337138530f852bc04662bf548ed184/WMIPersist.cs#L31
+    - https://github.com/cobbr/SharpSploit/blob/c16931ddb8cd2335e0bd26feb9aaa35f449d48db/SharpSploit/Persistence/WMI.cs#L57
+author: Nasreddine Bencherchali
+date: 2022/11/24
+modified: 2023/03/29
+tags:
+    - attack.execution
+    - attack.t1047
+logsource:
+    product: windows
+    service: wmi
+detection:
+    selection_eid:
+        EventID: 5861
+        Consumer|contains:
+            - 'ActiveScriptEventConsumer='
+            - 'CommandLineEventConsumer='
+        PossibleCause|contains: 'Select \*'
+    selection_cause:
+        # Example See WMILogonBackdoor.ps1
+        - PossibleCause|contains|all:
+            - 'FROM __InstanceCreationEvent'
+            - 'Win32_Process'
+            - '.Name'
+        # Example See Metasploit wmi_persistence.rb
+        - PossibleCause|contains|all:
+            - 'FROM Win32_ProcessStartTrace'
+            - 'ProcessName='
+    condition: all of selection_*
+falsepositives:
+    - Unknown
+level: medium

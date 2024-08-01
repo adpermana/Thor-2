@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: File Download Via InstallUtil.EXE
+id: 75edd216-1939-4c73-8d61-7f3a0d85b5cc
+status: test
+description: |
+    Detects use of .NET InstallUtil.exe in order to download arbitrary files. The files will be written to "%LOCALAPPDATA%\Microsoft\Windows\INetCache\IE\"
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/19 14:20:51
+references:
+  - https://github.com/LOLBAS-Project/LOLBAS/pull/239
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains:
+          - ftp://
+          - http://
+          - https://
+    selection_img:
+      - Image|endswith: \InstallUtil.exe
+      - OriginalFileName: InstallUtil.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/11/09
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

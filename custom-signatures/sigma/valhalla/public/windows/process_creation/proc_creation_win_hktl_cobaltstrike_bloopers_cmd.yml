@@ -1,0 +1,59 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Operator Bloopers Cobalt Strike Commands
+id: 647c7b9e-d784-4fda-b9a0-45c565a7b729
+related:
+  - type: similar
+    id: 4f154fb6-27d1-4813-a759-78b93e0b9c48
+status: test
+description: Detects use of Cobalt Strike commands accidentally entered in the CMD
+    shell
+author: _pete_0, TheDFIRReport
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/05/06 16:41:51
+references:
+  - https://hstechdocs.helpsystems.com/manuals/cobaltstrike/current/userguide/content/cobalt-4-5-user-guide.pdf
+  - https://thedfirreport.com/2021/10/04/bazarloader-and-the-conti-leaks/
+  - https://thedfirreport.com/2022/06/16/sans-ransomware-summit-2022-can-you-detect-this/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains:
+          - psinject
+          - spawnas
+          - make_token
+          - remote-exec
+          - rev2self
+          - dcsync
+          - logonpasswords
+          - execute-assembly
+          - getsystem
+        CommandLine|startswith:
+          - 'cmd '
+          - cmd.exe
+          - c:\windows\system32\cmd.exe
+    selection_img:
+      - OriginalFileName: Cmd.Exe
+      - Image|endswith: \cmd.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/01/30
+tags:
+  - attack.execution
+  - attack.t1059.003
+  - stp.1u
+  - DEMO

@@ -1,0 +1,20 @@
+#
+# THOR CUSTOM C2 IOCs
+#
+# Important: Activate this template by renaming it from .txt.template to .txt 
+#
+# FORMAT -----------------------------------------------------------------------
+#
+# # Comment
+# IP/FQDN;score
+#
+# If score is left out, it defaults to 100
+# IP/FQDN
+#
+#
+# EXAMPLES ---------------------------------------------------------------------
+#
+## Case 44 C2 Server
+#mastermind.eu
+#googleaccountservices.com;80
+#89.22.123.12

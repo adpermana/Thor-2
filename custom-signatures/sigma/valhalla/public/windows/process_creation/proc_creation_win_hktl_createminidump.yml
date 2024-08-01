@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - CreateMiniDump Execution
+id: 36d88494-1d43-4dc0-b3fa-35c8fea0ca9d
+status: test
+description: Detects the use of CreateMiniDump hack tool used to dump the LSASS process
+    memory for credential extraction on the attacker's machine
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/12/22 15:06:11
+references:
+  - https://ired.team/offensive-security/credential-access-and-credential-dumping/dumping-lsass-passwords-without-mimikatz-minidumpwritedump-av-signature-bypass
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - Image|endswith: \CreateMiniDump.exe
+      - Imphash: 4a07f944a83e8a7c2525efa35dd30e2f
+      - Hashes|contains: IMPHASH=4a07f944a83e8a7c2525efa35dd30e2f
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/02/04
+tags:
+  - attack.credential_access
+  - attack.t1003.001
+  - DEMO

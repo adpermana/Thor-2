@@ -1,0 +1,53 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential WMI Lateral Movement WmiPrvSE Spawned PowerShell
+id: 692f0bec-83ba-4d04-af7e-e884a96059b6
+related:
+  - type: similar
+    id: 8a582fe2-0882-4b89-a82a-da6b2dc32937
+  - type: similar
+    id: d21374ff-f574-44a7-9998-4a8c8bf33d7d
+status: stable
+description: Detects Powershell as a child of the WmiPrvSE process. Which could be
+    a sign of lateral movement via WMI.
+author: Markus Neis @Karneades
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/04/03 21:06:51
+references:
+  - https://any.run/report/68bc255f9b0db6a0d30a8f2dadfbee3256acfe12497bf93943bc1eab0735e45e/a2385d6f-34f7-403c-90d3-b1f9d2a90a5e
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_img:
+      - Image|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+      - OriginalFileName:
+          - PowerShell.EXE
+          - pwsh.dll
+    selection_parent:
+        ParentImage|endswith: \WmiPrvSE.exe
+falsepositives:
+  - AppvClient
+  - CCM
+  - WinRM
+level: medium
+customer: 'demo'
+modified: 2023/03/29
+tags:
+  - attack.execution
+  - attack.t1047
+  - attack.t1059.001
+  - DEMO

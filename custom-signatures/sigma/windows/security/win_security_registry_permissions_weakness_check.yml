@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Service Registry Key Read Access Request
+id: 11d00fff-5dc3-428c-8184-801f292faec0
+status: experimental
+description: |
+    Detects "read access" requests on the services registry key.
+    Adversaries may execute their own malicious payloads by hijacking the Registry entries used by services.
+    Adversaries may use flaws in the permissions for Registry keys related to services to redirect from the originally specified executable to one that they control, in order to launch their own code when a service starts.
+author: Center for Threat Informed Defense (CTID) Summiting the Pyramid Team
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/09/28 16:25:41
+references:
+  - https://center-for-threat-informed-defense.github.io/summiting-the-pyramid/analytics/service_registry_permissions_weakness_check/
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1574.011/T1574.011.md#atomic-test-1---service-registry-permissions-weakness
+logsource:
+    product: windows
+    service: security
+    definition: 'Requirements: SACLs must be enabled for "READ_CONTROL" on the registry
+        keys used in this rule'
+detection:
+    condition: selection
+    selection:
+        AccessList|contains: '%%1538'
+        EventID: "4663"
+        ObjectName|contains|all:
+          - \SYSTEM\
+          - ControlSet\Services\
+falsepositives: Likely from legitimate applications reading their key. Requires heavy
+    tuning
+level: low
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1574.011
+  - DEMO

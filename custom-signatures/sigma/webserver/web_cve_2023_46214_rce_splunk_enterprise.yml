@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential CVE-2023-46214 Exploitation Attempt
+id: 04017cd5-621e-4ec4-a762-1f042fe3d3e5
+related:
+  - type: derived
+    id: ba5268de-4dd4-4d5c-8a90-2b5e6dc1aff8
+status: experimental
+description: |
+    Detects potential exploitation of CVE-2023-46214, a remote code execution (RCE) in Splunk Enterprise through insecure XML parsing
+author: Nasreddine Bencherchali (Nextron Systems), Bhavin Patel (STRT)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/11/27 16:37:11
+references:
+  - https://github.com/nathan31337/Splunk-RCE-poc/
+  - https://blog.hrncirik.net/cve-2023-46214-analysis
+  - https://advisory.splunk.com/advisories/SVD-2023-1104
+logsource:
+    category: webserver
+detection:
+    condition: selection
+    selection:
+        cs-method: POST
+        cs-uri-query|contains|all:
+          - NO_BINARY_CHECK=1
+          - input.path
+        cs-uri-query|endswith: .xsl
+        sc-status:
+          - "200"
+          - "302"
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.lateral_movement
+  - attack.t1210
+  - cve.2023.46214
+  - detection.emerging_threats
+  - DEMO

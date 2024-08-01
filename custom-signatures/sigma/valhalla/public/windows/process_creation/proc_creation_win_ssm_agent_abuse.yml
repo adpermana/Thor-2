@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Amazon SSM Agent Hijacking
+id: d20ee2f4-822c-4827-9e15-41500b1fff10
+status: experimental
+description: Detects potential Amazon SSM agent hijack attempts as outlined in the
+    Mitiga research report.
+author: Muhammad Faisal
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/08/02 15:14:41
+references:
+  - https://www.mitiga.io/blog/mitiga-security-advisory-abusing-the-ssm-agent-as-a-remote-access-trojan
+  - https://www.bleepingcomputer.com/news/security/amazons-aws-ssm-agent-can-be-used-as-post-exploitation-rat-malware/
+  - https://www.helpnetsecurity.com/2023/08/02/aws-instances-attackers-access/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains|all:
+          - '-register '
+          - '-code '
+          - '-id '
+          - '-region '
+        Image|endswith: \amazon-ssm-agent.exe
+falsepositives: Legitimate activity of system administrators
+level: medium
+customer: 'demo'
+tags:
+  - attack.command_and_control
+  - attack.persistence
+  - attack.t1219
+  - DEMO

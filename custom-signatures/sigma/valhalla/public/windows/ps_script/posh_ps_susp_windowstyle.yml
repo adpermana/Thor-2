@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious PowerShell WindowStyle Option
+id: 313fbb0a-a341-4682-848d-6d6f8c4fab7c
+status: test
+description: |
+    Adversaries may use hidden windows to conceal malicious activity from the plain sight of users.
+    In some cases, windows that would typically be displayed when an application carries out an operation can be hidden
+author: frack113, Tim Shelton (fp AWS)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/10/20 17:06:21
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1564.003/T1564.003.md
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: selection and not filter
+    filter:
+        ScriptBlockText|contains|all:
+          - :\Program Files\Amazon\WorkSpacesConfig\Scripts\
+          - $PSScriptRoot\Module\WorkspaceScriptModule\WorkspaceScriptModule
+    selection:
+        ScriptBlockText|contains|all:
+          - powershell
+          - WindowStyle
+          - Hidden
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/01/03
+tags:
+  - attack.defense_evasion
+  - attack.t1564.003
+  - DEMO

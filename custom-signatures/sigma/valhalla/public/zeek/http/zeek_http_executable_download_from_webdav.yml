@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Executable from Webdav
+id: aac2fd97-bcba-491b-ad66-a6edf89c71bf
+status: test
+description: Detects executable access via webdav6. Can be seen in APT 29 such as
+    from the emulated APT 29 hackathon https://github.com/OTRF/detection-hackathon-apt29/
+author: SOC Prime, Adam Swan
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/05/01 11:54:31
+references:
+  - http://carnal0wnage.attackresearch.com/2012/06/webdav-server-to-download-custom.html
+  - https://github.com/OTRF/detection-hackathon-apt29
+logsource:
+    product: zeek
+    service: http
+detection:
+    condition: selection_webdav and selection_executable
+    selection_executable:
+      - resp_mime_types|contains: dosexec
+      - c-uri|endswith: .exe
+    selection_webdav:
+      - c-useragent|contains: WebDAV
+      - c-uri|contains: webdav
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.command_and_control
+  - attack.t1105
+  - DEMO

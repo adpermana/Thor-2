@@ -1,0 +1,35 @@
+title: C2 - ReverseTCPShell Obfuscated Payload - Classic Logging
+id: 52103a97-9f3c-426c-b78b-2851d4862f55
+related:
+    - id: 2e3b4ee3-6559-43d8-81d1-a183227d9593
+      type: similar
+status: test
+description: Detects obfuscated PowerShell payload used by ReverseTCPShell C2 via PowerShell Classic script logging
+references:
+    - https://github.com/ZHacker13/ReverseTCPShell
+author: Nasreddine Bencherchali (Nextron Systems)
+date: 2023/04/03
+tags:
+    - attack.defense_evasion
+logsource:
+    product: windows
+    category: ps_classic_script
+detection:
+    selection_ascii:
+        Data|contains|all:
+            - 'IEX(-Join(('
+            - ')|%{[ChAr]$_}));ExiT'
+    selection_b64:
+        Data|contains|all:
+            - '[Text.Encoding]::ASCII.GetString([Convert]::FromBase64String(([Text.Encoding]::ASCII.GetString(([Text.Encoding]::ASCII.GetBytes'
+            - '{Get-Random -SetSeed '
+            - '}))))));exit'
+    selection_bxor:
+        Data|contains|all:
+            - 'IEX(-Join(('
+            - '%{[CHAR]($_-bXor'
+            - ')}));exit'
+    condition: 1 of selection*
+falsepositives:
+    - Unknown
+level: high

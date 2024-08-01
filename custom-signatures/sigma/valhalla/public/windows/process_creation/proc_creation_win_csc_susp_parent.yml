@@ -1,0 +1,100 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Csc.EXE Execution Form Potentially Suspicious Parent
+id: b730a276-6b63-41b8-bcf8-55930c8fc6ee
+status: test
+description: Detects a potentially suspicious parent of "csc.exe", which could be
+    a sign of payload delivery.
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems),
+    X__Junior (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/02/11 19:42:31
+references:
+  - https://www.uptycs.com/blog/warzonerat-can-now-evade-with-process-hollowing
+  - https://reaqta.com/2017/11/short-journey-darkvnc/
+  - https://www.pwc.com/gx/en/issues/cybersecurity/cyber-threat-intelligence/yellow-liderc-ships-its-scripts-delivers-imaploader-malware.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection_img and 1 of selection_parent_* and not 1 of filter_main_*
+        and not 1 of filter_optional_*
+    filter_main_programfiles:
+        ParentImage|startswith:
+          - C:\Program Files (x86)\
+          - C:\Program Files\
+    filter_main_sdiagnhost:
+        ParentImage: C:\Windows\System32\sdiagnhost.exe
+    filter_main_w3p:
+        ParentImage: C:\Windows\System32\inetsrv\w3wp.exe
+    filter_optional_ansible:
+        ParentCommandLine|contains:
+          - JwB7ACIAZgBhAGkAbABlAGQAIgA6AHQAcgB1AGUALAAiAG0AcwBnACIAOgAiAEEAbgBzAGkAYgBsAGUAIAByAGUAcQB1AGkAcgBlAHMAIABQAG8AdwBlAHIAUwBoAGUAbABsACAAdgAzAC4AMAAgAG8AcgAgAG4AZQB3AGUAcgAiAH0AJw
+          - cAewAiAGYAYQBpAGwAZQBkACIAOgB0AHIAdQBlACwAIgBtAHMAZwAiADoAIgBBAG4AcwBpAGIAbABlACAAcgBlAHEAdQBpAHIAZQBzACAAUABvAHcAZQByAFMAaABlAGwAbAAgAHYAMwAuADAAIABvAHIAIABuAGUAdwBlAHIAIgB9ACcA
+          - nAHsAIgBmAGEAaQBsAGUAZAAiADoAdAByAHUAZQAsACIAbQBzAGcAIgA6ACIAQQBuAHMAaQBiAGwAZQAgAHIAZQBxAHUAaQByAGUAcwAgAFAAbwB3AGUAcgBTAGgAZQBsAGwAIAB2ADMALgAwACAAbwByACAAbgBlAHcAZQByACIAfQAnA
+    filter_optional_chocolatey:
+        ParentImage: C:\ProgramData\chocolatey\choco.exe
+    filter_optional_defender:
+        ParentCommandLine|contains: \ProgramData\Microsoft\Windows Defender Advanced
+            Threat Protection
+    selection_img:
+      - Image|endswith: \csc.exe
+      - OriginalFileName: csc.exe
+    selection_parent_generic:
+        ParentImage|endswith:
+          - \cscript.exe
+          - \excel.exe
+          - \mshta.exe
+          - \onenote.exe
+          - \outlook.exe
+          - \powerpnt.exe
+          - \winword.exe
+          - \wscript.exe
+    selection_parent_powershell:
+        ParentCommandLine|contains:
+          - '-Encoded '
+          - FromBase64String
+        ParentImage|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+    selection_parent_susp_location:
+      - ParentCommandLine|re: ([Pp]rogram[Dd]ata|%([Ll]ocal)?[Aa]pp[Dd]ata%|\\[Aa]pp[Dd]ata\\([Ll]ocal(Ll]ow)?|[Rr]oaming))\\[^\\]{1,256}$
+      - ParentCommandLine|contains:
+          - :\PerfLogs\
+          - :\Users\Public\
+          - :\Windows\Temp\
+          - \Temporary Internet
+      - ParentCommandLine|contains|all:
+          - :\Users\
+          - \Favorites\
+      - ParentCommandLine|contains|all:
+          - :\Users\
+          - \Favourites\
+      - ParentCommandLine|contains|all:
+          - :\Users\
+          - \Contacts\
+      - ParentCommandLine|contains|all:
+          - :\Users\
+          - \Pictures\
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/10/27
+tags:
+  - attack.execution
+  - attack.t1059.005
+  - attack.t1059.007
+  - attack.defense_evasion
+  - attack.t1218.005
+  - attack.t1027.004
+  - DEMO

@@ -1,0 +1,52 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: AWS Suspicious SAML Activity
+id: f43f5d2f-3f2a-4cc8-b1af-81fde7dbaf0e
+status: test
+description: Identifies when suspicious SAML activity has occurred in AWS. An adversary
+    could gain backdoor access via SAML.
+author: Austin Songer
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/09/22 13:06:01
+references:
+  - https://docs.aws.amazon.com/IAM/latest/APIReference/API_UpdateSAMLProvider.html
+  - https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRoleWithSAML.html
+logsource:
+    product: aws
+    service: cloudtrail
+detection:
+    condition: 1 of selection_*
+    selection_iam:
+        eventName: UpdateSAMLProvider
+        eventSource: iam.amazonaws.com
+    selection_sts:
+        eventName: AssumeRoleWithSAML
+        eventSource: sts.amazonaws.com
+falsepositives:
+  - Automated processes that uses Terraform may lead to false positives.
+  - SAML Provider could be updated by a system administrator. Verify whether the user
+    identity, user agent, and/or hostname should be making changes in your environment.
+  - SAML Provider being updated from unfamiliar users should be investigated. If known
+    behavior is causing false positives, it can be exempted from the rule.
+level: medium
+customer: 'demo'
+modified: 2022/12/18
+tags:
+  - attack.initial_access
+  - attack.t1078
+  - attack.lateral_movement
+  - attack.t1548
+  - attack.privilege_escalation
+  - attack.t1550
+  - attack.t1550.001
+  - DEMO

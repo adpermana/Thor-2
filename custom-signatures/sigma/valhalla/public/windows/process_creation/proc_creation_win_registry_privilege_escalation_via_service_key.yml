@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Privilege Escalation via Service Permissions Weakness
+id: 0f9c21f1-6a73-4b0e-9809-cb562cb8d981
+status: test
+description: Detect modification of services configuration (ImagePath, FailureCommand
+    and ServiceDLL) in registry by processes with Medium integrity level
+author: Teymur Kheirkhabarov
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/26 23:05:21
+references:
+  - https://speakerdeck.com/heirhabarov/hunting-for-privilege-escalation-in-windows-environment
+  - https://pentestlab.blog/2017/03/31/insecure-registry-permissions/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - \ImagePath
+          - \FailureCommand
+          - \ServiceDll
+        CommandLine|contains|all:
+          - ControlSet
+          - services
+        IntegrityLevel: Medium
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/01/30
+tags:
+  - attack.privilege_escalation
+  - attack.t1574.011
+  - DEMO

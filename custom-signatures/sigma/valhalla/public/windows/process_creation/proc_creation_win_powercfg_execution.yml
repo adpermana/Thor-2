@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Powercfg Execution To Change Lock Screen Timeout
+id: f8d6a15e-4bc8-4c27-8e5d-2b10f0b73e5b
+status: test
+description: Detects suspicious execution of 'Powercfg.exe' to change lock screen
+    timeout
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/11/18 21:33:31
+references:
+  - https://blogs.vmware.com/security/2022/11/batloader-the-evasive-downloader-malware.html
+  - https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/powercfg-command-line-options
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_power:
+      - Image|endswith: \powercfg.exe
+      - OriginalFileName: PowerCfg.exe
+    selection_standby:
+      - CommandLine|contains|all:
+          - '/setacvalueindex '
+          - SCHEME_CURRENT
+          - SUB_VIDEO
+          - VIDEOCONLOCK
+      - CommandLine|contains|all:
+          - '-change '
+          - -standby-timeout-
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - DEMO

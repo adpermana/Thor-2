@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Printer Driver Empty Manufacturer
+id: e0813366-0407-449a-9869-a2db1119dc41
+status: test
+description: Detects a suspicious printer driver installation with an empty Manufacturer
+    value
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/07/01 18:05:51
+references:
+  - https://twitter.com/SBousseaden/status/1410545674773467140
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection and not 1 of filter_*
+    filter_cutepdf:
+        TargetObject|contains: \CutePDF Writer v4.0\
+    filter_pdf24:
+        TargetObject|contains: \Version-3\PDF24\
+    filter_vnc:
+        TargetObject|contains:
+          - \VNC Printer (PS)\
+          - \VNC Printer (UD)\
+    selection:
+        Details: (Empty)
+        TargetObject|contains|all:
+          - \Control\Print\Environments\Windows x64\Drivers
+          - \Manufacturer
+falsepositives: Alerts on legitimate printer drivers that do not set any more details
+    in the Manufacturer value
+level: high
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.privilege_escalation
+  - attack.t1574
+  - cve.2021.1675
+  - DEMO

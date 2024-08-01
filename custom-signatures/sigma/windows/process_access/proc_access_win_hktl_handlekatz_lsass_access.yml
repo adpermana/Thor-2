@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - HandleKatz Duplicating LSASS Handle
+id: b1bd3a59-c1fd-4860-9f40-4dd161a7d1f5
+status: test
+description: Detects HandleKatz opening LSASS to duplicate its handle to later dump
+    the memory without opening any new handles
+author: Bhabesh Raj (rule), @thefLinkk
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/27 17:25:01
+references:
+  - https://github.com/codewhitesec/HandleKatz
+logsource:
+    category: process_access
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CallTrace|contains: '|UNKNOWN('
+        CallTrace|endswith: )
+        CallTrace|startswith: C:\Windows\System32\ntdll.dll+
+        GrantedAccess: "0x1440"
+        TargetImage|endswith: \lsass.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/11/28
+tags:
+  - attack.execution
+  - attack.t1106
+  - attack.defense_evasion
+  - attack.t1003.001
+  - DEMO

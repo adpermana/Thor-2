@@ -1,0 +1,88 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential WinAPI Calls Via CommandLine
+id: ba3f5c1b-6272-4119-9dbd-0bc8d21c2702
+related:
+  - type: derived
+    id: 03d83090-8cba-44a0-b02f-0b756a050306
+status: test
+description: Detects the use of WinAPI Functions via the commandline. As seen used
+    by threat actors via the tool winapiexec
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/06 15:38:21
+references:
+  - https://twitter.com/m417z/status/1566674631788007425
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_optional_*
+    filter_optional_mpcmdrun:
+        CommandLine|contains: GetLoadLibraryWAddress32
+        Image|endswith: \MpCmdRun.exe
+    selection:
+        CommandLine|contains:
+          - AddSecurityPackage
+          - AdjustTokenPrivileges
+          - Advapi32
+          - CloseHandle
+          - CreateProcessWithToken
+          - CreatePseudoConsole
+          - CreateRemoteThread
+          - CreateThread
+          - CreateUserThread
+          - DangerousGetHandle
+          - DuplicateTokenEx
+          - EnumerateSecurityPackages
+          - FreeHGlobal
+          - FreeLibrary
+          - GetDelegateForFunctionPointer
+          - GetLogonSessionData
+          - GetModuleHandle
+          - GetProcAddress
+          - GetProcessHandle
+          - GetTokenInformation
+          - ImpersonateLoggedOnUser
+          - kernel32
+          - LoadLibrary
+          - memcpy
+          - MiniDumpWriteDump
+          - ntdll
+          - OpenDesktop
+          - OpenProcess
+          - OpenProcessToken
+          - OpenThreadToken
+          - OpenWindowStation
+          - PtrToString
+          - QueueUserApc
+          - ReadProcessMemory
+          - RevertToSelf
+          - RtlCreateUserThread
+          - secur32
+          - SetThreadToken
+          - VirtualAlloc
+          - VirtualFree
+          - VirtualProtect
+          - WaitForSingleObject
+          - WriteInt32
+          - WriteProcessMemory
+          - ZeroFreeGlobalAllocUnicode
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/01/09
+tags:
+  - attack.execution
+  - attack.t1106
+  - DEMO

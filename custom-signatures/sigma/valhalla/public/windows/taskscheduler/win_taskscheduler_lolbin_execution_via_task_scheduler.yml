@@ -1,0 +1,51 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Scheduled Task Executed Uncommon LOLBIN
+id: f0767f15-0fb3-44b9-851e-e8d9a6d0005d
+status: test
+description: Detects the execution of Scheduled Tasks where the program being run
+    is located in a suspicious location or where it is an unusual program to be run
+    from a Scheduled Task
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/12/05 15:53:11
+references:
+  - Internal Research
+logsource:
+    product: windows
+    service: taskscheduler
+    definition: 'Requirements: The "Microsoft-Windows-TaskScheduler/Operational" is
+        disabled by default and needs to be enabled in order for this detection to
+        trigger'
+detection:
+    condition: selection
+    selection:
+        EventID: "129"
+        Path|endswith:
+          - \calc.exe
+          - \cscript.exe
+          - \mshta.exe
+          - \mspaint.exe
+          - \notepad.exe
+          - \regsvr32.exe
+          - \wscript.exe
+falsepositives: False positives may occur with some of the selected binaries if you
+    have tasks using them (which could be very common in your environment). Exclude
+    all the specific trusted tasks before using this rule
+level: medium
+customer: 'demo'
+modified: 2023/02/07
+tags:
+  - attack.persistence
+  - attack.t1053.005
+  - DEMO

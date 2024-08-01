@@ -1,0 +1,111 @@
+title: Suspicious Windows Defender Exclusions Added - PowerShell
+id: 90c9abab-cfd3-4f5c-b75e-25a5cf2a2e55
+related:
+    - id: 17769c90-230e-488b-a463-e05c08e9d48f
+      type: similar
+    - id: c1344fa2-323b-4d2e-9176-84b4d4821c88
+      type: similar
+status: test
+description: Detects execution of the PowerShell "Add-MpPreference" or "Set-MpPreference" cmdlets to add dangerous exclusions to Windows Defender
+references:
+    - https://www.cisa.gov/uscert/sites/default/files/publications/aa22-320a_joint_csa_iranian_government-sponsored_apt_actors_compromise_federal%20network_deploy_crypto%20miner_credential_harvester.pdf
+    - https://blogs.vmware.com/security/2022/11/batloader-the-evasive-downloader-malware.html
+author: Nasreddine Bencherchali
+date: 2022/11/17
+modified: 2023/03/29
+tags:
+    - attack.defense_evasion
+    - attack.t1562
+    - attack.execution
+    - attack.t1059
+logsource:
+    product: windows
+    category: ps_script
+    definition: Script Block Logging must be enabled
+detection:
+    selection_args_pref:
+        ScriptBlockText|contains:
+            - 'Add-MpPreference '
+            - 'Set-MpPreference '
+    selection_excludext_cmdlet:
+        ScriptBlockText|contains: ' -ExclusionExtension '
+    selection_excludext_extensions:
+        # Example: Add-MpPreference -ExclusionExtension '.dll'
+        ScriptBlockText|contains:
+            # Single quote variations
+            - '".bat"'
+            - '".dll"'
+            - '".exe"'
+            - '".hta"'
+            - '".ps1"'
+            - '".psm1"'
+            - '".sct"'
+            - '".vbe"'
+            - '".vbs"'
+            # Double quote variations
+            - "'.bat'"
+            - "'.dll'"
+            - "'.exe'"
+            - "'.hta'"
+            - "'.ps1'"
+            - "'.psm1'"
+            - "'.sct'"
+            - "'.vbe'"
+            - "'.vbs'"
+    selection_excludepath_cmdlet:
+        ScriptBlockText|contains:
+            - ' -ExclusionPath '
+            - ' -AttackSurfaceReductionOnlyExclusions '
+    selection_excludepath_paths:
+        # Example: Add-MpPreference -ExclusionProcess 'powershell.exe' -ExclusionPath 'C:\' " -verb runas
+        ScriptBlockText|contains:
+            # Single quote variations
+            - '"C:\"'
+            - '"C:\Users"'
+            - '"C:\Perflogs"'
+            - '"C:\Users\"'
+            - '"C:\Perflogs\"'
+            # Double quote variations
+            - "'C:\\'"
+            - "'C:\\Users'"
+            - "'C:\\Perflogs'"
+            - "'C:\\Users\\'"
+            - "'C:\\Perflogs\\'"
+            # Other
+            - '%Public%'
+            - '%Temp%'
+            - '%Tmp%'
+            - '$env:TEMP'
+            - '$env:public'
+            - '$env:USERPROFILE'
+            - '%USERPROFILE%'
+    selection_excludeprocess_cmdlet:
+        ScriptBlockText|contains: ' -ExclusionProcess '
+    selection_excludeprocess_processes:
+        # Example: Add-MpPreference -ExclusionProcess 'powershell.exe' -ExclusionPath 'C:\' " -verb runas
+        ScriptBlockText|contains:
+            # Single quote variations
+            - '"cmd.exe"'
+            - '"cscript.exe"'
+            - '"mshta.exe"'
+            - '"pwsh.exe"'
+            - '"powershell.exe"'
+            - '"regsvr32.exe"'
+            - '"rundll32.exe"'
+            - '"wscript.exe"'
+            # Double quote variations
+            - "'cmd.exe'"
+            - "'cscript.exe'"
+            - "'mshta.exe'"
+            - "'pwsh.exe'"
+            - "'powershell.exe'"
+            - "'regsvr32.exe'"
+            - "'rundll32.exe'"
+            - "'wscript.exe'"
+    selection_exclude_app_controlled_access_cmdlet:
+        # These cmdlet could cause FP with some third party apps since they like to get access. If you experience FP add another selection for interesting paths to avoid this
+        CommandLine|contains: '-ControlledFolderAccessAllowedApplications '
+    condition: selection_args_pref and (all of selection_excludext_* or all of selection_excludepath_* or all of selection_excludeprocess_* or selection_exclude_app_controlled_access_cmdlet)
+falsepositives:
+    - Rare administrator activity for testing purposes (should be investigated)
+level: high

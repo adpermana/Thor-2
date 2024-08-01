@@ -1,0 +1,33 @@
+title: Windows Hotfix Updates Enumeration Using WMI
+id: ddd1d8d8-e89b-44ac-a9de-61f4826ab55e
+related:
+    - id: dfd2fcb7-8bd5-4daa-b132-5adb61d6ad45
+      type: similar
+status: test
+description: Detects queries to the "Win32_QuickFixEngineering" WMI class in order to enumerate installed hotfix updates
+references:
+    - Internal Research
+author: Nasreddine Bencherchali
+date: 2022/11/22
+modified: 2023/03/29
+tags:
+    - attack.execution
+    - attack.t1047
+logsource:
+    product: windows
+    service: wmi
+detection:
+    selection:
+        # Example: wmic qfe get Caption,Description,HotFixID,InstalledOn
+        EventID: 11
+        Operation|contains|all:
+            - 'IWbemServices::ExecQuery'
+            - 'Caption'
+            - 'Description'
+            - 'HotFixID'
+            - 'InstalledOn'
+            - 'FROM Win32_QuickFixEngineering'
+    condition: selection
+falsepositives:
+    - Some AV and 3rd party software were seen making similiar requests, apply addtional filters to reduce noise
+level: medium

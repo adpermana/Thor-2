@@ -1,0 +1,57 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Modification of IE Registry Settings
+id: d88d0ab2-e696-4d40-a2ed-9790064e66b3
+status: experimental
+description: Detects modification of the registry settings used for Internet Explorer
+    and other Windows components that use these settings. An attacker can abuse this
+    registry key to add a domain to the trusted sites Zone or insert javascript for
+    persistence
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/22 15:31:11
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1112/T1112.md#atomic-test-4---add-domain-to-trusted-sites-zone
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1112/T1112.md#atomic-test-5---javascript-in-registry
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection_domains and not 1 of filter_*
+    filter_accepted_documents:
+        TargetObject|contains: \Accepted Documents\
+    filter_binary:
+        Details: Binary Data
+    filter_dword:
+        Details|startswith: DWORD
+    filter_office:
+        Details:
+          - 'Cookie:'
+          - 'Visited:'
+          - (Empty)
+    filter_path:
+        TargetObject|contains:
+          - \Cache
+          - \ZoneMap
+          - \WpadDecision
+    selection_domains:
+        TargetObject|contains: \Software\Microsoft\Windows\CurrentVersion\Internet
+            Settings
+falsepositives: Unknown
+level: low
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.defense_evasion
+  - attack.t1112
+  - DEMO

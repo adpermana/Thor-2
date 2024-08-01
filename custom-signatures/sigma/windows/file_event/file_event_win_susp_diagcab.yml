@@ -1,0 +1,35 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Creation of a Diagcab
+id: 3d0ed417-3d94-4963-a562-4a92c940656a
+status: test
+description: Detects the creation of diagcab file, which could be caused by some legitimate
+    installer or is a sign of exploitation (review the filename and its location)
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/08 11:15:41
+references:
+  - https://threadreaderapp.com/thread/1533879688141086720.html
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetFilename|endswith: .diagcab
+falsepositives: Legitimate microsoft diagcab
+level: medium
+customer: 'demo'
+tags:
+  - attack.resource_development
+  - DEMO

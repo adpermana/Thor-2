@@ -1,0 +1,51 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Uncommon AppX Package Locations
+id: c977cb50-3dff-4a9f-b873-9290f56132f1
+status: test
+description: Detects an appx package added the pipeline of the "to be processed" packages
+    which is located in uncommon locations
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/11 14:10:11
+references:
+  - Internal Research
+  - https://www.sentinelone.com/labs/inside-malicious-windows-apps-for-malware-deployment/
+  - https://learn.microsoft.com/en-us/windows/win32/appxpkg/troubleshooting
+  - https://news.sophos.com/en-us/2021/11/11/bazarloader-call-me-back-attack-abuses-windows-10-apps-mechanism/
+logsource:
+    product: windows
+    service: appxdeployment-server
+detection:
+    condition: selection and not 1 of filter_*
+    filter_generic:
+        Path|contains:
+          - C:\Program Files\WindowsApps\
+          - C:\Program Files (x86)\
+          - C:\Windows\SystemApps\
+          - C:\Windows\PrintDialog\
+          - C:\Windows\ImmersiveControlPanel\
+          - x-windowsupdate://
+          - file:///C:/Program%20Files
+    filter_specific:
+        Path|contains:
+          - https://statics.teams.cdn.office.net/
+          - microsoft.com
+    selection:
+        EventID: "854"
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - DEMO

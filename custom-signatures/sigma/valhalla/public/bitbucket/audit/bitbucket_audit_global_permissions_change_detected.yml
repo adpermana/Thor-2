@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Bitbucket Global Permission Changed
+id: aac6c4f4-87c7-4961-96ac-c3fd3a42c310
+status: experimental
+description: Detects global permissions change activity.
+author: Muhammad Faisal (@faisalusuf)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/02/25 15:20:11
+references:
+  - https://confluence.atlassian.com/bitbucketserver/audit-log-events-776640423.html
+  - https://confluence.atlassian.com/bitbucketserver/global-permissions-776640369.html
+logsource:
+    product: bitbucket
+    service: audit
+    definition: 'Requirements: "Advance" log level is required to receive these audit
+        events.'
+detection:
+    condition: selection
+    selection:
+        auditType.action:
+          - Global permission remove request
+          - Global permission removed
+          - Global permission granted
+          - Global permission requested
+        auditType.category: Permissions
+falsepositives: Legitimate user activity.
+level: medium
+customer: 'demo'
+tags:
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1098
+  - DEMO

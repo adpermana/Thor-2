@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Mshtml.DLL RunHTMLApplication Suspicious Usage
+id: 4782eb5a-a513-4523-a0ac-f3082b26ac5c
+related:
+  - type: obsoletes
+    id: 9f06447a-a33a-4cbe-a94f-a3f43184a7a3
+  - type: obsoletes
+    id: 73fcad2e-ff14-4c38-b11d-4172c8ac86c7
+status: test
+description: |
+    Detects execution of commands that leverage the "mshtml.dll" RunHTMLApplication export to run arbitrary code via different protocol handlers (vbscript, javascript, file, http...)
+author: Nasreddine Bencherchali (Nextron Systems),  Florian Roth (Nextron Systems),
+    Josh Nickels, frack113, Zaw Min Htun (ZETA)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/14 18:01:31
+references:
+  - https://twitter.com/n1nj4sec/status/1421190238081277959
+  - https://hyp3rlinx.altervista.org/advisories/MICROSOFT_WINDOWS_DEFENDER_TROJAN.WIN32.POWESSERE.G_MITIGATION_BYPASS_PART2.txt
+  - http://hyp3rlinx.altervista.org/advisories/MICROSOFT_WINDOWS_DEFENDER_DETECTION_BYPASS.txt
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - '#135'
+          - RunHTMLApplication
+        CommandLine|contains|all:
+          - \..\
+          - mshtml
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2024/02/23
+tags:
+  - attack.defense_evasion
+  - attack.execution
+  - DEMO

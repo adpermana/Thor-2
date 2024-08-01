@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: MSI Installation From Suspicious Locations
+id: c7c8aa1c-5aff-408e-828b-998e3620b341
+status: test
+description: Detects MSI package installation from suspicious locations
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/31 17:15:01
+references:
+  - https://www.trendmicro.com/en_us/research/22/h/ransomware-actor-abuses-genshin-impact-anti-cheat-driver-to-kill-antivirus.html
+logsource:
+    product: windows
+    service: application
+detection:
+    condition: selection and not 1 of filter_*
+    filter_updhealthtools:
+        Data|contains: C:\Windows\TEMP\UpdHealthTools.msi
+    filter_winget:
+        Data|contains: \AppData\Local\Temp\WinGet\
+    selection:
+        Data|contains:
+          - :\Windows\TEMP\
+          - \\\\
+          - \Desktop\
+          - \PerfLogs\
+          - \Users\Public\
+        EventID:
+          - "1040"
+          - "1042"
+        Provider_Name: MsiInstaller
+falsepositives: False positives may occur if you allow installation from folders such
+    as the desktop, the public folder or remote shares. A baseline is required before
+    production use.
+level: medium
+customer: 'demo'
+modified: 2023/10/23
+tags:
+  - attack.execution
+  - DEMO

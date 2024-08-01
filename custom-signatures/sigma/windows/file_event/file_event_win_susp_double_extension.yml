@@ -1,0 +1,64 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Double Extension Files
+id: b4926b47-a9d7-434c-b3a0-adc3fa0bd13e
+related:
+  - type: derived
+    id: 1cdd9a09-06c9-4769-99ff-626e2b3991b8
+  - type: similar
+    id: 3215aa19-f060-4332-86d5-5602511f3ca8
+status: test
+description: Detects dropped files with double extensions, which is often used by
+    malware as a method to abuse the fact that Windows hide default extensions by
+    default.
+author: Nasreddine Bencherchali (Nextron Systems), frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/19 14:59:01
+references:
+  - https://www.crowdstrike.com/blog/meet-crowdstrikes-adversary-of-the-month-for-june-mustang-panda/
+  - https://www.anomali.com/blog/china-based-apt-mustang-panda-targets-minority-groups-public-and-private-sector-organizations
+  - https://www.cybereason.com/blog/research/a-bazar-of-tricks-following-team9s-development-cycles
+  - https://twitter.com/malwrhunterteam/status/1235135745611960321
+  - https://twitter.com/luc4m/status/1073181154126254080
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_exe:
+        TargetFilename|endswith:
+          - .rar.exe
+          - .zip.exe
+    selection_gen:
+        TargetFilename|contains:
+          - .doc.
+          - .docx.
+          - .jpg.
+          - .pdf.
+          - .ppt.
+          - .pptx.
+          - .xls.
+          - .xlsx.
+        TargetFilename|endswith:
+          - .exe
+          - .iso
+          - .rar
+          - .zip
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2022/11/07
+tags:
+  - attack.defense_evasion
+  - attack.t1036.007
+  - DEMO

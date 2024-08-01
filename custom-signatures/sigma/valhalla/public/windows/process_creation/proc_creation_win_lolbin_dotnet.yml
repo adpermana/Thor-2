@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Dotnet.exe Exec Dll and Execute Unsigned Code LOLBIN
+id: d80d5c81-04ba-45b4-84e4-92eba40e0ad3
+status: test
+description: dotnet.exe will execute any DLL and execute unsigned code
+author: Beyu Denis, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/18 18:42:11
+references:
+  - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Dotnet/
+  - https://twitter.com/_felamos/status/1204705548668555264
+  - https://bohops.com/2019/08/19/dotnet-core-a-vector-for-awl-bypass-defense-evasion/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|endswith:
+          - .dll
+          - .csproj
+    selection_img:
+      - Image|endswith: \dotnet.exe
+      - OriginalFileName: .NET Host
+fields:
+  - ComputerName
+  - User
+  - CommandLine
+  - ParentCommandLine
+falsepositives: System administrator Usage
+level: medium
+customer: 'demo'
+modified: 2023/02/04
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

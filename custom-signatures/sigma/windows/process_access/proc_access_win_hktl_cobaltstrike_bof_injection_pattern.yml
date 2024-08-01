@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - CobaltStrike BOF Injection Pattern
+id: 09706624-b7f6-455d-9d02-adee024cee1d
+status: test
+description: Detects a typical pattern of a CobaltStrike BOF which inject into other
+    processes
+author: Christian Burkard (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/04 17:22:51
+references:
+  - https://github.com/boku7/injectAmsiBypass
+  - https://github.com/boku7/spawn
+logsource:
+    category: process_access
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CallTrace|re: ^C:\\Windows\\SYSTEM32\\ntdll\.dll\+[a-z0-9]{4,6}\|C:\\Windows\\System32\\KERNELBASE\.dll\+[a-z0-9]{4,6}\|UNKNOWN\([A-Z0-9]{16}\)$
+        GrantedAccess:
+          - "0x1028"
+          - "0x1fffff"
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/11/28
+tags:
+  - attack.execution
+  - attack.t1106
+  - attack.defense_evasion
+  - attack.t1562.001
+  - DEMO

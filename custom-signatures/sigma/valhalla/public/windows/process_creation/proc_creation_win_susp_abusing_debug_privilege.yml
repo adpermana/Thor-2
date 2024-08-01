@@ -1,0 +1,65 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Abused Debug Privilege by Arbitrary Parent Processes
+id: d522eca2-2973-4391-a3e0-ef0374321dae
+status: test
+description: Detection of unusual child processes by different system processes
+author: Semanur Guneysu @semanurtg, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/28 19:43:41
+references:
+  - https://image.slidesharecdn.com/kheirkhabarovoffzonefinal-181117201458/95/hunting-for-privilege-escalation-in-windows-environment-74-638.jpg
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_* and not filter
+    filter:
+        CommandLine|contains|all:
+          - ' route '
+          - ' ADD '
+    selection_img:
+      - Image|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+          - \cmd.exe
+      - OriginalFileName:
+          - PowerShell.EXE
+          - pwsh.dll
+          - Cmd.Exe
+    selection_parent:
+        ParentImage|endswith:
+          - \winlogon.exe
+          - \services.exe
+          - \lsass.exe
+          - \csrss.exe
+          - \smss.exe
+          - \wininit.exe
+          - \spoolsv.exe
+          - \searchindexer.exe
+        User|contains:
+          - AUTHORI
+          - AUTORI
+fields:
+  - ParentImage
+  - Image
+  - User
+  - CommandLine
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/11/11
+tags:
+  - attack.privilege_escalation
+  - attack.t1548
+  - DEMO

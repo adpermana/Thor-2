@@ -1,0 +1,25 @@
+title: Environment Variable Was Deleted Using WMI
+id: 52fbc4c9-bd62-42b4-bc92-3e8f209d82c5
+status: test
+description: Detects the deletion of environment variables using the "Win32_Environment" WMI class
+references:
+    - Internal Research
+author: Nasreddine Bencherchali
+date: 2022/11/22
+modified: 2023/03/29
+tags:
+    - attack.execution
+    - attack.t1047
+logsource:
+    product: windows
+    service: wmi
+detection:
+    selection:
+        EventID: 11
+        Operation|contains|all:
+            - 'IWbemServices::DeleteInstance'
+            - 'Win32_Environment.Name'
+    condition: selection
+falsepositives:
+    - Unknown
+level: medium

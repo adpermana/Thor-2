@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential PSFactoryBuffer COM Hijacking
+id: 243380fa-11eb-4141-af92-e14925e77c1b
+status: experimental
+description: Detects changes to the PSFactory COM InProcServer32 registry. This technique
+    was used by RomCom to create persistence storing a malicious DLL.
+author: BlackBerry Threat Research and Intelligence Team - @Joseliyo_Jstnk
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/06/07 16:10:01
+references:
+  - https://blogs.blackberry.com/en/2023/06/romcom-resurfaces-targeting-ukraine
+  - https://strontic.github.io/xcyclopedia/library/clsid_C90250F3-4D7D-4991-9B69-A5C5BC1C2AE6.html
+  - https://www.virustotal.com/gui/file/6d3ab9e729bb03ae8ae3fcd824474c5052a165de6cb4c27334969a542c7b261d/detection
+  - https://www.trendmicro.com/en_us/research/23/e/void-rabisu-s-use-of-romcom-backdoor-shows-a-growing-shift-in-th.html
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection and not filter_main
+    filter_main:
+        Details:
+          - '%windir%\System32\ActXPrxy.dll'
+          - C:\Windows\System32\ActXPrxy.dll
+    selection:
+        TargetObject|endswith: \CLSID\{c90250f3-4d7d-4991-9b69-a5c5bc1c2ae6}\InProcServer32\(Default)
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.persistence
+  - attack.t1546.015
+  - DEMO

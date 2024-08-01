@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Data Exfiltration Via Audio File
+id: e4f93c99-396f-47c8-bb0f-201b1fa69034
+status: test
+description: Detects potential exfiltration attempt via audio file using PowerShell
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/16 16:54:11
+references:
+  - https://github.com/gtworek/PSBits/blob/e97cbbb173b31cbc4d37244d3412de0a114dacfb/NoDLP/bin2wav.ps1
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: selection_main and 1 of selection_header_*
+    selection_header_wav:
+        ScriptBlockText|contains|all:
+          - "0x52"
+          - "0x49"
+          - "0x46"
+          - "0x57"
+          - "0x41"
+          - "0x56"
+          - "0x45"
+          - "0xAC"
+    selection_main:
+        ScriptBlockText|contains|all:
+          - '[System.Math]::'
+          - '[IO.FileMode]::'
+          - BinaryWriter
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.exfiltration
+  - DEMO

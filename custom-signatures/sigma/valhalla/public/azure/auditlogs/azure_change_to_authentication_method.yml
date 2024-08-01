@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-06-21 19:00
+# Generated for User: demo
+# Number of Rules: 3228
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Change to Authentication Method
+id: 4d78a000-ab52-4564-88a5-7ab5242b20c7
+status: test
+description: Change to authentication method could be an indicator of an attacker
+    adding an auth method to the account so they can have continued access.
+author: AlertIQ
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/10/10 14:17:41
+references:
+  - https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/security-operations-privileged-accounts
+logsource:
+    product: azure
+    service: auditlogs
+detection:
+    condition: selection
+    selection:
+        Category: UserManagement
+        LoggedByService: Authentication Methods
+        OperationName: User registered security info
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/12/25
+tags:
+  - attack.credential_access
+  - attack.t1556
+  - attack.persistence
+  - attack.defense_evasion
+  - attack.t1098
+  - DEMO

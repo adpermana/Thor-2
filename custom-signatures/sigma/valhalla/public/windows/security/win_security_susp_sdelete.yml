@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Secure Deletion with SDelete
+id: 39a80702-d7ca-4a83-b776-525b1f86a36d
+status: test
+description: Detects renaming of file while deletion with SDelete tool.
+author: Thomas Patzke
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/06/14 13:22:11
+references:
+  - https://jpcertcc.github.io/ToolAnalysisResultSheet/details/sdelete.htm
+  - https://www.jpcert.or.jp/english/pub/sr/ir_research.html
+  - https://docs.microsoft.com/en-gb/sysinternals/downloads/sdelete
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: selection
+    selection:
+        EventID:
+          - "4656"
+          - "4663"
+          - "4658"
+        ObjectName|endswith:
+          - .AAA
+          - .ZZZ
+falsepositives: Legitimate usage of SDelete
+level: medium
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.impact
+  - attack.defense_evasion
+  - attack.t1070.004
+  - attack.t1027.005
+  - attack.t1485
+  - attack.t1553.002
+  - attack.s0195
+  - DEMO

@@ -1,0 +1,47 @@
+title: Recon Activity From Suspicious Processes
+id: a2aa4e8b-ea2b-4c10-9322-36b085f278bc
+status: experimental
+description: Detects recon activity from unusual parent process. This behaviour is often found with injected process where the attacker will first try to perform recon activity from those process.
+references:
+    - Internal Research
+    - https://redcanary.com/threat-detection-report/techniques/process-injection/
+author: Nasreddine Bencherchali
+date: 2022/09/13
+modified: 2022/11/04
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_parent:
+        ParentImage|endswith:
+            # Add more processes that you suspect are being used often in process injection
+            - '\svchost.exe'
+            - '\dllhost.exe'
+            - '\rundll32.exe'
+            - '\SearchIndexer.exe'
+            - '\lsass.exe'
+            - '\notepad.exe'
+            - '\backgroundtaskhost.exe'
+            - '\regsvr32.exe'
+            - '\werfault.exe'
+            - '\wuauclt.exe'
+            - '\spoolsv.exe'
+    selection_cli_net:
+        Image|endswith:
+            # If you experience FP with this. Add the CLI that caused the FP to a seperate filter
+            - '\net.exe'
+            - '\net1.exe'
+            - '\ping.exe'
+            - '\ipconfig.exe'
+            - '\systeminfo.exe'
+            - '\nltest.exe'
+            - '\whoami.exe'
+            - '\nslookup.exe'
+            - '\route.exe'
+    condition: all of selection*
+falsepositives:
+    - Unknown
+level: high
+tags:
+    - attack.execution
+    - attack.t1059

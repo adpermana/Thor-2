@@ -1,0 +1,29 @@
+title: Create Remote Thread from AppData Temp
+id: 8f2611f1-95b1-4496-8450-e6d3226f0627
+description: Detects suspicious remote thread created from AppData or Temp directory
+status: test
+author: pH-T
+references:
+    - https://thedfirreport.com/2022/04/04/stolen-images-campaign-ends-in-conti-ransomware/
+date: 2022/04/29
+modified: 2023/03/29
+tags:
+    - attack.privilege_escalation
+    - attack.defense_evasion
+    - attack.t1055
+logsource:
+    product: windows
+    category: create_remote_thread
+detection:
+    selection:
+        SourceImage|contains|all:
+            - '\AppData\'
+            - '\Temp\'
+        TargetImage: 'C:\Windows\explorer.exe'
+    condition: selection
+fields:
+    - SourceImage
+    - TargetImage
+level: high
+falsepositives:
+    - Unknown

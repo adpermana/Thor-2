@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Arbitrary File Download Via MSOHTMED.EXE
+id: 459f2f98-397b-4a4a-9f47-6a5ec2f1c69d
+status: test
+description: Detects usage of "MSOHTMED" to download arbitrary files
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/19 15:34:51
+references:
+  - https://github.com/LOLBAS-Project/LOLBAS/pull/238/files
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains:
+          - ftp://
+          - http://
+          - https://
+    selection_img:
+      - Image|endswith: \MSOHTMED.exe
+      - OriginalFileName: MsoHtmEd.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/11/09
+tags:
+  - attack.defense_evasion
+  - attack.execution
+  - attack.t1218
+  - DEMO

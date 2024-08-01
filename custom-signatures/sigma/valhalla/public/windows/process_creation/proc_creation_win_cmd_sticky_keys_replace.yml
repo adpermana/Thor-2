@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Persistence Via Sticky Key Backdoor
+id: 1070db9a-3e5d-412e-8e7b-7183b616e1b3
+status: test
+description: |
+    By replacing the sticky keys executable with the local admins CMD executable, an attacker is able to access a privileged windows console session without authenticating to the system.
+    When the sticky keys are "activated" the privilleged shell is launched.
+author: Sreeman
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/02/18 15:11:01
+references:
+  - https://www.fireeye.com/blog/threat-research/2017/03/apt29_domain_frontin.html
+  - https://www.clearskysec.com/wp-content/uploads/2020/02/ClearSky-Fox-Kitten-Campaign-v1.pdf
+  - https://learn.microsoft.com/en-us/archive/blogs/jonathantrull/detecting-sticky-key-backdoors
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains|all:
+          - 'copy '
+          - '/y '
+          - C:\windows\system32\cmd.exe C:\windows\system32\sethc.exe
+falsepositives: Unlikely
+level: critical
+customer: 'demo'
+modified: 2023/03/07
+tags:
+  - attack.t1546.008
+  - attack.privilege_escalation
+  - DEMO

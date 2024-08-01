@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - Dumpert Process Dumper Execution
+id: 2704ab9e-afe2-4854-a3b1-0c0706d03578
+status: test
+description: Detects the use of Dumpert process dumper, which dumps the lsass.exe
+    process memory
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/02/04 17:12:31
+references:
+  - https://github.com/outflanknl/Dumpert
+  - https://unit42.paloaltonetworks.com/actors-still-exploiting-sharepoint-vulnerability/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - Hashes|contains: 09D278F9DE118EF09163C6140255C690
+      - CommandLine|contains: Dumpert.dll
+falsepositives: Very unlikely
+level: critical
+customer: 'demo'
+modified: 2023/02/04
+tags:
+  - attack.credential_access
+  - attack.t1003.001
+  - DEMO

@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Hidden Files and Directories
+id: d08722cd-3d09-449a-80b4-83ea2d9d4616
+status: test
+description: Detects adversary creating hidden file or directory, by detecting directories
+    or files with . as the first character
+author: Pawel Mazur
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/09/06 13:19:51
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1564.001/T1564.001.md
+logsource:
+    product: linux
+    service: auditd
+detection:
+    condition: commands and arguments
+    arguments:
+      - a1|contains: /.
+      - a1|startswith: .
+      - a2|contains: /.
+      - a2|startswith: .
+    commands:
+        a0:
+          - mkdir
+          - touch
+          - vim
+          - nano
+          - vi
+        type: EXECVE
+falsepositives: Unknown
+level: low
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.defense_evasion
+  - attack.t1564.001
+  - DEMO

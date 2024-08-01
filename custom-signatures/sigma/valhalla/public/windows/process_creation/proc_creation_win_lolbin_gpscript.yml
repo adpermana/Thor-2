@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Gpscript Execution
+id: 1e59c230-6670-45bf-83b0-98903780607e
+status: experimental
+description: Detects the execution of the LOLBIN gpscript, which executes logon or
+    startup scripts configured in Group Policy
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/05/16 11:04:01
+references:
+  - https://oddvar.moe/2018/04/27/gpscript-exe-another-lolbin-to-the-list/
+  - https://lolbas-project.github.io/lolbas/Binaries/Gpscript/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_* and not 1 of filter_main_*
+    filter_main_svchost:
+        ParentCommandLine: C:\windows\system32\svchost.exe -k netsvcs -p -s gpsvc
+    selection_cli:
+        CommandLine|contains:
+          - ' /logon'
+          - ' /startup'
+    selection_img:
+      - Image|endswith: \gpscript.exe
+      - OriginalFileName: GPSCRIPT.EXE
+falsepositives: Legitimate uses of logon scripts distributed via group policy
+level: medium
+customer: 'demo'
+modified: 2023/06/14
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

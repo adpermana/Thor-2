@@ -1,0 +1,31 @@
+title: Uncommon Scripting Engines Invokation
+id: 14a9c2fa-dd50-4a34-b950-39f1d445fd3e
+status: experimental
+description: Detects the execution of an encoded VBScript based on command line arguments
+references:
+    - https://en.wikipedia.org/wiki/Windows_Script_Host
+author: Nasreddine Bencherchali
+date: 2022/09/05
+modified: 2023/06/16
+tags:
+    - attack.execution
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith:
+            - '\wscript.exe'
+            - '\cscript.exe'
+        CommandLine|contains:
+            - ' /e:'
+            - ' //e:'
+    filter_main_engines:
+        CommandLine|contains:
+            - '/e:VBScript'
+            - '/e:JScript'
+            - '/e:javascript'
+    condition: selection and not 1 of filter_main_*
+falsepositives:
+    - Legitimate use of other engines
+level: medium

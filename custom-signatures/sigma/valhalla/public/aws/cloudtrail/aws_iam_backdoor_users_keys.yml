@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: AWS IAM Backdoor Users Keys
+id: 0a5177f4-6ca9-44c2-aacf-d3f3d8b6e4d2
+status: test
+description: |
+    Detects AWS API key creation for a user by another user.
+    Backdoored users can be used to obtain persistence in the AWS environment.
+    Also with this alert, you can detect a flow of AWS keys in your org.
+author: faloker
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/02/12 12:27:31
+references:
+  - https://github.com/RhinoSecurityLabs/pacu/blob/866376cd711666c775bbfcde0524c817f2c5b181/pacu/modules/iam__backdoor_users_keys/main.py
+logsource:
+    product: aws
+    service: cloudtrail
+detection:
+    condition: selection_source and not filter
+    filter:
+        userIdentity.arn|contains: responseElements.accessKey.userName
+    selection_source:
+        eventName: CreateAccessKey
+        eventSource: iam.amazonaws.com
+fields:
+  - userIdentity.arn
+  - responseElements.accessKey.userName
+  - errorCode
+  - errorMessage
+falsepositives:
+  - Adding user keys to their own accounts (the filter cannot cover all possible variants
+    of user naming)
+  - AWS API keys legitimate exchange workflows
+level: medium
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.persistence
+  - attack.t1098
+  - DEMO

@@ -1,0 +1,33 @@
+title: New Kernel Mode Driver From Suspicious Locations
+id: 39566a8c-fb4a-4bf4-9bb6-fb54f9188e8c
+description: Detects a kernel mode driver installation from suspicious locations
+status: test
+author: Nasreddine Bencherchali (Nextron Systems)
+date: 2022/08/11
+modified: 2023/03/28
+references:
+    - Internal Research
+tags:
+    - attack.defense_evasion
+    - attack.privilege_escalation
+logsource:
+    product: windows
+    service: system
+detection:
+    selection:
+        Provider_Name: 'Service Control Manager'
+        EventID: 7045
+        ServiceType: kernel mode driver
+        ImagePath|contains:
+            # Add more suspicious paths as needed
+            - '\Users\Public\'
+            - '\PerfLogs\'
+            - '\Temp\' # Covers cases such as Windows\Temp and \AppData\Local\Temp.....
+            - '\Desktop\'
+            - '\Downloads\'
+            - '\AppData\' # Kernel drivers should not be mounted from user controlled locations (but you never know how crazy people are) - Comment out this line if you experience a lot of FP (After investigation that is ;)
+            - 'E:\' # Mounted partitions (Remove this if you use this partitions for legitimate stuff)
+    condition: selection
+falsepositives:
+    - Unlikely
+level: critical

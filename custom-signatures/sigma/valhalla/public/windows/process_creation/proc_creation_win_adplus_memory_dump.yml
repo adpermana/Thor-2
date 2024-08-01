@@ -1,0 +1,51 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Adplus.EXE Abuse
+id: 2f869d59-7f6a-4931-992c-cce556ff2d53
+status: experimental
+description: Detects execution of "AdPlus.exe", a binary that is part of the Windows
+    SDK that can be used as a LOLBIN in order to dump process memory and execute arbitrary
+    commands.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/09 12:38:51
+references:
+  - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Adplus/
+  - https://twitter.com/nas_bench/status/1534916659676422152
+  - https://twitter.com/nas_bench/status/1534915321856917506
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains:
+          - ' -hang '
+          - ' -pn '
+          - ' -pmn '
+          - ' -p '
+          - ' -po '
+          - ' -c '
+          - ' -sc '
+    selection_img:
+      - Image|endswith: \adplus.exe
+      - OriginalFileName: Adplus.exe
+falsepositives: Legitimate usage of Adplus for debugging purposes
+level: high
+customer: 'demo'
+modified: 2023/06/23
+tags:
+  - attack.defense_evasion
+  - attack.execution
+  - attack.t1003.001
+  - DEMO

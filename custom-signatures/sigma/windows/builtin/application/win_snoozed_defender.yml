@@ -1,0 +1,25 @@
+title: Snoozed Windows Defender
+id: 465ebc61-c732-4b4c-954b-b45604dc7cc7
+status: test
+description: Windows Defender "Real-Time protection" state hase been changed to "SNOOZED" (temporarily disabled/paused) via GUI.
+references:
+    - https://github.com/MicrosoftDocs/microsoft-365-docs/blob/public/microsoft-365/security/defender-endpoint/troubleshoot-microsoft-defender-antivirus-when-migrating.md
+author: Nasreddine Bencherchali
+date: 2022/05/25
+modified: 2023/03/28
+tags:
+    - attack.defense_evasion
+    - attack.t1562.001
+logsource:
+    product: windows
+    service: application
+detection:
+    selection:
+        Provider_Name: 'SecurityCenter'
+        EventID: 15
+        Data|contains: 'SNOOZED'
+    condition: selection
+falsepositives:
+    - Environments with bad security practices
+    - Other AVs disabling defender during installation
+level: high

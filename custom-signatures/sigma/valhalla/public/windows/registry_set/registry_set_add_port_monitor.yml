@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Add Port Monitor Persistence in Registry
+id: 944e8941-f6f6-4ee8-ac05-1c224e923c0e
+status: experimental
+description: |
+    Adversaries may use port monitors to run an attacker supplied DLL during system boot for persistence or privilege escalation.
+    A port monitor can be set through the AddMonitor API call to set a DLL to be loaded at startup.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/12/30 16:36:31
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1547.010/T1547.010.md
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection and not 1 of filter_*
+    filter_cutepdf:
+        Details: cpwmon64_v40.dll
+        Image: C:\Windows\System32\spoolsv.exe
+        TargetObject|contains: \System\CurrentControlSet\Control\Print\Monitors\CutePDF
+            Writer Monitor v4.0\Driver
+        User|contains:
+          - AUTHORI
+          - AUTORI
+    filter_leg1:
+        TargetObject|contains: Control\Print\Monitors\MONVNC\Driver
+    filter_leg2:
+        TargetObject|contains|all:
+          - Control\Print\Environments\
+          - \Drivers\
+          - \VNC Printer
+    selection:
+        Details|endswith: .dll
+        TargetObject|startswith: HKLM\System\CurrentControlSet\Control\Print\Monitors\
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.persistence
+  - attack.t1547.010
+  - DEMO

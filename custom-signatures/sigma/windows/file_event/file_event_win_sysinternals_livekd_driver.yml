@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: LiveKD Driver Creation
+id: 16fe46bb-4f64-46aa-817d-ff7bec4a2352
+status: experimental
+description: Detects the creation of the LiveKD driver, which is used for live kernel
+    debugging
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/16 11:41:21
+references:
+  - Internal Research
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith:
+          - \livekd.exe
+          - \livek64.exe
+        TargetFilename: C:\Windows\System32\drivers\LiveKdD.SYS
+falsepositives: Legitimate usage of LiveKD for debugging purposes will also trigger
+    this
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - DEMO

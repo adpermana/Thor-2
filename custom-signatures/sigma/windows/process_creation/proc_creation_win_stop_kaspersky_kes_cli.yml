@@ -1,0 +1,24 @@
+title: Stop Kaspersky Endpoint Security Via CommandLine
+id: 86d8396d-ccfb-418d-9249-6455c23ea06e
+status: experimental
+description: Detects activity of stopping kaspersky endpoint security using "klpsm.exe"
+author: Nasreddine Bencherchali
+references:
+    - https://support.kaspersky.com/KESWin/11.1.1/en-US/178723.htm
+date: 2022/05/19
+tags:
+    - attack.defense_evasion
+    - attack.t1562.001
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        - OriginalFileName: 'klpsm.exe'
+        - Image|endswith: '\klpsm.exe'
+    selection_suspflags:
+        CommandLine|contains: ' stop_avp_service'
+    condition: all of selection*
+falsepositives:
+    - Administrator troubleshooting
+level: high

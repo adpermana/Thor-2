@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential PrintNightmare Exploitation Attempt
+id: 5b2bbc47-dead-4ef7-8908-0cf73fcbecbf
+status: test
+description: Detect DLL deletions from Spooler Service driver folder. This might be
+    a potential exploitation attempt of CVE-2021-1675
+author: Bhabesh Raj
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/07/01 18:31:11
+references:
+  - https://github.com/hhlxf/PrintNightmare
+  - https://github.com/cube0x0/CVE-2021-1675
+logsource:
+    category: file_delete
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith: \spoolsv.exe
+        TargetFilename|contains: C:\Windows\System32\spool\drivers\x64\3\
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/02/17
+tags:
+  - attack.persistence
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - attack.t1574
+  - cve.2021.1675
+  - DEMO

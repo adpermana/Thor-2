@@ -1,0 +1,71 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Azure Browser SSO Abuse
+id: 50f852e6-af22-4c78-9ede-42ef36aa3453
+status: test
+description: |
+    Detects abusing Azure Browser SSO by requesting OAuth 2.0 refresh tokens for an Azure-AD-authenticated Windows user (i.e. the machine is joined to Azure AD and a user logs in with their Azure AD account) wanting to perform SSO authentication in the browser.
+    An attacker can use this to authenticate to Azure AD in a browser as that user.
+author: Den Iuzvyk
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/07/15 14:32:01
+references:
+  - https://posts.specterops.io/requesting-azure-ad-request-tokens-on-azure-ad-joined-machines-for-browser-sso-2b0409caad30
+logsource:
+    category: image_load
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+    filter_main_bgtaskhost:
+        Image|endswith: \BackgroundTaskHost.exe
+        Image|startswith:
+          - C:\Windows\System32\
+          - C:\Windows\SysWOW64\
+    filter_optional_devenv:
+        Image|endswith: \IDE\devenv.exe
+        Image|startswith:
+          - C:\Program Files\Microsoft Visual Studio\
+          - C:\Program Files (x86)\Microsoft Visual Studio\
+    filter_optional_edge_1:
+      - Image|startswith: C:\Program Files (x86)\Microsoft\EdgeWebView\Application\
+      - Image|endswith: \WindowsApps\MicrosoftEdge.exe
+      - Image:
+          - C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+          - C:\Program Files\Microsoft\Edge\Application\msedge.exe
+    filter_optional_edge_2:
+        Image|endswith:
+          - \msedge.exe
+          - \msedgewebview2.exe
+        Image|startswith:
+          - C:\Program Files (x86)\Microsoft\EdgeCore\
+          - C:\Program Files\Microsoft\EdgeCore\
+    filter_optional_ie:
+        Image:
+          - C:\Program Files (x86)\Internet Explorer\iexplore.exe
+          - C:\Program Files\Internet Explorer\iexplore.exe
+    filter_optional_null:
+        Image: []
+    filter_optional_onedrive:
+        Image|endswith: \AppData\Local\Microsoft\OneDrive\OneDrive.exe
+    selection:
+        ImageLoaded: C:\Windows\System32\MicrosoftAccountTokenProvider.dll
+falsepositives: False positives are expected since this rules is only looking for
+    the DLL load event. This rule is better used in correlation with related activity
+level: low
+customer: 'demo'
+modified: 2023/04/18
+tags:
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - attack.t1574.002
+  - DEMO

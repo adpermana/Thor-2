@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PowerShell Write-EventLog Usage
+id: 35f41cd7-c98e-469f-8a02-ec4ba0cc7a7e
+status: test
+description: Detects usage of the "Write-EventLog" cmdlet with 'RawData' flag. The
+    cmdlet can be levreage to write malicious payloads to the EventLog and then retrieve
+    them later for later use
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/16 14:14:21
+references:
+  - https://www.blackhillsinfosec.com/windows-event-logs-for-red-teams/
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: selection
+    selection:
+        ScriptBlockText|contains|all:
+          - Write-EventLog
+          - '-RawData '
+falsepositives: Legitimate applications writing events via this cmdlet. Investigate
+    alerts to determine if the action is benign
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - DEMO

@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: OMIGOD SCX RunAsProvider ExecuteShellCommand - Auditd
+id: 045b5f9c-49f7-4419-a236-9854fb3c827a
+status: test
+description: |
+    Rule to detect the use of the SCX RunAsProvider Invoke_ExecuteShellCommand to execute any UNIX/Linux command using the /bin/sh shell.
+    SCXcore, started as the Microsoft Operations Manager UNIX/Linux Agent, is now used in a host of products including Microsoft Operations Manager.
+    Microsoft Azure, and Microsoft Operations Management Suite.
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/09/17 19:12:31
+references:
+  - https://www.wiz.io/blog/omigod-critical-vulnerabilities-in-omi-azure
+  - https://github.com/Azure/Azure-Sentinel/pull/3059
+logsource:
+    product: linux
+    service: auditd
+detection:
+    condition: selection
+    selection:
+        comm: sh
+        cwd: /var/opt/microsoft/scx/tmp
+        syscall: execve
+        type: SYSCALL
+        uid: "0"
+falsepositives: Legitimate use of SCX RunAsProvider Invoke_ExecuteShellCommand.
+level: high
+customer: 'demo'
+modified: 2022/11/26
+tags:
+  - attack.privilege_escalation
+  - attack.initial_access
+  - attack.execution
+  - attack.t1068
+  - attack.t1190
+  - attack.t1203
+  - DEMO

@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Access Token Abuse
+id: 02f7c9c1-1ae8-4c6a-8add-04693807f92f
+status: experimental
+description: Detects potential token impersonation and theft. Example, when using
+    "DuplicateToken(Ex)" and "ImpersonateLoggedOnUser" with the "LOGON32_LOGON_NEW_CREDENTIALS
+    flag".
+author: Michaela Adams, Zach Mathis
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/11/06 13:20:31
+references:
+  - https://www.elastic.co/fr/blog/how-attackers-abuse-access-token-manipulation
+  - https://www.manageengine.com/log-management/cyber-security/access-token-manipulation.html
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: selection
+    selection:
+        AuthenticationPackageName: Negotiate
+        EventID: "4624"
+        ImpersonationLevel: '%%1833'
+        LogonProcessName: Advapi
+        LogonType: "9"
+falsepositives: Anti-Virus
+level: medium
+customer: 'demo'
+modified: 2023/04/26
+tags:
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - attack.t1134.001
+  - stp.4u
+  - DEMO

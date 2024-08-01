@@ -1,0 +1,62 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Active Directory User Backdoors
+id: 300bac00-e041-4ee2-9c36-e262656a6ecc
+status: test
+description: Detects scenarios where one can control another users or computers account
+    without having to use their credentials.
+author: '@neu5ron'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/04/13 14:17:21
+references:
+  - https://msdn.microsoft.com/en-us/library/cc220234.aspx
+  - https://adsecurity.org/?p=3466
+  - https://blog.harmj0y.net/redteaming/another-word-on-delegation/
+logsource:
+    product: windows
+    service: security
+    definition: 'Requirements: Audit Policy : Account Management > Audit User Account
+        Management, Group Policy : Computer Configuration\Windows Settings\Security
+        Settings\Advanced Audit Policy Configuration\Audit Policies\Account Management\Audit
+        User Account Management, DS Access > Audit Directory Service Changes, Group
+        Policy : Computer Configuration\Windows Settings\Security Settings\Advanced
+        Audit Policy Configuration\Audit Policies\DS Access\Audit Directory Service
+        Changes'
+detection:
+    condition: (selection1 and not 1 of filter_*) or 1 of selection_5136_*
+    filter_empty:
+        AllowedToDelegateTo:
+          - ""
+          - '-'
+    filter_null:
+        AllowedToDelegateTo: []
+    selection_5136_1:
+        AttributeLDAPDisplayName: msDS-AllowedToDelegateTo
+        EventID: "5136"
+    selection_5136_2:
+        AttributeLDAPDisplayName: servicePrincipalName
+        EventID: "5136"
+        ObjectClass: user
+    selection_5136_3:
+        AttributeLDAPDisplayName: msDS-AllowedToActOnBehalfOfOtherIdentity
+        EventID: "5136"
+    selection1:
+        EventID: "4738"
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2024/02/26
+tags:
+  - attack.t1098
+  - attack.persistence
+  - DEMO

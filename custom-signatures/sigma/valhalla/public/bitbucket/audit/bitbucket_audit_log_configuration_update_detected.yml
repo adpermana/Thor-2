@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Bitbucket Audit Log Configuration Updated
+id: 6aa12161-235a-4dfb-9c74-fe08df8d8da1
+status: experimental
+description: Detects changes to the bitbucket audit log configuration.
+author: Muhammad Faisal (@faisalusuf)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/02/25 16:54:11
+references:
+  - https://confluence.atlassian.com/bitbucketserver/view-and-configure-the-audit-log-776640417.html
+logsource:
+    product: bitbucket
+    service: audit
+    definition: 'Requirements: "Basic" log level is required to receive these audit
+        events.'
+detection:
+    condition: selection
+    selection:
+        auditType.action: Audit log configuration updated
+        auditType.category: Auditing
+falsepositives: Legitimate user activity.
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+  - DEMO

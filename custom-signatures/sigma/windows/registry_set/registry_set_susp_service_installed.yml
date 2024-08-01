@@ -1,0 +1,51 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Service Installed
+id: f2485272-a156-4773-82d7-1d178bc4905b
+status: test
+description: |
+    Detects installation of NalDrv or PROCEXP152 services via registry-keys to non-system32 folders.
+    Both services are used in the tool Ghost-In-The-Logs (https://github.com/bats3c/Ghost-In-The-Logs), which uses KDU (https://github.com/hfiref0x/KDU)
+author: xknow (@xknow_infosec), xorxes (@xor_xes)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/04/08 13:45:21
+references:
+  - https://web.archive.org/web/20200419024230/https://blog.dylan.codes/evading-sysmon-and-windows-event-logging/
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        Details|contains: \WINDOWS\system32\Drivers\PROCEXP152.SYS
+        Image|endswith:
+          - \procexp64.exe
+          - \procexp.exe
+          - \procmon64.exe
+          - \procmon.exe
+          - \handle.exe
+          - \handle64.exe
+    selection:
+        TargetObject:
+          - HKLM\System\CurrentControlSet\Services\NalDrv\ImagePath
+          - HKLM\System\CurrentControlSet\Services\PROCEXP152\ImagePath
+falsepositives: Other legimate tools using this service names and drivers. Note -
+    clever attackers may easily bypass this detection by just renaming the services.
+    Therefore just Medium-level and don't rely on it.
+level: medium
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.t1562.001
+  - attack.defense_evasion
+  - DEMO

@@ -1,0 +1,39 @@
+title: DCToolbox PowerShell Cmdlets Execution - PsScript
+id: 0e3d936a-6278-45de-bc1f-a73ca8a4ab6f
+status: experimental
+description: |
+    Detects DCToolbox a PowerShell module that contains a collection of tools for Microsoft 365 security tasks, Microsoft Graph functions, Azure AD management, Conditional Access, zero trust strategies, attack and defense scenarios, etc.
+    Attackers could abuse this module to wipe all files from all teams in a Microsoft 365 tenant and more.
+references:
+    - https://danielchronlund.com/2023/02/14/the-threat-of-microsoft-365-wiper-malware/
+    - https://github.com/DanielChronlund/DCToolbox
+author: X__Junior
+date: 2023/02/15
+tags:
+    - attack.execution
+    - attack.t1059
+logsource:
+    product: windows
+    category: ps_script
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection:
+        ScriptBlockText|contains:
+            - 'Connect-DCMsG' # Covers Connect-DCMsGraphAsDelegated, Connect-DCMsGraphAsApplication
+            - 'Enable-DCAzureADPIMRole'
+            - 'Export-DCConditionalAccessPolicyDesign'
+            - 'Get-DCAzureADUsersAndGroupsAsGuest'
+            # - 'Get-DCPublicIp' # Might be prone to FP. Remove if FP are found
+            - 'Import-DCConditionalAccessPolicyDesign'
+            - 'Invoke-DCMsGraphQuery'
+            - 'Invoke-DCM365DataWiper' # Don't shorten it. Its important
+            - 'Invoke-M365DataExfiltration'
+            - 'New-DCConditionalAccess' # Covers: New-DCConditionalAccessPolicyDesignReport, New-DCConditionalAccessAssignmentReport
+            - 'New-DCM365ConfigReport'
+            - 'Start-DCTorHttpProxy'
+            - 'Test-DCAzureAd' # Covers: Test-DCAzureAdUserExistence, Test-DCAzureAdCommonAdmins
+            - 'Test-DCLegacyAuthentication'
+    condition: selection
+falsepositives:
+    - Unknown
+level: high

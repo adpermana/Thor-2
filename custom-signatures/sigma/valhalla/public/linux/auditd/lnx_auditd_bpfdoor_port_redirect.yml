@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Bpfdoor TCP Ports Redirect
+id: 70b4156e-50fc-4523-aa50-c9dddf1993fc
+status: test
+description: |
+    All TCP traffic on particular port from attacker is routed to different port. ex. '/sbin/iptables -t nat -D PREROUTING -p tcp -s 192.168.1.1 --dport 22 -j REDIRECT --to-ports 42392'
+    The traffic looks like encrypted SSH communications going to TCP port 22, but in reality is being directed to the shell port once it hits the iptables rule for the attacker host only.
+author: Rafal Piasecki
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/10 12:39:31
+references:
+  - https://www.sandflysecurity.com/blog/bpfdoor-an-evasive-linux-backdoor-technical-analysis/
+  - https://www.elastic.co/security-labs/a-peek-behind-the-bpfdoor
+logsource:
+    product: linux
+    service: auditd
+detection:
+    condition: cmd and keywords
+    cmd:
+        a0|endswith: iptables
+        a1: -t
+        a2: nat
+        type: EXECVE
+    keywords:
+      - --to-ports 42
+      - --to-ports 43
+falsepositives: Legitimate ports redirect
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1562.004
+  - DEMO

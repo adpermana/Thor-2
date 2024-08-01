@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Driver Load From A Temporary Directory
+id: 2c4523d5-d481-4ed0-8ec3-7fbf0cb41a75
+status: test
+description: Detects a driver load from a temporary directory
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/02/12 15:50:51
+references:
+  - Internal Research
+logsource:
+    category: driver_load
+    product: windows
+detection:
+    condition: selection
+    selection:
+        ImageLoaded|contains: \Temp\
+falsepositives: There is a relevant set of false positives depending on applications
+    in the environment
+level: high
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1543.003
+  - DEMO

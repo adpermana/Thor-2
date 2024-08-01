@@ -1,0 +1,53 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious File Drop by Exchange
+id: 6b269392-9eba-40b5-acb6-55c882b20ba6
+related:
+  - type: similar
+    id: bd1212e5-78da-431e-95fa-c58e3237a8e6
+status: test
+description: Detects suspicious file type dropped by an Exchange component in IIS
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/10/04 14:23:01
+references:
+  - https://www.microsoft.com/security/blog/2022/09/30/analyzing-attacks-using-the-exchange-vulnerabilities-cve-2022-41040-and-cve-2022-41082/
+  - https://www.gteltsc.vn/blog/canh-bao-chien-dich-tan-cong-su-dung-lo-hong-zero-day-tren-microsoft-exchange-server-12714.html
+  - https://en.gteltsc.vn/blog/cap-nhat-nhe-ve-lo-hong-bao-mat-0day-microsoft-exchange-dang-duoc-su-dung-de-tan-cong-cac-to-chuc-tai-viet-nam-9685.html
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: all of selection*
+    selection:
+        CommandLine|contains: MSExchange
+        Image|endswith: \w3wp.exe
+    selection_types:
+        TargetFilename|endswith:
+          - .aspx
+          - .asp
+          - .ashx
+          - .ps1
+          - .bat
+          - .exe
+          - .dll
+          - .vbs
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.persistence
+  - attack.t1190
+  - attack.initial_access
+  - attack.t1505.003
+  - DEMO

@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Azure Kubernetes Events Deleted
+id: 225d8b09-e714-479c-a0e4-55e6f29adf35
+status: test
+description: Detects when Events are deleted in Azure Kubernetes. An adversary may
+    delete events in Azure Kubernetes in an attempt to evade detection.
+author: Austin Songer @austinsonger
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/07/24 14:17:51
+references:
+  - https://docs.microsoft.com/en-us/azure/role-based-access-control/resource-provider-operations#microsoftkubernetes
+  - https://github.com/elastic/detection-rules/blob/da3852b681cf1a33898b1535892eab1f3a76177a/rules/integrations/azure/defense_evasion_kubernetes_events_deleted.toml
+logsource:
+    product: azure
+    service: activitylogs
+detection:
+    condition: selection
+    selection:
+        operationName: MICROSOFT.KUBERNETES/CONNECTEDCLUSTERS/EVENTS.K8S.IO/EVENTS/DELETE
+falsepositives: Event deletions may be done by a system or network administrator.
+    Verify whether the username, hostname, and/or resource name should be making changes
+    in your environment. Events deletions from unfamiliar users or hosts should be
+    investigated. If known behavior is causing false positives, it can be exempted
+    from the rule.
+level: medium
+customer: 'demo'
+modified: 2022/08/23
+tags:
+  - attack.defense_evasion
+  - attack.t1562
+  - attack.t1562.001
+  - DEMO

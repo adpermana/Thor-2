@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Publicly Accessible RDP Service
+id: 1fc0809e-06bf-4de3-ad52-25e5263b7623
+status: test
+description: |
+    Detects connections from routable IPs to an RDP listener. Which is indicative of a publicly-accessible RDP service.
+author: Josh Brower @DefensiveDepth
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/08/22 14:01:31
+references:
+  - https://attack.mitre.org/techniques/T1021/001/
+logsource:
+    product: zeek
+    service: rdp
+detection:
+    condition: not selection
+    selection:
+        id.orig_h|cidr:
+          - ::1/128
+          - 10.0.0.0/8
+          - 127.0.0.0/8
+          - 172.16.0.0/12
+          - 192.168.0.0/16
+          - 169.254.0.0/16
+          - 2620:83:8000::/48
+          - fc00::/7
+          - fe80::/10
+falsepositives: Although it is recommended to NOT have RDP exposed to the internet,
+    verify that this is a) allowed b) the server has not already been compromised
+    via some brute force or remote exploit since it has been exposed to the internet.
+    Work to secure the server if you are unable to remove it from being exposed to
+    the internet.
+level: high
+customer: 'demo'
+modified: 2024/03/13
+tags:
+  - attack.lateral_movement
+  - attack.t1021.001
+  - DEMO

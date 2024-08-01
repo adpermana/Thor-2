@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Dllhost.EXE Execution Anomaly
+id: e7888eb1-13b0-4616-bd99-4bc0c2b054b9
+status: experimental
+description: Detects a "dllhost" process spawning with no commandline arguments which
+    is very rare to happen and could indicate process injection activity or malware
+    mimicking similar system processes.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/27 13:35:51
+references:
+  - https://redcanary.com/blog/child-processes/
+  - https://nasbench.medium.com/what-is-the-dllhost-exe-process-actually-running-ef9fe4c19c08
+  - https://www.ncsc.gov.uk/static-assets/documents/malware-analysis-reports/goofy-guineapig/NCSC-MAR-Goofy-Guineapig.pdf
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_null:
+        CommandLine: []
+    selection:
+        CommandLine:
+          - dllhost.exe
+          - dllhost
+        Image|endswith: \dllhost.exe
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/05/15
+tags:
+  - attack.defense_evasion
+  - attack.t1055
+  - DEMO

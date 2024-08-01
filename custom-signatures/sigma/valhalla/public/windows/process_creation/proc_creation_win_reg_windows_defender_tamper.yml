@@ -1,0 +1,83 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Windows Defender Registry Key Tampering Via Reg.EXE
+id: 452bce90-6fb0-43cc-97a5-affc283139b3
+status: experimental
+description: Detects the usage of "reg.exe" to tamper with different Windows Defender
+    registry keys in order to disable some important features related to protection
+    and detection
+author: Florian Roth (Nextron Systems), Swachchhanda Shrawan Poudel, Nasreddine Bencherchali
+    (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/03/22 22:03:41
+references:
+  - https://thedfirreport.com/2022/03/21/apt35-automates-initial-access-using-proxyshell/
+  - https://github.com/swagkarna/Defeat-Defender-V1.2.0
+  - https://www.elevenforum.com/t/video-guide-how-to-completely-disable-microsoft-defender-antivirus.14608/page-2
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_root_* and 1 of selection_dword_*
+    selection_dword_0:
+        CommandLine|contains:
+          - DisallowExploitProtectionOverride
+          - EnableControlledFolderAccess
+          - MpEnablePus
+          - PUAProtection
+          - SpynetReporting
+          - SubmitSamplesConsent
+          - TamperProtection
+        CommandLine|contains|all:
+          - ' add '
+          - d 0
+    selection_dword_1:
+        CommandLine|contains:
+          - DisableAntiSpyware
+          - DisableAntiSpywareRealtimeProtection
+          - DisableAntiVirus
+          - DisableArchiveScanning
+          - DisableBehaviorMonitoring
+          - DisableBlockAtFirstSeen
+          - DisableConfig
+          - DisableEnhancedNotifications
+          - DisableIntrusionPreventionSystem
+          - DisableIOAVProtection
+          - DisableOnAccessProtection
+          - DisablePrivacyMode
+          - DisableRealtimeMonitoring
+          - DisableRoutinelyTakingAction
+          - DisableScanOnRealtimeEnable
+          - DisableScriptScanning
+          - Notification_Suppress
+          - SignatureDisableUpdateOnStartupWithoutEngine
+        CommandLine|contains|all:
+          - ' add '
+          - d 1
+    selection_root_img:
+      - Image|endswith: \reg.exe
+      - OriginalFileName: reg.exe
+    selection_root_path:
+        CommandLine|contains:
+          - SOFTWARE\Microsoft\Windows Defender\
+          - SOFTWARE\Policies\Microsoft\Windows Defender Security Center
+          - SOFTWARE\Policies\Microsoft\Windows Defender\
+falsepositives: Rare legitimate use by administrators to test software (should always
+    be investigated)
+level: high
+customer: 'demo'
+modified: 2023/06/05
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+  - DEMO

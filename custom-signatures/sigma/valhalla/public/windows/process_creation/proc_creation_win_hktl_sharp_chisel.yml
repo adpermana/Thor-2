@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - SharpChisel Execution
+id: cf93e05e-d798-4d9e-b522-b0248dc61eaf
+related:
+  - type: similar
+    id: 8b0e12da-d3c3-49db-bb4f-256703f380e5
+status: test
+description: Detects usage of the Sharp Chisel via the commandline arguments
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/05 14:18:01
+references:
+  - https://github.com/shantanu561993/SharpChisel
+  - https://www.sentinelone.com/labs/wading-through-muddy-waters-recent-activity-of-an-iranian-state-sponsored-threat-actor/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - Image|endswith: \SharpChisel.exe
+      - Product: SharpChisel
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/02/13
+tags:
+  - attack.command_and_control
+  - attack.t1090.001
+  - DEMO

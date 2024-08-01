@@ -1,0 +1,71 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Failed Logon From Public IP
+id: f88e112a-21aa-44bd-9b01-6ee2a2bbbed1
+status: test
+description: Detects a failed logon attempt from a public IP. A login from a public
+    IP can indicate a misconfigured firewall or network boundary.
+author: NVISO
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/05/06 12:37:21
+references:
+  - https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4625
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_ip_privatev4:
+        IpAddress|startswith:
+          - "10."
+          - 192.168.
+          - 172.16.
+          - 172.17.
+          - 172.18.
+          - 172.19.
+          - 172.20.
+          - 172.21.
+          - 172.22.
+          - 172.23.
+          - 172.24.
+          - 172.25.
+          - 172.26.
+          - 172.27.
+          - 172.28.
+          - 172.29.
+          - 172.30.
+          - 172.31.
+          - "127."
+          - 169.254.
+    filter_main_ip_privatev6:
+      - IpAddress: ::1
+      - IpAddress|startswith:
+          - 'fe80::'
+          - 'fc00::'
+    filter_main_ip_unknown:
+        IpAddress|contains: '-'
+    selection:
+        EventID: "4625"
+falsepositives:
+  - Legitimate logon attempts over the internet
+  - IPv4-to-IPv6 mapped IPs
+level: medium
+customer: 'demo'
+modified: 2023/01/11
+tags:
+  - attack.initial_access
+  - attack.persistence
+  - attack.t1078
+  - attack.t1190
+  - attack.t1133
+  - DEMO

@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Cat Sudoers
+id: 0f79c4d2-4e1f-4683-9c36-b5469a665e06
+status: test
+description: Detects the execution of a cat /etc/sudoers to list all users that have
+    sudo rights
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/20 08:55:31
+references:
+  - https://github.com/sleventyeleven/linuxprivchecker/
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains: ' /etc/sudoers'
+        Image|endswith:
+          - /cat
+          - grep
+          - /head
+          - /tail
+          - /more
+falsepositives: Legitimate administration activities
+level: medium
+customer: 'demo'
+modified: 2022/09/15
+tags:
+  - attack.reconnaissance
+  - attack.t1592.004
+  - DEMO

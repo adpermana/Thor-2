@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Creation Of A Local User Account
+id: 51719bf5-e4fd-4e44-8ba8-b830e7ac0731
+status: test
+description: Detects the creation of a new user account. Such accounts may be used
+    for persistence that do not require persistent remote access tools to be deployed
+    on the system.
+author: Alejandro Ortuno, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/06 13:55:01
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1136.001/T1136.001.md
+  - https://ss64.com/osx/sysadminctl.html
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    condition: 1 of selection_*
+    selection_dscl:
+        CommandLine|contains: create
+        Image|endswith: /dscl
+    selection_sysadminctl:
+        CommandLine|contains: addUser
+        Image|endswith: /sysadminctl
+falsepositives: Legitimate administration activities
+level: low
+customer: 'demo'
+modified: 2023/02/18
+tags:
+  - attack.t1136.001
+  - attack.persistence
+  - DEMO

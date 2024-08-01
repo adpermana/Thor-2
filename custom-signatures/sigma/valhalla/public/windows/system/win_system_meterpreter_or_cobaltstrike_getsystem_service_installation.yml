@@ -1,0 +1,55 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Meterpreter or Cobalt Strike Getsystem Service Installation - System
+id: 843544a7-56e0-4dcc-a44f-5cc266dd97d6
+status: test
+description: Detects the use of getsystem Meterpreter/Cobalt Strike command by detecting
+    a specific service installation
+author: Teymur Kheirkhabarov, Ecco, Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/26 00:05:31
+references:
+  - https://speakerdeck.com/heirhabarov/hunting-for-privilege-escalation-in-windows-environment
+  - https://blog.cobaltstrike.com/2014/04/02/what-happens-when-i-type-getsystem/
+logsource:
+    product: windows
+    service: system
+detection:
+    condition: selection_id and 1 of selection_cli_*
+    selection_cli_cmd:
+        ImagePath|contains:
+          - cmd
+          - '%COMSPEC%'
+        ImagePath|contains|all:
+          - /c
+          - echo
+          - \pipe\
+    selection_cli_rundll:
+        ImagePath|contains|all:
+          - rundll32
+          - .dll,a
+          - '/p:'
+    selection_cli_share:
+        ImagePath|startswith: \\\\127.0.0.1\\ADMIN$\
+    selection_id:
+        EventID: "7045"
+        Provider_Name: Service Control Manager
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/11/15
+tags:
+  - attack.privilege_escalation
+  - attack.t1134.001
+  - attack.t1134.002
+  - DEMO

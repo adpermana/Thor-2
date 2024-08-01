@@ -1,0 +1,29 @@
+title: Suspicious Schtasks WScript Combo
+id: 38c5a956-175b-4f91-8b72-9864f6db2d68
+status: experimental
+description: Detects suspicious scheduled task creation that rerefences to wscript and VBS code
+author: Florian Roth
+date: 2022/02/05
+tags:
+    - attack.execution
+    - attack.t1053.005
+    - attack.s0111
+references:
+    - https://www.microsoft.com/security/blog/2022/02/04/actinium-targets-ukrainian-organizations/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains|all:
+            - 'schtasks'
+            - 'create'
+            - 'wscript'
+            - 'vbscript'
+    condition: selection
+fields:
+    - CommandLine
+    - ParentCommandLine
+falsepositives:
+    - Unknown
+level: high

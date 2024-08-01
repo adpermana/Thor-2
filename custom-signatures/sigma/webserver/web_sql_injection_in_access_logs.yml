@@ -1,0 +1,78 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: SQL Injection Strings In URI
+id: 5513deaf-f49a-46c2-a6c8-3f111b5cb453
+status: test
+description: Detects potential SQL injection attempts via GET requests in access logs.
+author: Saw Win Naung, Nasreddine Bencherchali (Nextron Systems), Thurein Oo (Yoma
+    Bank)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/02/22 12:51:21
+references:
+  - https://www.acunetix.com/blog/articles/exploiting-sql-injection-example/
+  - https://www.acunetix.com/blog/articles/using-logs-to-investigate-a-web-application-attack/
+  - https://brightsec.com/blog/sql-injection-payloads/
+  - https://github.com/payloadbox/sql-injection-payload-list
+  - https://book.hacktricks.xyz/pentesting-web/sql-injection/mysql-injection
+logsource:
+    category: webserver
+detection:
+    condition: selection and keywords and not 1 of filter_main_*
+    filter_main_status:
+        sc-status: "404"
+    keywords:
+      - '@@version'
+      - '%271%27%3D%271'
+      - '=select '
+      - =select(
+      - =select%20
+      - concat_ws(
+      - CONCAT(0x
+      - from mysql.innodb_table_stats
+      - from%20mysql.innodb_table_stats
+      - group_concat(
+      - information_schema.tables
+      - json_arrayagg(
+      - or 1=1#
+      - or%201=1#
+      - 'order by '
+      - order%20by%20
+      - 'select * '
+      - select database()
+      - select version()
+      - select%20*%20
+      - select%20database()
+      - select%20version()
+      - select%28sleep%2810%29
+      - SELECTCHAR(
+      - table_schema
+      - UNION ALL SELECT
+      - UNION SELECT
+      - UNION%20ALL%20SELECT
+      - UNION%20SELECT
+      - '''1''=''1'
+    selection:
+        cs-method: GET
+falsepositives:
+  - Java scripts and CSS Files
+  - User searches in search boxes of the respective website
+  - Internal vulnerability scanners can cause some serious FPs when used, if you experience
+    a lot of FPs due to this think of adding more filters such as "User Agent" strings
+    and more response codes
+level: high
+customer: 'demo'
+modified: 2023/09/04
+tags:
+  - attack.initial_access
+  - attack.t1190
+  - DEMO

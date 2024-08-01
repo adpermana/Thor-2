@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Keyboard Layout Load
+id: 34aa0252-6039-40ff-951f-939fd6ce47d8
+status: test
+description: Detects the keyboard preload installation with a suspicious keyboard
+    layout, e.g. Chinese, Iranian or Vietnamese layout load in user session on systems
+    maintained by US staff only
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/12 14:22:21
+references:
+  - https://renenyffenegger.ch/notes/Windows/registry/tree/HKEY_CURRENT_USER/Keyboard-Layout/Preload/index
+  - https://github.com/SwiftOnSecurity/sysmon-config/pull/92/files
+logsource:
+    category: registry_set
+    product: windows
+    definition: 'Requirements: Sysmon config that monitors \Keyboard Layout\Preload
+        subkey of the HKLU hives - see https://github.com/SwiftOnSecurity/sysmon-config/pull/92/files'
+detection:
+    condition: selection_registry
+    selection_registry:
+        Details|contains:
+          - "429"
+          - "50429"
+          - 0000042a
+        TargetObject|contains:
+          - \Keyboard Layout\Preload\
+          - \Keyboard Layout\Substitutes\
+falsepositives: Administrators or users that actually use the selected keyboard layouts
+    (heavily depends on the organisation's user base)
+level: medium
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.resource_development
+  - attack.t1588.002
+  - DEMO

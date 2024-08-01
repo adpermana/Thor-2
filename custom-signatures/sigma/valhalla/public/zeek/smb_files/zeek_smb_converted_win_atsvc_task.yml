@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Remote Task Creation via ATSVC Named Pipe - Zeek
+id: dde85b37-40cd-4a94-b00c-0b8794f956b5
+related:
+  - type: derived
+    id: f6de6525-4509-495a-8a82-1f8b0ed73a00
+status: test
+description: Detects remote task creation via at.exe or API interacting with ATSVC
+    namedpipe
+author: Samir Bousseaden, @neu5rn
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/04/03 17:28:41
+references:
+  - https://blog.menasec.net/2019/03/threat-hunting-25-scheduled-tasks-for.html
+logsource:
+    product: zeek
+    service: smb_files
+detection:
+    condition: selection
+    selection:
+        name: atsvc
+        path: \\\*\IPC$
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/12/27
+tags:
+  - attack.lateral_movement
+  - attack.persistence
+  - car.2013-05-004
+  - car.2015-04-001
+  - attack.t1053.002
+  - DEMO

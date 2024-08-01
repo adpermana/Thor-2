@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Windows Credential Manager Access via VaultCmd
+id: 58f50261-c53b-4c88-bd12-1d71f12eda4c
+status: test
+description: List credentials currently stored in Windows Credential Manager via the
+    native Windows utility vaultcmd.exe
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/04/08 18:03:11
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1555.004/T1555.004.md#atomic-test-1---access-saved-credentials-via-vaultcmd
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection*
+    selection_cli:
+        CommandLine|contains: '/listcreds:'
+    selection_img:
+      - Image|endswith: \VaultCmd.exe
+      - OriginalFileName: VAULTCMD.EXE
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/05/13
+tags:
+  - attack.credential_access
+  - attack.t1555.004
+  - DEMO

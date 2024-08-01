@@ -1,0 +1,22 @@
+title: APT41 Process Patterns
+id: ced8e2d2-1ea5-4e36-9345-d9dd900e91c6
+status: experimental
+description: Detects suspicious process patterns as observed in APT41 intrusions
+author: Florian Roth
+references:
+    - https://www.mandiant.com/resources/apt41-us-state-governments
+date: 2022/03/08
+tags:
+    - attack.persistence
+    - attack.t1053.005
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        ParentCommandLine|endswith: '\svchost.exe -k netsvcs -p -s Schedule'
+        CommandLine|contains: 'SHELL32.DLL,ShellExec_RunDLLA'
+    condition: selection
+falsepositives:
+    - False positives depend on scripts and administrative tools used in the monitored environment
+level: high

@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Remote Code Execute via Winrm.vbs
+id: 9df0dd3a-1a5c-47e3-a2bc-30ed177646a0
+status: test
+description: Detects an attempt to execute code or create service on remote host via
+    winrm.vbs.
+author: Julia Fomina, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/07 14:32:01
+references:
+  - https://twitter.com/bohops/status/994405551751815170
+  - https://redcanary.com/blog/lateral-movement-winrm-wmi/
+  - https://lolbas-project.github.io/lolbas/Scripts/Winrm/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection*
+    selection_cli:
+        CommandLine|contains|all:
+          - winrm
+          - invoke Create wmicimv2/Win32_
+          - -r:http
+    selection_img:
+      - Image|endswith: \cscript.exe
+      - OriginalFileName: cscript.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/03/03
+tags:
+  - attack.defense_evasion
+  - attack.t1216
+  - DEMO

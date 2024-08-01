@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Guest Users Invited To Tenant By Non Approved Inviters
+id: 4ad97bf5-a514-41a4-abd3-4f3455ad4865
+status: test
+description: Detects guest users being invited to tenant by non-approved inviters
+author: MikeDuddington, '@dudders1'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/28 19:55:31
+references:
+  - https://docs.microsoft.com/en-gb/azure/active-directory/fundamentals/security-operations-user-accounts#monitoring-external-user-sign-ins
+logsource:
+    product: azure
+    service: auditlogs
+detection:
+    condition: selection and not filter
+    filter:
+        InitiatedBy|contains: <approved guest inviter use OR for multiple>
+    selection:
+        Category: UserManagement
+        OperationName: Invite external user
+falsepositives: If this was approved by System Administrator.
+level: medium
+customer: 'demo'
+tags:
+  - attack.initial_access
+  - attack.t1078
+  - DEMO

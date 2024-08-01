@@ -1,0 +1,77 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Persistence Via Disk Cleanup Handler - Registry
+id: d4f4e0be-cf12-439f-9e25-4e2cdcf7df5a
+status: test
+description: |
+    Detects when an attacker modifies values of the Disk Cleanup Handler in the registry to achieve persistence.
+    The disk cleanup manager is part of the operating system. It displays the dialog box […]
+    The user has the option of enabling or disabling individual handlers by selecting or clearing their check box in the disk cleanup manager's UI.
+    Although Windows comes with a number of disk cleanup handlers, they aren't designed to handle files produced by other applications.
+    Instead, the disk cleanup manager is designed to be flexible and extensible by enabling any developer to implement and register their own disk cleanup handler.
+    Any developer can extend the available disk cleanup services by implementing and registering a disk cleanup handler.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/21 20:47:21
+references:
+  - https://persistence-info.github.io/Data/diskcleanuphandler.html
+  - https://www.hexacorn.com/blog/2018/09/02/beyond-good-ol-run-key-part-86/
+logsource:
+    category: registry_add
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        TargetObject|endswith:
+          - \Active Setup Temp Folders
+          - \BranchCache
+          - \Content Indexer Cleaner
+          - \D3D Shader Cache
+          - \Delivery Optimization Files
+          - \Device Driver Packages
+          - \Diagnostic Data Viewer database files
+          - \Downloaded Program Files
+          - \DownloadsFolder
+          - \Feedback Hub Archive log files
+          - \Internet Cache Files
+          - \Language Pack
+          - \Microsoft Office Temp Files
+          - \Offline Pages Files
+          - \Old ChkDsk Files
+          - \Previous Installations
+          - \Recycle Bin
+          - \RetailDemo Offline Content
+          - \Setup Log Files
+          - \System error memory dump files
+          - \System error minidump files
+          - \Temporary Files
+          - \Temporary Setup Files
+          - \Temporary Sync Files
+          - \Thumbnail Cache
+          - \Update Cleanup
+          - \Upgrade Discarded Files
+          - \User file versions
+          - \Windows Defender
+          - \Windows Error Reporting Files
+          - \Windows ESD installation files
+          - \Windows Upgrade Log Files
+    selection:
+        EventType: CreateKey
+        TargetObject|contains: \SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\
+falsepositives: Legitimate new entry added by windows
+level: medium
+customer: 'demo'
+modified: 2023/02/07
+tags:
+  - attack.persistence
+  - DEMO

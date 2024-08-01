@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Local File Read Vulnerability In JVM Based Application
+id: e032f5bc-4563-4096-ae3b-064bab588685
+status: test
+description: |
+    Detects potential local file read vulnerability in JVM based apps.
+    If the exceptions are caused due to user input and contain path traversal payloads then it's a red flag.
+author: Moti Harmats
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/02/11 22:20:01
+references:
+  - https://www.wix.engineering/post/threat-and-vulnerability-hunting-with-application-server-error-logs
+logsource:
+    category: application
+    product: jvm
+    definition: 'Requirements: application error logs must be collected (with LOG_LEVEL=ERROR
+        and above)'
+detection:
+    condition: keywords_local_file_read
+    keywords_local_file_read:
+        '|all':
+          - FileNotFoundException
+          - /../../..
+falsepositives: Application bugs
+level: high
+customer: 'demo'
+tags:
+  - attack.initial_access
+  - attack.t1190
+  - DEMO

@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Renamed Comsvcs DLL Loaded By Rundll32
+id: 8cde342c-ba48-4b74-b615-172c330f2e93
+status: test
+description: Detects rundll32 loading a renamed comsvcs.dll to dump process memory
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/14 18:17:11
+references:
+  - https://twitter.com/sbousseaden/status/1555200155351228419
+logsource:
+    category: image_load
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        ImageLoaded|endswith: \comsvcs.dll
+    selection:
+        Hashes|contains:
+          - IMPHASH=eed93054cb555f3de70eaa9787f32ebb
+          - IMPHASH=5e0dbdec1fce52daae251a110b4f309d
+          - IMPHASH=eadbccbb324829acb5f2bbe87e5549a8
+          - IMPHASH=407ca0f7b523319d758a40d7c0193699
+          - IMPHASH=281d618f4e6271e527e6386ea6f748de
+        Image|endswith: \rundll32.exe
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/02/17
+tags:
+  - attack.credential_access
+  - attack.defense_evasion
+  - attack.t1003.001
+  - DEMO

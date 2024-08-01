@@ -1,0 +1,55 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Cleartext Protocol Usage Via Netflow
+id: 7e4bfe58-4a47-4709-828d-d86c78b7cc1f
+status: stable
+description: |
+    Ensure that all account usernames and authentication credentials are transmitted across networks using encrypted channels
+    Ensure that an encryption is used for all sensitive information in transit.
+    Ensure that an encrypted channels is used for all administrative account access.
+author: Alexandr Yampolskyi, SOC Prime
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/03/26 15:33:41
+references:
+  - https://www.cisecurity.org/controls/cis-controls-list/
+  - https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf
+  - https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.04162018.pdf
+logsource:
+    service: netflow
+detection:
+    condition: selection
+    selection:
+        destination.port:
+          - "8080"
+          - "21"
+          - "80"
+          - "23"
+          - "50000"
+          - "1521"
+          - "27017"
+          - "1433"
+          - "11211"
+          - "3306"
+          - "15672"
+          - "5900"
+          - "5901"
+          - "5902"
+          - "5903"
+          - "5904"
+falsepositives: Unknown
+level: low
+customer: 'demo'
+modified: 2022/11/18
+tags:
+  - attack.credential_access
+  - DEMO

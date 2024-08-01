@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Ransomware or Unauthorized MBR Tampering Via Bcdedit.EXE
+id: c9fbe8e9-119d-40a6-9b59-dd58a5d84429
+status: test
+description: Detects potential malicious and unauthorized usage of bcdedit.exe
+author: '@neu5ron'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/02/07 23:02:51
+references:
+  - https://docs.microsoft.com/en-us/windows-hardware/drivers/devtest/bcdedit--set
+  - https://twitter.com/malwrhunterteam/status/1372536434125512712/photo/2
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains:
+          - delete
+          - deletevalue
+          - import
+          - safeboot
+          - network
+    selection_img:
+      - Image|endswith: \bcdedit.exe
+      - OriginalFileName: bcdedit.exe
+level: medium
+customer: 'demo'
+modified: 2023/02/15
+tags:
+  - attack.defense_evasion
+  - attack.t1070
+  - attack.persistence
+  - attack.t1542.003
+  - DEMO

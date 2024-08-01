@@ -1,0 +1,53 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Service Installation Script
+id: 70f00d10-60b2-4f34-b9a0-dc3df3fe762a
+status: test
+description: Detects suspicious service installation scripts
+author: pH-T (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/03/18 16:31:51
+references:
+  - Internal Research
+logsource:
+    product: windows
+    service: system
+detection:
+    condition: all of selection_*
+    selection_binaries:
+        ImagePath|contains:
+          - cscript
+          - mshta
+          - powershell
+          - pwsh
+          - regsvr32
+          - rundll32
+          - wscript
+    selection_cmd_flags:
+        ImagePath|contains|windash:
+          - ' -c '
+          - ' -r '
+          - ' -k '
+    selection_eid:
+        EventID: "7045"
+        Provider_Name: Service Control Manager
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2024/03/05
+tags:
+  - attack.persistence
+  - attack.privilege_escalation
+  - car.2013-09-005
+  - attack.t1543.003
+  - DEMO

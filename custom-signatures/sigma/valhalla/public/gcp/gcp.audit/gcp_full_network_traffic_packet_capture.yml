@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Google Full Network Traffic Packet Capture
+id: 980a7598-1e7f-4962-9372-2d754c930d0e
+status: test
+description: Identifies potential full network packet capture in gcp. This feature
+    can potentially be abused to read sensitive data from unencrypted internal traffic.
+author: Austin Songer @austinsonger
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/13 16:56:51
+references:
+  - https://cloud.google.com/kubernetes-engine/docs/how-to/audit-logging
+  - https://developers.google.com/resources/api-libraries/documentation/compute/v1/java/latest/com/google/api/services/compute/Compute.PacketMirrorings.html
+logsource:
+    product: gcp
+    service: gcp.audit
+detection:
+    condition: selection
+    selection:
+        gcp.audit.method_name:
+          - v*.Compute.PacketMirrorings.Get
+          - v*.Compute.PacketMirrorings.Delete
+          - v*.Compute.PacketMirrorings.Insert
+          - v*.Compute.PacketMirrorings.Patch
+          - v*.Compute.PacketMirrorings.List
+          - v*.Compute.PacketMirrorings.aggregatedList
+falsepositives:
+  - Full Network Packet Capture may be done by a system or network administrator.
+  - If known behavior is causing false positives, it can be exempted from the rule.
+level: medium
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.collection
+  - attack.t1074
+  - DEMO

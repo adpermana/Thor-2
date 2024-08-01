@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: RunDLL32 Spawning Explorer
+id: caa06de8-fdef-4c91-826a-7f9e163eef4b
+status: test
+description: Detects RunDLL32.exe spawning explorer.exe as child, which is very uncommon,
+    often observes Gamarue spawning the explorer.exe process in an unusual way
+author: elhoim, CD_ROM_
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/04/27 12:37:01
+references:
+  - https://redcanary.com/blog/intelligence-insights-november-2021/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        ParentCommandLine|contains: \shell32.dll,Control_RunDLL
+    selection:
+        Image|endswith: \explorer.exe
+        ParentImage|endswith: \rundll32.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/05/25
+tags:
+  - attack.defense_evasion
+  - attack.t1218.011
+  - DEMO

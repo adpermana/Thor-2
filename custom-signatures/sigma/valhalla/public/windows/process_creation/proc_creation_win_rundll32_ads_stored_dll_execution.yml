@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Rundll32 Execution With DLL Stored In ADS
+id: 9248c7e1-2bf3-4661-a22c-600a8040b446
+status: test
+description: Detects execution of rundll32 where the DLL being called is stored in
+    an Alternate Data Stream (ADS).
+author: Harjot Singh, '@cyb3rjy0t'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/21 18:29:41
+references:
+  - https://lolbas-project.github.io/lolbas/Binaries/Rundll32
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|re: '[Rr][Uu][Nn][Dd][Ll][Ll]32(\.[Ee][Xx][Ee])? \S+?\w:\S+?:'
+    selection_img:
+      - Image|endswith: \rundll32.exe
+      - OriginalFileName: RUNDLL32.EXE
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/02/08
+tags:
+  - attack.defense_evasion
+  - attack.t1564.004
+  - DEMO

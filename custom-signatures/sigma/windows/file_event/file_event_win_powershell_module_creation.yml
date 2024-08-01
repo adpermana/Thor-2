@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PowerShell Module File Created
+id: e36941d0-c0f0-443f-bc6f-cb2952eb69ea
+status: experimental
+description: Detects the creation of a new PowerShell module ".psm1", ".psd1", ".dll",
+    ".ps1", etc.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/09 13:49:51
+references:
+  - Internal Research
+  - https://learn.microsoft.com/en-us/powershell/scripting/developer/module/understanding-a-windows-powershell-module?view=powershell-7.3
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+        TargetFilename|contains:
+          - \WindowsPowerShell\Modules\
+          - \PowerShell\7\Modules\
+falsepositives: Likely
+level: low
+customer: 'demo'
+tags:
+  - attack.persistence
+  - DEMO

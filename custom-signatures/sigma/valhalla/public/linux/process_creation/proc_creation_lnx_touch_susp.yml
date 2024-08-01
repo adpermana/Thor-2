@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Touch Suspicious Service File
+id: 31545105-3444-4584-bebf-c466353230d2
+status: test
+description: Detects usage of the "touch" process in service file.
+author: Joseliyo Sanchez, @Joseliyo_Jstnk
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/11 13:45:51
+references:
+  - https://blogs.blackberry.com/
+  - https://twitter.com/Joseliyo_Jstnk/status/1620131033474822144
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains: ' -t '
+        CommandLine|endswith: .service
+        Image|endswith: /touch
+falsepositives: Admin changing date of files.
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1070.006
+  - DEMO

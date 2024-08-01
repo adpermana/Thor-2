@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PowerShell Module File Created By Non-PowerShell Process
+id: e3845023-ca9a-4024-b2b2-5422156d5527
+status: experimental
+description: Detects the creation of a new PowerShell module ".psm1", ".psd1", ".dll",
+    ".ps1", etc. by a non-PowerShell process
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/09 20:28:21
+references:
+  - Internal Research
+  - https://learn.microsoft.com/en-us/powershell/scripting/developer/module/understanding-a-windows-powershell-module?view=powershell-7.3
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_pwsh:
+        Image|endswith:
+          - :\Program Files\PowerShell\7-preview\pwsh.exe
+          - :\Program Files\PowerShell\7\pwsh.exe
+          - :\Windows\System32\poqexec.exe
+          - :\Windows\System32\WindowsPowerShell\v1.0\powershell_ise.exe
+          - :\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+          - :\Windows\SysWOW64\poqexec.exe
+          - :\Windows\SysWOW64\WindowsPowerShell\v1.0\powershell_ise.exe
+          - :\Windows\SysWOW64\WindowsPowerShell\v1.0\powershell.exe
+    selection:
+        TargetFilename|contains:
+          - \WindowsPowerShell\Modules\
+          - \PowerShell\7\Modules\
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/10/18
+tags:
+  - attack.persistence
+  - DEMO

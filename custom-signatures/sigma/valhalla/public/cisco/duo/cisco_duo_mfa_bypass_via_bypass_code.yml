@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-06-21 19:00
+# Generated for User: demo
+# Number of Rules: 3228
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Cisco Duo Successful MFA Authentication Via Bypass Code
+id: 6f7e1c10-2dc9-4312-adb6-9574ff09a5c8
+status: experimental
+description: |
+    Detects when a successful MFA authentication occurs due to the use of a bypass code.
+    A bypass code is a temporary passcode created by an administrator for a specific user to access a Duo-protected application. These are generally used as "backup codes," so that enrolled users who are having problems with their mobile devices (e.g., mobile service is disrupted, the device is lost or stolen, etc.) or who temporarily can't use their enrolled devices (on a plane without mobile data services) can still access their Duo-protected systems.
+author: Nikita Khalimonenkov
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/04/17 20:01:41
+references:
+  - https://duo.com/docs/adminapi#logs
+  - https://help.duo.com/s/article/6327?language=en_US
+logsource:
+    product: cisco
+    service: duo
+detection:
+    condition: selection
+    selection:
+        event_type: authentication
+        reason: bypass_user
+falsepositives: Legitimate user that was assigned on purpose to a bypass group
+level: medium
+customer: 'demo'
+tags:
+  - attack.credential_access
+  - attack.defense_evasion
+  - attack.initial_access
+  - DEMO

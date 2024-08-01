@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Reg Add Suspicious Paths
+id: b7e2a8d4-74bb-4b78-adc9-3f92af2d4829
+status: test
+description: Detects when an adversary uses the reg.exe utility to add or modify new
+    keys or subkeys
+author: frack113, Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/19 12:13:01
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/40b77d63808dd4f4eafb83949805636735a1fd15/atomics/T1112/T1112.md
+  - https://github.com/redcanaryco/atomic-red-team/blob/40b77d63808dd4f4eafb83949805636735a1fd15/atomics/T1562.001/T1562.001.md
+  - https://www.absolomb.com/2018-01-26-Windows-Privilege-Escalation-Guide/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_path:
+        CommandLine|contains:
+          - \AppDataLow\Software\Microsoft\
+          - \Policies\Microsoft\Windows\OOBE
+          - \Policies\Microsoft\Windows NT\CurrentVersion\Winlogon
+          - \SOFTWARE\Microsoft\Windows NT\Currentversion\Winlogon
+          - \CurrentControlSet\Control\SecurityProviders\WDigest
+          - \Microsoft\Windows Defender\
+    selection_reg:
+      - Image|endswith: \reg.exe
+      - OriginalFileName: reg.exe
+falsepositives: Rare legitimate add to registry via cli (to these locations)
+level: high
+customer: 'demo'
+modified: 2022/10/10
+tags:
+  - attack.defense_evasion
+  - attack.t1112
+  - attack.t1562.001
+  - DEMO

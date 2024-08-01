@@ -1,0 +1,61 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential DLL Sideloading Of Non-Existent DLLs From System Folders
+id: 6b98b92b-4f00-4f62-b4fe-4d1920215771
+related:
+  - type: similar
+    id: df6ecb8b-7822-4f4b-b412-08f524b4576c
+  - type: obsoletes
+    id: 602a1f13-c640-4d73-b053-be9a2fa58b77
+status: test
+description: |
+    Detects DLL sideloading of system DLLs that are not present on the system by default (at least not in system directories).
+    Usually this technique is used to achieve UAC bypass or privilege escalation.
+author: Nasreddine Bencherchali (Nextron Systems), SBousseaden
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/12/09 22:43:51
+references:
+  - https://decoded.avast.io/martinchlumecky/png-steganography/
+  - https://posts.specterops.io/lateral-movement-scm-and-dll-hijacking-primer-d2f61e8ab992
+  - https://clement.notin.org/blog/2020/09/12/CVE-2020-7315-McAfee-Agent-DLL-injection/
+  - https://github.com/Wh04m1001/SysmonEoP
+  - https://www.hexacorn.com/blog/2013/12/08/beyond-good-ol-run-key-part-5/
+  - http://remoteawesomethoughts.blogspot.com/2019/05/windows-10-task-schedulerservice.html
+logsource:
+    category: image_load
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_ms_signed:
+        Signature: Microsoft Windows
+        SignatureStatus: Valid
+        Signed: "true"
+    selection:
+        ImageLoaded|endswith:
+          - :\Windows\System32\TSMSISrv.dll
+          - :\Windows\System32\TSVIPSrv.dll
+          - :\Windows\System32\wbem\wbemcomn.dll
+          - :\Windows\System32\WLBSCTRL.dll
+          - :\Windows\System32\wow64log.dll
+          - :\Windows\System32\WptsExtensions.dll
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2024/01/10
+tags:
+  - attack.defense_evasion
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1574.001
+  - attack.t1574.002
+  - DEMO

@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: New Firewall Rule Added Via Netsh.EXE
+id: cd5cfd80-aa5f-44c0-9c20-108c4ae12e3c
+status: test
+description: Detects the addition of a new rule to the Windows firewall via netsh
+author: Markus Neis, Sander Wiebing
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/01/29 14:58:01
+references:
+  - https://www.operationblockbuster.com/wp-content/uploads/2016/02/Operation-Blockbuster-RAT-and-Staging-Report.pdf
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_* and not 1 of filter_optional_*
+    filter_optional_dropbox:
+        CommandLine|contains:
+          - advfirewall firewall add rule name=Dropbox dir=in action=allow "program=?:\Program
+            Files (x86)\Dropbox\Client\Dropbox.exe" enable=yes profile=Any
+          - advfirewall firewall add rule name=Dropbox dir=in action=allow "program=?:\Program
+            Files\Dropbox\Client\Dropbox.exe" enable=yes profile=Any
+    selection_cli:
+        CommandLine|contains|all:
+          - ' firewall '
+          - ' add '
+    selection_img:
+      - Image|endswith: \netsh.exe
+      - OriginalFileName: netsh.exe
+falsepositives:
+  - Legitimate administration activity
+  - Software installations
+level: medium
+customer: 'demo'
+modified: 2023/02/10
+tags:
+  - attack.defense_evasion
+  - attack.t1562.004
+  - attack.s0246
+  - DEMO

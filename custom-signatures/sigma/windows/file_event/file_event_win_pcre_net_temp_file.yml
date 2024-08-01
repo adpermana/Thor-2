@@ -1,0 +1,37 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PCRE.NET Package Temp Files
+id: 6e90ae7a-7cd3-473f-a035-4ebb72d961da
+status: test
+description: Detects processes creating temp files related to PCRE.NET package
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/29 12:16:41
+references:
+  - https://twitter.com/rbmaslen/status/1321859647091970051
+  - https://twitter.com/tifkin_/status/1321916444557365248
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetFilename|contains: \AppData\Local\Temp\ba9ea7344a4a5f591d6e5dc32a13494b\
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.execution
+  - attack.t1059
+  - DEMO

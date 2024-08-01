@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PUA - Suspicious ActiveDirectory Enumeration Via AdFind.EXE
+id: 455b9d50-15a1-4b99-853f-8d37655a4c1b
+related:
+  - type: similar
+    id: 9a132afa-654e-11eb-ae93-0242ac130002
+status: test
+description: Detects active directory enumeration activity using known AdFind CLI
+    flags
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/12/13 20:54:41
+references:
+  - https://www.joeware.net/freetools/tools/adfind/
+  - https://social.technet.microsoft.com/wiki/contents/articles/7535.adfind-command-examples.aspx
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1087.002/T1087.002.md
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_enum_ad:
+        CommandLine|contains: -sc admincountdmp
+    selection_enum_exchange:
+        CommandLine|contains: -sc exchaddresses
+    selection_password:
+        CommandLine|contains:
+          - lockoutduration
+          - lockoutthreshold
+          - lockoutobservationwindow
+          - maxpwdage
+          - minpwdage
+          - minpwdlength
+          - pwdhistorylength
+          - pwdproperties
+falsepositives: Authorized administrative activity
+level: high
+customer: 'demo'
+modified: 2023/03/05
+tags:
+  - attack.discovery
+  - attack.t1087.002
+  - DEMO

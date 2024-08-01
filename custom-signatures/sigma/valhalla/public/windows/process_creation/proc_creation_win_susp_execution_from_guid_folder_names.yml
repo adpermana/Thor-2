@@ -1,0 +1,52 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Execution From GUID Like Folder Names
+id: 90b63c33-2b97-4631-a011-ceb0f47b77c3
+status: test
+description: Detects potential suspicious execution of a GUID like folder name located
+    in a suspicious location such as %TEMP% as seen being used in IcedID attacks
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/01 18:15:31
+references:
+  - https://twitter.com/Kostastsale/status/1565257924204986369
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_* and not 1 of filter*
+    filter:
+        Image|contains|all:
+          - \{
+          - '}\'
+    filter_driver_inst:
+        Image: C:\Windows\System32\drvinst.exe
+    filter_null:
+        Image: []
+    selection_folder:
+        CommandLine|contains:
+          - \AppData\Roaming\
+          - \AppData\Local\Temp\
+    selection_guid:
+        CommandLine|contains|all:
+          - \{
+          - '}\'
+falsepositives: Installers are sometimes known for creating temporary folders with
+    GUID like names. Add appropriate filters accordingly
+level: medium
+customer: 'demo'
+modified: 2023/03/02
+tags:
+  - attack.defense_evasion
+  - attack.t1027
+  - DEMO

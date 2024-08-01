@@ -1,0 +1,25 @@
+title: Possible LockBit 3.0 Ransomware Persistence Activity by Detection of Associated File
+(via file_event)
+id: fb098979-2e64-4c88-a861-e9980b75fb1f
+status: stable
+description: This rule detects that include names of suspicious files associated with LockBit
+3.0 ransomware.
+author: vinzel
+references:
+- https://research.nccgroup.com/2022/08/19/back-in-black-unlocking-a-lockbit-3-0-
+ransomware-attack/
+tags:
+- attack.execution
+- attack.persistence
+- attack.t1204.002
+logsource:
+ category: file_event
+ product: windows
+detection:
+ selection:
+ TargetFilename|endswith:
+ - ‘\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\VGAuthService.lnk’
+ condition: selection
+falsepositives:
+- Unknown
+level: high

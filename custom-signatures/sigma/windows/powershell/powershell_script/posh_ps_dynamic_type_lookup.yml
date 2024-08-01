@@ -1,0 +1,26 @@
+title: Dynamic Types Lookup
+id: ae808f8d-a971-4203-b79c-4bfc0bed2c94
+status: test
+description: Detects activity to dynamically search for "Types". Often used as an obfuscation method to bypass AMSI
+author: Nasreddine Bencherchali
+references:
+    - https://www.virustotal.com/gui/file/dfd67657d5664bb04b1e61d779c9b4f2a64f21dd59c682f8885f315003c8b1ca/
+    - https://github.com/S3cur3Th1sSh1t/Creds/blob/master/PowershellScripts/AmsBypass.ps1
+date: 2022/05/24
+modified: 2023/03/29
+tags:
+    - attack.defense_evasion
+logsource:
+    product: windows
+    category: ps_script
+    definition: Script Block Logging must be enabled
+detection:
+    selection:
+        ScriptBlockText|contains|all:
+            - '[Ref].Assembly.gettypes()'
+            - '$_.Name -like'
+            - '.GetFields('
+    condition: selection
+falsepositives:
+    - Unknown
+level: high

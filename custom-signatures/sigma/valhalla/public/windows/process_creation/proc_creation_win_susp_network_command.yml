@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Network Command
+id: a29c1813-ab1f-4dde-b489-330b952e91ae
+status: test
+description: Adversaries may look for details about the network configuration and
+    settings of systems they access or through information discovery of remote systems
+author: frack113, Christopher Peacock '@securepeacock', SCYTHE '@scythe_io'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/12/07 13:12:01
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1016/T1016.md#atomic-test-1---system-network-configuration-discovery-on-windows
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - ipconfig /all
+          - netsh interface show interface
+          - arp -a
+          - nbtstat -n
+          - net config
+          - route print
+falsepositives: Administrator, hotline ask to user
+level: low
+customer: 'demo'
+modified: 2022/04/11
+tags:
+  - attack.discovery
+  - attack.t1016
+  - DEMO

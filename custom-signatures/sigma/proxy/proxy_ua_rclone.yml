@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Rclone Activity via Proxy
+id: 2c03648b-e081-41a5-b9fb-7d854a915091
+status: test
+description: Detects the use of rclone, a command-line program to manage files on
+    cloud storage, via its default user-agent string
+author: Janantha Marasinghe
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/10/18 12:43:01
+references:
+  - https://rclone.org/
+  - https://www.kroll.com/en/insights/publications/cyber/new-m365-business-email-compromise-attacks-with-rclone
+logsource:
+    category: proxy
+detection:
+    condition: selection
+    selection:
+        c-useragent|startswith: rclone/v
+fields:
+  - c-ip
+falsepositives: Valid requests with this exact user agent to that is used by legitimate
+    scripts or sysadmin operations
+level: medium
+customer: 'demo'
+tags:
+  - attack.exfiltration
+  - attack.t1567.002
+  - DEMO

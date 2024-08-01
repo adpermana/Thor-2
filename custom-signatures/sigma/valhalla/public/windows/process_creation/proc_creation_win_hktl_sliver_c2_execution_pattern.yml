@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - Sliver C2 Implant Activity Pattern
+id: 42333b2c-b425-441c-b70e-99404a17170f
+status: test
+description: Detects process activity patterns as seen being used by Sliver C2 framework
+    implants
+author: Nasreddine Bencherchali (Nextron Systems), Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/25 17:19:21
+references:
+  - https://github.com/BishopFox/sliver/blob/79f2d48fcdfc2bee4713b78d431ea4b27f733f30/implant/sliver/shell/shell_windows.go#L36
+  - https://www.microsoft.com/security/blog/2022/08/24/looking-for-the-sliver-lining-hunting-for-emerging-command-and-control-frameworks/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains: -NoExit -Command [Console]::OutputEncoding=[Text.UTF8Encoding]::UTF8
+falsepositives: Unlikely
+level: critical
+customer: 'demo'
+modified: 2023/03/05
+tags:
+  - attack.execution
+  - attack.t1059
+  - DEMO

@@ -1,0 +1,37 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Split A File Into Pieces
+id: 7f2bb9d5-6395-4de5-969c-70c11fbe6b12
+status: test
+description: Detection use of the command "split" to split files into parts and possible
+    transfer.
+author: Igor Fits, Mikhail Larin, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/15 11:52:01
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1030/T1030.md
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    condition: selection
+    selection:
+        Image|endswith: /split
+falsepositives: Legitimate administrative activity
+level: low
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.exfiltration
+  - attack.t1030
+  - DEMO

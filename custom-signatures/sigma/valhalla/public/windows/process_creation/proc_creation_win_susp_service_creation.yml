@@ -1,0 +1,68 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious New Service Creation
+id: 17a1be64-8d88-40bf-b5ff-a4f7a50ebcc8
+related:
+  - type: derived
+    id: 7fe71fc9-de3b-432a-8d57-8c809efc10ab
+status: test
+description: Detects creation of a new service via "sc" command or the powershell
+    "new-service" cmdlet with suspicious binary paths
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/14 14:22:31
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1543.003/T1543.003.md
+  - https://web.archive.org/web/20180331144337/https://www.fireeye.com/blog/threat-research/2018/03/sanny-malware-delivery-method-updated-in-recently-observed-attacks.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection* and susp_binpath
+    selection_posh:
+        CommandLine|contains|all:
+          - New-Service
+          - -BinaryPathName
+    selection_sc:
+        CommandLine|contains|all:
+          - create
+          - binPath=
+        Image|endswith: \sc.exe
+    susp_binpath:
+        CommandLine|contains:
+          - powershell
+          - mshta
+          - wscript
+          - cscript
+          - svchost
+          - dllhost
+          - 'cmd '
+          - cmd.exe /c
+          - cmd.exe /k
+          - cmd.exe /r
+          - rundll32
+          - C:\Users\Public
+          - \Downloads\
+          - \Desktop\
+          - \Microsoft\Windows\Start Menu\Programs\Startup\
+          - C:\Windows\TEMP\
+          - \AppData\Local\Temp
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2022/11/18
+tags:
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1543.003
+  - DEMO

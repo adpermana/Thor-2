@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-06-21 19:00
+# Generated for User: demo
+# Number of Rules: 3228
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Process Memory Dump Via Dotnet-Dump
+id: 53d8d3e1-ca33-4012-adf3-e05a4d652e34
+status: test
+description: |
+    Detects the execution of "dotnet-dump" with the "collect" flag. The execution could indicate potential process dumping of critical processes such as LSASS.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/03/14 15:03:51
+references:
+  - https://learn.microsoft.com/en-us/dotnet/core/diagnostics/dotnet-dump#dotnet-dump-collect
+  - https://twitter.com/bohops/status/1635288066909966338
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains: collect
+    selection_img:
+      - Image|endswith: \dotnet-dump.exe
+      - OriginalFileName: dotnet-dump.dll
+falsepositives: Process dumping is the expected behavior of the tool. So false positives
+    are expected in legitimate usage. The PID/Process Name of the process being dumped
+    needs to be investigated
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

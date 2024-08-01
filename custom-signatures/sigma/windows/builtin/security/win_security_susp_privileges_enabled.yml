@@ -1,0 +1,108 @@
+title: Process Enabled Suspicious Privileges
+id: acdcb96e-41e7-4399-9d68-062dab34d836
+description: Detects when a process has enabled a single suspicious privilege
+references:
+    - https://blog.palantir.com/windows-privilege-abuse-auditing-detection-and-defense-3078a403d74e
+    - https://github.com/Wh04m1001/DiagTrackEoP/blob/3a2fc99c9700623eb7dc7d4b5f314fd9ce5ef51f/main.cpp#L27
+status: test
+author: Nasreddine Bencherchali
+date: 2022/05/23
+modified: 2023/03/28
+tags:
+    - attack.defense_evasion
+    - attack.privilege_escalation
+    - attack.t1134.001
+    - attack.t1134.002
+logsource:
+    product: windows
+    service: security
+    definition: 'Requirements: Audit Policy : Computer Management > Audit Policy Configuration, Group Policy : Computer Configuration\Windows Settings\Security Settings\Advanced Audit Policy Configuration\Audit Policies\Detailed Tracking\Audit Token Right Adjusted'
+detection:
+    selection:
+        EventID: 4703
+        EnabledPrivilegeList:
+            - 'SeBackupPrivilege'
+            - 'SeCreateTokenPrivilege'
+            - 'SeDebugPrivilege'
+            - 'SeLoadDriverPrivilege'
+            - 'SeRestorePrivilege'
+            - 'SeTakeOwnershipPrivilege'
+            - 'SeTcbPrivilege'
+            - 'SeImpersonatePrivilege'
+    filter_generic:
+        ProcessName|startswith: # More FP processes could exist. Need more testing
+            - 'C:\Windows\System32\'
+            - 'C:\Windows\SysWOW64\'
+            - 'C:\Windows\WinSxS\'
+            - 'C:\Program Files\'
+            - 'C:\Program Files (x86)\'
+            - 'C:\Windows\Installer\MSI'
+    filter_defender:
+        ProcessName|startswith: 'C:\ProgramData\Microsoft\Windows Defender\'
+    filter_procexp:
+        ProcessName|endswith:
+            - '\procexp64.exe'
+            - '\procexp.exe'
+        EnabledPrivilegeList:
+            - 'SeBackupPrivilege'
+            - 'SeRestorePrivilege'
+            - 'SeDebugPrivilege'
+            - 'SeLoadDriverPrivilege'
+    filter_nextron:
+        ProcessName|endswith:
+            - '\thor-util.exe'
+            - '\thor64.exe'
+            - '\thor.exe'
+            - '\aurora-agent-util.exe'
+            - '\aurora-agent-64.exe'
+            - '\aurora-agent.exe'
+        EnabledPrivilegeList: 'SeDebugPrivilege'
+    #filter_dismhost_sys:
+    #    ProcessName:
+    #        - 'C:\Windows\System32\DismHost.exe'
+    #        - 'C:\Windows\SysWOW64\DismHost.exe'
+    #    EnabledPrivilegeList:
+    #        - 'SeBackupPrivilege'
+    #        - 'SeRestorePrivilege'
+    #        - 'SeTakeOwnershipPrivilege'
+    filter_dismhost_tmp:
+        ProcessName|contains:
+            - '\AppData\Local\Temp\'
+            - 'C:\Windows\TEMP\'
+        ProcessName|endswith: '\DismHost.exe'
+        EnabledPrivilegeList:
+            - 'SeBackupPrivilege'
+            - 'SeRestorePrivilege'
+            - 'SeTakeOwnershipPrivilege'
+    filter_installers:
+        ProcessName|contains|all:
+            - '\AppData\'
+            - '.tmp\'
+    filter_winsdk:
+        ProcessName|startswith:
+            - 'C:\Windows\Temp\'
+            - 'C:\ProgramData\Package Cache\{'
+        ProcessName|endswith: '\winsdksetup.exe'
+        EnabledPrivilegeList: 'SeDebugPrivilege'
+    filter_windows_helper:
+        ProcessName|startswith: 'C:\Windows\Temp\Helper\'
+        EnabledPrivilegeList: 'SeLoadDriverPrivilege'
+    filter_ccmexec:
+        ProcessName|startswith: 'C:\Windows\CCM\CcmExec.exe'
+        EnabledPrivilegeList:
+            - 'SeTakeOwnershipPrivilege'
+            - 'SeRestorePrivilege'
+            - 'SeBackupPrivilege'
+    filter_scnotification:
+        ProcessName|startswith: 'C:\Windows\CCM\SCNotification.exe'
+        EnabledPrivilegeList: 'SeDebugPrivilege'
+    filter_mssql_searchengine:
+        ProcessName|endswith: '\x64\SCENARIOENGINE.EXE'
+        EnabledPrivilegeList: 'SeDebugPrivilege'
+    filter_systemsettings:
+        ProcessName: 'C:\Windows\ImmersiveControlPanel\SystemSettings.exe'
+        EnabledPrivilegeList: 'SeTakeOwnershipPrivilege'
+    condition: selection and not 1 of filter_*
+falsepositives:
+    - Unknown
+level: high

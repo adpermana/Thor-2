@@ -1,0 +1,56 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Parent in Public Folder Suspicious Process
+id: 69bd9b97-2be2-41b6-9816-fb08757a4d1a
+status: test
+description: This rule detects suspicious processes with parent images located in
+    the C:\Users\Public folder
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/02/25 17:09:41
+references:
+  - https://redcanary.com/blog/blackbyte-ransomware/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - powershell
+          - 'cmd.exe /c '
+          - 'cmd.exe /r '
+          - 'cmd.exe /k '
+          - 'cmd /c '
+          - 'cmd /r '
+          - 'cmd /k '
+          - wscript.exe
+          - cscript.exe
+          - bitsadmin
+          - certutil
+          - mshta.exe
+        ParentImage|startswith: C:\Users\Public\
+fields:
+  - ComputerName
+  - User
+  - CommandLine
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/11/18
+tags:
+  - attack.defense_evasion
+  - attack.execution
+  - attack.t1564
+  - attack.t1059
+  - DEMO

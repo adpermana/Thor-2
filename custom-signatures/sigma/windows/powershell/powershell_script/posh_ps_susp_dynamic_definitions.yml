@@ -1,0 +1,25 @@
+title: Dynamic Definition of Modules/Assemblies
+id: 4236f084-c36f-4da2-8b24-46564140c6cb
+status: test
+description: Detects powershell scripts that dynamically defines Modules/Assemblies
+author: Nasreddine Bencherchali
+references:
+    - https://github.com/S3cur3Th1sSh1t/Creds/blob/master/obfuscatedps/CVE-2021-40449.ps1
+date: 2022/05/24
+modified: 2023/03/29
+tags:
+    - attack.defense_evasion
+logsource:
+    product: windows
+    category: ps_script
+    definition: Script Block Logging must be enabled
+detection:
+    selection:
+        ScriptBlockText|contains:
+            - '.DefineDynamicAssembly('
+            - '.DefineDynamicModule('
+            - 'System.Reflection.Emit.'
+    condition: selection
+falsepositives:
+    - Unknown
+level: high

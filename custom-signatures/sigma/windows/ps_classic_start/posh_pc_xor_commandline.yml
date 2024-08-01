@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious XOR Encoded PowerShell Command Line - PowerShell
+id: 812837bb-b17f-45e9-8bd0-0ec35d2e3bd6
+status: test
+description: Detects suspicious powershell process which includes bxor command, alternative
+    obfuscation method to b64 encoded commands.
+author: Teymur Kheirkhabarov, Harish Segar (rule)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/06/29 21:06:41
+references:
+  - https://speakerdeck.com/heirhabarov/hunting-for-powershell-abuse?slide=46
+logsource:
+    category: ps_classic_start
+    product: windows
+detection:
+    condition: selection and filter
+    filter:
+        Data|contains:
+          - bxor
+          - char
+          - join
+    selection:
+        Data|contains: HostName=ConsoleHost
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/10/27
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

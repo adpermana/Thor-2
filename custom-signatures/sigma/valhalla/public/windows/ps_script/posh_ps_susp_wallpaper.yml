@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Replace Desktop Wallpaper by Powershell
+id: c5ac6a1e-9407-45f5-a0ce-ca9a0806a287
+status: test
+description: |
+    An adversary may deface systems internal to an organization in an attempt to intimidate or mislead users.
+    This may take the form of modifications to internal websites, or directly to user systems with the replacement of the desktop wallpaper
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/12/26 16:29:01
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1491.001/T1491.001.md
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: 1 of selection_*
+    selection_1:
+        ScriptBlockText|contains|all:
+          - Get-ItemProperty
+          - 'Registry::'
+          - HKEY_CURRENT_USER\Control Panel\Desktop\
+          - WallPaper
+    selection_2:
+        ScriptBlockText|contains: SystemParametersInfo(20,0,*,3)
+falsepositives: Unknown
+level: low
+customer: 'demo'
+tags:
+  - attack.impact
+  - attack.t1491.001
+  - DEMO

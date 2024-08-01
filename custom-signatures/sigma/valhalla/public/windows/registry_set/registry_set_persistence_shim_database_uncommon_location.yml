@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Persistence Via Shim Database In Uncommon Location
+id: 6b6976a3-b0e6-4723-ac24-ae38a737af41
+status: experimental
+description: Detects the installation of a new shim database where the file is located
+    in a non-default location
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/08/01 21:42:31
+references:
+  - https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
+  - https://andreafortuna.org/2018/11/12/process-injection-and-persistence-using-application-shimming/
+  - https://www.blackhat.com/docs/asia-14/materials/Erickson/Asia-14-Erickson-Persist-It-Using-And-Abusing-Microsofts-Fix-It-Patches.pdf
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_known_locations:
+        Details|contains: :\Windows\AppPatch\Custom
+    selection:
+        TargetObject|contains|all:
+          - \SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\InstalledSDB\
+          - \DatabasePath
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.persistence
+  - attack.t1546.011
+  - DEMO

@@ -1,0 +1,53 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious VSFTPD Error Messages
+id: 377f33a1-4b36-4ee1-acee-1dbe4b43cfbe
+status: test
+description: Detects suspicious VSFTPD error messages that indicate a fatal or suspicious
+    error that could be caused by exploiting attempts
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/07/05 14:18:41
+references:
+  - https://github.com/dagwieers/vsftpd/
+logsource:
+    product: linux
+    service: vsftpd
+detection:
+    condition: keywords
+    keywords:
+      - 'Connection refused: too many sessions for this address.'
+      - 'Connection refused: tcp_wrappers denial.'
+      - Bad HTTP verb.
+      - port and pasv both active
+      - pasv and port both active
+      - Transfer done (but failed to open directory).
+      - Could not set file modification time.
+      - 'bug: pid active in ptrace_sandbox_free'
+      - PTRACE_SETOPTIONS failure
+      - 'weird status:'
+      - couldn't handle sandbox event
+      - syscall * out of bounds
+      - 'syscall not permitted:'
+      - 'syscall validate failed:'
+      - Input line too long.
+      - poor buffer accounting in str_netfd_alloc
+      - vsf_sysutil_read_loop
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.initial_access
+  - attack.t1190
+  - DEMO

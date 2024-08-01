@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Advanced IP/Port Scanner Update Check
+id: 1a9bb21a-1bb5-42d7-aa05-3219c7c8f47d
+status: test
+description: Detect update check performed by Advanced IP Scanner and Advanced Port
+    Scanner
+author: Axel Olsson
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/14 15:17:01
+references:
+  - https://www.advanced-ip-scanner.com/
+  - https://www.advanced-port-scanner.com/
+logsource:
+    category: proxy
+detection:
+    condition: selection
+    selection:
+        c-uri-query|contains|all:
+          - lng=
+          - ver=
+          - beta=
+          - type=
+          - rmode=
+          - product=
+        c-uri|contains: /checkupdate.php
+fields:
+  - c-ip
+falsepositives: Legitimate use by administrators
+level: medium
+customer: 'demo'
+tags:
+  - attack.discovery
+  - attack.t1590
+  - DEMO

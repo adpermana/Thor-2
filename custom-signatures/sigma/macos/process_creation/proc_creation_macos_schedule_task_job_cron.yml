@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Scheduled Cron Task/Job - MacOs
+id: 7c3b43d8-d794-47d2-800a-d277715aa460
+status: test
+description: Detects abuse of the cron utility to perform task scheduling for initial
+    or recurring execution of malicious code. Detection will focus on crontab jobs
+    uploaded from the tmp folder.
+author: Alejandro Ortuno, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/06 13:28:01
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1053.003/T1053.003.md
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains: /tmp/
+        Image|endswith: /crontab
+falsepositives: Legitimate administration activities
+level: medium
+customer: 'demo'
+modified: 2022/11/27
+tags:
+  - attack.execution
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1053.003
+  - DEMO

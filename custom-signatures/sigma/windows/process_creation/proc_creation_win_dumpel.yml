@@ -1,0 +1,26 @@
+title: Dump Windows Eventlog Using Dumpel
+id: 6e4e04b2-0931-48fa-be65-ab82ff27a554
+status: experimental
+description: Detects usage of dumpel utility from the Windows Server 2000 Resource Kit to dump windows event log (application, system, security) to a CSV file
+references:
+    - https://www.tek-tips.com/viewthread.cfm?qid=840311
+author: Nasreddine Bencherchali
+date: 2022/05/09
+tags:
+    - attack.credential_access
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains|all:
+            - ' -f '
+            - ' -c '
+        CommandLine|contains:
+            - ' -l application'
+            - ' -l system'
+            - ' -l security'
+    condition: selection
+falsepositives:
+    - Unknown
+level: high

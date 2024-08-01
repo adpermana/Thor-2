@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential CCleanerReactivator.DLL Sideloading
+id: 3735d5ac-d770-4da0-99ff-156b180bc600
+status: experimental
+description: Detects potential DLL sideloading of "CCleanerReactivator.dll"
+author: X__Junior
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/07/13 17:59:41
+references:
+  - https://lab52.io/blog/2344-2/
+logsource:
+    category: image_load
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_path:
+        Image|endswith: \CCleanerReactivator.exe
+        Image|startswith:
+          - C:\Program Files\CCleaner\
+          - C:\Program Files (x86)\CCleaner\
+    selection:
+        ImageLoaded|endswith: \CCleanerReactivator.dll
+falsepositives: False positives could occur from other custom installation paths.
+    Apply additional filters accordingly.
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1574.001
+  - attack.t1574.002
+  - DEMO

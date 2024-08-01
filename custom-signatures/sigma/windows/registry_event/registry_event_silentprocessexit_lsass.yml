@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Credential Dumping Via LSASS SilentProcessExit Technique
+id: 55e29995-75e7-451a-bef0-6225e2f13597
+related:
+  - type: similar
+    id: 36803969-5421-41ec-b92f-8500f79c23b0
+status: test
+description: Detects changes to the Registry in which a monitor program gets registered
+    to dump the memory of the lsass.exe process
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/02/26 23:23:11
+references:
+  - https://www.deepinstinct.com/2021/02/16/lsass-memory-dumps-are-stealthier-than-ever-before-part-2/
+  - https://oddvar.moe/2018/04/10/persistence-using-globalflags-in-image-file-execution-options-hidden-from-autoruns-exe/
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetObject|contains: Microsoft\Windows NT\CurrentVersion\SilentProcessExit\lsass.exe
+falsepositives: Unlikely
+level: critical
+customer: 'demo'
+modified: 2022/12/19
+tags:
+  - attack.credential_access
+  - attack.t1003.001
+  - DEMO

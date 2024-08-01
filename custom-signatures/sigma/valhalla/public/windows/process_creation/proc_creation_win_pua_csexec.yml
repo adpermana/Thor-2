@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PUA - CsExec Execution
+id: d08a2711-ee8b-4323-bdec-b7d85e892b31
+status: test
+description: Detects the use of the lesser known remote execution tool named CsExec
+    a PsExec alternative
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/22 11:15:01
+references:
+  - https://github.com/malcomvetter/CSExec
+  - https://www.microsoft.com/security/blog/2022/05/09/ransomware-as-a-service-understanding-the-cybercrime-gig-economy-and-how-to-protect-yourself/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection*
+    selection:
+        Image|endswith: \csexec.exe
+    selection_pe:
+        Description: csexec
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/02/21
+tags:
+  - attack.resource_development
+  - attack.t1587.001
+  - attack.execution
+  - attack.t1569.002
+  - DEMO

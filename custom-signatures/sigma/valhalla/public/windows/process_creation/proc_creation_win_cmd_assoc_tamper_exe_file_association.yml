@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Change Default File Association To Executable Via Assoc
+id: ae6f14e6-14de-45b0-9f44-c0986f50dc89
+related:
+  - type: derived
+    id: 3d3aa6cd-6272-44d6-8afc-7e88dfef7061
+status: test
+description: |
+    Detects when a program changes the default file association of any extension to an executable.
+    When a file is opened, the default program used to open the file (also called the file association or handler) is checked. File association selections are stored in the Windows Registry and can be edited by users, administrators, or programs that have Registry access or by administrators using the built-in assoc utility. Applications can modify the file association for a given file extension to call an arbitrary program when a file with the given extension is opened.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/28 20:03:41
+references:
+  - https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/assoc
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_* and not filter
+    filter:
+        CommandLine|contains: .exe=exefile
+    selection_cli:
+        CommandLine|contains|all:
+          - 'assoc '
+          - exefile
+    selection_img:
+      - Image|endswith: \cmd.exe
+      - OriginalFileName: Cmd.Exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/03/06
+tags:
+  - attack.persistence
+  - attack.t1546.001
+  - DEMO

@@ -1,0 +1,52 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PowerShell Script Change Permission Via Set-Acl
+id: bdeb2cff-af74-4094-8426-724dc937f20a
+related:
+  - type: derived
+    id: cae80281-ef23-44c5-873b-fd48d2666f49
+  - type: derived
+    id: 0944e002-e3f6-4eb5-bf69-3a3067b53d73
+  - type: derived
+    id: 3bf1d859-3a7e-44cb-8809-a99e066d3478
+status: test
+description: Detects PowerShell execution to set the ACL of a file or a folder
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/10/18 18:08:21
+references:
+  - https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.security/set-acl?view=powershell-5.1
+  - https://github.com/redcanaryco/atomic-red-team/blob/74438b0237d141ee9c99747976447dc884cb1a39/atomics/T1505.005/T1505.005.md
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cmdlet:
+        CommandLine|contains|all:
+          - 'Set-Acl '
+          - '-AclObject '
+          - '-Path '
+    selection_img:
+      - OriginalFileName:
+          - PowerShell.EXE
+          - pwsh.dll
+      - Image|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - DEMO

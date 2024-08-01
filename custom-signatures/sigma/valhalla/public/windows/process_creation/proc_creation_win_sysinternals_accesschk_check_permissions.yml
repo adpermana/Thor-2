@@ -1,0 +1,58 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Permission Check Via Accesschk.EXE
+id: c625d754-6a3d-4f65-9c9a-536aea960d37
+status: test
+description: Detects the usage of the "Accesschk" utility, an access and privilege
+    audit tool developed by SysInternal and often being abused by attacker to verify
+    process privileges
+author: Teymur Kheirkhabarov (idea), Mangatas Tondang, oscd.community, Nasreddine
+    Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/13 14:37:11
+references:
+  - https://speakerdeck.com/heirhabarov/hunting-for-privilege-escalation-in-windows-environment?slide=43
+  - https://www.youtube.com/watch?v=JGs-aKf2OtU&ab_channel=OFFZONEMOSCOW
+  - https://github.com/carlospolop/PEASS-ng/blob/fa0f2e17fbc1d86f1fd66338a40e665e7182501d/winPEAS/winPEASbat/winPEAS.bat
+  - https://github.com/gladiatx0r/Powerless/blob/04f553bbc0c65baf4e57344deff84e3f016e6b51/Powerless.bat
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection*
+    selection_cli:
+        CommandLine|contains:
+          - 'uwcqv '
+          - 'kwsu '
+          - 'qwsu '
+          - 'uwdqs '
+    selection_img:
+      - Product|endswith: AccessChk
+      - Description|contains: Reports effective permissions
+      - Image|endswith:
+          - \accesschk.exe
+          - \accesschk64.exe
+      - OriginalFileName: accesschk.exe
+fields:
+  - IntegrityLevel
+  - Product
+  - Description
+  - CommandLine
+falsepositives: System administrator Usage
+level: medium
+customer: 'demo'
+modified: 2023/02/20
+tags:
+  - attack.discovery
+  - attack.t1069.001
+  - DEMO

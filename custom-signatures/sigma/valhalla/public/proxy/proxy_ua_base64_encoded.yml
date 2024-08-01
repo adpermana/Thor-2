@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Base64 Encoded User-Agent
+id: d443095b-a221-4957-a2c4-cd1756c9b747
+related:
+  - type: derived
+    id: 894a8613-cf12-48b3-8e57-9085f54aa0c3
+status: test
+description: Detects suspicious encoded User-Agent strings, as seen used by some malware.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/04 15:10:51
+references:
+  - https://deviceatlas.com/blog/list-of-user-agent-strings#desktop
+logsource:
+    category: proxy
+detection:
+    condition: selection
+    selection:
+        c-useragent|startswith:
+          - Q2hyb21l
+          - QXBwbGVXZWJLaX
+          - RGFsdmlr
+          - TW96aWxsY
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.command_and_control
+  - attack.t1071.001
+  - DEMO

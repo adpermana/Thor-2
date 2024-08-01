@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Perl Inline Command Execution
+id: f426547a-e0f7-441a-b63e-854ac5bdf54d
+status: test
+description: Detects execution of perl using the "-e"/"-E" flags. This is could be
+    used as a way to launch a reverse shell or execute live perl code.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/02 13:39:31
+references:
+  - https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet
+  - https://www.revshells.com/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains: ' -e'
+    selection_img:
+      - Image|endswith: \perl.exe
+      - OriginalFileName: perl.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.execution
+  - attack.t1059
+  - DEMO

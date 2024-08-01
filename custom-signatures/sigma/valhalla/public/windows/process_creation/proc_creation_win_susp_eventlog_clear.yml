@@ -1,0 +1,73 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Eventlog Clear or Configuration Change
+id: cc36992a-4671-4f21-a91d-6c2b72a2edf5
+status: stable
+description: Detects clearing or configuration of eventlogs using wevtutil, powershell
+    and wmic. Might be used by ransomwares during the attack (seen by NotPetya and
+    others).
+author: Ecco, Daniil Yugoslavskiy, oscd.community, D3F7A5105
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/09/26 19:09:31
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1070.001/T1070.001.md
+  - https://eqllib.readthedocs.io/en/latest/analytics/5b223758-07d6-4100-9e11-238cfdd0fe97.html
+  - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/wevtutil
+  - https://gist.github.com/fovtran/ac0624983c7722e80a8f5a4babb170ee
+  - https://jdhnet.wordpress.com/2017/12/19/changing-the-location-of-the-windows-event-logs/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_* and not 1 of filter_*
+    filter_msiexec:
+        CommandLine|contains: ' sl '
+        ParentImage:
+          - C:\Windows\SysWOW64\msiexec.exe
+          - C:\Windows\System32\msiexec.exe
+    selection_other_ps:
+        CommandLine|contains:
+          - 'Clear-EventLog '
+          - 'Remove-EventLog '
+          - 'Limit-EventLog '
+          - 'Clear-WinEvent '
+        Image|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+    selection_other_wmi:
+        CommandLine|contains: ClearEventLog
+        Image|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+          - \wmic.exe
+    selection_wevtutil:
+        CommandLine|contains:
+          - 'clear-log '
+          - ' cl '
+          - 'set-log '
+          - ' sl '
+          - 'lfn:'
+        Image|endswith: \wevtutil.exe
+falsepositives:
+  - Admin activity
+  - Scripts and administrative tools used in the monitored environment
+  - Maintenance activity
+level: high
+customer: 'demo'
+modified: 2023/07/13
+tags:
+  - attack.defense_evasion
+  - attack.t1070.001
+  - attack.t1562.002
+  - car.2016-04-002
+  - DEMO

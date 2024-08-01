@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: WhoAmI as Parameter
+id: e9142d84-fbe0-401d-ac50-3e519fb00c89
+status: test
+description: Detects a suspicious process command line that uses whoami as first parameter
+    (as e.g. used by EfsPotato)
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/11/29 10:52:21
+references:
+  - https://twitter.com/blackarrowsec/status/1463805700602224645?s=12
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains: .exe whoami
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/12/25
+tags:
+  - attack.discovery
+  - attack.t1033
+  - car.2016-03-001
+  - DEMO

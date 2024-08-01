@@ -1,0 +1,27 @@
+title: Villain Linux Payload Indicators
+id: e66d558c-5f9b-4c6a-b918-e4bb9c03e603
+status: test
+description: Detects indicators in command lines as used in Villain payloads for the Linux platform
+references:
+    - https://github.com/t3l3machus/Villain/
+author: Florian Roth
+date: 2022/11/30
+modified: 2023/03/28
+tags:
+    - attack.command_and_control
+logsource:
+    product: linux
+    category: process_creation
+detection:
+    selection_specific:
+        CommandLine|contains:
+            - ';echo $$;fi; fi; sleep 0.8;'
+            - 'then pkill -P $$; else curl -s $'
+    selection_generic:
+        CommandLine|contains|all:
+            - '-o /dev/null&&while :; do'
+            - '")&&if [ $'
+    condition: 1 of selection*
+falsepositives:
+    - Unlikely
+level: high

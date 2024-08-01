@@ -1,0 +1,51 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Lazarus APT DLL Sideloading Activity
+id: 24007168-a26b-4049-90d0-ce138e13a5cf
+status: experimental
+description: Detects sideloading of trojanized DLLs used in Lazarus APT campaign in
+    the case of a Spanish aerospace company
+author: Thurein Oo, Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/10/18 15:07:11
+references:
+  - https://www.welivesecurity.com/en/eset-research/lazarus-luring-employees-trojanized-coding-challenges-case-spanish-aerospace-company/
+  - https://www.bleepingcomputer.com/news/security/lazarus-hackers-breach-aerospace-firm-with-new-lightlesscan-malware/
+logsource:
+    category: image_load
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_colorui:
+        Image: C:\ProgramData\Adobe\colorcpl.exe
+        ImageLoaded: C:\ProgramData\Adobe\colorui.dll
+    selection_hid:
+        Image: C:\ProgramData\Adobe\ARM\tabcal.exe
+        ImageLoaded: C:\ProgramData\Adobe\ARM\HID.dll
+    selection_mapistub:
+        Image: C:\ProgramData\Oracle\Java\fixmapi.exe
+        ImageLoaded: C:\ProgramData\Oracle\Java\mapistub.dll
+    selection_mscoree:
+        Image: C:\ProgramShared\PresentationHost.exe
+        ImageLoaded: :\ProgramShared\mscoree.dll
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - attack.t1574.001
+  - attack.t1574.002
+  - attack.g0032
+  - detection.emerging_threats
+  - DEMO

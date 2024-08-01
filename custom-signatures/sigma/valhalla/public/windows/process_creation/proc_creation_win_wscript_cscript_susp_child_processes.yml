@@ -1,0 +1,65 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Cscript/Wscript Potentially Suspicious Child Process
+id: b6676963-0353-4f88-90f5-36c20d443c6a
+status: experimental
+description: |
+    Detects potentially suspicious child processes of Wscript/Cscript. These include processes such as rundll32 with uncommon exports or PowerShell spawning rundll32 or regsvr32.
+    Malware such as Pikabot and Qakbot were seen using similar techniques as well as many others.
+author: Nasreddine Bencherchali (Nextron Systems), Alejandro Houspanossian ('@lekz86')
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/15 20:13:41
+references:
+  - Internal Research
+  - https://github.com/pr0xylife/Pikabot/blob/main/Pikabot_30.10.2023.txt
+  - https://github.com/pr0xylife/Pikabot/blob/main/Pikabot_22.12.2023.txt
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection_parent and ( selection_cli_standalone or (selection_cli_script_main
+        and 1 of selection_cli_script_option_*) ) and not 1 of filter_main_*
+    filter_main_rundll32_known_exports:
+        CommandLine|contains:
+          - UpdatePerUserSystemParameters
+          - PrintUIEntry
+          - ClearMyTracksByProcess
+        Image|endswith: \rundll32.exe
+    selection_cli_script_main:
+        Image|endswith:
+          - \cmd.exe
+          - \powershell.exe
+          - \pwsh.exe
+    selection_cli_script_option_mshta:
+        CommandLine|contains|all:
+          - mshta
+          - http
+    selection_cli_script_option_other:
+        CommandLine|contains:
+          - rundll32
+          - regsvr32
+          - msiexec
+    selection_cli_standalone:
+        Image|endswith: \rundll32.exe
+    selection_parent:
+        ParentImage|endswith:
+          - \wscript.exe
+          - \cscript.exe
+falsepositives: Some false positives might occur with admin or third party software
+    scripts. Investigate and apply additional filters accordingly.
+level: medium
+customer: 'demo'
+modified: 2024/01/02
+tags:
+  - attack.execution
+  - DEMO

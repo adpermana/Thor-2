@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Disable Tamper Protection on Windows Defender
+id: 93d298a1-d28f-47f1-a468-d971e7796679
+status: experimental
+description: Detects disabling Windows Defender Tamper Protection
+author: Austin Songer @austinsonger
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/04 17:56:11
+references:
+  - https://www.tenforums.com/tutorials/123792-turn-off-tamper-protection-microsoft-defender-antivirus.html
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection and not 1 of filter_*
+    filter_msmpeng_client:
+        Image|endswith: \MsMpEng.exe
+        Image|startswith: C:\ProgramData\Microsoft\Windows Defender\Platform\
+    filter_msmpeng_domain_controller:
+        Image: C:\Program Files\Windows Defender\MsMpEng.exe
+    selection:
+        Details: DWORD (0x00000000)
+        TargetObject|contains: \Microsoft\Windows Defender\Features\TamperProtection
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+  - DEMO

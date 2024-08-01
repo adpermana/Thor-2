@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Code Executed Via Office Add-in XLL File
+id: 36fbec91-fa1b-4d5d-8df1-8d8edcb632ad
+status: test
+description: |
+    Adversaries may abuse Microsoft Office add-ins to obtain persistence on a compromised system.
+    Office add-ins can be used to add functionality to Office programs
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/12/28 15:29:51
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1137.006/T1137.006.md
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: selection
+    selection:
+        ScriptBlockText|contains|all:
+          - 'new-object '
+          - '-ComObject '
+          - .application
+          - .RegisterXLL
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.persistence
+  - attack.t1137.006
+  - DEMO

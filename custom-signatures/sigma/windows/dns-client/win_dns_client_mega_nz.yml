@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: DNS Query To MEGA Hosting Website - DNS Client
+id: 66474410-b883-415f-9f8d-75345a0a66a6
+related:
+  - type: similar
+    id: 613c03ba-0779-4a53-8a1f-47f914a4ded3
+status: test
+description: Detects DNS queries for subdomains related to MEGA sharing website
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/16 16:38:41
+references:
+  - https://research.nccgroup.com/2021/05/27/detecting-rclone-an-effective-tool-for-exfiltration/
+logsource:
+    product: windows
+    service: dns-client
+    definition: 'Requirements: Microsoft-Windows-DNS Client Events/Operational Event
+        Log must be enabled/collected in order to receive the events.'
+detection:
+    condition: selection
+    selection:
+        EventID: "3008"
+        QueryName|contains: userstorage.mega.co.nz
+falsepositives: Legitimate DNS queries and usage of Mega
+level: medium
+customer: 'demo'
+tags:
+  - attack.exfiltration
+  - attack.t1567.002
+  - DEMO

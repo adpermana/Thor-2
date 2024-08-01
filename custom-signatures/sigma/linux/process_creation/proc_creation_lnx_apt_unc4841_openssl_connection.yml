@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: UNC4841 - SSL Certificate Exfiltration Via Openssl
+id: 60911c07-f989-4362-84af-c609828ef829
+status: experimental
+description: Detects the execution of "openssl" to connect to an IP address. This
+    techniques was used by UNC4841 to exfiltrate SSL certificates and as a C2 channel
+    with named pipes. Investigate commands executed in the temporal vicinity of this
+    command.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/06/16 18:03:41
+references:
+  - https://www.mandiant.com/resources/blog/barracuda-esg-exploited-globally
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - :443
+          - :8080
+        CommandLine|contains|all:
+          - s_client
+          - -quiet
+          - -connect
+        CommandLine|re: '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'
+        Image|endswith: /openssl
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1140
+  - detection.emerging_threats
+  - DEMO

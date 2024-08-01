@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious TSCON Start as SYSTEM
+id: 9847f263-4a81-424f-970c-875dab15b79b
+status: test
+description: Detects a tscon.exe start as LOCAL SYSTEM
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2018/03/17 13:50:11
+references:
+  - http://www.korznikov.com/2017/03/0-day-or-feature-privilege-escalation.html
+  - https://medium.com/@networksecurity/rdp-hijacking-how-to-hijack-rds-and-remoteapp-sessions-transparently-to-move-through-an-da2a1e73a5f6
+  - https://www.ired.team/offensive-security/lateral-movement/t1076-rdp-hijacking-for-lateral-movement
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith: \tscon.exe
+        User|contains:
+          - AUTHORI
+          - AUTORI
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/05/27
+tags:
+  - attack.command_and_control
+  - attack.t1219
+  - DEMO

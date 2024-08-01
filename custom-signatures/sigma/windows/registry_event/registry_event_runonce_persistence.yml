@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Run Once Task Configuration in Registry
+id: c74d7efc-8826-45d9-b8bb-f04fac9e4eff
+status: test
+description: Rule to detect the configuration of Run Once registry key. Configured
+    payload can be run by runonce.exe /AlternateShellStartup
+author: Avneet Singh @v3t0_, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/11/15 16:16:51
+references:
+  - https://twitter.com/pabraeken/status/990717080805789697
+  - https://lolbas-project.github.io/lolbas/Binaries/Runonce/
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    condition: selection and not 1 of filter_*
+    filter_chrome:
+        Details|contains: \Installer\chrmstp.exe" --configure-user-settings --verbose-logging
+            --system-level
+        Details|startswith: '"C:\Program Files\Google\Chrome\Application\'
+    filter_edge:
+        Details|endswith: \Installer\setup.exe" --configure-user-settings --verbose-logging
+            --system-level --msedge --channel=stable
+        Details|startswith:
+          - '"C:\Program Files (x86)\Microsoft\Edge\Application\'
+          - '"C:\Program Files\Microsoft\Edge\Application\'
+    selection:
+        TargetObject|endswith: \StubPath
+        TargetObject|startswith: HKLM\SOFTWARE\Microsoft\Active Setup\Installed Components
+falsepositives: Legitimate modification of the registry key by legitimate program
+level: medium
+customer: 'demo'
+modified: 2022/04/04
+tags:
+  - attack.defense_evasion
+  - attack.t1112
+  - DEMO

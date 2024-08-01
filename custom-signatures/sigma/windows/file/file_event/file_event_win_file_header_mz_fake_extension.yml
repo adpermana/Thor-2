@@ -1,0 +1,79 @@
+title: File With MZ Header With Potential Fake Extension
+id: 94d27a1e-20d6-4adc-bdbf-64f328468592
+status: experimental
+description: Detects creation of files with the MZ header but a fake or wrong extension that don't usually associate with files with the MZ header.
+author: Nasreddine Bencherchali
+references:
+    - Internal Research
+date: 2023/01/18
+modified: 2023/04/14
+tags:
+    - attack.defense_evasion
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        - MagicHeader|startswith: '0x4D5A'
+        # TODO: Remove little endian notation starting 2024
+        - MagicHeader: '0x5A4D'
+    filter_ext:
+        TargetFilename|endswith:
+            # Based on https://en.wikipedia.org/wiki/List_of_file_signatures
+            - '.com'
+            - '.cpl'
+            - '.dll'
+            - '.exe'
+            - '.fon'
+            - '.iec'
+            - '.ime'
+            - '.rs'
+            - '.scr'
+            - '.sys'
+            - '.tsp'
+            - '.dll.mui'
+    filter_main_msiexec:
+        ParentImage: 'C:\Windows\System32\services.exe'
+        Image: 'C:\Windows\System32\msiexec.exe'
+        CommandLine: 'C:\Windows\System32\msiexec.exe /V'
+        TargetFilename|endswith:
+            - 'C:\Config.Msi'
+            - 'C:\Windows\Installer\MSI'
+    filter_main_tiworker_update:
+        ParentImage: 'C:\Windows\System32\svchost.exe'
+        Image|startswith: 'C:\Windows\WinSxS\'
+        Image|endswith: '\TiWorker.exe'
+        TargetFilename|startswith: 'C:\Windows\WinSxS\'
+    filter_optional_vdm:
+        TargetFilename|contains:
+            - 'C:\Windows\Temp\'
+            - 'C:\ProgramData\Microsoft\Windows Defender\Definition Updates\'
+        TargetFilename|endswith: '.vdm'
+    filter_optional_mozilla:
+        ParentImage:
+            - 'C:\Program Files (x86)\Mozilla Maintenance Service\maintenanceservice.exe'
+            - 'C:\Program Files\Mozilla Maintenance Service\maintenanceservice.exe'
+        Image:
+            - 'C:\Program Files (x86)\Mozilla Maintenance Service\update\updater.exe'
+            - 'C:\Program Files\Mozilla Maintenance Service\update\updater.exe'
+        #CommandLine: '"C:\Program Files (x86)\Mozilla Maintenance Service\update\updater.exe" C:\ProgramData\Mozilla-1de4eec8-1241-4177-a864-e594e8d1fb38\updates\308046B0AF4A39CB\updates\0 "C:\Program Files\Mozilla Firefox" "C:\Program Files\Mozilla Firefox\updated" -1'
+        TargetFilename|startswith:
+            - 'C:\Program Files (x86)\Mozilla Firefox\updated\tobedeleted\'
+            - 'C:\Program Files\Mozilla Firefox\updated\tobedeleted\'
+    filter_optional_msedge_installer:
+        Image|startswith:
+            - 'C:\Program Files (x86)\Microsoft\EdgeUpdate\Install\'
+            - 'C:\Program Files\Microsoft\EdgeUpdate\Install\'
+        Image|endswith: '\setup.exe'
+        TargetFilename|startswith: 'C:\Windows\Temp\'
+        TargetFilename|endswith: '.tmp'
+    # Uncomment this filter if you experience a lot of FP with installers
+    #filter_optional_generic:
+    #    TargetFilename|contains:
+    #        - '\Windows\Temp\'
+    #        - '\AppData\Local\Temp\'
+    #    TargetFilename|endswith: '.tmp'
+    condition: selection and not filter_ext and not 1 of filter_main_* and not 1 of filter_optional_*
+falsepositives:
+    - Installers are known to drop ".tmp" files which are actually binaries or similar in temp folders
+level: medium

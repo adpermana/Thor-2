@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Privileged User Has Been Created
+id: 0ac15ec3-d24f-4246-aa2a-3077bb1cf90e
+status: test
+description: Detects the addition of a new user to a privileged group such as "root"
+    or "sudo"
+author: Pawel Mazur
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/12/21 14:09:21
+references:
+  - https://digital.nhs.uk/cyber-alerts/2018/cc-2825
+  - https://linux.die.net/man/8/useradd
+  - https://github.com/redcanaryco/atomic-red-team/blob/25acadc0b43a07125a8a5b599b28bbc1a91ffb06/atomics/T1136.001/T1136.001.md#atomic-test-5---create-a-new-user-in-linux-with-root-uid-and-gid
+logsource:
+    product: linux
+    definition: /var/log/secure on REHL systems or /var/log/auth.log on debian like
+        Systems needs to be collected in order for this detection to work
+detection:
+    condition: all of selection_*
+    selection_new_user: new user
+    selection_uids_gids:
+      - GID=0
+      - UID=0
+      - GID=10
+      - GID=27
+falsepositives: Administrative activity
+level: high
+customer: 'demo'
+tags:
+  - attack.persistence
+  - attack.t1136.001
+  - attack.t1098
+  - DEMO

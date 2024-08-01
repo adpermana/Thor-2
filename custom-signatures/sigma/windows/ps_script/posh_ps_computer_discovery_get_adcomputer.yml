@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Computer Discovery And Export Via Get-ADComputer Cmdlet - PowerShell
+id: db885529-903f-4c5d-9864-28fe199e6370
+related:
+  - type: similar
+    id: 435e10e4-992a-4281-96f3-38b11106adde
+status: test
+description: Detects usage of the Get-ADComputer cmdlet to collect computer information
+    and output it to a file
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/11/17 23:21:21
+references:
+  - http://blog.talosintelligence.com/2022/09/lazarus-three-rats.html
+  - https://www.microsoft.com/en-us/security/blog/2022/10/18/defenders-beware-a-case-for-post-ransomware-investigations/
+  - https://www.cisa.gov/uscert/sites/default/files/publications/aa22-320a_joint_csa_iranian_government-sponsored_apt_actors_compromise_federal%20network_deploy_crypto%20miner_credential_harvester.pdf
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: selection
+    selection:
+        ScriptBlockText|contains:
+          - ' | Select '
+          - Out-File
+          - Set-Content
+          - Add-Content
+        ScriptBlockText|contains|all:
+          - 'Get-ADComputer '
+          - ' -Filter \*'
+falsepositives: Legitimate admin scripts may use the same technique, it's better to
+    exclude specific computers or users who execute these commands or scripts often
+level: medium
+customer: 'demo'
+tags:
+  - attack.discovery
+  - attack.t1033
+  - DEMO

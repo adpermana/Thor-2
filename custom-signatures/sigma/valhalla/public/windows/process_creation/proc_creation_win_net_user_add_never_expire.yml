@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: New User Created Via Net.EXE With Never Expire Option
+id: b9f0e6f5-09b4-4358-bae4-08408705bd5c
+related:
+  - type: derived
+    id: cd219ff3-fa99-45d4-8380-a7d15116c6dc
+status: test
+description: Detects creation of local users via the net.exe command with the option
+    "never expire"
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/12 19:03:01
+references:
+  - https://thedfirreport.com/2022/07/11/select-xmrig-from-sqlserver/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains|all:
+          - user
+          - add
+          - expires:never
+    selection_img:
+      - Image|endswith:
+          - \net.exe
+          - \net1.exe
+      - OriginalFileName:
+          - net.exe
+          - net1.exe
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/02/21
+tags:
+  - attack.persistence
+  - attack.t1136.001
+  - DEMO

@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious PowerShell Mailbox SMTP Forward Rule
+id: 15b7abbb-8b40-4d01-9ee2-b51994b1d474
+status: test
+description: Detects usage of the powerShell Set-Mailbox Cmdlet to set-up an SMTP
+    forwarding rule.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/10/26 18:20:11
+references:
+  - https://m365internals.com/2022/10/07/hunting-in-on-premises-exchange-server-logs/
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: selection
+    selection:
+        ScriptBlockText|contains|all:
+          - 'Set-Mailbox '
+          - ' -DeliverToMailboxAndForward '
+          - ' -ForwardingSmtpAddress '
+falsepositives: Legitimate usage of the cmdlet to forward emails
+level: medium
+customer: 'demo'
+tags:
+  - attack.exfiltration
+  - DEMO

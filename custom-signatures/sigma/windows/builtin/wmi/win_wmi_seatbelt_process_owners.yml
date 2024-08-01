@@ -1,0 +1,26 @@
+title: Seatbelt Non Zero Session Processes Recon
+id: 96fff6e6-61ed-446b-bca7-48a843cff281
+status: test
+description: Detects WMI query to obtain the list of processes outside of sessions zero. This query has been seen used by Seatbelt using the command "ProcessOwners"
+references:
+    - https://github.com/GhostPack/Seatbelt/blob/f0b5cd5b4edf4325b613835b51a63705d2139c30/Seatbelt/Commands/Windows/ProcessOwnersCommand.cs#L26
+author: Nasreddine Bencherchali
+date: 2022/11/22
+modified: 2023/03/29
+tags:
+    - attack.execution
+    - attack.t1047
+logsource:
+    product: windows
+    service: wmi
+detection:
+    selection:
+        # For an example see reference
+        EventID: 11
+        Operation|contains|all:
+            - 'IWbemServices::ExecQuery'
+            - 'Select \* FROM Win32_Process WHERE SessionID != 0'
+    condition: selection
+falsepositives:
+    - Unknown
+level: high

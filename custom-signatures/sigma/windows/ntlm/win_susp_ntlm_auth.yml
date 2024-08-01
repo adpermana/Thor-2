@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: NTLM Logon
+id: 98c3bcf1-56f2-49dc-9d8d-c66cf190238b
+status: test
+description: Detects logons using NTLM, which could be caused by a legacy source or
+    attackers
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2018/06/08 05:50:01
+references:
+  - https://twitter.com/JohnLaTwC/status/1004895028995477505
+  - https://goo.gl/PsqrhT
+logsource:
+    product: windows
+    service: ntlm
+    definition: Requires events from Microsoft-Windows-NTLM/Operational
+detection:
+    condition: selection
+    selection:
+        EventID: "8002"
+        ProcessName|contains: '*'
+falsepositives: Legacy hosts
+level: low
+customer: 'demo'
+modified: 2022/10/05
+tags:
+  - attack.lateral_movement
+  - attack.t1550.002
+  - DEMO

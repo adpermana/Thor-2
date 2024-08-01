@@ -1,0 +1,53 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Azure Kubernetes Admission Controller
+id: a61a3c56-4ce2-4351-a079-88ae4cbd2b58
+status: test
+description: |
+    Identifies when an admission controller is executed in Azure Kubernetes.
+    A Kubernetes Admission controller intercepts, and possibly modifies, requests to the Kubernetes API server.
+    The behavior of this admission controller is determined by an admission webhook (MutatingAdmissionWebhook or ValidatingAdmissionWebhook) that the user deploys in the cluster.
+    An adversary can use such webhooks as the MutatingAdmissionWebhook for obtaining persistence in the cluster.
+    For example, attackers can intercept and modify the pod creation operations in the cluster and add their malicious container to every created pod.
+    An adversary can use the webhook ValidatingAdmissionWebhook, which could be used to obtain access credentials.
+    An adversary could use the webhook to intercept the requests to the API server, record secrets, and other sensitive information.
+author: Austin Songer @austinsonger
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/11/25 16:09:41
+references:
+  - https://docs.microsoft.com/en-us/azure/role-based-access-control/resource-provider-operations#microsoftkubernetes
+logsource:
+    product: azure
+    service: activitylogs
+detection:
+    condition: selection
+    selection:
+        operationName|endswith:
+          - /MUTATINGWEBHOOKCONFIGURATIONS/WRITE
+          - /VALIDATINGWEBHOOKCONFIGURATIONS/WRITE
+        operationName|startswith:
+          - MICROSOFT.KUBERNETES/CONNECTEDCLUSTERS/ADMISSIONREGISTRATION.K8S.IO
+          - MICROSOFT.CONTAINERSERVICE/MANAGEDCLUSTERS/ADMISSIONREGISTRATION.K8S.IO
+falsepositives:
+  - Azure Kubernetes Admissions Controller may be done by a system administrator.
+  - If known behavior is causing false positives, it can be exempted from the rule.
+level: medium
+customer: 'demo'
+modified: 2022/12/18
+tags:
+  - attack.persistence
+  - attack.t1078
+  - attack.credential_access
+  - attack.t1552
+  - attack.t1552.007
+  - DEMO

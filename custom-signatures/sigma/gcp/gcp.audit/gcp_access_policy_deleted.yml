@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: GCP Access Policy Deleted
+id: 32438676-1dba-4ac7-bf69-b86cba995e05
+status: experimental
+description: |
+    Detects when an access policy that is applied to a GCP cloud resource is deleted.
+    An adversary would be able to remove access policies to gain access to a GCP cloud resource.
+author: Bryan Lim
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/01/12 12:11:11
+references:
+  - https://cloud.google.com/access-context-manager/docs/audit-logging
+  - https://cloud.google.com/logging/docs/audit/understanding-audit-logs
+  - https://cloud.google.com/logging/docs/reference/audit/auditlog/rest/Shared.Types/AuditLog
+logsource:
+    product: gcp
+    service: gcp.audit
+detection:
+    condition: selection
+    selection:
+        data.protoPayload.authorizationInfo.granted: "true"
+        data.protoPayload.authorizationInfo.permission:
+          - accesscontextmanager.accessPolicies.delete
+          - accesscontextmanager.accessPolicies.accessLevels.delete
+          - accesscontextmanager.accessPolicies.accessZones.delete
+          - accesscontextmanager.accessPolicies.authorizedOrgsDescs.delete
+        data.protoPayload.serviceName: accesscontextmanager.googleapis.com
+falsepositives: Legitimate administrative activities
+level: medium
+customer: 'demo'
+tags:
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1098
+  - DEMO

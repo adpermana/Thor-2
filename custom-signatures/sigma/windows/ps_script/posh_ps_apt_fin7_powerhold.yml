@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential APT FIN7 POWERHOLD Execution
+id: 71c432c4-e4da-4eab-ba49-e60ea9a81bca
+status: test
+description: Detects execution of the POWERHOLD script seen used by FIN7 as reported
+    by WithSecureLabs
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/04 14:56:11
+references:
+  - https://labs.withsecure.com/publications/fin7-target-veeam-servers
+logsource:
+    category: ps_script
+    product: windows
+    definition: bade5735-5ab0-4aa7-a642-a11be0e40872
+detection:
+    condition: selection
+    selection:
+        ScriptBlockText|contains|all:
+          - $env:APPDATA
+          - function MainPayload
+          - ::WriteAllBytes
+          - wscript.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - attack.g0046
+  - detection.emerging_threats
+  - DEMO

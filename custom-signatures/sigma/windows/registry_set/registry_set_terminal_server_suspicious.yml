@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: RDP Sensitive Settings Changed to Zero
+id: a2863fbc-d5cb-48d5-83fb-d976d4b1743b
+related:
+  - type: similar
+    id: 3f6b7b62-61aa-45db-96bd-9c31b36b653c
+status: test
+description: |
+    Detects tampering of RDP Terminal Service/Server sensitive settings.
+    Such as allowing unauthorized users access to a system via the 'fAllowUnsolicited' or enabling RDP via 'fDenyTSConnections', etc.
+author: Samir Bousseaden, David ANDRE, Roberto Rodriguez @Cyb3rWard0g, Nasreddine
+    Bencherchali
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/29 15:46:21
+references:
+  - https://blog.menasec.net/2019/02/threat-hunting-rdp-hijacking-via.html
+  - http://woshub.com/rds-shadow-how-to-connect-to-a-user-session-in-windows-server-2012-r2/
+  - https://twitter.com/SagieSec/status/1469001618863624194?t=HRf0eA0W1YYzkTSHb-Ky1A&s=03
+  - https://threathunterplaybook.com/hunts/windows/190407-RegModEnableRDPConnections/notebook.html
+  - https://bazaar.abuse.ch/sample/6f3aa9362d72e806490a8abce245331030d1ab5ac77e400dd475748236a6cc81/
+  - http://etutorials.org/Microsoft+Products/microsoft+windows+server+2003+terminal+services/Chapter+6+Registry/Registry+Keys+for+Terminal+Services/
+  - https://admx.help/HKLM/SOFTWARE/Policies/Microsoft/Windows%20NT/Terminal%20Services
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Details: DWORD (0x00000000)
+        TargetObject|endswith:
+          - \fDenyTSConnections
+          - \fSingleSessionPerUser
+          - \UserAuthentication
+falsepositives: Some of the keys mentioned here could be modified by an administrator
+    while setting group policy (it should be investigated either way)
+level: medium
+customer: 'demo'
+modified: 2022/11/26
+tags:
+  - attack.defense_evasion
+  - attack.persistence
+  - attack.t1112
+  - DEMO

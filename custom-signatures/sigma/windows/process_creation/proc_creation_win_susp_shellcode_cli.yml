@@ -1,0 +1,35 @@
+title: Possible Shellcode In CommandLine
+id: 7b6bc843-624a-40dc-9895-10bea3be0370
+status: experimental
+description: Detects the presence of shellcode via the commandline by looking at values starting with '0x' as seen used in the tool winapiexec
+references:
+    - https://www.welivesecurity.com/wp-content/uploads/2020/06/ESET_InvisiMole.pdf
+    - https://shell-storm.org/shellcode/
+    - https://modexp.wordpress.com/2016/06/04/winux/
+author: Nasreddine Bencherchali
+date: 2022/09/06
+tags:
+    - attack.execution
+    - attack.t1059
+logsource:
+    product: windows
+    category: process_creation
+detection:
+    selection:
+        CommandLine|contains:
+            # Add more common hex starts or remove if FP are caused
+            - '0xFFFFFFFFFFFFFF'
+            - '0x00000000000000'
+            - '0x31c0' # XOR EAX,EAX
+            - '0x31c9' # XOR ECX,ECX
+            - '0x565753' # PUSH ESI; PUSH EDI; PUSH EBX
+            - '0x505152' # PUSH RAX; PUSH RCX; PUSH RDX'
+    filter:
+        Image: 'C:\Windows\System32\conhost.exe'
+        CommandLine|contains|all:
+            - '\??\'
+            - ' 0x'
+    condition: selection and not filter
+falsepositives:
+    - There could be some commandline tool that uses hex arguments in a way similar to the ones described by the detection section (reduce the level if you experience a lot of FP)
+level: high

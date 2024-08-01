@@ -1,0 +1,57 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Linux Crypto Mining Pool Connections
+id: a46c93b7-55ed-4d27-a41b-c259456c4746
+status: stable
+description: Detects process connections to a Monero crypto mining pool
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/10/26 15:38:41
+references:
+  - https://www.poolwatch.io/coin/monero
+logsource:
+    category: network_connection
+    product: linux
+detection:
+    condition: selection
+    selection:
+        DestinationHostname:
+          - pool.minexmr.com
+          - fr.minexmr.com
+          - de.minexmr.com
+          - sg.minexmr.com
+          - ca.minexmr.com
+          - us-west.minexmr.com
+          - pool.supportxmr.com
+          - mine.c3pool.com
+          - xmr-eu1.nanopool.org
+          - xmr-eu2.nanopool.org
+          - xmr-us-east1.nanopool.org
+          - xmr-us-west1.nanopool.org
+          - xmr-asia1.nanopool.org
+          - xmr-jp1.nanopool.org
+          - xmr-au1.nanopool.org
+          - xmr.2miners.com
+          - xmr.hashcity.org
+          - xmr.f2pool.com
+          - xmrpool.eu
+          - pool.hashvault.pro
+          - moneroocean.stream
+          - monerocean.stream
+falsepositives: Legitimate use of crypto miners
+level: high
+customer: 'demo'
+tags:
+  - attack.impact
+  - attack.t1496
+  - DEMO

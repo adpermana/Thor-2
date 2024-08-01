@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential CVE-2023-27997 Exploitation Indicators
+id: 31e4e649-7394-4fd2-9ae7-dbc61eebb550
+status: experimental
+description: |
+    Detects indicators of potential exploitation of CVE-2023-27997 in Frotigate weblogs.
+    To avoid false positives it is best to look for successive requests to the endpoints mentioned as well as weird values of the "enc" parameter
+author: Sergio Palacios Dominguez, Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/07/28 17:30:51
+references:
+  - https://blog.lexfo.fr/Forensics-xortigate-notice.html
+  - https://blog.lexfo.fr/xortigate-cve-2023-27997.html
+  - https://research.kudelskisecurity.com/2023/06/12/cve-2023-27997-fortigate-ssl-vpn/
+  - https://labs.watchtowr.com/xortigate-or-cve-2023-27997/
+logsource:
+    category: webserver
+detection:
+    condition: all of selection_*
+    selection_keywords: enc=
+    selection_uri:
+        cs-method:
+          - GET
+          - POST
+        cs-uri-query|contains:
+          - /remote/hostcheck_validate
+          - /remote/logincheck
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - cve.2023.27997
+  - attack.initial_access
+  - attack.t1190
+  - detection.emerging_threats
+  - DEMO

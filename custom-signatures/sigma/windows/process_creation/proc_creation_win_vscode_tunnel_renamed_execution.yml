@@ -1,0 +1,66 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Renamed Visual Studio Code Tunnel Execution
+id: 2cf29f11-e356-4f61-98c0-1bdb9393d6da
+status: experimental
+description: Detects renamed Visual Studio Code tunnel execution. Attackers can abuse
+    this functionality to establish a C2 channel
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/09/28 17:19:31
+references:
+  - https://ipfyx.fr/post/visual-studio-code-tunnel/
+  - https://badoption.eu/blog/2023/01/31/code_c2.html
+  - https://code.visualstudio.com/docs/remote/tunnels
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: (1 of selection_image_* and not 1 of filter_main_image_*) or (1 of
+        selection_parent_* and not 1 of filter_main_parent_*)
+    filter_main_image_code:
+        Image|endswith:
+          - \code-tunnel.exe
+          - \code.exe
+    filter_main_parent_code:
+        ParentImage|endswith:
+          - \code-tunnel.exe
+          - \code.exe
+    selection_image_only_tunnel:
+        CommandLine|endswith: .exe tunnel
+        OriginalFileName: []
+    selection_image_tunnel_args:
+        CommandLine|contains|all:
+          - .exe tunnel
+          - '--name '
+          - --accept-server-license-terms
+    selection_image_tunnel_service:
+        CommandLine|contains|all:
+          - 'tunnel '
+          - service
+          - internal-run
+          - tunnel-service.log
+    selection_parent_tunnel:
+        CommandLine|contains|all:
+          - '/d /c '
+          - \servers\Stable-
+          - code-server.cmd
+        Image|endswith: \cmd.exe
+        ParentCommandLine|endswith: ' tunnel'
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.command_and_control
+  - attack.t1071.001
+  - DEMO

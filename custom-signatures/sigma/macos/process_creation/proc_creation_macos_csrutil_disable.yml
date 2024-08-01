@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: System Integrity Protection (SIP) Disabled
+id: 3603f18a-ec15-43a1-9af2-d196c8a7fec6
+status: experimental
+description: |
+    Detects the use of csrutil to disable the Configure System Integrity Protection (SIP). This technique is used in post-exploit scenarios.
+author: Joseliyo Sanchez, @Joseliyo_Jstnk
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/01/02 16:50:41
+references:
+  - https://ss64.com/osx/csrutil.html
+  - https://objective-see.org/blog/blog_0x6D.html
+  - https://www.welivesecurity.com/2017/10/20/osx-proton-supply-chain-attack-elmedia/
+  - https://www.virustotal.com/gui/file/05a2adb266ec6c0ba9ed176d87d8530e71e845348c13caf9f60049760c312cd3/behavior
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains: disable
+        Image|endswith: /csrutil
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.discovery
+  - attack.t1518.001
+  - DEMO

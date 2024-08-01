@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PUA - Nimgrab Execution
+id: 74a12f18-505c-4114-8d0b-8448dd5485c6
+status: test
+description: Detects the usage of nimgrab, a tool bundled with the Nim programming
+    framework and used for downloading files.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/28 11:37:11
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/28d190330fe44de6ff4767fc400cc10fa7cd6540/atomics/T1105/T1105.md
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_hash:
+      - md5: 2DD44C3C29D667F5C0EF5F9D7C7FFB8B
+      - sha256: F266609E91985F0FE3E31C5E8FAEEEC4FFA5E0322D8B6F15FE69F4C5165B9559
+      - Imphash: C07FDDD21D123EA9B3A08EEF44AAAC45
+    selection_hashes:
+        Hashes|contains:
+          - MD5=2DD44C3C29D667F5C0EF5F9D7C7FFB8B
+          - SHA256=F266609E91985F0FE3E31C5E8FAEEEC4FFA5E0322D8B6F15FE69F4C5165B9559
+          - IMPHASH=C07FDDD21D123EA9B3A08EEF44AAAC45
+    selection_name:
+        Image|endswith: \nimgrab.exe
+falsepositives: Legitimate use of Nim on a developer systems
+level: high
+customer: 'demo'
+modified: 2023/02/13
+tags:
+  - attack.command_and_control
+  - attack.t1105
+  - DEMO

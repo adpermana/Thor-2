@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Verclsid.exe Runs COM Object
+id: d06be4b9-8045-428b-a567-740a26d9db25
+status: test
+description: Detects when verclsid.exe is used to run COM object via GUID
+author: Victor Sergeev, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/09 13:03:01
+references:
+  - https://lolbas-project.github.io/lolbas/Binaries/Verclsid/
+  - https://gist.github.com/NickTyrer/0598b60112eaafe6d07789f7964290d5
+  - https://bohops.com/2018/08/18/abusing-the-com-registry-structure-part-2-loading-techniques-for-evasion-and-persistence/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains|all:
+          - /S
+          - /C
+    selection_img:
+      - Image|endswith: \verclsid.exe
+      - OriginalFileName: verclsid.exe
+fields:
+  - CommandLine
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/07/11
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

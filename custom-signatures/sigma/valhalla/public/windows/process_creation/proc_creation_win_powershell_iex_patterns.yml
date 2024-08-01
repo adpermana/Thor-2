@@ -1,0 +1,58 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious PowerShell IEX Execution Patterns
+id: 09576804-7a05-458e-a817-eb718ca91f54
+status: test
+description: Detects suspicious ways to run Invoke-Execution using IEX alias
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/03/24 17:50:31
+references:
+  - https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-expression?view=powershell-7.2
+  - https://www.huntress.com/blog/slashandgrab-screen-connect-post-exploitation-in-the-wild-cve-2024-1709-cve-2024-1708
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_combined_* or selection_standalone
+    selection_combined_1:
+        CommandLine|contains:
+          - ' | iex;'
+          - ' | iex '
+          - ' | iex}'
+          - ' | IEX ;'
+          - ' | IEX -Error'
+          - ' | IEX (new'
+          - ');IEX '
+        Image|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+    selection_combined_2:
+        CommandLine|contains:
+          - ::FromBase64String
+          - '.GetString([System.Convert]::'
+    selection_standalone:
+        CommandLine|contains:
+          - )|iex;$
+          - );iex($
+          - );iex $
+          - ' | IEX | '
+          - ' | iex\"'
+falsepositives: Legitimate scripts that use IEX
+level: high
+customer: 'demo'
+modified: 2022/11/28
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

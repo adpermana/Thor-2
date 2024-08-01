@@ -1,0 +1,43 @@
+#
+# THOR File Name Characteristics
+#
+# Important: Rename this template file from .txt.template to .txt
+#
+# FORMAT -----------------------------------------------------------------------
+#
+# # COMMENT
+# REGEX;SCORE to add;Optional False Positive Regex
+#
+# APPLICATION ------------------------------------------------------------------
+#
+# Every line is starts with a regular expression.
+# Regular expressions are applied case insensitively if they contain (?i) or all special regexp characters (like [, . or *) are escaped with backslashes.
+# Every line includes a score that adds up to a total score for this finding.
+# Lines can optionally include a false positive regex. A finding is only generated if the false positive regex does not match.
+#
+# EXAMPLES ---------------------------------------------------------------------
+#
+# # This regular expression is applied case insensitively since all special characters are escaped
+# \\svcsstat\.exe;75
+# Whereas this regular expression contains unescaped special characters and is therefore case sensitive
+# \\(server|servisces|smrr|srrm|svchost|svhost|svshost|taskmgr)\.exe$;25
+# This regular expression is applied case insensitively and also defines a false positive regex4
+# (?i)\\chrome_frame_helper\.exe;60;(?i)(\\Google\\Chrome\\application\\|Prefetch\\)
+#
+# ProgramData\\Mail\\MailAg\\;40
+# (Anwendungsdaten|Application Data|APPDATA)\\sydmain\.dll;55
+# (TEMP|Temp)\\[^\\]+\.(xmd|yls)$;45
+# (LOCAL SETTINGS\\Temp|Local Settings\\Temp|Local\\Temp)\\(word\.exe|winword\.exe);50
+#
+# NOTICE -----------------------------------------------------------------------
+# Notice that you can overwrite an exact regex definition within the Scanner's 
+# signatures with your own definition. That means that if there is a definition 
+# for "\\ncat\.exe", you can overwrite the score given by THOR by defining 
+# exactly the same regex. 
+# You are able to the reduce the score given by THOR by negative score 
+# definitions like "\\bin\\ncat\.exe;-40" to exclude ncats that are located in
+# a typical directory of e.g. a Cygwin installation. If "ncat" is detected in a
+# different directory, the reduction will not take place. 
+
+# Ncat Example
+# bin\\nc\.exe;-20

@@ -1,0 +1,38 @@
+title: PortQry Reconnaissance Usage
+id: da9a33b1-e637-4f60-94f0-4367f24de503
+status: experimental
+description: Detects usage of PortQry tool for reconnaissance
+references:
+    - https://ss64.com/nt/portqry.html
+    - https://docs.microsoft.com/en-us/troubleshoot/windows-server/networking/portqry-command-line-port-scanner-v2
+    - https://www.cybereason.com/blog/research/deadringer-exposing-chinese-threat-actors-targeting-major-telcos
+    - https://www.cybereason.com/blog/research/operation-soft-cell-a-worldwide-campaign-against-telecommunications-providers
+    - https://www.welivesecurity.com/2021/06/10/backdoordiplomacy-upgrading-quarian-turian/
+author: Nasreddine Bencherchali
+date: 2022/05/06
+modified: 2022/11/04
+tags:
+    - attack.discovery
+    - attack.t1049
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: '\PortQry.exe'
+    selection_cli_ip:
+        CommandLine|contains:
+            - ' -n 10.'
+            - ' -n 127.'
+            - ' -n 192.'
+            - ' -n 172.'
+    selection_cli_ports:
+        CommandLine|contains:
+            - ' -e 3389'
+            - ' -e 53'
+            - ' -e 445'
+            - ' -e 135'
+    condition: selection_img or all of selection_cli_*
+falsepositives:
+    - Legitimate use of the tool for administration purposes
+level: high

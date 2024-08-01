@@ -1,0 +1,53 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PUA - Process Hacker Driver Load
+id: 67add051-9ee7-4ad3-93ba-42935615ae8d
+related:
+  - type: similar
+    id: 10cb6535-b31d-4512-9962-513dcbc42cc1
+status: experimental
+description: Detects driver load of the Process Hacker tool
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/11/16 13:40:41
+references:
+  - https://processhacker.sourceforge.io/
+logsource:
+    category: driver_load
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_image:
+        ImageLoaded|endswith: \kprocesshacker.sys
+    selection_processhack_hashes:
+        Imphash:
+          - 821D74031D3F625BCBD0DF08B70F1E77
+          - F86759BB4DE4320918615DC06E998A39
+          - 0A64EEB85419257D0CE32BD5D55C3A18
+          - 6E7B34DFC017700B1517B230DF6FF0D0
+    selection_processhack_sysmon:
+        Hashes|contains:
+          - IMPHASH=821D74031D3F625BCBD0DF08B70F1E77
+          - IMPHASH=F86759BB4DE4320918615DC06E998A39
+          - IMPHASH=0A64EEB85419257D0CE32BD5D55C3A18
+          - IMPHASH=6E7B34DFC017700B1517B230DF6FF0D0
+falsepositives: Legitimate use of process hacker or system informer by developers
+    or system administrators
+level: high
+customer: 'demo'
+modified: 2023/05/08
+tags:
+  - attack.privilege_escalation
+  - cve.2021.21551
+  - attack.t1543
+  - DEMO

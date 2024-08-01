@@ -1,0 +1,37 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Loading Diagcab Package From Remote Path
+id: 50cb47b8-2c33-4b23-a2e9-4600657d9746
+status: test
+description: Detects loading of diagcab packages from a remote path, as seen in DogWalk
+    vulnerability
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/14 16:05:41
+references:
+  - https://twitter.com/nas_bench/status/1539679555908141061
+  - https://twitter.com/j00sean/status/1537750439701225472
+logsource:
+    product: windows
+    service: diagnosis-scripted
+detection:
+    condition: selection
+    selection:
+        EventID: "101"
+        PackagePath|contains: \\\\
+falsepositives: Legitimate package hosted on a known and authorized remote location
+level: high
+customer: 'demo'
+tags:
+  - attack.execution
+  - DEMO

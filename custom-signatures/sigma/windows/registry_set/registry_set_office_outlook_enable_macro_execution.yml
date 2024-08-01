@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Outlook Macro Execution Without Warning Setting Enabled
+id: e3b50fa5-3c3f-444e-937b-0a99d33731cd
+status: test
+description: Detects the modification of Outlook security setting to allow unprompted
+    execution of macros.
+author: '@ScoubiMtl'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/04/05 20:41:01
+references:
+  - https://www.mdsec.co.uk/2020/11/a-fresh-outlook-on-mail-based-persistence/
+  - https://speakerdeck.com/heirhabarov/hunting-for-persistence-via-microsoft-exchange-server-or-outlook?slide=53
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Details|contains: "0x00000001"
+        TargetObject|endswith: \Outlook\Security\Level
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.persistence
+  - attack.command_and_control
+  - attack.t1137
+  - attack.t1008
+  - attack.t1546
+  - DEMO

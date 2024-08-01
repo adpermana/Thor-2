@@ -1,0 +1,58 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PUA - Potential PE Metadata Tamper Using Rcedit
+id: 0c92f2e6-f08f-4b73-9216-ecb0ca634689
+status: test
+description: Detects the use of rcedit to potentially alter executable PE metadata
+    properties, which could conceal efforts to rename system utilities for defense
+    evasion.
+author: Micah Babinski
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/12/11 17:28:31
+references:
+  - https://security.stackexchange.com/questions/210843/is-it-possible-to-change-original-filename-of-an-exe
+  - https://www.virustotal.com/gui/file/02e8e8c5d430d8b768980f517b62d7792d690982b9ba0f7e04163cbc1a6e7915
+  - https://github.com/electron/rcedit
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_attributes:
+        CommandLine|contains:
+          - OriginalFileName
+          - CompanyName
+          - FileDescription
+          - ProductName
+          - ProductVersion
+          - LegalCopyright
+    selection_flags:
+        CommandLine|contains: --set-
+    selection_img:
+      - Image|endswith:
+          - \rcedit-x64.exe
+          - \rcedit-x86.exe
+      - Description: Edit resources of exe
+      - Product: rcedit
+falsepositives: Legitimate use of the tool by administrators or users to update metadata
+    of a binary
+level: medium
+customer: 'demo'
+modified: 2023/03/05
+tags:
+  - attack.defense_evasion
+  - attack.t1036.003
+  - attack.t1036
+  - attack.t1027.005
+  - attack.t1027
+  - DEMO

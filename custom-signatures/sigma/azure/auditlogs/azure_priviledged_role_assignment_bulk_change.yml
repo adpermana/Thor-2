@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Bulk Deletion Changes To Privileged Account Permissions
+id: 102e11e3-2db5-4c9e-bc26-357d42585d21
+status: test
+description: Detects when a user is removed from a privileged role. Bulk changes should
+    be investigated.
+author: Mark Morowczynski '@markmorow', Yochana Henderson, '@Yochana-H'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/05 20:32:21
+references:
+  - https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/security-operations-privileged-identity-management#azure-ad-roles-assignment
+logsource:
+    product: azure
+    service: auditlogs
+detection:
+    condition: selection
+    selection:
+        properties.message:
+          - Remove eligible member (permanent)
+          - Remove eligible member (eligible)
+falsepositives: Legtimate administrator actions of removing members from a role
+level: high
+customer: 'demo'
+tags:
+  - attack.persistence
+  - attack.t1098
+  - DEMO

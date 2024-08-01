@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Indirect Command Execution By Program Compatibility Wizard
+id: b97cd4b1-30b8-4a9d-bd72-6293928d52bc
+status: test
+description: Detect indirect command execution via Program Compatibility Assistant
+    pcwrun.exe
+author: A. Sungurov , oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/12 21:28:31
+references:
+  - https://twitter.com/pabraeken/status/991335019833708544
+  - https://lolbas-project.github.io/lolbas/Binaries/Pcwrun/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        ParentImage|endswith: \pcwrun.exe
+fields:
+  - ComputerName
+  - User
+  - ParentCommandLine
+  - CommandLine
+falsepositives:
+  - Need to use extra processing with 'unique_count' / 'filter' to focus on outliers
+    as opposed to commonly seen artifacts
+  - Legit usage of scripts
+level: low
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - attack.execution
+  - DEMO

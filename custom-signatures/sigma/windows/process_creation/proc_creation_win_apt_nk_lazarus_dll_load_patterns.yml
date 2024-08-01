@@ -1,0 +1,29 @@
+title: Suspicious Lazarus DLL Loading Pattern
+id: e9dbf5ea-4ce7-4bcf-a0b0-2b3ac3044246
+status: experimental
+description: Detects suspicious process creation pattern found in DLL loading activity of Lazarus group
+author: Florian Roth
+date: 2021/11/29
+tags:
+    - attack.g0032
+    - attack.execution
+    - attack.t1059 
+references:
+    - https://www.hvs-consulting.de/lazarus-report/"
+    - https://github.com/JPCERTCC/Lazarus-research/blob/main/slides/CODEBLUE2021_The-Lazarus-Groups-Attack-Operations-Targeting-Japan.pdf
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains: 
+            - '.bin -p 0x'
+            - '.dat -p 0x'
+            - '.tmp -p 0x'
+    condition: selection
+fields:
+    - CommandLine
+    - ParentCommandLine
+falsepositives:
+    - Unknown
+level: critical

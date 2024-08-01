@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Process Injection Via Msra.EXE
+id: 744a188b-0415-4792-896f-11ddb0588dbc
+status: test
+description: Detects potential process injection via Microsoft Remote Asssistance
+    (Msra.exe) by looking at suspicious child processes spawned from the aforementioned
+    process. It has been a target used by many threat actors and used for discovery
+    and persistence tactics
+author: Alexander McDonald
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/24 16:16:51
+references:
+  - https://www.microsoft.com/security/blog/2021/12/09/a-closer-look-at-qakbots-latest-building-blocks-and-how-to-knock-them-down/
+  - https://www.fortinet.com/content/dam/fortinet/assets/analyst-reports/ar-qakbot.pdf
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith:
+          - \arp.exe
+          - \cmd.exe
+          - \net.exe
+          - \netstat.exe
+          - \nslookup.exe
+          - \route.exe
+          - \schtasks.exe
+          - \whoami.exe
+        ParentCommandLine|endswith: msra.exe
+        ParentImage|endswith: \msra.exe
+falsepositives: Legitimate use of Msra.exe
+level: high
+customer: 'demo'
+modified: 2023/02/03
+tags:
+  - attack.defense_evasion
+  - attack.t1055
+  - DEMO

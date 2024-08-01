@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Malicious PE Execution by Microsoft Visual Studio Debugger
+id: 15c7904e-6ad1-4a45-9b46-5fb25df37fd2
+status: test
+description: |
+    There is an option for a MS VS Just-In-Time Debugger "vsjitdebugger.exe" to launch specified executable and attach a debugger.
+    This option may be used adversaries to execute malicious code by signed verified binary.
+    The debugger is installed alongside with Microsoft Visual Studio package.
+author: Agro (@agro_sev), Ensar Şamil (@sblmsrsn), oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/14 21:14:51
+references:
+  - https://twitter.com/pabraeken/status/990758590020452353
+  - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Vsjitdebugger/
+  - https://docs.microsoft.com/en-us/visualstudio/debugger/debug-using-the-just-in-time-debugger?view=vs-2019
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not (reduction1 or reduction2)
+    reduction1:
+        Image|endswith: \vsimmersiveactivatehelper*.exe
+    reduction2:
+        Image|endswith: \devenv.exe
+    selection:
+        ParentImage|endswith: \vsjitdebugger.exe
+falsepositives: The process spawned by vsjitdebugger.exe is uncommon.
+level: medium
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.t1218
+  - attack.defense_evasion
+  - DEMO

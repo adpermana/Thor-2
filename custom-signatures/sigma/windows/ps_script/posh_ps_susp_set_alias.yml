@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential PowerShell Obfuscation Using Alias Cmdlets
+id: 96cd126d-f970-49c4-848a-da3a09f55c55
+related:
+  - type: derived
+    id: e8314f79-564d-4f79-bc13-fbc0bf2660d8
+status: test
+description: Detects Set-Alias or New-Alias cmdlet usage. Which can be use as a mean
+    to obfuscate PowerShell scripts
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/08 19:54:21
+references:
+  - https://github.com/1337Rin/Swag-PSO
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: selection
+    selection:
+        ScriptBlockText|contains:
+          - 'Set-Alias '
+          - 'New-Alias '
+falsepositives: Unknown
+level: low
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.execution
+  - attack.t1027
+  - attack.t1059.001
+  - DEMO

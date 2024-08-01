@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Google Workspace User Granted Admin Privileges
+id: 2d1b83e4-17c6-4896-a37b-29140b40a788
+status: test
+description: Detects when an Google Workspace user is granted admin privileges.
+author: Austin Songer
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/23 18:08:31
+references:
+  - https://cloud.google.com/logging/docs/audit/gsuite-audit-logging#3
+  - https://developers.google.com/admin-sdk/reports/v1/appendix/activity/admin-user-settings#GRANT_ADMIN_PRIVILEGE
+logsource:
+    product: gcp
+    service: google_workspace.admin
+detection:
+    condition: selection
+    selection:
+        eventName:
+          - GRANT_DELEGATED_ADMIN_PRIVILEGES
+          - GRANT_ADMIN_PRIVILEGE
+        eventService: admin.googleapis.com
+falsepositives: Google Workspace admin role privileges, may be modified by system
+    administrators.
+level: medium
+customer: 'demo'
+modified: 2023/10/11
+tags:
+  - attack.persistence
+  - attack.t1098
+  - DEMO

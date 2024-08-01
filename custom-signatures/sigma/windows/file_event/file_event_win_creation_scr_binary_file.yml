@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Screensaver Binary File Creation
+id: 97aa2e88-555c-450d-85a6-229bcd87efb8
+status: test
+description: |
+    Adversaries may establish persistence by executing malicious content triggered by user inactivity.
+    Screensavers are programs that execute after a configurable time of user inactivity and consist of Portable Executable (PE) files with a .scr file extension
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/12/29 17:36:21
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1546.002/T1546.002.md
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection and not 1 of filter_*
+    filter_generic:
+        Image|endswith:
+          - \Kindle.exe
+          - \Bin\ccSvcHst.exe
+    filter_tiworker:
+        Image|endswith: \TiWorker.exe
+        TargetFilename|endswith: \uwfservicingscr.scr
+    selection:
+        TargetFilename|endswith: .scr
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/11/08
+tags:
+  - attack.persistence
+  - attack.t1546.002
+  - DEMO

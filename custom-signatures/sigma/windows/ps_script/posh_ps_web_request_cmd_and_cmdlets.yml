@@ -1,0 +1,56 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Usage Of Web Request Commands And Cmdlets - ScriptBlock
+id: 1139d2e2-84b1-4226-b445-354492eba8ba
+related:
+  - type: derived
+    id: 9fc51a3c-81b3-4fa7-b35f-7c02cf10fd2d
+status: test
+description: Detects the use of various web request commands with commandline tools
+    and Windows PowerShell cmdlets (including aliases) via PowerShell scriptblock
+    logs
+author: James Pemberton / @4A616D6573
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/24 19:43:51
+references:
+  - https://4sysops.com/archives/use-powershell-to-download-a-file-with-http-https-and-ftp/
+  - https://blog.jourdant.me/post/3-ways-to-download-files-with-powershell
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: selection and not filter
+    filter:
+        Path|startswith: C:\Packages\Plugins\Microsoft.GuestConfiguration.ConfigurationforWindows\
+    selection:
+        ScriptBlockText|contains:
+          - '[System.Net.WebRequest]::create'
+          - 'curl '
+          - Invoke-RestMethod
+          - Invoke-WebRequest
+          - 'iwr '
+          - Net.WebClient
+          - Resume-BitsTransfer
+          - Start-BitsTransfer
+          - 'wget '
+          - WinHttp.WinHttpRequest
+falsepositives: Use of Get-Command and Get-Help modules to reference Invoke-WebRequest
+    and Start-BitsTransfer.
+level: medium
+customer: 'demo'
+modified: 2023/01/10
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

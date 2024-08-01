@@ -1,0 +1,20 @@
+title: Hacktool PPLDump Indicator
+id: 227a91f7-cdde-4641-a1bf-6de5ed01f328
+description: Detects events that indicate PPLDump process dumping actitivty
+status: test
+references:
+    - https://github.com/itm4n/PPLdump
+author: Florian Roth
+date: 2022/03/07
+modified: 2023/03/29
+logsource:
+    product: windows
+    category: file_event
+detection:
+    selection:
+        Image: 'C:\Windows\System32\services.exe'
+        TargetFilename: 'C:\Windows\System32\EventAggregation.dll'
+    condition: selection
+falsepositives:
+    - Unknown
+level: high

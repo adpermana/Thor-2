@@ -1,0 +1,37 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Symlink Etc Passwd
+id: c67fc22a-0be5-4b4f-aad5-2b32c4b69523
+status: test
+description: Detects suspicious command lines that look as if they would create symbolic
+    links to /etc/passwd
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/04/05 10:46:11
+references:
+  - https://www.qualys.com/2021/05/04/21nails/21nails.txt
+logsource:
+    product: linux
+detection:
+    condition: keywords
+    keywords:
+      - ln -s -f /etc/passwd
+      - ln -s /etc/passwd
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.t1204.001
+  - attack.execution
+  - DEMO

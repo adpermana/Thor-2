@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Confluence Exploitation CVE-2019-3398
+id: e9bc39ae-978a-4e49-91ab-5bd481fc668b
+status: test
+description: Detects the exploitation of the Confluence vulnerability described in
+    CVE-2019-3398
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/05/26 14:36:51
+references:
+  - https://devcentral.f5.com/s/articles/confluence-arbitrary-file-write-via-path-traversal-cve-2019-3398-34181
+logsource:
+    category: webserver
+detection:
+    condition: selection
+    selection:
+        cs-method: POST
+        cs-uri-query|contains|all:
+          - /upload.action
+          - filename=../../../../
+falsepositives: Unknown
+level: critical
+customer: 'demo'
+modified: 2023/01/02
+tags:
+  - attack.initial_access
+  - attack.t1190
+  - cve.2019.3398
+  - detection.emerging_threats
+  - DEMO

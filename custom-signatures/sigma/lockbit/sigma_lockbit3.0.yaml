@@ -1,0 +1,108 @@
+title: Lockbit 3.0 Ransomware Launched
+id: 100013
+status: experimental
+description: Detects command line activity related to Lockbit 3.0 ransomware launch.
+level: high
+references:
+  - https://attack.mitre.org/techniques/T1134/
+tags:
+  - attack.persistence
+  - attack.t1134
+detection:
+  selection:
+    CommandLine:
+      - '*-k LocalServiceNetworkRestricted -pass*'
+  condition: selection
+---
+
+title: Possible Ransomware Activity Detected via README.TXT File Creation
+id: 100015
+status: experimental
+description: Detects the creation of README.TXT files in multiple directories, which may indicate ransomware activity.
+level: high
+tags:
+  - attack.impact
+detection:
+  selection1:
+    TargetFilename:
+      - '\\\\users*'
+  selection2:
+    TargetFilename:
+      - '*.+readme.txt'
+  condition: selection1 and selection2
+  timeframe: 100s
+---
+
+title: Possible Ransomware Activity Detected by Deletion of Hyper-V Volume Shadow Copy Service
+id: 100029
+status: experimental
+description: Detects deletion of the Hyper-V volume shadow copy requestor service, indicating possible ransomware activity.
+level: high
+references:
+  - https://attack.mitre.org/techniques/T1490/
+tags:
+  - attack.impact
+  - attack.t1490
+detection:
+  selection:
+    TargetObject:
+      - 'HKLM\\System\\CurrentControlSet\\Services\\vmicvss'
+    EventType: '^DeleteKey$'
+    User: 'NT AUTHORITY\\SYSTEM'
+  condition: selection
+---
+
+title: Possible Ransomware Activity Detected by Deletion of Volume Shadow Copy Service
+id: 100030
+status: experimental
+description: Detects deletion of the Volume Shadow Copy Service, indicating possible ransomware activity.
+level: high
+references:
+  - https://attack.mitre.org/techniques/T1490/
+tags:
+  - attack.impact
+  - attack.t1490
+detection:
+  selection:
+    TargetObject:
+      - 'HKLM\\System\\CurrentControlSet\\Services\\VSS'
+    EventType: '^DeleteKey$'
+    User: 'NT AUTHORITY\\SYSTEM'
+  condition: selection
+---
+
+title: Possible Ransomware Activity Detected by Deletion of Windows Defender Service
+id: 100031
+status: experimental
+description: Detects deletion of the Windows Defender service, indicating possible ransomware activity.
+level: high
+references:
+  - https://attack.mitre.org/techniques/T1562.001/
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+detection:
+  selection:
+    TargetObject:
+      - 'HKLM\\System\\CurrentControlSet\\Services\\WinDefend'
+    EventType: '^DeleteKey$'
+    User: 'NT AUTHORITY\\SYSTEM'
+  condition: selection
+---
+
+title: Possible Ransomware Activity Detected by Creation of Multiple Registry Keys in Event Viewer
+id: 100032
+status: experimental
+description: Detects creation of multiple registry keys in Event Viewer, indicating possible ransomware activity.
+level: high
+references:
+  - https://attack.mitre.org/techniques/T1070.001/
+tags:
+  - attack.defense_evasion
+  - attack.t1070.001
+detection:
+  selection:
+    TargetObject:
+      - 'HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\WINEVT\\Channels'
+    EventType: '^CreateKey$'
+  condition: selection

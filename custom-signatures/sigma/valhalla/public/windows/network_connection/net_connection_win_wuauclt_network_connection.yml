@@ -1,0 +1,72 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potentially Suspicious Wuauclt Network Connection
+id: c649a6c7-cd8c-4a78-9c04-000fc76df954
+status: test
+description: |
+    Detects the use of the Windows Update Client binary (wuauclt.exe) to proxy execute code and making network connections.
+    One could easily make the DLL spawn a new process and inject to it to proxy the network connection and bypass this rule.
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/12 19:37:51
+references:
+  - https://dtm.uk/wuauclt/
+logsource:
+    category: network_connection
+    product: windows
+    definition: 'Requirements: The CommandLine field enrichment is required in order
+        for this rule to be used.'
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_cli_empty:
+        CommandLine: ""
+    filter_main_cli_null:
+        CommandLine: []
+    filter_main_ip:
+        DestinationIp|cidr:
+          - 127.0.0.0/8
+          - 10.0.0.0/8
+          - 169.254.0.0/16
+          - 172.16.0.0/12
+          - 192.168.0.0/16
+          - ::1/128
+          - fe80::/10
+          - fc00::/7
+    filter_main_msrange:
+        DestinationIp|cidr:
+          - 20.184.0.0/13
+          - 20.192.0.0/10
+          - 23.79.0.0/16
+          - 51.10.0.0/15
+          - 51.103.0.0/16
+          - 51.104.0.0/15
+          - 52.224.0.0/11
+    filter_main_uus:
+        CommandLine|contains:
+          - :\Windows\UUS\Packages\Preview\amd64\updatedeploy.dll /ClassId
+          - :\Windows\UUS\amd64\UpdateDeploy.dll /ClassId
+    filter_main_winsxs:
+        CommandLine|contains|all:
+          - :\Windows\WinSxS\
+          - '\UpdateDeploy.dll /ClassId '
+    selection:
+        CommandLine|contains: ' /RunHandlerComServer'
+        Image|contains: wuauclt
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2024/03/12
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

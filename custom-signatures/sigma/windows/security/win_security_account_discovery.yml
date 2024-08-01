@@ -1,0 +1,55 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: AD Privileged Users or Groups Reconnaissance
+id: 35ba1d85-724d-42a3-889f-2e2362bcaf23
+status: test
+description: Detect priv users or groups recon based on 4661 eventid and known privileged
+    users or groups SIDs
+author: Samir Bousseaden
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/04/03 17:35:51
+references:
+  - https://blog.menasec.net/2019/02/threat-hunting-5-detecting-enumeration.html
+logsource:
+    product: windows
+    service: security
+    definition: 'Requirements: enable Object Access SAM on your Domain Controllers'
+detection:
+    condition: selection and selection_object and not filter
+    filter:
+        SubjectUserName|endswith: $
+    selection:
+        EventID: "4661"
+        ObjectType:
+          - SAM_USER
+          - SAM_GROUP
+    selection_object:
+      - ObjectName|endswith:
+          - "-512"
+          - "-502"
+          - "-500"
+          - "-505"
+          - "-519"
+          - "-520"
+          - "-544"
+          - "-551"
+          - "-555"
+      - ObjectName|contains: admin
+falsepositives: If source account name is not an admin then its super suspicious
+level: high
+customer: 'demo'
+modified: 2022/07/13
+tags:
+  - attack.discovery
+  - attack.t1087.002
+  - DEMO

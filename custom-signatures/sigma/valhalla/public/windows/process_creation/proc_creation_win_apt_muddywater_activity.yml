@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential MuddyWater APT Activity
+id: 36222790-0d43-4fe8-86e4-674b27809543
+status: test
+description: Detects potential Muddywater APT activity
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/03/10 14:44:01
+references:
+  - https://www.mandiant.com/resources/blog/iranian-threat-group-updates-ttps-in-spear-phishing-campaign
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_mshta:
+        CommandLine|contains|all:
+          - vbscript:Close(Execute("CreateObject(
+          - powershell
+          - -w 1 -exec Bypass
+          - \ProgramData\
+    selection_pwsh_backdoor:
+        CommandLine|contains|all:
+          - '[Convert]::ToBase64String'
+          - '[System.Text.Encoding]::UTF8.GetString]'
+          - GetResponse().GetResponseStream()
+          - '[System.Net.HttpWebRequest]::Create('
+          - '-bxor '
+    selection_survey:
+        CommandLine|contains|all:
+          - Win32_OperatingSystem
+          - Win32_NetworkAdapterConfiguration
+          - root\SecurityCenter2
+          - '[System.Net.DNS]'
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.execution
+  - attack.g0069
+  - detection.emerging_threats
+  - DEMO

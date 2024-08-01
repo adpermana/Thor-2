@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Scheduled Task/Job At
+id: d2d642d7-b393-43fe-bae4-e81ed5915c4b
+status: stable
+description: |
+    Detects the use of at/atd which are utilities that are used to schedule tasks.
+    They are often abused by adversaries to maintain persistence or to perform task scheduling for initial or recurring execution of malicious code
+author: Ömer Günal, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/06 11:15:11
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1053.002/T1053.002.md
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    condition: selection
+    selection:
+        Image|endswith:
+          - /at
+          - /atd
+falsepositives: Legitimate administration activities
+level: low
+customer: 'demo'
+modified: 2022/07/07
+tags:
+  - attack.persistence
+  - attack.t1053.002
+  - DEMO

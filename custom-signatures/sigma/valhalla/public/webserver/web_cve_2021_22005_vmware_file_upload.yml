@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: VMware vCenter Server File Upload CVE-2021-22005
+id: b014ea07-8ea0-4859-b517-50a4e5b7ecec
+status: test
+description: Detects exploitation attempts using file upload vulnerability CVE-2021-22005
+    in the VMWare vCenter Server.
+author: Sittikorn S
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/09/24 16:44:31
+references:
+  - https://kb.vmware.com/s/article/85717
+  - https://www.tenable.com/blog/cve-2021-22005-critical-file-upload-vulnerability-in-vmware-vcenter-server
+logsource:
+    category: webserver
+detection:
+    condition: selection
+    selection:
+        cs-method: POST
+        cs-uri-query|contains: /analytics/telemetry/ph/api/hyper/send?
+falsepositives: Vulnerability Scanning
+level: high
+customer: 'demo'
+modified: 2023/01/02
+tags:
+  - attack.initial_access
+  - attack.t1190
+  - cve.2021.22005
+  - detection.emerging_threats
+  - DEMO

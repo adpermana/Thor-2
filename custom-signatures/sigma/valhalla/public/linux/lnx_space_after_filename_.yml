@@ -1,0 +1,34 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Space After Filename
+id: 879c3015-c88b-4782-93d7-07adf92dbcb7
+status: test
+description: Detects space after filename
+author: Ömer Günal
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/06/17 11:09:11
+references:
+  - https://attack.mitre.org/techniques/T1064
+logsource:
+    product: linux
+detection:
+    condition: all of selection*
+    selection1: echo "*" > * && chmod +x *
+    selection2: mv * "* "
+falsepositives: Typos
+level: low
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.execution
+  - DEMO

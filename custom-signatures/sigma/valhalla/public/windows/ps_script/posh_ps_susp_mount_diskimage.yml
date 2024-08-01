@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Mount-DiskImage
+id: 29e1c216-6408-489d-8a06-ee9d151ef819
+status: test
+description: Adversaries may abuse container files such as disk image (.iso, .vhd)
+    file formats to deliver malicious payloads that may not be tagged with MOTW.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/02/01 13:07:31
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1553.005/T1553.005.md#atomic-test-1---mount-iso-image
+  - https://docs.microsoft.com/en-us/powershell/module/storage/mount-diskimage?view=windowsserver2022-ps
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: selection
+    selection:
+        ScriptBlockText|contains|all:
+          - 'Mount-DiskImage '
+          - '-ImagePath '
+falsepositives: Legitimate PowerShell scripts
+level: low
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1553.005
+  - DEMO

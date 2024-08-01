@@ -1,0 +1,63 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Renamed Office Binary Execution
+id: 0b0cd537-fc77-4e6e-a973-e53495c1083d
+status: test
+description: Detects the execution of a renamed office binary
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/12/20 14:10:51
+references:
+  - https://infosec.exchange/@sbousseaden/109542254124022664
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_legit_names:
+        Image|endswith:
+          - \EXCEL.exe
+          - \excelcnv.exe
+          - \MSACCESS.exe
+          - \MSPUB.EXE
+          - \ONENOTE.EXE
+          - \ONENOTEM.EXE
+          - \OUTLOOK.EXE
+          - \POWERPNT.EXE
+          - \WINWORD.exe
+    selection:
+      - OriginalFileName:
+          - Excel.exe
+          - MSACCESS.EXE
+          - MSPUB.EXE
+          - OneNote.exe
+          - OneNoteM.exe
+          - OUTLOOK.EXE
+          - POWERPNT.EXE
+          - WinWord.exe
+      - Description:
+          - Microsoft Access
+          - Microsoft Excel
+          - Microsoft OneNote
+          - Microsoft Outlook
+          - Microsoft PowerPoint
+          - Microsoft Publisher
+          - Microsoft Word
+          - Sent to OneNote Tool
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/11/13
+tags:
+  - attack.defense_evasion
+  - DEMO

@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Default Cobalt Strike Certificate
+id: 7100f7e3-92ce-4584-b7b7-01b40d3d4118
+status: test
+description: Detects the presence of default Cobalt Strike certificate in the HTTPS
+    traffic
+author: Bhabesh Raj
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/06/23 14:45:11
+references:
+  - https://sergiusechel.medium.com/improving-the-network-based-detection-of-cobalt-strike-c2-servers-in-the-wild-while-reducing-the-6964205f6468
+logsource:
+    product: zeek
+    service: x509
+detection:
+    condition: selection
+    selection:
+        certificate.serial: 8BB00EE
+fields:
+  - san.dns
+  - certificate.subject
+  - certificate.issuer
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.command_and_control
+  - attack.s0154
+  - DEMO

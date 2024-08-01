@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential DLL Injection Or Execution Using Tracker.exe
+id: 148431ce-4b70-403d-8525-fcc2993f29ea
+status: test
+description: Detects potential DLL injection and execution using "Tracker.exe"
+author: Avneet Singh @v3t0_, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/18 19:58:21
+references:
+  - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Tracker/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_* and not 1 of filter_*
+    filter_msbuild1:
+        CommandLine|contains: ' /ERRORREPORT:PROMPT '
+    filter_msbuild2:
+        ParentImage|endswith:
+          - \Msbuild\Current\Bin\MSBuild.exe
+          - \Msbuild\Current\Bin\amd64\MSBuild.exe
+    selection_cli:
+        CommandLine|contains:
+          - ' /d '
+          - ' /c '
+    selection_img:
+      - Image|endswith: \tracker.exe
+      - Description: Tracker
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/01/09
+tags:
+  - attack.defense_evasion
+  - attack.t1055.001
+  - DEMO

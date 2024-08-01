@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: DirectorySearcher Powershell Exploitation
+id: 1f6399cf-2c80-4924-ace1-6fcff3393480
+status: test
+description: Enumerates Active Directory to determine computers that are joined to
+    the domain
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/02/12 17:34:31
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1018/T1018.md#atomic-test-15---enumerate-domain-computers-within-active-directory-using-directorysearcher
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: selection
+    selection:
+        ScriptBlockText|contains|all:
+          - 'New-Object '
+          - System.DirectoryServices.DirectorySearcher
+          - .PropertiesToLoad.Add
+          - .findall()
+          - Properties.name
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.discovery
+  - attack.t1018
+  - DEMO

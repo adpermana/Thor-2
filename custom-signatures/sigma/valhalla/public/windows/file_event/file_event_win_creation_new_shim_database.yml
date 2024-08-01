@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: New Custom Shim Database Created
+id: ee63c85c-6d51-4d12-ad09-04e25877a947
+status: test
+description: |
+    Adversaries may establish persistence and/or elevate privileges by executing malicious content triggered by application shims.
+    The Microsoft Windows Application Compatibility Infrastructure/Framework (Application Shim) was created to allow for backward compatibility of software as the operating system codebase changes over time.
+author: frack113, Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/12/29 14:11:11
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1546.011/T1546.011.md#atomic-test-2---new-shim-database-files-created-in-the-default-shim-database-directory
+  - https://www.mandiant.com/resources/blog/fin7-shim-databases-persistence
+  - https://liberty-shell.com/sec/2020/02/25/shim-persistence/
+  - https://andreafortuna.org/2018/11/12/process-injection-and-persistence-using-application-shimming/
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetFilename|contains:
+          - :\Windows\apppatch\Custom\
+          - :\Windows\apppatch\CustomSDB\
+falsepositives: Legitimate custom SHIM installations will also trigger this rule
+level: medium
+customer: 'demo'
+modified: 2023/12/06
+tags:
+  - attack.persistence
+  - attack.t1547.009
+  - DEMO

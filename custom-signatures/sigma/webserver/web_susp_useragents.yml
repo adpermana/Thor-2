@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious User-Agents Related To Recon Tools
+id: 19aa4f58-94ca-45ff-bc34-92e533c0994a
+status: test
+description: Detects known suspicious (default) user-agents related to scanning/recon
+    tools
+author: Nasreddine Bencherchali (Nextron Systems), Tim Shelton
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/19 17:46:51
+references:
+  - https://github.com/wpscanteam/wpscan/blob/196fbab5b1ce3870a43515153d4f07878a89d410/lib/wpscan/browser.rb
+  - https://github.com/xmendez/wfuzz/blob/1b695ee9a87d66a7d7bf6cae70d60a33fae51541/docs/user/basicusage.rst
+  - https://github.com/lanmaster53/recon-ng/blob/9e907dfe09fce2997f0301d746796408e01a60b7/recon/core/base.py#L92
+logsource:
+    category: webserver
+detection:
+    condition: selection
+    selection:
+        cs-user-agent|contains:
+          - Wfuzz/
+          - WPScan v
+          - Recon-ng/v
+          - GIS - AppSec Team - Project Vision
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/01/02
+tags:
+  - attack.initial_access
+  - attack.t1190
+  - DEMO

@@ -1,0 +1,36 @@
+title: Suspicious Rundll32 Execution With AllocConsole Export
+id: 5ce6476c-e811-4f9e-a290-d1e15b4a425c
+status: experimental
+description: Detects execution of rundll32 from a suspicious location invoking the AllocConsole export function. This exported function has been used in variation of the Termite family of malware
+author: Nasreddine Bencherchali
+date: 2022/11/09
+tags:
+    - attack.defense_evasion
+    - attack.t1218.011
+references:
+    - https://www.microsoft.com/en-us/security/blog/2022/10/18/defenders-beware-a-case-for-post-ransomware-investigations/
+    - https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&ved=2ahUKEwiU2Mi35aH7AhUPGewKHRtJBTUQFnoECBsQAQ&url=https%3A%2F%2Fwww.joesandbox.com%2Fanalysis%2F614320%2F0%2Flighthtml%3Fdownload%3D1&usg=AOvVaw3tew1If0LnWs6WA-mc0JjG
+    - https://twitter.com/th3_protocol/status/1496116103264800772
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        - Image|endswith: '\rundll32.exe'
+        - OriginalFileName: 'RUNDLL32.EXE'
+    selection_locations:
+        CommandLine|contains:
+            - '\Windows\Temp\'
+            - '\Appdata\Local\Temp\'
+            - '\Desktop\'
+            - '\Downloads\'
+            - '\Users\Public\'
+    selection_export:
+        CommandLine|contains: 'AllocConsole'
+    condition: all of selection_*
+fields:
+    - CommandLine
+    - ParentCommandLine
+falsepositives:
+    - Unlikely
+level: high

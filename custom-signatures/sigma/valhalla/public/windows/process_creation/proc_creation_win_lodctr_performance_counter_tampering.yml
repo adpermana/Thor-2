@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Rebuild Performance Counter Values Via Lodctr.EXE
+id: cc9d3712-6310-4320-b2df-7cb408274d53
+status: experimental
+description: Detects the execution of "lodctr.exe" to rebuild the performance counter
+    registry values. This can be abused by attackers by providing a malicious config
+    file to overwrite performance counter configuration to confuse and evade monitoring
+    and security solutions.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/06/15 18:37:31
+references:
+  - https://learn.microsoft.com/en-us/windows/security/identity-protection/virtual-smart-cards/virtual-smart-card-tpmvscmgr
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains|windash: ' -r'
+    selection_img:
+        Image|endswith: \lodctr.exe
+        OriginalFileName: LODCTR.EXE
+falsepositives: Legitimate usage by an administrator
+level: medium
+customer: 'demo'
+modified: 2024/03/05
+tags:
+  - attack.execution
+  - DEMO

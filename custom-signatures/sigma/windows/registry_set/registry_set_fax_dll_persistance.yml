@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Change the Fax Dll
+id: 9e3357ba-09d4-4fbd-a7c5-ad6386314513
+status: test
+description: Detect possible persistence using Fax DLL load when service restart
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/17 10:21:41
+references:
+  - https://twitter.com/dottor_morte/status/1544652325570191361
+  - https://raw.githubusercontent.com/RiccardoAncarani/talks/master/F-Secure/unorthodox-lateral-movement.pdf
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        Details: '%systemroot%\system32\fxst30.dll'
+    selection:
+        TargetObject|contains|all:
+          - \Software\Microsoft\Fax\Device Providers\
+          - \ImageName
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/12/30
+tags:
+  - attack.defense_evasion
+  - attack.t1112
+  - DEMO

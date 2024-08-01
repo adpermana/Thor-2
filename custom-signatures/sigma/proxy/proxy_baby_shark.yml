@@ -1,0 +1,35 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: BabyShark Agent Pattern
+id: 304810ed-8853-437f-9e36-c4975c3dfd7e
+status: test
+description: Detects Baby Shark C2 Framework communication patterns
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/06/09 12:03:21
+references:
+  - https://nasbench.medium.com/understanding-detecting-c2-frameworks-babyshark-641be4595845
+logsource:
+    category: proxy
+detection:
+    condition: selection
+    selection:
+        c-uri|contains: momyshark\?key=
+falsepositives: Unknown
+level: critical
+customer: 'demo'
+modified: 2022/08/15
+tags:
+  - attack.command_and_control
+  - attack.t1071.001
+  - DEMO

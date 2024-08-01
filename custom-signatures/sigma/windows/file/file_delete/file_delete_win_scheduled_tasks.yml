@@ -1,0 +1,32 @@
+title: Delete Scheduled Tasks By User Processes
+id: 9f6601eb-2c17-47bf-88de-4ebcf2bb4396
+status: test
+description: Detects deletion of scheduled tasks by system processes from suspicious locations. This is often the case of persistent malware covering its tracks
+author: Nasreddine Bencherchali
+references:
+    - Internal Research
+date: 2022/06/29
+modified: 2023/03/29
+tags:
+    - attack.defense_evasion
+    - attack.t1070.004
+logsource:
+    product: windows
+    category: file_delete
+detection:
+    selection:
+        TargetFilename|startswith:
+            - 'C:\Windows\Tasks\'
+            - 'C:\Windows\System32\Tasks\'
+        User|contains: # covers many language settings
+            - 'AUTHORI'
+            - 'AUTORI'
+    filter:
+        Image|startswith:
+            - 'C:\Windows\System32\'
+            - 'C:\Windows\SysWOW64\'
+            - 'C:\Program Files'
+    condition: selection and not filter
+falsepositives:
+    - Legitimate processes deleting their own scheduled tasks running under system privileges
+level: medium

@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Veeam Backup Database Suspicious Query
+id: 696bfb54-227e-4602-ac5b-30d9d2053312
+status: test
+description: Detects potentially suspicious SQL queries using SQLCmd targeting the
+    Veeam backup databases in order to steal information.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/04 16:03:41
+references:
+  - https://labs.withsecure.com/publications/fin7-target-veeam-servers
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_db:
+        CommandLine|contains:
+          - BackupRepositories
+          - Backups
+          - Credentials
+          - HostCreds
+          - SmbFileShares
+          - Ssh_creds
+          - VSphereInfo
+    selection_sql:
+        CommandLine|contains|all:
+          - VeeamBackup
+          - 'From '
+        Image|endswith: \sqlcmd.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.collection
+  - attack.t1005
+  - DEMO

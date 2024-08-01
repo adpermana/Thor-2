@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - CACTUSTORCH Remote Thread Creation
+id: 2e4e488a-6164-4811-9ea1-f960c7359c40
+status: test
+description: Detects remote thread creation from CACTUSTORCH as described in references.
+author: '@SBousseaden (detection), Thomas Patzke (rule)'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/02/01 16:45:01
+references:
+  - https://twitter.com/SBousseaden/status/1090588499517079552
+  - https://github.com/mdsecactivebreach/CACTUSTORCH
+logsource:
+    category: create_remote_thread
+    product: windows
+detection:
+    condition: selection
+    selection:
+        SourceImage|endswith:
+          - \System32\cscript.exe
+          - \System32\wscript.exe
+          - \System32\mshta.exe
+          - \winword.exe
+          - \excel.exe
+        StartModule: []
+        TargetImage|contains: \SysWOW64\
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/05/05
+tags:
+  - attack.defense_evasion
+  - attack.execution
+  - attack.t1055.012
+  - attack.t1059.005
+  - attack.t1059.007
+  - attack.t1218.005
+  - DEMO

@@ -1,0 +1,19 @@
+title: HermeticWiper Ransom Note
+id: eff6c0f3-c6b8-4164-95b7-2b9cdd1e07b7
+description: Detects the creation of the ransom note of HermeticWiper
+status: experimental
+author: Tobias Michalski
+references:
+    - https://www.crowdstrike.com/blog/how-to-decrypt-the-partyticket-ransomware-targeting-ukraine/
+date: 2022/02/11
+logsource:
+    product: windows
+    category: process_creation
+detection:
+    selection:
+        CommandLine|startswith: 'cmd /C copy'
+        CommandLine|endswith: 'Desktop\read_me.html'
+    condition: selection
+falsepositives:
+    - Unknown
+level: high

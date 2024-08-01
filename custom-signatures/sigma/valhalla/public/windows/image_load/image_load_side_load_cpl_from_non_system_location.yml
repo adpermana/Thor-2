@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: System Control Panel Item Loaded From Uncommon Location
+id: 2b140a5c-dc02-4bb8-b6b1-8bdb45714cde
+status: experimental
+description: Detects image load events of system control panel items (.cpl) from uncommon
+    or non-system locations which might be the result of sideloading.
+author: Anish Bogati
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/01/09 20:19:51
+references:
+  - https://www.hexacorn.com/blog/2024/01/06/1-little-known-secret-of-fondue-exe/
+  - https://www.hexacorn.com/blog/2024/01/01/1-little-known-secret-of-hdwwiz-exe/
+logsource:
+    category: image_load
+    product: windows
+detection:
+    condition: selection and not 1 of filter_*
+    filter_main_legit_location:
+        ImageLoaded|contains:
+          - :\Windows\System32\
+          - :\Windows\SysWOW64\
+          - :\Windows\WinSxS\
+    selection:
+        ImageLoaded|endswith:
+          - \hdwwiz.cpl
+          - \appwiz.cpl
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1036
+  - DEMO

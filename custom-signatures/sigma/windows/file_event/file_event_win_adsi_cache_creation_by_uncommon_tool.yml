@@ -1,0 +1,64 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: ADSI-Cache File Creation By Uncommon Tool
+id: 75bf09fa-1dd7-4d18-9af9-dd9e492562eb
+status: test
+description: Detects the creation of an "Active Directory Schema Cache File" (.sch)
+    file by an uncommon tool.
+author: xknow @xknow_infosec, Tim Shelton
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/03/24 16:02:01
+references:
+  - https://medium.com/@ivecodoe/detecting-ldapfragger-a-newly-released-cobalt-strike-beacon-using-ldap-for-c2-communication-c274a7f00961
+  - https://blog.fox-it.com/2020/03/19/ldapfragger-command-and-control-over-ldap-attributes/
+  - https://github.com/fox-it/LDAPFragger
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+    filter_main_generic:
+      - Image|endswith:
+          - :\Program Files\Cylance\Desktop\CylanceSvc.exe
+          - :\Windows\CCM\CcmExec.exe
+          - :\windows\system32\dllhost.exe
+          - :\Windows\system32\dsac.exe
+          - :\Windows\system32\efsui.exe
+          - :\windows\system32\mmc.exe
+          - :\windows\system32\svchost.exe
+          - :\Windows\System32\wbem\WmiPrvSE.exe
+          - :\windows\system32\WindowsPowerShell\v1.0\powershell.exe
+      - Image|contains:
+          - :\Windows\ccmsetup\autoupgrade\ccmsetup
+          - :\Program Files\SentinelOne\Sentinel Agent
+    filter_main_office:
+        Image|contains|all:
+          - :\Program Files\
+          - \Microsoft Office
+        Image|endswith: \OUTLOOK.EXE
+    filter_optional_citrix:
+        Image|endswith: :\Program Files\Citrix\Receiver StoreFront\Services\DefaultDomainServices\Citrix.DeliveryServices.DomainServices.ServiceHost.exe
+    filter_optional_ldapwhoami:
+        Image|endswith: \LANDesk\LDCLient\ldapwhoami.exe
+    selection:
+        TargetFilename|contains: \Local\Microsoft\Windows\SchCache\
+        TargetFilename|endswith: .sch
+falsepositives: Other legimate tools, which do ADSI (LDAP) operations, e.g. any remoting
+    activity by MMC, Powershell, Windows etc.
+level: medium
+customer: 'demo'
+modified: 2023/10/18
+tags:
+  - attack.t1001.003
+  - attack.command_and_control
+  - DEMO

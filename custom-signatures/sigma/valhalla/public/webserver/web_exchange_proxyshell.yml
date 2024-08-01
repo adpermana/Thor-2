@@ -1,0 +1,55 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Exchange ProxyShell Pattern
+id: 23eee45e-933b-49f9-ae1b-df706d2d52ef
+status: test
+description: Detects URL patterns that could be found in ProxyShell exploitation attempts
+    against Exchange servers (failed and successful)
+author: Florian Roth (Nextron Systems), Rich Warren
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/07 13:21:51
+references:
+  - https://youtu.be/5mqid-7zp8k?t=2231
+  - https://blog.orange.tw/2021/08/proxylogon-a-new-attack-surface-on-ms-exchange-part-1.html
+  - https://peterjson.medium.com/reproducing-the-proxyshell-pwn2own-exploit-49743a4ea9a1
+logsource:
+    category: webserver
+detection:
+    condition: all of selection_1* or selection_poc
+    selection_1:
+        sc-status: "401"
+    selection_1_auto:
+        cs-uri-query|contains: /autodiscover.json
+    selection_1_uri:
+        cs-uri-query|contains:
+          - /powershell
+          - /mapi/nspi
+          - /EWS
+          - X-Rps-CAT
+    selection_poc:
+        cs-uri-query|contains:
+          - autodiscover.json?@
+          - autodiscover.json%3f@
+          - '%3f@foo.com'
+          - Email=autodiscover/autodiscover.json
+          - json?@foo.com
+        sc-status: "401"
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/01/02
+tags:
+  - attack.initial_access
+  - attack.t1190
+  - detection.emerging_threats
+  - DEMO

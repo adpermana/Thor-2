@@ -1,0 +1,67 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Remote AppX Package Locations
+id: 8b48ad89-10d8-4382-a546-50588c410f0d
+status: experimental
+description: Detects an appx package added the pipeline of the "to be processed" packages
+    which is downloaded from a suspicious domain
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/11 16:38:01
+references:
+  - Internal Research
+  - https://www.sentinelone.com/labs/inside-malicious-windows-apps-for-malware-deployment/
+  - https://learn.microsoft.com/en-us/windows/win32/appxpkg/troubleshooting
+  - https://news.sophos.com/en-us/2021/11/11/bazarloader-call-me-back-attack-abuses-windows-10-apps-mechanism/
+logsource:
+    product: windows
+    service: appxdeployment-server
+detection:
+    condition: selection
+    selection:
+        EventID: "854"
+        Path|contains:
+          - .githubusercontent.com
+          - anonfiles.com
+          - cdn.discordapp.com
+          - cdn.discordapp.com/attachments/
+          - ddns.net
+          - dl.dropboxusercontent.com
+          - ghostbin.co
+          - glitch.me
+          - gofile.io
+          - hastebin.com
+          - mediafire.com
+          - mega.nz
+          - onrender.com
+          - paste.ee
+          - pastebin.com
+          - pastebin.pl
+          - pastetext.net
+          - privatlab.com
+          - privatlab.net
+          - send.exploit.in
+          - sendspace.com
+          - storage.googleapis.com
+          - storjshare.io
+          - supabase.co
+          - temp.sh
+          - transfer.sh
+          - ufile.io
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2024/02/09
+tags:
+  - attack.defense_evasion
+  - DEMO

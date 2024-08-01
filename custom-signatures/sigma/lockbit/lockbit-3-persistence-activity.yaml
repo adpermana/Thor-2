@@ -1,0 +1,26 @@
+title: Suspicious LockBit 3.0 Ransomware Persistence Activity via Scheduled Task Creation
+(via process_creation)
+id: 24fde8a1-bfa0-4f98-8ac5-5bb39b7a49b4
+status: stable
+description: This rule detects all attempts to create persistence via the scheduled task
+associated LockBit 3.0 Ransomware.
+author: vinzel
+references:
+- https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-325a
+tags:
+- attack.execution
+- attack.persistence
+- attack.t1053
+logsource:
+ category: process_creation
+ product: windows
+detection:
+ selection:
+ Image|endswith: \schtasks.exe
+ CommandLine|contains|all:
+ - 'create'
+ - 'UpdateAdobeTask'
+ condition: selection
+falsepositives:
+- Unknown
+level: medium

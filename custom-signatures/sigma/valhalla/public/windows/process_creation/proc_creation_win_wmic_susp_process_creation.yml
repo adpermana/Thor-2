@@ -1,0 +1,69 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Process Created Via Wmic.EXE
+id: 3c89a1e8-0fba-449e-8f1b-8409d6267ec8
+related:
+  - type: derived
+    id: 526be59f-a573-4eea-b5f7-f0973207634d
+status: test
+description: Detects WMIC executing "process call create" with suspicious calls to
+    processes such as "rundll32", "regsrv32", etc.
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/12 15:59:41
+references:
+  - https://thedfirreport.com/2020/10/08/ryuks-return/
+  - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/ransomware-hive-conti-avoslocker
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - rundll32
+          - bitsadmin
+          - regsvr32
+          - 'cmd.exe /c '
+          - 'cmd.exe /k '
+          - 'cmd.exe /r '
+          - 'cmd /c '
+          - 'cmd /k '
+          - 'cmd /r '
+          - powershell
+          - pwsh
+          - certutil
+          - cscript
+          - wscript
+          - mshta
+          - \Users\Public\
+          - \Windows\Temp\
+          - \AppData\Local\
+          - '%temp%'
+          - '%tmp%'
+          - '%ProgramData%'
+          - '%appdata%'
+          - '%comspec%'
+          - '%localappdata%'
+        CommandLine|contains|all:
+          - 'process '
+          - 'call '
+          - 'create '
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/02/14
+tags:
+  - attack.execution
+  - attack.t1047
+  - DEMO

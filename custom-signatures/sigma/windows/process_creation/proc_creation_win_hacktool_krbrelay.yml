@@ -1,0 +1,36 @@
+title: Hacktool KrbRelay Usage Indicators
+id: 28e4093b-b3b3-4027-a257-eb81e9e45b4c
+description: Detects hacktool KrbRelay usage based on command line flags and program names
+status: experimental
+references:
+    - https://github.com/cube0x0/KrbRelay
+author: Florian Roth
+date: 2022/03/21
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        - Image|endswith: '\KrbRelay.exe'
+        - CommandLine|contains|all:
+            - ' -shadowcred'
+            - ' -spn '
+            - ' -clsid '
+        - CommandLine|contains|all:
+            - ' -session '
+            - ' -spn '
+            - ' -reset-password '
+            - ' -clsid '
+        - CommandLine|contains|all:
+            - ' -add-privileges '
+            - ' -spn '
+            - ' -session '
+            - ' -clsid '
+        - CommandLine|contains|all:
+            - ' -llmnr '
+            - ' -spn '
+            - ' -secrets'
+    condition: selection
+falsepositives:
+    - Unknown
+level: high

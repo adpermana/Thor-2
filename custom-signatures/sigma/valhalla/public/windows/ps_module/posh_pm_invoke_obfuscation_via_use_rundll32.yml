@@ -1,0 +1,51 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Invoke-Obfuscation Via Use Rundll32 - PowerShell Module
+id: 88a22f69-62f9-4b8a-aa00-6b0212f2f05a
+related:
+  - type: derived
+    id: a5a30a6e-75ca-4233-8b8c-42e0f2037d3b
+status: test
+description: Detects Obfuscated Powershell via use Rundll32 in Scripts
+author: Nikita Nazarov, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/08 19:54:51
+references:
+  - https://github.com/SigmaHQ/sigma/issues/1009
+logsource:
+    category: ps_module
+    product: windows
+    definition: 0ad03ef1-f21b-4a79-8ce8-e6900c54b65b
+detection:
+    condition: selection_4103
+    selection_4103:
+        Payload|contains:
+          - value
+          - invoke
+          - comspec
+          - iex
+        Payload|contains|all:
+          - '&&'
+          - rundll32
+          - shell32.dll
+          - shellexec_rundll
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/11/29
+tags:
+  - attack.defense_evasion
+  - attack.t1027
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

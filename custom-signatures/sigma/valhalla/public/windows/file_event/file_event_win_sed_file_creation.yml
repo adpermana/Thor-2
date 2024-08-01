@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Self Extraction Directive File Created In Potentially Suspicious Location
+id: 760e75d8-c3b5-409b-a9bf-6130b4c4603f
+related:
+  - type: derived
+    id: ab90dab8-c7da-4010-9193-563528cfa347
+status: experimental
+description: |
+    Detects the creation of Self Extraction Directive files (.sed) in a potentially suspicious location.
+    These files are used by the "iexpress.exe" utility in order to create self extracting packages.
+    Attackers were seen abusing this utility and creating PE files with embedded ".sed" entries.
+author: Joseliyo Sanchez, @Joseliyo_Jstnk
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/02/05 01:22:21
+references:
+  - https://strontic.github.io/xcyclopedia/library/iexpress.exe-D594B2A33EFAFD0EABF09E3FDC05FCEA.html
+  - https://en.wikipedia.org/wiki/IExpress
+  - https://www.virustotal.com/gui/file/602f4ae507fa8de57ada079adff25a6c2a899bd25cd092d0af7e62cdb619c93c/behavior
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetFilename|contains:
+          - :\ProgramData\
+          - :\Temp\
+          - :\Windows\System32\Tasks\
+          - :\Windows\Tasks\
+          - :\Windows\Temp\
+          - \AppData\Local\Temp\
+        TargetFilename|endswith: .sed
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

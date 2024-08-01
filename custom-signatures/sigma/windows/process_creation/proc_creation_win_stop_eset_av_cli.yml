@@ -1,0 +1,26 @@
+title: Pause ESET Features Via CommandLine
+id: 07227463-50e4-4fec-b778-8aad7a18f47d
+status: experimental
+description: Detects activity of pausing ESET security features using "ecmd.exe"
+author: Nasreddine Bencherchali
+references:
+    - https://help.eset.com/ees/7/en-US/idh_config_ecmd.html
+date: 2022/05/19
+tags:
+    - attack.defense_evasion
+    - attack.t1562.001
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        - OriginalFileName: 'ecmd.exe'
+        - Image|endswith: '\ecmd.exe'
+    selection_suspflags:
+        CommandLine|contains|all:
+            - ' /setfeature'
+            - ' pause'
+    condition: all of selection*
+falsepositives:
+    - Administrator troubleshooting
+level: high

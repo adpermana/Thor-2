@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: DLL Execution Via Register-cimprovider.exe
+id: a2910908-e86f-4687-aeba-76a5f996e652
+status: test
+description: Detects using register-cimprovider.exe to execute arbitrary dll file.
+author: Ivan Dyachkov, Yulia Fomina, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/07 17:05:01
+references:
+  - https://twitter.com/PhilipTsukerman/status/992021361106268161
+  - https://lolbas-project.github.io/lolbas/Binaries/Register-cimprovider/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains|all:
+          - -path
+          - dll
+        Image|endswith: \register-cimprovider.exe
+fields:
+  - CommandLine
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.defense_evasion
+  - attack.t1574
+  - DEMO

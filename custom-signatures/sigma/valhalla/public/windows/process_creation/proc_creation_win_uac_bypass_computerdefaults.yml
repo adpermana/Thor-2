@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: UAC Bypass Tools Using ComputerDefaults
+id: 3c05e90d-7eba-4324-9972-5d7f711a60a8
+status: test
+description: Detects tools such as UACMe used to bypass UAC with computerdefaults.exe
+    (UACMe 59)
+author: Christian Burkard (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/31 16:14:51
+references:
+  - https://github.com/hfiref0x/UACME
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        ParentImage|contains:
+          - :\Windows\System32
+          - :\Program Files
+    selection:
+        Image: C:\Windows\System32\ComputerDefaults.exe
+        IntegrityLevel:
+          - High
+          - System
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - attack.t1548.002
+  - DEMO

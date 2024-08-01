@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: LiveKD Kernel Memory Dump File Created
+id: 814ddeca-3d31-4265-8e07-8cc54fb44903
+status: experimental
+description: Detects the creation of a file that has the same name as the default
+    LiveKD kernel memory dump.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/16 15:31:51
+references:
+  - Internal Research
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetFilename: C:\Windows\livekd.dmp
+falsepositives: In rare occasions administrators might leverage LiveKD to perform
+    live kernel debugging. This should not be allowed on production systems. Investigate
+    and apply additional filters where necessary.
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - DEMO

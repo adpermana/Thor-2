@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Powershell Detect Virtualization Environment
+id: d93129cd-1ee0-479f-bc03-ca6f129882e3
+status: test
+description: |
+    Adversaries may employ various system checks to detect and avoid virtualization and analysis environments.
+    This may include changing behaviors based on the results of checks for the presence of artifacts indicative of a virtual machine environment (VME) or sandbox
+author: frack113, Duc.Le-GTSC
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/03 18:20:01
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1497.001/T1497.001.md
+  - https://techgenix.com/malicious-powershell-scripts-evade-detection/
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: all of selection*
+    selection_action:
+        ScriptBlockText|contains:
+          - Get-WmiObject
+          - gwmi
+    selection_module:
+        ScriptBlockText|contains:
+          - MSAcpi_ThermalZoneTemperature
+          - Win32_ComputerSystem
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/03/03
+tags:
+  - attack.defense_evasion
+  - attack.t1497.001
+  - DEMO

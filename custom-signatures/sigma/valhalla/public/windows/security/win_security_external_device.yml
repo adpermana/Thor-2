@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: External Disk Drive Or USB Storage Device Was Recognized By The System
+id: f69a87ea-955e-4fb4-adb2-bb9fd6685632
+status: test
+description: Detects external disk drives or plugged-in USB devices.
+author: Keith Wright
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/11/20 23:27:41
+references:
+  - https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-6416
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: all of selection_*
+    selection_eid:
+        EventID: "6416"
+    selection_field:
+      - ClassName: DiskDrive
+      - DeviceDescription: USB Mass Storage Device
+falsepositives: Likely
+level: low
+customer: 'demo'
+modified: 2024/02/09
+tags:
+  - attack.t1091
+  - attack.t1200
+  - attack.lateral_movement
+  - attack.initial_access
+  - DEMO

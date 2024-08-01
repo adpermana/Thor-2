@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential ReflectDebugger Content Execution Via WerFault.EXE
+id: fabfb3a7-3ce1-4445-9c7c-3c27f1051cdd
+related:
+  - type: derived
+    id: 0cf2e1c6-8d10-4273-8059-738778f981ad
+status: experimental
+description: Detects execution of "WerFault.exe" with the "-pr" commandline flag that
+    is used to run files stored in the ReflectDebugger key which could be used to
+    store the path to the malware in order to masquerade the execution flow
+author: X__Junior (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/06/30 21:44:31
+references:
+  - https://cocomelonc.github.io/malware/2022/11/02/malware-pers-18.html
+  - https://www.hexacorn.com/blog/2018/08/31/beyond-good-ol-run-key-part-85/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains: ' -pr '
+    selection_img:
+      - Image|endswith: \WerFault.exe
+      - OriginalFileName: WerFault.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.execution
+  - attack.defense_evasion
+  - attack.t1036
+  - DEMO

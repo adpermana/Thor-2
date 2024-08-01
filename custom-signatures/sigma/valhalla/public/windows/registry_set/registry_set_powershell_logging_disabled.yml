@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PowerShell Logging Disabled Via Registry Key Tampering
+id: fecfd1a1-cc78-4313-a1ea-2ee2e8ec27a7
+status: experimental
+description: Detects changes to the registry for the currently logged-in user. In
+    order to disable PowerShell module logging, script block logging or transcription
+    and script execution logging
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/04/02 20:10:11
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1112/T1112.md#atomic-test-32---windows-powershell-logging-disabled
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Details: DWORD (0x00000000)
+        TargetObject|contains:
+          - \Microsoft\Windows\PowerShell\
+          - \Microsoft\PowerShellCore\
+        TargetObject|endswith:
+          - \ModuleLogging\EnableModuleLogging
+          - \ScriptBlockLogging\EnableScriptBlockLogging
+          - \ScriptBlockLogging\EnableScriptBlockInvocationLogging
+          - \Transcription\EnableTranscripting
+          - \Transcription\EnableInvocationHeader
+          - \EnableScripts
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.defense_evasion
+  - attack.t1564.001
+  - DEMO

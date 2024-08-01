@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Wmiprvse Wbemcomn DLL Hijack
+id: 7707a579-e0d8-4886-a853-ce47e4575aaa
+status: test
+description: Detects a threat actor creating a file named `wbemcomn.dll` in the `C:\Windows\System32\wbem\`
+    directory over the network and loading it for a WMI DLL Hijack scenario.
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/12 13:11:11
+references:
+  - https://threathunterplaybook.com/hunts/windows/201009-RemoteWMIWbemcomnDLLHijack/notebook.html
+logsource:
+    category: image_load
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith: \wmiprvse.exe
+        ImageLoaded|endswith: \wbem\wbemcomn.dll
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.execution
+  - attack.t1047
+  - attack.lateral_movement
+  - attack.t1021.002
+  - DEMO

@@ -1,0 +1,24 @@
+title: Unsigned Or Expired Driver Load From Suspicious Location
+id: b7709bb6-035a-4afc-b763-c27530e553d5
+status: test
+description: Detects the load of unsigned or expired drivers from suspicious locations
+author: Nasreddine Bencherchali
+date: 2022/06/19
+modified: 2023/03/29
+references:
+    - Internal Research
+logsource:
+    category: driver_load
+    product: windows
+detection:
+    selection_sig:
+        - Signed: 'false'
+        - SignatureStatus: Expired
+    filter:
+        ImageLoaded|startswith:
+            - 'C:\Windows\System32\drivers'
+            - 'C:\Program Files'
+    condition: selection_sig and not filter
+falsepositives:
+    - Legitimate unsigned or expired drivers loaded from ohter unfilterd locations
+level: high

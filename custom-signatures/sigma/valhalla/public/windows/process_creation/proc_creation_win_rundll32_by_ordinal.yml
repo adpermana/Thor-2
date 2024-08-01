@@ -1,0 +1,63 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Call by Ordinal
+id: e79a9e79-eb72-4e78-a628-0e7e8f59e89c
+status: stable
+description: Detects suspicious calls of DLLs in rundll32.dll exports by ordinal
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/22 12:54:31
+references:
+  - https://techtalk.pcmatic.com/2017/11/30/running-dll-files-malware-analysis/
+  - https://github.com/Neo23x0/DLLRunner
+  - https://twitter.com/cyb3rops/status/1186631731543236608
+  - https://www.welivesecurity.com/2022/03/01/isaacwiper-hermeticwizard-wiper-worm-targeting-ukraine/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_* and not 1 of filter_*
+    filter_edge:
+        CommandLine|contains|all:
+          - EDGEHTML.dll
+          - '#141'
+    filter_vsbuild_dll:
+        CommandLine|contains:
+          - \FileTracker32.dll,#1
+          - \FileTracker32.dll",#1
+          - \FileTracker64.dll,#1
+          - \FileTracker64.dll",#1
+        ParentImage|contains:
+          - \Msbuild\Current\Bin\
+          - \VC\Tools\MSVC\
+          - \Tracker.exe
+    selection_cli:
+        CommandLine|contains:
+          - ',#'
+          - ', #'
+          - '.dll #'
+          - '.ocx #'
+    selection_img:
+      - Image|endswith: \rundll32.exe
+      - OriginalFileName: RUNDLL32.EXE
+falsepositives:
+  - False positives depend on scripts and administrative tools used in the monitored
+    environment
+  - Windows control panel elements have been identified as source (mmc)
+level: high
+customer: 'demo'
+modified: 2023/02/09
+tags:
+  - attack.defense_evasion
+  - attack.t1218.011
+  - DEMO

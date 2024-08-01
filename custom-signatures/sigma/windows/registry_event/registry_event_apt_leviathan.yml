@@ -1,0 +1,35 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Leviathan Registry Key Activity
+id: 70d43542-cd2d-483c-8f30-f16b436fd7db
+status: test
+description: Detects registry key used by Leviathan APT in Malaysian focused campaign
+author: Aidan Bracher
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/07/07 14:23:11
+references:
+  - https://www.elastic.co/blog/advanced-techniques-used-in-malaysian-focused-apt-campaign
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetObject|contains: \Software\Microsoft\Windows\CurrentVersion\Run\ntkd
+level: critical
+customer: 'demo'
+modified: 2023/09/19
+tags:
+  - attack.persistence
+  - attack.t1547.001
+  - DEMO

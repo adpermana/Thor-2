@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: WINEKEY Registry Modification
+id: b98968aa-dbc0-4a9c-ac35-108363cbf8d5
+status: test
+description: Detects potential malicious modification of run keys by winekey or team9
+    backdoor
+author: omkar72
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/30 13:29:51
+references:
+  - https://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetObject|endswith: Software\Microsoft\Windows\CurrentVersion\Run\Backup
+            Mgr
+fields:
+  - ComputerName
+  - Image
+  - EventType
+  - TargetObject
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.persistence
+  - attack.t1547
+  - DEMO

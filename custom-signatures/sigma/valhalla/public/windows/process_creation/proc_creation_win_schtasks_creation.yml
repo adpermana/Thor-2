@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Scheduled Task Creation Via Schtasks.EXE
+id: 92626ddd-662c-49e3-ac59-f6535f12d189
+status: test
+description: Detects the creation of scheduled tasks by user accounts via the "schtasks"
+    utility.
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/01/16 16:10:11
+references:
+  - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks-create
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_system_user:
+        User|contains:
+          - AUTHORI
+          - AUTORI
+    selection:
+        CommandLine|contains: ' /create '
+        Image|endswith: \schtasks.exe
+falsepositives:
+  - Administrative activity
+  - Software installation
+level: low
+customer: 'demo'
+modified: 2024/01/18
+tags:
+  - attack.execution
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1053.005
+  - attack.s0111
+  - car.2013-08-001
+  - stp.1u
+  - DEMO

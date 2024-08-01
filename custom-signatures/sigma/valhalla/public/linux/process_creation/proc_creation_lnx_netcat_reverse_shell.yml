@@ -1,0 +1,74 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Netcat Reverse Shell Execution
+id: 7f734ed0-4f47-46c0-837f-6ee62505abd9
+status: test
+description: Detects execution of netcat with the "-e" flag followed by common shells.
+    This could be a sign of a potential reverse shell setup.
+author: '@d4ns4n_, Nasreddine Bencherchali (Nextron Systems)'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/04/07 16:43:51
+references:
+  - https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet
+  - https://www.revshells.com/
+  - https://www.hackingtutorials.org/networking/hacking-netcat-part-2-bind-reverse-shells/
+  - https://www.infosecademy.com/netcat-reverse-shells/
+  - https://man7.org/linux/man-pages/man1/ncat.1.html
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    condition: all of selection_*
+    selection_flags:
+        CommandLine|contains:
+          - ' -c '
+          - ' -e '
+    selection_nc:
+        Image|endswith:
+          - /nc
+          - /ncat
+    selection_shell:
+        CommandLine|contains:
+          - ' ash'
+          - ' bash'
+          - ' bsh'
+          - ' csh'
+          - ' ksh'
+          - ' pdksh'
+          - ' sh'
+          - ' tcsh'
+          - /bin/ash
+          - /bin/bash
+          - /bin/bsh
+          - /bin/csh
+          - /bin/ksh
+          - /bin/pdksh
+          - /bin/sh
+          - /bin/tcsh
+          - /bin/zsh
+          - $IFSash
+          - $IFSbash
+          - $IFSbsh
+          - $IFScsh
+          - $IFSksh
+          - $IFSpdksh
+          - $IFSsh
+          - $IFStcsh
+          - $IFSzsh
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+tags:
+  - attack.execution
+  - attack.t1059
+  - DEMO

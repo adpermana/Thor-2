@@ -1,0 +1,56 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PowerShell Base64 Encoded Invoke Keyword
+id: 6385697e-9f1b-40bd-8817-f4a91f40508e
+related:
+  - type: obsoletes
+    id: fd6e2919-3936-40c9-99db-0aa922c356f7
+status: test
+description: Detects UTF-8 and UTF-16 Base64 encoded powershell 'Invoke-' calls
+author: pH-T (Nextron Systems), Harjot Singh, @cyb3rjy0t
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/05/20 16:15:31
+references:
+  - https://thedfirreport.com/2022/05/09/seo-poisoning-a-gootloader-story/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli_enc:
+        CommandLine|contains: ' -e'
+    selection_cli_invoke:
+        CommandLine|contains:
+          - SQBuAHYAbwBrAGUALQ
+          - kAbgB2AG8AawBlAC0A
+          - JAG4AdgBvAGsAZQAtA
+          - SW52b2tlL
+          - ludm9rZS
+          - JbnZva2Ut
+    selection_img:
+      - Image|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+      - OriginalFileName:
+          - PowerShell.EXE
+          - pwsh.dll
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/04/06
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - attack.defense_evasion
+  - attack.t1027
+  - DEMO

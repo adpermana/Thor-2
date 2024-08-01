@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Windows Defender Threat Detection Disabled - Service
+id: 6c0a7755-6d31-44fa-80e1-133e57752680
+related:
+  - type: derived
+    id: fe34868f-6e0e-4882-81f6-c43aa8f15b62
+status: stable
+description: Detects the "Windows Defender Threat Protection" service has been disabled
+author: Ján Trenčanský, frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/07/28 19:26:11
+references:
+  - https://docs.microsoft.com/en-us/windows/security/threat-protection/windows-defender-antivirus/troubleshoot-windows-defender-antivirus
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.001/T1562.001.md
+logsource:
+    product: windows
+    service: system
+detection:
+    condition: selection
+    selection:
+        EventID: "7036"
+        Provider_Name: Service Control Manager
+        param1:
+          - Windows Defender Antivirus Service
+          - Service antivirus Microsoft Defender
+        param2:
+          - stopped
+          - arrêté
+falsepositives:
+  - Administrator actions
+  - Auto updates of Windows Defender causes restarts
+level: medium
+customer: 'demo'
+modified: 2023/08/08
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+  - DEMO

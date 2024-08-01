@@ -1,0 +1,25 @@
+title: Remove Installed Windows Update Using WUSA
+id: 3c8193fe-a6d7-4954-a717-a182973f753f
+status: experimental
+description: Detects when a malicious actor tries to remove already installed windows update from a system
+references:
+    - https://github.com/samratashok/nishang/blob/master/Escalation/Remove-Update.ps1
+author: Nasreddine Bencherchali
+date: 2022/05/18
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        - Image|endswith: '\wusa.exe'
+        - OriginalFileName: 'wusa.exe'
+    selection_cli:
+        CommandLine|contains|all:
+            - '/uninstall'
+            - '/kb:'
+    condition: all of selection*
+falsepositives:
+    - Unknown
+level: medium
+tags:
+    - attack.defense_evasion

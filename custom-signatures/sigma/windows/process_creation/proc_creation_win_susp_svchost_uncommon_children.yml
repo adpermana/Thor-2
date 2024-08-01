@@ -1,0 +1,127 @@
+title: Uncommon Children Of Svchost Processes
+id: 439e34fd-6ed4-4c54-8367-891442a81b76
+related:
+    - id: 81325ce1-be01-4250-944f-b4789644556f
+      type: similar
+status: experimental
+description: Detects children of svchost processes with specific command lines that are known to not have children other than the one specified
+references:
+    - Internal Research
+    - https://twitter.com/SBousseaden/status/1432646570294616064
+author: Nasreddine Bencherchali
+date: 2022/06/30
+modified: 2023/05/16
+tags:
+    - attack.execution
+    - attack.t1559.001
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    parent:
+        ParentImage|endswith: '\svchost.exe'
+    filter_null:
+        Image: null
+    # Appinfo
+    selection_appinfo:
+        ParentCommandLine|contains: ' -s Appinfo'
+    filter_appinfo:
+        # original version: Image|endswith: '\consent.exe'  # TODO: revert after Aurora fix, if possible
+        - Image|endswith: 'consent.exe'
+        - ImageFileName: 'consent.exe'
+    # DeviceAssociationService
+    selection_deviceAssociationService:
+        ParentCommandLine|contains: ' -s DeviceAssociationService'
+    filter_deviceAssociationService:
+        Image|startswith:
+            - 'C:\Windows\System32\'
+            - 'C:\Windows\SysWOW64\'
+            - 'C:\Windows\WinSxS\'
+        Image|endswith:
+            - '\dasHost.exe'
+            - '\hostname.exe'
+    # TokenBroker
+    selection_tokenBroker:
+        ParentCommandLine|contains: ' -s TokenBroker'
+    filter_tokenBroker:
+        Image|startswith:
+            - 'C:\Windows\System32\'
+            - 'C:\Windows\SysWOW64\'
+            - 'C:\Windows\WinSxS\'
+        Image|endswith: '\TokenBrokerCookies.exe'
+    # UserManager
+    selection_userManager:
+        ParentCommandLine|contains: ' -s UserManager'
+    filter_userManager:
+        Image|startswith:
+            - 'C:\Windows\System32\'
+            - 'C:\Windows\SysWOW64\'
+            - 'C:\Windows\WinSxS\'
+        Image|endswith: '\sihost.exe'
+    # TabletInputService
+    selection_tabletInputService:
+        ParentCommandLine|contains: ' -s TabletInputService'
+    filter_tabletInputService:
+        Image|startswith:
+            - 'C:\Windows\System32\'
+            - 'C:\Windows\SysWOW64\'
+            - 'C:\Windows\WinSxS\'
+            - 'C:\Program Files\Common Files\microsoft shared\ink\'
+        Image|endswith:
+            - '\ctfmon.exe'
+            - '\TabTip.exe'
+    # Schedule
+    selection_schedule_img:
+        ParentCommandLine|contains: ' -s Schedule'
+        Image|contains:
+            - '\AppData\Local\Temp\'
+            - '\Users\Public'
+            - '\Windows\TEMP'
+            - 'C:\Perflogs'
+            - 'C:\Temp\'
+            - 'C:\Tmp\'
+    selection_schedule_cli:
+        ParentCommandLine|contains: ' -s Schedule'
+        CommandLine|contains:
+            - '\AppData\Local\Temp\'
+            - '\Users\Public'
+            - '\Windows\TEMP'
+            - 'C:\Perflogs'
+            - 'C:\Temp\'
+            - 'C:\Tmp\'
+    selection_schedule_combination:
+        ParentCommandLine|contains: ' -s Schedule'
+        Image|endswith:
+            - '\cscript.exe'
+            - '\mshta.exe'
+            - '\msiexec.exe'
+            - '\powershell.exe'
+            - '\pwsh.exe'
+            - '\regsvr32.exe'
+            - '\rundll32.exe'
+            - '\wscript.exe'
+        CommandLine|contains:
+            - '\AppData\Local\'
+            - '\Users\Public\'
+            - '%appdata%'
+            - '%localappdata%'
+            - '%public%'
+            - '%temp%'
+            - '%tmp%'
+            - 'http'
+    # -k utcsvc (This Host group contains only once service which is the "DiagTrack")
+    selection_utcsvc:
+        ParentCommandLine|contains: ' -k utcsvc'
+    filter_utcsvc:
+        Image|endswith: '\System32\AggregatorHost.exe'
+    # -s CDPUserSvc (This service is used for Connected Devices Platform).
+    selection_cdpusersvc:
+        ParentCommandLine|contains: ' -s CDPUserSvc' # Not a lot of information about it, during testing didn't observe children spawning from it. Adding it as it was seen used as a target for process injection (See: https://thedfirreport.com/2022/09/12/dead-or-alive-an-emotet-story/). If a lot of FP are seen in production, comment it out or add suspicious children spawning from it.
+    filter_cdpusersvc:
+        - Image|endswith: '\conhost.exe'
+        - ImageFileName: 'conhost.exe'
+    condition: parent and 1 of selection* and not 1 of filter_*
+falsepositives:
+    - There could be other children for different or older versions of windows. If you found such cases please add them to the filter
+    - In some cases where the svchost host process crashes it could spwan a werfault process
+level: high

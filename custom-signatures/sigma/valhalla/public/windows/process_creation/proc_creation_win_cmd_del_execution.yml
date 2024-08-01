@@ -1,0 +1,53 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: File Deletion Via Del
+id: 379fa130-190e-4c3f-b7bc-6c8e834485f3
+status: test
+description: |
+    Detects execution of the builtin "del"/"erase" commands in order to delete files.
+    Adversaries may delete files left behind by the actions of their intrusion activity.
+    Malware, tools, or other non-native files dropped or created on a system by an adversary may leave traces to indicate to what was done within a network and how.
+    Removal of these files can occur during an intrusion, or as part of a post-intrusion process to minimize the adversary's footprint.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/15 11:10:51
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1070.004/T1070.004.md
+  - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/erase
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_del:
+        CommandLine|contains:
+          - 'del '
+          - 'erase '
+    selection_flags:
+        CommandLine|contains|windash:
+          - ' -f'
+          - ' -s'
+          - ' -q'
+    selection_img:
+      - Image|endswith: \cmd.exe
+      - OriginalFileName: Cmd.Exe
+falsepositives: False positives levels will differ Depending on the environment. You
+    can use a combination of ParentImage and other keywords from the CommandLine field
+    to filter legitimate activity
+level: low
+customer: 'demo'
+modified: 2024/03/05
+tags:
+  - attack.defense_evasion
+  - attack.t1070.004
+  - DEMO

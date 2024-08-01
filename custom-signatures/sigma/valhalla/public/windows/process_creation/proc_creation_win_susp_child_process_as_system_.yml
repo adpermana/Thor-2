@@ -1,0 +1,58 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Child Process Created as System
+id: 590a5f4c-6c8c-4f10-8307-89afe9453a9d
+status: test
+description: Detection of child processes spawned with SYSTEM privileges by parents
+    with LOCAL SERVICE or NETWORK SERVICE accounts
+author: Teymur Kheirkhabarov, Roberto Rodriguez (@Cyb3rWard0g), Open Threat Research
+    (OTR)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/26 17:08:31
+references:
+  - https://speakerdeck.com/heirhabarov/hunting-for-privilege-escalation-in-windows-environment
+  - https://foxglovesecurity.com/2016/09/26/rotten-potato-privilege-escalation-from-service-accounts-to-system/
+  - https://github.com/antonioCoco/RogueWinRM
+  - https://twitter.com/Cyb3rWard0g/status/1453123054243024897
+logsource:
+    category: process_creation
+    product: windows
+    definition: 'Requirements: ParentUser field needs sysmon >= 13.30'
+detection:
+    condition: selection and not 1 of filter_*
+    filter_rundll32:
+        CommandLine|contains: DavSetCookie
+        Image|endswith: \rundll32.exe
+    selection:
+        IntegrityLevel: System
+        ParentUser|contains:
+          - AUTHORI
+          - AUTORI
+        ParentUser|endswith:
+          - \NETWORK SERVICE
+          - \LOCAL SERVICE
+        User|contains:
+          - AUTHORI
+          - AUTORI
+        User|endswith:
+          - \SYSTEM
+          - \Système
+          - \СИСТЕМА
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/12/15
+tags:
+  - attack.privilege_escalation
+  - attack.t1134.002
+  - DEMO

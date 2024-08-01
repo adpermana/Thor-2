@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: WMI Persistence - Script Event Consumer
+id: ec1d5e28-8f3b-4188-a6f8-6e8df81dc28e
+status: test
+description: Detects WMI script event consumers
+author: Thomas Patzke
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2018/03/07 15:57:41
+references:
+  - https://www.eideon.com/2018-03-02-THL03-WMIBackdoors/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image: C:\WINDOWS\system32\wbem\scrcons.exe
+        ParentImage: C:\Windows\System32\svchost.exe
+falsepositives:
+  - Legitimate event consumers
+  - Dell computers on some versions register an event consumer that is known to cause
+    false positives when brightness is changed by the corresponding keyboard button
+level: medium
+customer: 'demo'
+modified: 2022/10/11
+tags:
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1546.003
+  - DEMO

@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Sysmon Configuration Error
+id: 815cd91b-7dbc-4247-841a-d7dd1392b0a8
+status: test
+description: Detects when an adversary is trying to hide it's action from Sysmon logging
+    based on error messages
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/06/04 13:13:51
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.001/T1562.001.md
+  - https://talesfrominfosec.blogspot.com/2017/12/killing-sysmon-silently.html
+logsource:
+    category: sysmon_error
+    product: windows
+detection:
+    condition: selection_error and not 1 of filter*
+    filter_by_errorcode:
+        Description|contains:
+          - Failed to open service configuration with error 19
+          - Failed to open service configuration with error 93
+    filter_generic_english:
+        Description|contains|all:
+          - Failed to open service configuration with error
+          - 'Last error: The media is write protected.'
+    selection_error:
+        Description|contains:
+          - Failed to open service configuration with error
+          - Failed to connect to the driver to update configuration
+falsepositives: Legitimate administrative action
+level: high
+customer: 'demo'
+modified: 2022/07/07
+tags:
+  - attack.defense_evasion
+  - attack.t1564
+  - DEMO

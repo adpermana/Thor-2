@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: New DLL Added to AppInit_DLLs Registry Key
+id: 4f84b697-c9ed-4420-8ab5-e09af5b2345d
+status: test
+description: DLLs that are specified in the AppInit_DLLs value in the Registry key
+    HKLM\Software\Microsoft\Windows NT\CurrentVersion\Windows are loaded by user32.dll
+    into every process that loads user32.dll
+author: Ilyas Ochkov, oscd.community, Tim Shelton
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/25 16:13:21
+references:
+  - https://eqllib.readthedocs.io/en/latest/analytics/822dc4c5-b355-4df8-bd37-29c458997b8f.html
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        Details: (Empty)
+    selection:
+      - TargetObject|endswith:
+          - \SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows\AppInit_Dlls
+          - \SOFTWARE\Wow6432Node\Microsoft\Windows NT\CurrentVersion\Windows\AppInit_Dlls
+      - NewName|endswith:
+          - \SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows\AppInit_Dlls
+          - \SOFTWARE\Wow6432Node\Microsoft\Windows NT\CurrentVersion\Windows\AppInit_Dlls
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/12/25
+tags:
+  - attack.persistence
+  - attack.t1546.010
+  - DEMO

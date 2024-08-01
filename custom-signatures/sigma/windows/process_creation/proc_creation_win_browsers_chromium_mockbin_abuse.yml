@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Chromium Browser Headless Execution To Mockbin Like Site
+id: 1c526788-0abe-4713-862f-b520da5e5316
+status: experimental
+description: Detects the execution of a Chromium based browser process with the "headless"
+    flag and a URL pointing to the mockbin.org service (which can be used to exfiltrate
+    data).
+author: X__Junior (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/09/11 20:35:31
+references:
+  - https://www.zscaler.com/blogs/security-research/steal-it-campaign
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_headless:
+        CommandLine|contains: --headless
+    selection_img:
+        Image|endswith:
+          - \brave.exe
+          - \chrome.exe
+          - \msedge.exe
+          - \opera.exe
+          - \vivaldi.exe
+    selection_url:
+        CommandLine|contains:
+          - ://run.mocky
+          - ://mockbin
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.execution
+  - DEMO

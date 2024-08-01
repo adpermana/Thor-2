@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Atlassian Confluence CVE-2022-26134
+id: 7fb14105-530e-4e2e-8cfb-99f7d8700b66
+related:
+  - type: derived
+    id: 245f92e3-c4da-45f1-9070-bc552e06db11
+status: test
+description: Detects spawning of suspicious child processes by Atlassian Confluence
+    server which may indicate successful exploitation of CVE-2022-26134
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/03 13:44:01
+references:
+  - https://www.volexity.com/blog/2022/06/02/zero-day-exploitation-of-atlassian-confluence/
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - /bin/sh
+          - bash
+          - dash
+          - ksh
+          - zsh
+          - csh
+          - fish
+          - curl
+          - wget
+          - python
+        ParentImage|endswith: /java
+        ParentImage|startswith: /opt/atlassian/confluence/
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.initial_access
+  - attack.execution
+  - attack.t1190
+  - attack.t1059
+  - cve.2022.26134
+  - DEMO

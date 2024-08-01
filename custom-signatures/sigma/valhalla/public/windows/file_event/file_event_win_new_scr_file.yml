@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: SCR File Write Event
+id: c048f047-7e2a-4888-b302-55f509d4a91d
+status: experimental
+description: Detects the creation of screensaver files (.scr) outside of system folders.
+    Attackers may execute an application as an ".SCR" file using "rundll32.exe desk.cpl,InstallScreenSaver"
+    for example.
+author: Christopher Peacock @securepeacock, SCYTHE @scythe_io
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/04/27 10:51:31
+references:
+  - https://lolbas-project.github.io/lolbas/Libraries/Desk/
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        TargetFilename|contains:
+          - :\$WINDOWS.~BT\NewOS\
+          - :\Windows\System32\
+          - :\Windows\SysWOW64\
+          - :\Windows\WinSxS\
+          - :\WUDownloadCache\
+    selection:
+        TargetFilename|endswith: .scr
+falsepositives: The installation of new screen savers by third party software
+level: medium
+customer: 'demo'
+modified: 2023/08/23
+tags:
+  - attack.defense_evasion
+  - attack.t1218.011
+  - DEMO

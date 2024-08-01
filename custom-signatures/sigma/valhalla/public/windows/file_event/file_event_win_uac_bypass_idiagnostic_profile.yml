@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: UAC Bypass Using IDiagnostic Profile - File
+id: 48ea844d-19b1-4642-944e-fe39c2cc1fec
+status: test
+description: Detects the creation of a file by "dllhost.exe" in System32 directory
+    part of "IDiagnosticProfileUAC" UAC bypass technique
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/03 16:34:11
+references:
+  - https://github.com/Wh04m1001/IDiagnosticProfileUAC
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith: \DllHost.exe
+        TargetFilename|endswith: .dll
+        TargetFilename|startswith: C:\Windows\System32\
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.execution
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - attack.t1548.002
+  - DEMO

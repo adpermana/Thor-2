@@ -1,0 +1,42 @@
+title: NCat Command Line Flags - Windows
+id: 4c43f8da-ad24-4b81-a9de-1df10d81e1fa
+related:
+    - id: 281b0753-8f45-4cc2-b4af-17767902c780
+      type: similar
+status: experimental
+description: Detects command line flags often used with NCat - the networking utility often used for hacking
+references:
+    - https://nmap.org/ncat/
+author: Florian Roth
+date: 2022/12/07
+tags:
+    - attack.command_and_control
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_specific:
+        CommandLine|contains:
+            - ' -lnvp '
+            - ' -lvp '
+            - ' -l -v -p '
+            - ' -l -n -v -p '
+            - 'cat.exe -l -p '
+            - 'cat.exe -l'
+            - 'nc.exe -l'
+    selection_ncat:
+        CommandLine|contains:
+            - 'nc.exe'
+            - 'cat.exe'
+    selection_flags:
+        CommandLine|contains:
+            - ' -e cmd.exe'
+            - ' -e powershell.exe'
+    selection_specific_ngrok_io: # Sample e.g. 3c0f96d6ef462e81433a78cff50f627e33fe8bd38bcdabbba64aa2391b5dada7
+        CommandLine|contains|all:
+            - ' -e '
+            - 'ngrok.io'
+    condition: 1 of selection_specific* or ( selection_ncat and selection_flags )
+falsepositives:
+    - Unlikely
+level: high

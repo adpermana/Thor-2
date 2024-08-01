@@ -1,0 +1,20 @@
+title: Hacktool Image Load Based on PE Info
+id: dde87595-9439-46da-ab69-e0346ed488d3
+status: test
+description: Detects image loads of DLLs used in various hacktools based on the info in their PE headers
+author: Florian Roth
+references:
+    - Internal Research
+date: 2022/03/04
+logsource:
+    category: image_load
+    product: windows
+detection:
+    selection:
+        Product|contains:
+            - 'mimilib'
+            - 'mimidrv'
+    condition: selection
+falsepositives:
+    - Unknown
+level: high

@@ -1,0 +1,38 @@
+#
+# THOR CUSTOM C2 IOCs
+#
+# Important: Activate this template by renaming it from .txt.template to .txt 
+#
+# FORMAT -----------------------------------------------------------------------
+#
+# # Comment
+# IP
+# FQDN
+#
+# EXAMPLES ---------------------------------------------------------------------
+#
+## Case 44 C2 Server
+#mastermind.eu
+#googleaccountservices.com
+#89.22.123.12
+artilleryin.online
+berxion9.online
+caliberunity.club
+trojan.win32.vatet.sm
+pexxota.space
+wellernaft.top
+kastellira3.space
+awerityubfer.club
+bowepripos.uno
+vatet.sm
+timerework.fun
+cleantheplace.top
+cleantheplace.top
+shrapnell.space
+tvpress.com
+btloader.com
+iyfbodn.com
+sbdtds.com
+securesearchnow.com
+vulusercontent.com
+mybmtbgd7aprdnw2ekxht5qap5daam2wch25coqerrq2zdioanob34ad.onion

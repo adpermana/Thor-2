@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Processes Accessing the Microphone and Webcam
+id: 8cd538a4-62d5-4e83-810b-12d41e428d6e
+status: test
+description: Potential adversaries accessing the microphone and webcam in an endpoint.
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/06/07 17:54:21
+references:
+  - https://twitter.com/duzvik/status/1269671601852813320
+  - https://medium.com/@7a616368/can-you-track-processes-accessing-the-camera-and-microphone-7e6885b37072
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: selection
+    selection:
+        EventID:
+          - "4657"
+          - "4656"
+          - "4663"
+        ObjectName|contains:
+          - \SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\microphone\NonPackaged
+          - \SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\webcam\NonPackaged
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.collection
+  - attack.t1123
+  - DEMO

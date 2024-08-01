@@ -1,0 +1,60 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Renamed PAExec Execution
+id: c4e49831-1496-40cf-8ce1-b53f942b02f9
+related:
+  - type: obsoletes
+    id: 7b0666ad-3e38-4e3d-9bab-78b06de85f7b
+status: test
+description: Detects execution of renamed version of PAExec. Often used by attackers
+author: Florian Roth (Nextron Systems), Jason Lynch
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/05/22 12:14:21
+references:
+  - https://www.poweradmin.com/paexec/
+  - https://summit.fireeye.com/content/dam/fireeye-www/summit/cds-2018/presentations/cds18-technical-s05-att&cking-fin7.pdf
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+      - Image|endswith: \paexec.exe
+      - Image|startswith: C:\Windows\PAExec-
+    selection:
+      - Description: PAExec Application
+      - OriginalFileName: PAExec.exe
+      - Product|contains: PAExec
+      - Imphash:
+          - 11D40A7B7876288F919AB819CC2D9802
+          - 6444f8a34e99b8f7d9647de66aabe516
+          - dfd6aa3f7b2b1035b76b718f1ddc689f
+          - 1a6cca4d5460b1710a12dea39e4a592c
+      - Hashes|contains:
+          - IMPHASH=11D40A7B7876288F919AB819CC2D9802
+          - IMPHASH=6444f8a34e99b8f7d9647de66aabe516
+          - IMPHASH=dfd6aa3f7b2b1035b76b718f1ddc689f
+          - IMPHASH=1a6cca4d5460b1710a12dea39e4a592c
+falsepositives:
+  - Weird admins that rename their tools
+  - Software companies that bundle PAExec with their software and rename it, so that
+    it is less embarrassing
+  - When executed with the "-s" flag. PAExec will copy itself to the "C:\Windows\"
+    directory with a different name. Usually like this "PAExec-[XXXXX]-[ComputerName]"
+level: high
+customer: 'demo'
+modified: 2023/02/14
+tags:
+  - attack.defense_evasion
+  - attack.t1202
+  - DEMO

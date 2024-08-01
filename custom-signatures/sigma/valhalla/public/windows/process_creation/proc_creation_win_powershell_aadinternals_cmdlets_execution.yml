@@ -1,0 +1,72 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: AADInternals PowerShell Cmdlets Execution - ProccessCreation
+id: c86500e9-a645-4680-98d7-f882c70c1ea3
+related:
+  - type: similar
+    id: 91e69562-2426-42ce-a647-711b8152ced6
+status: test
+description: Detects ADDInternals Cmdlet execution. A tool for administering Azure
+    AD and Office 365. Which can be abused by threat actors to attack Azure AD or
+    Office 365.
+author: Austin Songer (@austinsonger), Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/12/23 21:49:11
+references:
+  - https://o365blog.com/aadinternals/
+  - https://github.com/Gerenios/AADInternals
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains:
+          - Add-AADInt
+          - ConvertTo-AADInt
+          - Disable-AADInt
+          - Enable-AADInt
+          - Export-AADInt
+          - Get-AADInt
+          - Grant-AADInt
+          - Install-AADInt
+          - Invoke-AADInt
+          - Join-AADInt
+          - New-AADInt
+          - Open-AADInt
+          - Read-AADInt
+          - Register-AADInt
+          - Remove-AADInt
+          - Restore-AADInt
+          - Search-AADInt
+          - Send-AADInt
+          - Set-AADInt
+          - Start-AADInt
+          - Update-AADInt
+    selection_img:
+      - Image|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+      - OriginalFileName:
+          - PowerShell.Exe
+          - pwsh.dll
+falsepositives: Legitimate use of the library for administrative activity
+level: high
+customer: 'demo'
+tags:
+  - attack.execution
+  - attack.reconnaissance
+  - attack.discovery
+  - attack.credential_access
+  - attack.impact
+  - DEMO

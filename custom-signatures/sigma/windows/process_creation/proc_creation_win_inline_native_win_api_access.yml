@@ -1,0 +1,71 @@
+title: Accessing Native WinAPI Via CommandLine
+id: 1cd9a545-7a58-4b4f-86ef-427c98a71ea0
+related:
+    - id: 876529e1-a157-4e3e-a86d-ff9c68ae8d5e
+      type: derived
+status: experimental
+description: Detects the use of Native WinAPI Functions via the commandline as seen used by threat actors via the tool winapiexec
+author: Nasreddine Bencherchali
+date: 2022/09/06
+references:
+    - https://twitter.com/m417z/status/1566674631788007425
+tags:
+    - attack.execution
+    - attack.t1106
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains:
+            - 'NtCreateProcess'
+            - 'NtTerminateProcess'
+            - 'NtOpenProcess' #Included in OpenProcess from Win32API
+            - 'NtQueryInformationProcess'
+            - 'NtSetInformationProcess'
+            - 'NtSuspendProcess'
+            - 'NtResumeProcess'
+            - 'NtQueryObject'
+            - 'NtQuerySystemInformation'
+            - 'RtlAdjustPrivilege'
+            - 'NtDeviceIoCOntrolFile'
+            - 'NtDuplicateToken'
+            - 'NtFilterToken'
+            - 'NtSetInformationToken'
+            - 'NtUnmapViewOfSection'
+            - 'RtlNtStatusToDosError'
+            - 'NtOpenFile'
+            - 'NtCreateSection'
+            - 'RtlCreateProcessParametersEx'
+            - 'NtCreateThread' # Included in CreateThread from Win32API
+            - 'NtTerminateThread'
+            - 'NtOpenThread'
+            - 'NtQueryInformationThread'
+            - 'NtSetInformationThread'
+            - 'NtSuspendThread'
+            - 'NtResumeThread'
+            - 'NtAlertResumeThread'
+            - 'NtAlertThread'
+            - 'NtGetContextThread'
+            - 'NtSetContextThread'
+            - 'NtAllocateVirtualMemory'
+            - 'NtFreeVirtualMemory'
+            - 'NtProtectVirtualMemory'
+            - 'NtQueryVirtualMemory'
+            - 'NtReadVirtualMemory'
+            - 'NtWriteVirtualMemory'
+            - 'LdrLoadDll'
+            - 'LdrUnloadDll'
+            - 'LdrGetDllHandle'
+            - 'LdrGetProcedureAddress'
+            - 'LdrGetDllFullName'
+            - 'NtLoadDriver'
+            - 'NtUnloadDrive'
+            - 'RtlSetUnhandledExceptionFilter'
+            - 'NtSetSystemInformation'
+            - 'NtClose'
+            - 'NtDuplicateObject'
+    condition: selection
+falsepositives:
+    - Rare FP could occur in search software that use CLI to search for a string.
+level: high

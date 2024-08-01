@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Office Token Search Via CLI
+id: 6d3a3952-6530-44a3-8554-cf17c116c615
+status: test
+description: Detects possible search for office tokens via CLI by looking for the
+    string "eyJ0eX". This string is used as an anchor to look for the start of the
+    JWT token used by office and similar apps.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/10/25 15:33:41
+references:
+  - https://mrd0x.com/stealing-tokens-from-office-applications/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - eyJ0eXAiOi
+          - ' eyJ0eX'
+          - ' "eyJ0eX"'
+          - ' ''eyJ0eX'''
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.credential_access
+  - attack.t1528
+  - DEMO

@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Cisco Discovery
+id: 9705a6a1-6db6-4a16-a987-15b7151e299b
+status: test
+description: Find information about network devices that is not stored in config files
+author: Austin Clark
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/08/12 10:06:51
+references:
+  - https://www.cisco.com/c/en/us/td/docs/server_nw_virtual/2-5_release/command_reference/show.html
+logsource:
+    product: cisco
+    service: aaa
+detection:
+    condition: keywords
+    keywords:
+      - dir
+      - show arp
+      - show cdp
+      - show clock
+      - show ip interface
+      - show ip route
+      - show ip sockets
+      - show processes
+      - show ssh
+      - show users
+      - show version
+falsepositives: Commonly used by administrators for troubleshooting
+level: low
+customer: 'demo'
+modified: 2023/01/04
+tags:
+  - attack.discovery
+  - attack.t1083
+  - attack.t1201
+  - attack.t1057
+  - attack.t1018
+  - attack.t1082
+  - attack.t1016
+  - attack.t1049
+  - attack.t1033
+  - attack.t1124
+  - DEMO

@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Dism Remove Online Package
+id: 43e32da2-fdd0-4156-90de-50dfd62636f9
+status: test
+description: Deployment Image Servicing and Management tool. DISM is used to enumerate,
+    install, uninstall, configure, and update features and packages in Windows images
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/16 12:42:01
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.001/T1562.001.md#atomic-test-26---disable-windows-defender-with-dism
+  - https://www.trendmicro.com/en_us/research/22/h/ransomware-actor-abuses-genshin-impact-anti-cheat-driver-to-kill-antivirus.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_dism:
+        CommandLine|contains|all:
+          - /Online
+          - /Disable-Feature
+        Image|endswith: \Dism.exe
+    selection_dismhost:
+        Image|endswith: \DismHost.exe
+        ParentCommandLine|contains|all:
+          - /Online
+          - /Disable-Feature
+falsepositives: Legitimate script
+level: medium
+customer: 'demo'
+modified: 2022/08/26
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+  - DEMO

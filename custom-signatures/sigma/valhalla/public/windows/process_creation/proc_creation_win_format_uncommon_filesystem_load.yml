@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-06-21 19:00
+# Generated for User: demo
+# Number of Rules: 3228
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Uncommon FileSystem Load Attempt By Format.com
+id: 9fb6b26e-7f9e-4517-a48b-8cac4a1b6c60
+status: test
+description: |
+    Detects the execution of format.com with an uncommon filesystem selection that could indicate a defense evasion activity in which "format.com" is used to load malicious DLL files or other programs.
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/04 18:00:11
+references:
+  - https://twitter.com/0gtweet/status/1477925112561209344
+  - https://twitter.com/wdormann/status/1478011052130459653?s=20
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_known_fs:
+        CommandLine|contains:
+          - /fs:exFAT
+          - /fs:FAT
+          - /fs:NTFS
+          - /fs:ReFS
+          - /fs:UDF
+    selection:
+        CommandLine|contains: '/fs:'
+        Image|endswith: \format.com
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2024/05/13
+tags:
+  - attack.defense_evasion
+  - DEMO

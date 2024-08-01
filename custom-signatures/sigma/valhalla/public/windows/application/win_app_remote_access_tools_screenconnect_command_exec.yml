@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Remote Access Tool - ScreenConnect Command Execution
+id: 076ebe48-cc05-4d8f-9d41-89245cd93a14
+related:
+  - type: similar
+    id: b1f73849-6329-4069-bc8f-78a604bb8b23
+status: experimental
+description: Detects command execution via ScreenConnect RMM
+author: Ali Alwashali
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/10/10 19:26:21
+references:
+  - https://www.huntandhackett.com/blog/revil-the-usage-of-legitimate-remote-admin-tooling
+  - https://github.com/SigmaHQ/sigma/pull/4467
+logsource:
+    product: windows
+    service: application
+detection:
+    condition: selection
+    selection:
+        Data|contains: Executed command of length
+        EventID: "200"
+        Provider_Name: ScreenConnect
+falsepositives: Legitimate use of ScreenConnect
+level: low
+customer: 'demo'
+tags:
+  - attack.execution
+  - attack.t1059.003
+  - DEMO

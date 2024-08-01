@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Renamed AutoHotkey.EXE Execution
+id: 0f16d9cf-0616-45c8-8fad-becc11b5a41c
+status: test
+description: Detects execution of a renamed autohotkey.exe binary based on PE metadata
+    fields
+author: Nasreddine Bencherchali
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/02/07 14:23:31
+references:
+  - https://www.autohotkey.com/download/
+  - https://thedfirreport.com/2023/02/06/collect-exfiltrate-sleep-repeat/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+      - Image|endswith:
+          - \AutoHotkey.exe
+          - \AutoHotkey32.exe
+          - \AutoHotkey32_UIA.exe
+          - \AutoHotkey64.exe
+          - \AutoHotkey64_UIA.exe
+          - \AutoHotkeyA32.exe
+          - \AutoHotkeyA32_UIA.exe
+          - \AutoHotkeyU32.exe
+          - \AutoHotkeyU32_UIA.exe
+          - \AutoHotkeyU64.exe
+          - \AutoHotkeyU64_UIA.exe
+      - Image|contains: \AutoHotkey
+    selection:
+      - Product|contains: AutoHotkey
+      - Description|contains: AutoHotkey
+      - OriginalFileName:
+          - AutoHotkey.exe
+          - AutoHotkey.rc
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - DEMO

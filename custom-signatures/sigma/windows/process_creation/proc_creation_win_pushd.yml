@@ -1,0 +1,27 @@
+title: Suspicious Directory Switching Using "Pushd"
+id: 2614465d-d65e-4061-9fc8-55c6fdb53300
+status: experimental
+description: Detects usage of the "pushd" command similar to "cd" to switch directories before executing another command. In the hope to bypass detections based on full paths.
+references:
+    - https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/pushd
+    - https://app.any.run/tasks/3a48d773-269d-4c7c-a19c-151bc47ef581/
+author: Nasreddine Bencherchali
+date: 2022/06/07
+tags:
+    - attack.execution
+    - attack.t1059
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_pushd:
+        CommandLine|contains: ' pushd '
+    selection_paths:
+        CommandLine|contains:
+            - '\AppData\Local\'
+            - '\AppData\Roaming'
+            - 'C:\Users\Public'
+    condition: all of selection*
+falsepositives:
+    - Legitimate users using "pushd" as it was intended to be used
+level: medium

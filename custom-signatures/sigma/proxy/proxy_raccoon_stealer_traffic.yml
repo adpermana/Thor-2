@@ -1,0 +1,22 @@
+title: Raccoon Stealer Traffic
+id: 9d1109b2-1e37-4714-a286-bef820e1eb5c
+status: test
+description: Detects raccoon stealer traffic fetching additional DLLs
+references:
+    - https://urlhaus.abuse.ch/browse.php?search=%2FaN7jD0qO6kT5bK5bQ4eR8fE1xP7hL2vK
+    - https://www.virustotal.com/gui/search/behaviour_network%253AaN7jD0qO6kT5bK5bQ4eR8fE1xP7hL2vK/files
+author: X__Junior
+date: 2022/10/31
+modified: 2023/03/28
+tags:
+    - attack.command_and_control
+logsource:
+    category: proxy
+detection:
+    selection:
+        cs-method: 'GET'
+        c-uri|contains: 'aN7jD0qO6kT5bK5bQ4eR8fE1xP7hL2vK'
+    condition: selection
+falsepositives:
+    - Unknown
+level: high

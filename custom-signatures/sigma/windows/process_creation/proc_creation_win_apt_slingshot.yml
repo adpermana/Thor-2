@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Defrag Deactivation
+id: 958d81aa-8566-4cea-a565-59ccd4df27b0
+status: test
+description: Detects the deactivation and disabling of the Scheduled defragmentation
+    task as seen by Slingshot APT group
+author: Florian Roth (Nextron Systems), Bartlomiej Czyz (@bczyz1)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/03/04 11:10:01
+references:
+  - https://securelist.com/apt-slingshot/84312/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - /delete
+          - /change
+        CommandLine|contains|all:
+          - /TN
+          - \Microsoft\Windows\Defrag\ScheduledDefrag
+        Image|endswith: \schtasks.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.persistence
+  - attack.t1053.005
+  - attack.s0111
+  - detection.emerging_threats
+  - DEMO

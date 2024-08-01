@@ -1,0 +1,22 @@
+title: Execution Error Of Potentially Infected Script
+id: 36acc4ba-2ca3-4c17-b98e-8b25a101adf5
+status: test
+description: Detects execution errors of PowerShell scripts that contains viruses or potentially unwanted software.
+references:
+    - Internal Research
+author: Nasreddine Bencherchali (Nextron Systems)
+date: 2023/04/03
+tags:
+    - attack.execution
+    - attack.t1059.001
+logsource:
+    product: windows
+    category: ps_module
+    definition: 0ad03ef1-f21b-4a79-8ce8-e6900c54b65b
+detection:
+    selection:
+        Payload|contains: 'virus or potentially unwanted software'
+    condition: selection
+falsepositives:
+    - Unlikely
+level: high

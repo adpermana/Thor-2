@@ -1,0 +1,52 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Persistence Via Microsoft Office Add-In
+id: 8e1cb247-6cf6-42fa-b440-3f27d57e9936
+status: test
+description: Detects potential persistence activity via startup add-ins that load
+    when Microsoft Office starts (.wll/.xll are simply .dll fit for Word or Excel).
+author: NVISO
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/05/11 18:43:21
+references:
+  - Internal Research
+  - https://labs.withsecure.com/publications/add-in-opportunities-for-office-persistence
+  - https://github.com/redcanaryco/atomic-red-team/blob/4ae9580a1a8772db87a1b6cdb0d03e5af231e966/atomics/T1137.006/T1137.006.md
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_generic:
+        TargetFilename|contains: \Microsoft\Addins\
+        TargetFilename|endswith:
+          - .xlam
+          - .xla
+          - .ppam
+    selection_wlldropped:
+        TargetFilename|contains: \Microsoft\Word\Startup\
+        TargetFilename|endswith: .wll
+    selection_xladropped:
+        TargetFilename|contains: Microsoft\Excel\XLSTART\
+        TargetFilename|endswith: .xlam
+    selection_xlldropped:
+        TargetFilename|contains: \Microsoft\Excel\Startup\
+        TargetFilename|endswith: .xll
+falsepositives: Legitimate add-ins
+level: high
+customer: 'demo'
+modified: 2023/02/08
+tags:
+  - attack.persistence
+  - attack.t1137.006
+  - DEMO

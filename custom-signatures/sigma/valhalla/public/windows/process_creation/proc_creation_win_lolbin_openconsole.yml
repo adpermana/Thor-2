@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Use of OpenConsole
+id: 814c95cc-8192-4378-a70a-f1aafd877af1
+status: test
+description: Detects usage of OpenConsole binary as a LOLBIN to launch other binaries
+    to bypass application Whitelisting
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/16 10:43:51
+references:
+  - https://twitter.com/nas_bench/status/1537563834478645252
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        Image|startswith: C:\Program Files\WindowsApps\Microsoft.WindowsTerminal
+    selection:
+      - OriginalFileName: OpenConsole.exe
+      - Image|endswith: \OpenConsole.exe
+falsepositives: Legitimate use by an administrator
+level: medium
+customer: 'demo'
+tags:
+  - attack.execution
+  - attack.t1059
+  - DEMO

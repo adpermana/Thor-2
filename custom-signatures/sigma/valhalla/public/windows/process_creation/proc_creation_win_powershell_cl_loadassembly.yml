@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Assembly Loading Via CL_LoadAssembly.ps1
+id: c57872c7-614f-4d7f-a40d-b78c8df2d30d
+status: experimental
+description: Detects calls to "LoadAssemblyFromPath" or "LoadAssemblyFromNS" that
+    are part of the "CL_LoadAssembly.ps1" script. This can be abused to load different
+    assemblies and bypass App locker controls.
+author: frack113, Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/05/21 16:15:41
+references:
+  - https://bohops.com/2018/01/07/executing-commands-and-bypassing-applocker-with-powershell-diagnostic-scripts/
+  - https://lolbas-project.github.io/lolbas/Scripts/CL_LoadAssembly/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - 'LoadAssemblyFromPath '
+          - 'LoadAssemblyFromNS '
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.defense_evasion
+  - attack.t1216
+  - DEMO

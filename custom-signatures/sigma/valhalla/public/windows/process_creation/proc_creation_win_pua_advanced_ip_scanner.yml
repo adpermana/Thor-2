@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PUA - Advanced IP Scanner Execution
+id: bef37fa2-f205-4a7b-b484-0759bfd5f86f
+status: test
+description: Detects the use of Advanced IP Scanner. Seems to be a popular tool for
+    ransomware groups.
+author: Nasreddine Bencherchali (Nextron Systems), @ROxPinTeddy
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/05/12 14:26:41
+references:
+  - https://news.sophos.com/en-us/2019/12/09/snatch-ransomware-reboots-pcs-into-safe-mode-to-bypass-protection/
+  - https://www.fireeye.com/blog/threat-research/2020/05/tactics-techniques-procedures-associated-with-maze-ransomware-incidents.html
+  - https://labs.f-secure.com/blog/prelude-to-ransomware-systembc
+  - https://assets.documentcloud.org/documents/20444693/fbi-pin-egregor-ransomware-bc-01062021.pdf
+  - https://thedfirreport.com/2021/01/18/all-that-for-a-coinminer
+  - https://github.com/3CORESec/MAL-CL/tree/master/Descriptors/Other/Advanced%20IP%20Scanner
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_cli:
+        CommandLine|contains|all:
+          - /portable
+          - /lng
+    selection_img:
+      - Image|contains: \advanced_ip_scanner
+      - OriginalFileName|contains: advanced_ip_scanner
+      - Description|contains: Advanced IP Scanner
+falsepositives: Legitimate administrative use
+level: medium
+customer: 'demo'
+modified: 2023/02/07
+tags:
+  - attack.discovery
+  - attack.t1046
+  - attack.t1135
+  - DEMO

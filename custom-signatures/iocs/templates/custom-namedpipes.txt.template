@@ -1,0 +1,22 @@
+#
+# THOR CUSTOM NAMED PIPES
+#
+# Important: Activate this template by renaming it from .txt.template to .txt 
+#
+# FORMAT -----------------------------------------------------------------------
+#
+# Pipenameregex;Comment
+# OR
+# Pipenameregex;Score;Comment
+#
+# APPLICATION ------------------------------------------------------------------
+#
+# Every line is starts with a regular expression.
+# Regular expressions are applied case insensitively.
+# Lines can include a score that adds up to a total score for this finding. If no score is specified, it defaults to 100.
+# Lines end with a comment that gives more context about that IOC.
+#
+# EXAMPLES ---------------------------------------------------------------------
+#
+# isapi_dg;Regin Malware Named Pipe
+# ^msagent_.*;CobaltStrike Named Pipe Default https://twitter.com/jfslowik/status/1063449750371016704

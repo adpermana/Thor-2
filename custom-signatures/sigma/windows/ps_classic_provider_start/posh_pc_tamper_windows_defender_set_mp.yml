@@ -1,0 +1,97 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Tamper Windows Defender - PSClassic
+id: ec19ebab-72dc-40e1-9728-4c0b805d722c
+related:
+  - type: similar
+    id: 14c71865-6cd3-44ae-adaa-1db923fae5f2
+status: experimental
+description: Attempting to disable scheduled scanning and other parts of Windows Defender
+    ATP or set default actions to allow.
+author: frack113, Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/06/07 14:53:51
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.001/T1562.001.md
+logsource:
+    category: ps_classic_provider_start
+    product: windows
+detection:
+    condition: selection_set_mppreference and 1 of selection_options_*
+    selection_options_actions_func:
+        Data|contains:
+          - HighThreatDefaultAction Allow
+          - htdefac Allow
+          - LowThreatDefaultAction Allow
+          - ltdefac Allow
+          - ModerateThreatDefaultAction Allow
+          - mtdefac Allow
+          - SevereThreatDefaultAction Allow
+          - stdefac Allow
+    selection_options_bool_allow:
+        Data|contains:
+          - -dbaf $true
+          - -dbaf 1
+          - -dbm $true
+          - -dbm 1
+          - -dips $true
+          - -dips 1
+          - -DisableArchiveScanning $true
+          - -DisableArchiveScanning 1
+          - -DisableBehaviorMonitoring $true
+          - -DisableBehaviorMonitoring 1
+          - -DisableBlockAtFirstSeen $true
+          - -DisableBlockAtFirstSeen 1
+          - -DisableCatchupFullScan $true
+          - -DisableCatchupFullScan 1
+          - -DisableCatchupQuickScan $true
+          - -DisableCatchupQuickScan 1
+          - -DisableIntrusionPreventionSystem $true
+          - -DisableIntrusionPreventionSystem 1
+          - -DisableIOAVProtection $true
+          - -DisableIOAVProtection 1
+          - -DisableRealtimeMonitoring $true
+          - -DisableRealtimeMonitoring 1
+          - -DisableRemovableDriveScanning $true
+          - -DisableRemovableDriveScanning 1
+          - -DisableScanningMappedNetworkDrivesForFullScan $true
+          - -DisableScanningMappedNetworkDrivesForFullScan 1
+          - -DisableScanningNetworkFiles $true
+          - -DisableScanningNetworkFiles 1
+          - -DisableScriptScanning $true
+          - -DisableScriptScanning 1
+          - -MAPSReporting $false
+          - -MAPSReporting 0
+          - -drdsc $true
+          - -drdsc 1
+          - -drtm $true
+          - -drtm 1
+          - -dscrptsc $true
+          - -dscrptsc 1
+          - -dsmndf $true
+          - -dsmndf 1
+          - -dsnf $true
+          - -dsnf 1
+          - -dss $true
+          - -dss 1
+    selection_set_mppreference:
+        Data|contains: Set-MpPreference
+falsepositives: Legitimate PowerShell scripts that disable Windows Defender for troubleshooting
+    purposes. Must be investigated.
+level: high
+customer: 'demo'
+modified: 2024/01/02
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+  - DEMO

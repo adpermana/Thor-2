@@ -1,0 +1,66 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Suspicious Change To Sensitive/Critical Files
+id: 86157017-c2b1-4d4a-8c33-93b8e67e4af4
+status: experimental
+description: Detects changes of sensitive and critical files. Monitors files that
+    you don't expect to change without planning on Linux system.
+author: '@d4ns4n_ (Wuerth-Phoenix)'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/30 20:38:31
+references:
+  - https://docs.microsoft.com/en-us/azure/defender-for-cloud/file-integrity-monitoring-overview#which-files-should-i-monitor
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    condition: 1 of selection_img_* and selection_paths
+    selection_img_1:
+        CommandLine|contains: '>'
+        Image|endswith:
+          - /cat
+          - /echo
+          - /grep
+          - /head
+          - /more
+          - /tail
+    selection_img_2:
+        Image|endswith:
+          - /emacs
+          - /nano
+          - /sed
+          - /vi
+          - /vim
+    selection_paths:
+        CommandLine|contains:
+          - /bin/login
+          - /bin/passwd
+          - /boot/
+          - /etc/*.conf
+          - /etc/cron.
+          - /etc/crontab
+          - /etc/hosts
+          - /etc/init.d
+          - /etc/sudoers
+          - /opt/bin/
+          - /sbin
+          - /usr/bin/
+          - /usr/local/bin/
+falsepositives: Some false positives are to be expected on user or administrator machines.
+    Apply additional filters as needed.
+level: medium
+customer: 'demo'
+tags:
+  - attack.impact
+  - attack.t1565.001
+  - DEMO

@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: UEFI Persistence Via Wpbbin - ProcessCreation
+id: 4abc0ec4-db5a-412f-9632-26659cddf145
+status: test
+description: Detects execution of the binary "wpbbin" which is used as part of the
+    UEFI based persistence method described in the reference section
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/18 17:25:31
+references:
+  - https://grzegorztworek.medium.com/using-uefi-to-inject-executable-files-into-bitlocker-protected-drives-8ff4ca59c94c
+  - https://persistence-info.github.io/Data/wpbbin.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image: C:\Windows\System32\wpbbin.exe
+falsepositives: Legitimate usage of the file by hardware manufacturer such as lenovo
+    (Thanks @0gtweet for the tip)
+level: high
+customer: 'demo'
+tags:
+  - attack.persistence
+  - attack.defense_evasion
+  - attack.t1542.001
+  - DEMO

@@ -1,0 +1,53 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: New Firewall Rule Added In Windows Firewall Exception List For Potential Suspicious
+    Application
+id: 9e2575e7-2cb9-4da1-adc8-ed94221dca5e
+related:
+  - type: derived
+    id: cde0a575-7d3d-4a49-9817-b8004a7bf105
+status: experimental
+description: Detects the addition of a new rule to the Windows Firewall exception
+    list for an application located in a potentially suspicious location.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/02/26 06:50:31
+references:
+  - https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-r2-and-2008/dd364427(v=ws.10)
+  - https://app.any.run/tasks/7123e948-c91e-49e0-a813-00e8d72ab393/#
+logsource:
+    product: windows
+    service: firewall-as
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_block:
+        Action: "2"
+    selection:
+        ApplicationPath|contains:
+          - :\PerfLogs\
+          - :\Temp\
+          - :\Users\Public\
+          - :\Windows\Tasks\
+          - :\Windows\Temp\
+          - \AppData\Local\Temp\
+        EventID:
+          - "2004"
+          - "2071"
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2024/01/22
+tags:
+  - attack.defense_evasion
+  - attack.t1562.004
+  - DEMO

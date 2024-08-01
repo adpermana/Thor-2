@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: New ODBC Driver Registered
+id: 3390fbef-c98d-4bdd-a863-d65ed7c610dd
+status: experimental
+description: Detects the registration of a new ODBC driver.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/23 12:28:41
+references:
+  - https://www.hexacorn.com/blog/2020/08/23/odbcconf-lolbin-trifecta/
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+    filter_main_sqlserver:
+        Details: '%WINDIR%\System32\SQLSRV32.dll'
+        TargetObject|contains: \SQL Server\
+    filter_optional_office_access:
+        Details|endswith: \ACEODBC.DLL
+        Details|startswith: C:\Progra
+        TargetObject|contains: '\Microsoft Access '
+    filter_optional_office_excel:
+        Details|endswith: \ACEODBC.DLL
+        Details|startswith: C:\Progra
+        TargetObject|contains: \Microsoft Excel Driver
+    selection:
+        TargetObject|contains: \SOFTWARE\ODBC\ODBCINST.INI\
+        TargetObject|endswith: \Driver
+falsepositives: Likely
+level: low
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.persistence
+  - DEMO

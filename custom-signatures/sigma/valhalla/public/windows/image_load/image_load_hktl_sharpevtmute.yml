@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - SharpEvtMute DLL Load
+id: 49329257-089d-46e6-af37-4afce4290685
+related:
+  - type: similar
+    id: bedfc8ad-d1c7-4e37-a20e-e2b0dbee759c
+status: test
+description: Detects the load of EvtMuteHook.dll, a key component of SharpEvtHook,
+    a tool that tampers with the Windows event logs
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/07 13:45:01
+references:
+  - https://github.com/bats3c/EvtMute
+logsource:
+    category: image_load
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - Hashes|contains: IMPHASH=330768A4F172E10ACB6287B87289D83B
+      - Imphash: 330768a4f172e10acb6287b87289d83b
+falsepositives: Other DLLs with the same Imphash
+level: high
+customer: 'demo'
+modified: 2023/02/17
+tags:
+  - attack.defense_evasion
+  - attack.t1562.002
+  - DEMO

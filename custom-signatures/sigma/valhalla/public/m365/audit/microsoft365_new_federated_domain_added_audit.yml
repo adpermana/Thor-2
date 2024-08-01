@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: New Federated Domain Added
+id: 58f88172-a73d-442b-94c9-95eaed3cbb36
+related:
+  - type: similar
+    id: 42127bdd-9133-474f-a6f1-97b6c08a4339
+status: experimental
+description: Detects the addition of a new Federated Domain.
+author: Splunk Threat Research Team (original rule), Harjot Singh @cyb3rjy0t (sigma
+    rule)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/09/18 12:33:21
+references:
+  - https://research.splunk.com/cloud/e155876a-6048-11eb-ae93-0242ac130002/
+  - https://o365blog.com/post/aadbackdoor/
+logsource:
+    product: m365
+    service: audit
+detection:
+    condition: all of selection_*
+    selection_domain:
+        Operation|contains: domain
+    selection_operation:
+        Operation|contains:
+          - add
+          - new
+falsepositives: The creation of a new Federated domain is not necessarily malicious,
+    however these events need to be followed closely, as it may indicate federated
+    credential abuse or backdoor via federated identities at a similar or different
+    cloud provider.
+level: medium
+customer: 'demo'
+tags:
+  - attack.persistence
+  - attack.t1136.003
+  - DEMO

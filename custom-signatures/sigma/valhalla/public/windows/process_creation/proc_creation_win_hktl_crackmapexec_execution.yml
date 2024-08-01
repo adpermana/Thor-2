@@ -1,0 +1,96 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - CrackMapExec Execution
+id: 42a993dd-bb3e-48c8-b372-4d6684c4106c
+status: test
+description: This rule detect common flag combinations used by CrackMapExec in order
+    to detect its use even if the binary has been replaced.
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/02/25 14:26:11
+references:
+  - https://mpgn.gitbook.io/crackmapexec/smb-protocol/authentication/checking-credentials-local
+  - https://www.mandiant.com/resources/telegram-malware-iranian-espionage
+  - https://www.infosecmatter.com/crackmapexec-module-library/?cmem=mssql-mimikatz
+  - https://www.infosecmatter.com/crackmapexec-module-library/?cmem=smb-pe_inject
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_* or all of part_localauth*
+    part_localauth_1:
+        CommandLine|contains|all:
+          - ' --local-auth'
+          - ' -u '
+          - ' -p '
+    part_localauth_2:
+        CommandLine|contains|all:
+          - ' 10.'
+          - ' 192.168.'
+          - '/24 '
+    selection_binary:
+        Image|endswith: \crackmapexec.exe
+    selection_execute:
+        CommandLine|contains|all:
+          - ' --local-auth'
+          - ' -u '
+          - ' -x '
+    selection_hash:
+        CommandLine|contains|all:
+          - ' --local-auth'
+          - ' -u '
+          - ' -p '
+          - ' -H ''NTHASH'''
+    selection_module_mssql:
+        CommandLine|contains|all:
+          - ' mssql '
+          - ' -u '
+          - ' -p '
+          - ' -M '
+          - ' -d '
+    selection_module_smb1:
+        CommandLine|contains|all:
+          - ' smb '
+          - ' -u '
+          - ' -H '
+          - ' -M '
+          - ' -o '
+    selection_module_smb2:
+        CommandLine|contains|all:
+          - ' smb '
+          - ' -u '
+          - ' -p '
+          - ' --local-auth'
+    selection_special:
+        CommandLine|contains: ' -M pe_inject '
+fields:
+  - ComputerName
+  - User
+  - CommandLine
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/03/08
+tags:
+  - attack.execution
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.credential_access
+  - attack.discovery
+  - attack.t1047
+  - attack.t1053
+  - attack.t1059.003
+  - attack.t1059.001
+  - attack.t1110
+  - attack.t1201
+  - DEMO

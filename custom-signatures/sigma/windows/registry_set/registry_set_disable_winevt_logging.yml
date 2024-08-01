@@ -1,0 +1,61 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Disable Windows Event Logging Via Registry
+id: 2f78da12-f7c7-430b-8b19-a28f269b77a3
+status: experimental
+description: Detects tampering with the "Enabled" registry key in order to disable
+    Windows logging of a Windows event channel
+author: frack113, Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/04 17:01:31
+references:
+  - https://twitter.com/WhichbufferArda/status/1543900539280293889
+  - https://github.com/DebugPrivilege/CPP/blob/c39d365617dbfbcb01fffad200d52b6239b2918c/Windows%20Defender/RestoreDefenderConfig.cpp
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+    filter_main_iis:
+        Image|endswith: \TiWorker.exe
+        Image|startswith: C:\Windows\winsxs\
+    filter_main_svchost:
+        Image: C:\Windows\System32\svchost.exe
+        TargetObject|contains:
+          - \Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-FileInfoMinifilter
+          - \Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-ASN1\
+          - \Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Kernel-AppCompat\
+          - \Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Runtime\Error\
+          - \Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-CAPI2/Operational\
+    filter_main_trusted_installer:
+        Image: C:\Windows\servicing\TrustedInstaller.exe
+        TargetObject|contains: \Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Compat-Appraiser
+    filter_main_wevutil:
+        Image|endswith: \Windows\system32\wevtutil.exe
+    filter_optional_empty:
+        Image: ""
+    filter_optional_null:
+        Image: []
+    selection:
+        Details: DWORD (0x00000000)
+        TargetObject|endswith: \Enabled
+        TargetObject|startswith: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\
+falsepositives: Rare falsepositives may occur from legitimate administrators disabling
+    specific event log for troubleshooting
+level: high
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.defense_evasion
+  - attack.t1562.002
+  - DEMO

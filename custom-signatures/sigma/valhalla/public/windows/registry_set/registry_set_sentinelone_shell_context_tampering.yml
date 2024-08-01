@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential SentinelOne Shell Context Menu Scan Command Tampering
+id: 6c304b02-06e6-402d-8be4-d5833cdf8198
+status: experimental
+description: Detects potentially suspicious changes to the SentinelOne context menu
+    scan command by a process other than SentinelOne.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/03/06 22:34:51
+references:
+  - https://mrd0x.com/sentinelone-persistence-via-menu-context/
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_sentinelone_binary:
+        Image|endswith:
+          - C:\Program Files\SentinelOne\
+          - C:\Program Files (x86)\SentinelOne\
+    filter_main_sentinelone_default_scan_binary:
+        Details|contains: \SentinelScanFromContextMenu.exe
+        Details|startswith:
+          - C:\Program Files\SentinelOne\Sentinel Agent
+          - C:\Program Files (x86)\SentinelOne\Sentinel Agent
+    selection:
+        TargetObject|contains: \shell\SentinelOneScan\command\
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.persistence
+  - DEMO

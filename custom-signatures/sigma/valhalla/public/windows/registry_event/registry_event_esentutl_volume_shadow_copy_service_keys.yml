@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Esentutl Volume Shadow Copy Service Keys
+id: 5aad0995-46ab-41bd-a9ff-724f41114971
+status: test
+description: Detects the volume shadow copy service initialization and processing
+    via esentutl. Registry keys such as HKLM\\System\\CurrentControlSet\\Services\\VSS\\Diag\\VolSnap\\Volume
+    are captured.
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/20 16:33:41
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1003.002/T1003.002.md#atomic-test-3---esentutlexe-sam-copy
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        TargetObject|contains: System\CurrentControlSet\Services\VSS\Start
+    selection:
+        Image|endswith: esentutl.exe
+        TargetObject|contains: System\CurrentControlSet\Services\VSS
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/12/25
+tags:
+  - attack.credential_access
+  - attack.t1003.002
+  - DEMO

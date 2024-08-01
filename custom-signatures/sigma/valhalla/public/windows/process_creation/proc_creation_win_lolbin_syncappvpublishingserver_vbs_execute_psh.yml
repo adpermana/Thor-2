@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: SyncAppvPublishingServer VBS Execute Arbitrary PowerShell Code
+id: 36475a7d-0f6d-4dce-9b01-6aeb473bbaf1
+status: test
+description: Executes arbitrary PowerShell code using SyncAppvPublishingServer.vbs
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/07/16 22:34:21
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1216/T1216.md
+  - https://lolbas-project.github.io/lolbas/Binaries/Syncappvpublishingserver/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains|all:
+          - \SyncAppvPublishingServer.vbs
+          - ;
+fields:
+  - ComputerName
+  - User
+  - CommandLine
+  - ParentCommandLine
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/06/22
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - attack.t1216
+  - DEMO

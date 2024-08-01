@@ -1,0 +1,67 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Always Install Elevated Windows Installer
+id: cd951fdc-4b2f-47f5-ba99-a33bf61e3770
+status: test
+description: Detects Windows Installer service (msiexec.exe) trying to install MSI
+    packages with SYSTEM privilege
+author: Teymur Kheirkhabarov (idea), Mangatas Tondang (rule), oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/13 17:03:11
+references:
+  - https://image.slidesharecdn.com/kheirkhabarovoffzonefinal-181117201458/95/hunting-for-privilege-escalation-in-windows-environment-48-638.jpg
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_image_* and selection_user and not 1 of filter_*
+    filter_avast:
+        ParentImage|startswith:
+          - C:\Program Files\Avast Software\
+          - C:\Program Files (x86)\Avast Software\
+    filter_avira:
+        ParentImage|startswith: C:\ProgramData\Avira\
+    filter_google_update:
+        ParentImage|startswith:
+          - C:\Program Files\Google\Update\
+          - C:\Program Files (x86)\Google\Update\
+    filter_installer:
+        ParentImage: C:\Windows\System32\services.exe
+    filter_repair:
+      - CommandLine|endswith: \system32\msiexec.exe /V
+      - ParentCommandLine|endswith: \system32\msiexec.exe /V
+    filter_sophos:
+        ParentImage|startswith: C:\ProgramData\Sophos\
+    selection_image_1:
+        Image|contains|all:
+          - \Windows\Installer\
+          - msi
+        Image|endswith: tmp
+    selection_image_2:
+        Image|endswith: \msiexec.exe
+        IntegrityLevel: System
+    selection_user:
+        User|contains:
+          - AUTHORI
+          - AUTORI
+falsepositives:
+  - System administrator usage
+  - Anti virus products
+  - WindowsApps located in "C:\Program Files\WindowsApps\"
+level: medium
+customer: 'demo'
+modified: 2023/03/23
+tags:
+  - attack.privilege_escalation
+  - attack.t1548.002
+  - DEMO

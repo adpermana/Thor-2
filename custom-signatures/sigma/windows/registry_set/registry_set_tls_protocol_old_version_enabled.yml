@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Old TLS1.0/TLS1.1 Protocol Version Enabled
+id: 439957a7-ad86-4a8f-9705-a28131c6821b
+status: experimental
+description: Detects applications or users re-enabling old TLS versions by setting
+    the "Enabled" value to "1" for the "Protocols" registry key.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/09/05 15:45:01
+references:
+  - https://techcommunity.microsoft.com/t5/windows-it-pro-blog/tls-1-0-and-tls-1-1-soon-to-be-disabled-in-windows/ba-p/3887947
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Details: DWORD (0x00000001)
+        TargetObject|contains:
+          - \Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\
+          - \Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\
+        TargetObject|endswith: \Enabled
+falsepositives: Legitimate enabling of the old tls versions due to incompatibility
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - DEMO

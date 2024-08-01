@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Windows ANONYMOUS LOGON Local Account Created
+id: 1bbf25b9-8038-4154-a50b-118f2a32be27
+status: test
+description: Detects the creation of suspicious accounts similar to ANONYMOUS LOGON,
+    such as using additional spaces. Created as an covering detection for exclusion
+    of Logon Type 3 from ANONYMOUS LOGON accounts.
+author: James Pemberton / @4A616D6573
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/31 19:56:21
+references:
+  - https://twitter.com/SBousseaden/status/1189469425482829824
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: selection
+    selection:
+        EventID: "4720"
+        SamAccountName|contains|all:
+          - ANONYMOUS
+          - LOGON
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.persistence
+  - attack.t1136.001
+  - attack.t1136.002
+  - DEMO

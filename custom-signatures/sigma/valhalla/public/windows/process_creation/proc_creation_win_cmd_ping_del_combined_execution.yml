@@ -1,0 +1,51 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Ping/Del Command Combination
+id: 54786ddc-5b8a-11ed-9b6a-0242ac120002
+status: test
+description: Detects a method often used by ransomware. Which combines the "ping"
+    to wait a couple of seconds and then "del" to delete the file in question. Its
+    used to hide the file responsible for the initial infection for example
+author: Ilya Krestinichev
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/11/03 16:23:11
+references:
+  - https://blog.sygnia.co/kaseya-ransomware-supply-chain-attack
+  - https://media.kasperskycontenthub.com/wp-content/uploads/sites/43/2022/06/23093553/Common-TTPs-of-the-modern-ransomware_low-res.pdf
+  - https://www.acronis.com/en-us/blog/posts/lockbit-ransomware/
+  - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/blackbyte-exbyte-ransomware
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_all:
+        CommandLine|contains|all:
+          - ping
+          - 'del '
+    selection_count:
+        CommandLine|contains|windash: ' -n '
+    selection_del_param:
+        CommandLine|contains|windash:
+          - ' -f '
+          - ' -q '
+    selection_nul:
+        CommandLine|contains: Nul
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2024/03/05
+tags:
+  - attack.defense_evasion
+  - attack.t1070.004
+  - DEMO

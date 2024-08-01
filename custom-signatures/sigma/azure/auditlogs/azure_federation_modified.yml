@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Azure Domain Federation Settings Modified
+id: 352a54e1-74ba-4929-9d47-8193d67aba1e
+status: test
+description: Identifies when an user or application modified the federation settings
+    on the domain.
+author: Austin Songer
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/09/06 16:53:41
+references:
+  - https://docs.microsoft.com/en-us/azure/active-directory/hybrid/how-to-connect-monitor-federation-changes
+logsource:
+    product: azure
+    service: auditlogs
+detection:
+    condition: selection
+    selection:
+        ActivityDisplayName: Set federation settings on domain
+falsepositives:
+  - Federation Settings being modified or deleted may be performed by a system administrator.
+  - Verify whether the user identity, user agent, and/or hostname should be making
+    changes in your environment.
+  - Federation Settings modified from unfamiliar users should be investigated. If
+    known behavior is causing false positives, it can be exempted from the rule.
+level: medium
+customer: 'demo'
+modified: 2022/06/08
+tags:
+  - attack.initial_access
+  - attack.t1078
+  - DEMO

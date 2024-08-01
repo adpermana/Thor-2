@@ -1,0 +1,55 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Child Process of AspNetCompiler
+id: 9ccba514-7cb6-4c5c-b377-700758f2f120
+related:
+  - type: similar
+    id: 4c7f49ee-2638-43bb-b85b-ce676c30b260
+  - type: similar
+    id: 9f50fe98-fe5c-4a2d-86c7-fad7f63ed622
+  - type: similar
+    id: a01b8329-5953-4f73-ae2d-aa01e1f35f00
+status: experimental
+description: Detects potentially suspicious child processes of "aspnet_compiler.exe".
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/08/14 17:15:31
+references:
+  - https://lolbas-project.github.io/lolbas/Binaries/Aspnet_Compiler/
+  - https://ijustwannared.team/2020/08/01/the-curious-case-of-aspnet_compiler-exe/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_child:
+      - Image|endswith:
+          - \calc.exe
+          - \notepad.exe
+      - Image|contains:
+          - \Users\Public\
+          - \AppData\Local\Temp\
+          - \AppData\Local\Roaming\
+          - :\Temp\
+          - :\Windows\Temp\
+          - :\Windows\System32\Tasks\
+          - :\Windows\Tasks\
+    selection_parent:
+        ParentImage|endswith: \aspnet_compiler.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1127
+  - DEMO

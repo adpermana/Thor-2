@@ -1,0 +1,75 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Dumping of Sensitive Hives Via Reg.EXE
+id: fd877b94-9bb5-4191-bb25-d79cbd93c167
+related:
+  - type: obsoletes
+    id: 038cd51c-3ad8-41c5-ba8f-5d1c92f3cc1e
+  - type: obsoletes
+    id: 4d6c9da1-318b-4edf-bcea-b6c93fa98fd0
+status: test
+description: Detects the usage of "reg.exe" in order to dump sensitive registry hives.
+    This includes SAM, SYSTEM and SECURITY hives.
+author: Teymur Kheirkhabarov, Endgame, JHasenbusch, Daniil Yugoslavskiy, oscd.community,
+    frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/22 15:28:01
+references:
+  - https://www.slideshare.net/heirhabarov/hunting-for-credentials-dumping-in-windows-environment
+  - https://eqllib.readthedocs.io/en/latest/analytics/aed95fc6-5e3f-49dc-8b35-06508613f979.html
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1003/T1003.md
+  - https://www.wietzebeukema.nl/blog/windows-command-line-obfuscation
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1003.002/T1003.002.md#atomic-test-1---registry-dump-of-sam-creds-and-secrets
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli_flag:
+        CommandLine|contains:
+          - ' save '
+          - ' export '
+          - ' ˢave '
+          - ' eˣport '
+    selection_cli_hive:
+        CommandLine|contains:
+          - \system
+          - \sam
+          - \security
+          - \ˢystem
+          - \syˢtem
+          - \ˢyˢtem
+          - \ˢam
+          - \ˢecurity
+    selection_cli_hklm:
+        CommandLine|contains:
+          - hklm
+          - hk˪m
+          - hkey_local_machine
+          - hkey_˪ocal_machine
+          - hkey_loca˪_machine
+          - hkey_˪oca˪_machine
+    selection_img:
+      - Image|endswith: \reg.exe
+      - OriginalFileName: reg.exe
+falsepositives: Dumping hives for legitimate purpouse i.e. backup or forensic investigation
+level: high
+customer: 'demo'
+modified: 2023/12/13
+tags:
+  - attack.credential_access
+  - attack.t1003.002
+  - attack.t1003.004
+  - attack.t1003.005
+  - car.2013-07-001
+  - DEMO

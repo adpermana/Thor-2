@@ -1,0 +1,37 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Google Workspace Role Privilege Deleted
+id: bf638ef7-4d2d-44bb-a1dc-a238252e6267
+status: test
+description: Detects when an a role privilege is deleted in Google Workspace.
+author: Austin Songer
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/24 16:18:01
+references:
+  - https://cloud.google.com/logging/docs/audit/gsuite-audit-logging#3
+  - https://developers.google.com/admin-sdk/reports/v1/appendix/activity/admin-delegated-admin-settings
+logsource:
+    product: gcp
+    service: google_workspace.admin
+detection:
+    condition: selection
+    selection:
+        eventName: REMOVE_PRIVILEGE
+        eventService: admin.googleapis.com
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/10/11
+tags:
+  - attack.impact
+  - DEMO

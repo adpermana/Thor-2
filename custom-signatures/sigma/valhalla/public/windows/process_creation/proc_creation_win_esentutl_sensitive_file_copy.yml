@@ -1,0 +1,61 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Copying Sensitive Files with Credential Data
+id: e7be6119-fc37-43f0-ad4f-1f3f99be2f9f
+status: test
+description: Files with well-known filenames (sensitive files with credential data)
+    copying
+author: Teymur Kheirkhabarov, Daniil Yugoslavskiy, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/22 17:37:11
+references:
+  - https://room362.com/post/2013/2013-06-10-volume-shadow-copy-ntdsdit-domain-hashes-remotely-part-1/
+  - https://www.slideshare.net/heirhabarov/hunting-for-credentials-dumping-in-windows-environment
+  - https://dfironthemountain.wordpress.com/2018/12/06/locked-file-access-using-esentutl-exe/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_esent_* or selection_susp_paths
+    selection_esent_cli:
+        CommandLine|contains:
+          - vss
+          - ' /m '
+          - ' /y '
+    selection_esent_img:
+      - Image|endswith: \esentutl.exe
+      - OriginalFileName: \esentutl.exe
+    selection_susp_paths:
+        CommandLine|contains:
+          - \windows\ntds\ntds.dit
+          - \config\sam
+          - \config\security
+          - '\config\system '
+          - \repair\sam
+          - \repair\system
+          - \repair\security
+          - \config\RegBack\sam
+          - \config\RegBack\system
+          - \config\RegBack\security
+falsepositives: Copying sensitive files for legitimate use (eg. backup) or forensic
+    investigation by legitimate incident responder or forensic invetigator
+level: high
+customer: 'demo'
+modified: 2022/11/11
+tags:
+  - attack.credential_access
+  - attack.t1003.002
+  - attack.t1003.003
+  - car.2013-07-001
+  - attack.s0404
+  - DEMO

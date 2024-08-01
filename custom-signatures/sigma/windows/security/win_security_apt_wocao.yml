@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Operation Wocao Activity - Security
+id: 74ad4314-482e-4c3e-b237-3f7ed3b9ca8d
+status: test
+description: Detects activity mentioned in Operation Wocao report
+author: Florian Roth (Nextron Systems), frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/12/20 15:14:01
+references:
+  - https://web.archive.org/web/20200226212615/https://www.fox-it.com/en/news/whitepapers/operation-wocao-shining-a-light-on-one-of-chinas-hidden-hacking-groups/
+  - https://web.archive.org/web/20200226212615/https://resources.fox-it.com/rs/170-CAK-271/images/201912_Report_Operation_Wocao.pdf
+  - https://twitter.com/SBousseaden/status/1207671369963646976
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: selection
+    selection:
+        CallerProcessName|endswith: \checkadmin.exe
+        EventID: "4799"
+        TargetUserName|startswith: Administr
+falsepositives: Administrators that use checkadmin.exe tool to enumerate local administrators
+level: high
+customer: 'demo'
+modified: 2022/11/27
+tags:
+  - attack.discovery
+  - attack.t1012
+  - attack.defense_evasion
+  - attack.t1036.004
+  - attack.t1027
+  - attack.execution
+  - attack.t1053.005
+  - attack.t1059.001
+  - detection.emerging_threats
+  - DEMO

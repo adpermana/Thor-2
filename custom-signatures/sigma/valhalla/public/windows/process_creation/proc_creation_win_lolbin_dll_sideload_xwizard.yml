@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Xwizard DLL Sideloading
+id: 193d5ccd-6f59-40c6-b5b0-8e32d5ddd3d1
+status: test
+description: Detects the execution of Xwizard tool from the non-default directory
+    which can be used to sideload a custom xwizards.dll
+author: Christian Burkard (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/09/20 11:58:41
+references:
+  - https://lolbas-project.github.io/lolbas/Binaries/Xwizard/
+  - http://www.hexacorn.com/blog/2017/07/31/the-wizard-of-x-oppa-plugx-style/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        Image|startswith: C:\Windows\System32\
+    selection:
+        Image|endswith: \xwizard.exe
+falsepositives: Windows installed on non-C drive
+level: high
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.defense_evasion
+  - attack.t1574.002
+  - DEMO

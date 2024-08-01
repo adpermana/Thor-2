@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PST Export Alert Using eDiscovery Alert
+id: 18b88d08-d73e-4f21-bc25-4b9892a4fdd0
+related:
+  - type: similar
+    id: 6897cd82-6664-11ed-9022-0242ac120002
+status: test
+description: Alert on when a user has performed an eDiscovery search or exported a
+    PST file from the search. This PST file usually has sensitive information including
+    email body content
+author: Sorina Ionescu
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/02/08 16:04:41
+references:
+  - https://learn.microsoft.com/en-us/microsoft-365/compliance/alert-policies?view=o365-worldwide
+logsource:
+    product: m365
+    service: threat_management
+    definition: Requires the 'eDiscovery search or exported' alert to be enabled
+detection:
+    condition: selection
+    selection:
+        eventName: eDiscovery search started or exported
+        eventSource: SecurityComplianceCenter
+        status: success
+falsepositives: PST export can be done for legitimate purposes but due to the sensitive
+    nature of its content it must be monitored.
+level: medium
+customer: 'demo'
+modified: 2022/11/17
+tags:
+  - attack.collection
+  - attack.t1114
+  - DEMO

@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential CommandLine Path Traversal Via Cmd.EXE
+id: 087790e3-3287-436c-bccf-cbd0184a7db1
+status: test
+description: Detects potential path traversal attempt via cmd.exe. Could indicate
+    possible command/argument confusion/hijacking
+author: xknow @xknow_infosec, Tim Shelton
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/06/11 18:10:01
+references:
+  - https://hackingiscool.pl/cmdhijack-command-argument-confusion-with-path-traversal-in-cmd-exe/
+  - https://twitter.com/Oddvarmoe/status/1270633613449723905
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_* and not 1 of filter_*
+    filter_java:
+        CommandLine|contains: \Tasktop\keycloak\bin\/../../jre\bin\java
+    selection_flags:
+      - ParentCommandLine|contains:
+          - /c
+          - /k
+          - /r
+      - CommandLine|contains:
+          - /c
+          - /k
+          - /r
+    selection_img:
+      - ParentImage|endswith: \cmd.exe
+      - Image|endswith: \cmd.exe
+      - OriginalFileName: cmd.exe
+    selection_path_traversal:
+      - ParentCommandLine: /../../
+      - CommandLine|contains: /../../
+falsepositives: Java tools are known to produce false-positive when loading libraries
+level: high
+customer: 'demo'
+modified: 2023/03/06
+tags:
+  - attack.execution
+  - attack.t1059.003
+  - DEMO

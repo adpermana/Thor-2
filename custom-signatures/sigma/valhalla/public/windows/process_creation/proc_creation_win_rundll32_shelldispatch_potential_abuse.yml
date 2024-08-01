@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential ShellDispatch.DLL Functionality Abuse
+id: 82343930-652f-43f5-ab70-2ee9fdd6d5e9
+status: experimental
+description: Detects potential "ShellDispatch.dll" functionality abuse to execute
+    arbitrary binaries via "ShellExecute"
+author: X__Junior (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/06/20 18:31:11
+references:
+  - https://www.hexacorn.com/blog/2023/06/07/this-lolbin-doesnt-exist/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains: RunDll_ShellExecuteW
+    selection_img:
+      - Image|endswith: \rundll32.exe
+      - OriginalFileName: RUNDLL32.EXE
+falsepositives: Unlikely
+level: medium
+customer: 'demo'
+tags:
+  - attack.execution
+  - attack.defense_evasion
+  - DEMO

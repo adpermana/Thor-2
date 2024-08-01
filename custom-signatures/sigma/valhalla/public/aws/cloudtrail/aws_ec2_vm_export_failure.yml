@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: AWS EC2 VM Export Failure
+id: 54b9a76a-3c71-4673-b4b3-2edb4566ea7b
+status: test
+description: An attempt to export an AWS EC2 instance has been detected. A VM Export
+    might indicate an attempt to extract information from an instance.
+author: Diogo Braz
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/04/16 11:44:21
+references:
+  - https://docs.aws.amazon.com/vm-import/latest/userguide/vmexport.html#export-instance
+logsource:
+    product: aws
+    service: cloudtrail
+detection:
+    condition: selection and not 1 of filter*
+    filter1:
+        errorMessage|contains: '*'
+    filter2:
+        errorCode|contains: '*'
+    filter3:
+        responseElements|contains: Failure
+    selection:
+        eventName: CreateInstanceExportTask
+        eventSource: ec2.amazonaws.com
+level: low
+customer: 'demo'
+modified: 2022/10/05
+tags:
+  - attack.collection
+  - attack.t1005
+  - attack.exfiltration
+  - attack.t1537
+  - DEMO

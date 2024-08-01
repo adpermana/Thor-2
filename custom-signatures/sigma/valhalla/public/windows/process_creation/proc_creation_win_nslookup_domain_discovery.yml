@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Network Reconnaissance Activity
+id: e6313acd-208c-44fc-a0ff-db85d572e90e
+status: test
+description: Detects a set of suspicious network related commands often used in recon
+    stages
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/02/07 14:37:51
+references:
+  - https://thedfirreport.com/2022/02/07/qbot-likes-to-move-it-move-it/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains|all:
+          - nslookup
+          - _ldap._tcp.dc._msdcs.
+falsepositives: False positives depend on scripts and administrative tools used in
+    the monitored environment
+level: high
+customer: 'demo'
+tags:
+  - attack.discovery
+  - attack.t1087
+  - attack.t1082
+  - car.2016-03-001
+  - DEMO

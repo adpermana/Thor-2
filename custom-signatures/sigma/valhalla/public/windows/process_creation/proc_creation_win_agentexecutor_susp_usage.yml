@@ -1,0 +1,53 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious AgentExecutor PowerShell Execution
+id: c0b40568-b1e9-4b03-8d6c-b096da6da9ab
+related:
+  - type: similar
+    id: 7efd2c8d-8b18-45b7-947d-adfe9ed04f61
+status: test
+description: Detects execution of the AgentExecutor.exe binary. Which can be abused
+    as a LOLBIN to execute powershell scripts with the ExecutionPolicy "Bypass" or
+    any binary named "powershell.exe" located in the path provided by 6th positional
+    argument
+author: Nasreddine Bencherchali (Nextron Systems), memory-shards
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/12/24 18:29:01
+references:
+  - https://twitter.com/lefterispan/status/1286259016436514816
+  - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Agentexecutor/
+  - https://docs.microsoft.com/en-us/mem/intune/apps/intune-management-extension
+  - https://twitter.com/jseerden/status/1247985304667066373/photo/1
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_* and not 1 of filter_main_*
+    filter_main_pwsh:
+        CommandLine|contains:
+          - C:\Windows\SysWOW64\WindowsPowerShell\v1.0\
+          - C:\Windows\System32\WindowsPowerShell\v1.0\
+    selection_cli:
+        CommandLine|contains:
+          - ' -powershell'
+          - ' -remediationScript'
+    selection_img:
+      - Image|endswith: \AgentExecutor.exe
+      - OriginalFileName: AgentExecutor.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

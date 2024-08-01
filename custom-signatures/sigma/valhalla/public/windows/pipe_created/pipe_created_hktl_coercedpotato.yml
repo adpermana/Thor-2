@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - CoercedPotato Named Pipe Creation
+id: 4d0083b3-580b-40da-9bba-626c19fe4033
+status: experimental
+description: Detects the pattern of a pipe name as used by the hack tool CoercedPotato
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/10/11 17:10:21
+references:
+  - https://blog.hackvens.fr/articles/CoercedPotato.html
+  - https://github.com/hackvens/CoercedPotato
+logsource:
+    category: pipe_created
+    product: windows
+    definition: Note that you have to configure logging for Named Pipe Events in Sysmon
+        config (Event ID 17 and Event ID 18). The basic configuration is in popular
+        sysmon configuration (https://github.com/SwiftOnSecurity/sysmon-config), but
+        it is worth verifying. You can also use other repo, e.g. https://github.com/Neo23x0/sysmon-config,
+        https://github.com/olafhartong/sysmon-modular. How to test detection? You
+        can check powershell script from this site https://svch0st.medium.com/guide-to-named-pipes-and-hunting-for-cobalt-strike-pipes-dc46b2c5f575
+detection:
+    condition: selection
+    selection:
+        PipeName|contains: \coerced\
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - attack.t1055
+  - DEMO

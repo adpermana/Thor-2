@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - CoercedPotato Execution
+id: e8d34729-86a4-4140-adfd-0a29c2106307
+status: experimental
+description: Detects the use of CoercedPotato, a tool for privilege escalation
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/10/11 14:53:41
+references:
+  - https://github.com/hackvens/CoercedPotato
+  - https://blog.hackvens.fr/articles/CoercedPotato.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_loader_img:
+        Image|endswith: \CoercedPotato.exe
+    selection_loader_imphash:
+      - Imphash:
+          - a75d7669db6b2e107a44c4057ff7f7d6
+          - f91624350e2c678c5dcbe5e1f24e22c9
+          - 14c81850a079a87e83d50ca41c709a15
+      - Hashes:
+          - IMPHASH=A75D7669DB6B2E107A44C4057FF7F7D6
+          - IMPHASH=F91624350E2C678C5DCBE5E1F24E22C9
+          - IMPHASH=14C81850A079A87E83D50CA41C709A15
+    selection_params:
+        CommandLine|contains: ' --exploitId '
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - attack.t1055
+  - DEMO

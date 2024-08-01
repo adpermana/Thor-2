@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Registry Modification to Hidden File Extension
+id: 5df86130-4e95-4a54-90f7-26541b40aec2
+status: test
+description: Hides the file extension through modification of the registry
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/22 18:15:11
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1112/T1112.md#atomic-test-1---modify-registry-of-current-user-profile---cmd
+  - https://unit42.paloaltonetworks.com/ransomware-families/
+  - https://www.microsoft.com/en-us/wdsi/threats/malware-encyclopedia-description?name=TrojanSpy%3aMSIL%2fHakey.A
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_Hidden:
+        Details: DWORD (0x00000002)
+        TargetObject|endswith: \SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\Hidden
+    selection_HideFileExt:
+        Details: DWORD (0x00000001)
+        TargetObject|endswith: \SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\HideFileExt
+falsepositives: Administrative scripts
+level: medium
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.persistence
+  - attack.t1137
+  - DEMO

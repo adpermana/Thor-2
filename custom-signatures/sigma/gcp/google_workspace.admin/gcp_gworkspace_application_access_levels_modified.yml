@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Google Workspace Application Access Level Modified
+id: 22f2fb54-5312-435d-852f-7c74f81684ca
+status: experimental
+description: |
+    Detects when an access level is changed for a Google workspace application.
+    An access level is part of BeyondCorp Enterprise which is Google Workspace's way of enforcing Zero Trust model.
+    An adversary would be able to remove access levels to gain easier access to Google workspace resources.
+author: Bryan Lim
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/01/12 19:11:11
+references:
+  - https://developers.google.com/admin-sdk/reports/v1/appendix/activity/admin-application-settings
+  - https://support.google.com/a/answer/9261439
+logsource:
+    product: gcp
+    service: google_workspace.admin
+detection:
+    condition: selection
+    selection:
+        eventName: CHANGE_APPLICATION_SETTING
+        eventService: admin.googleapis.com
+        setting_name|startswith: ContextAwareAccess
+falsepositives: Legitimate administrative activities changing the access levels for
+    an application
+level: medium
+customer: 'demo'
+tags:
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1098.003
+  - DEMO

@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: New Application in AppCompat
+id: 60936b49-fca0-4f32-993d-7415edcf9a5d
+status: test
+description: A General detection for a new application in AppCompat. This indicates
+    an application executing for the first time on an endpoint.
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/05/02 13:21:41
+references:
+  - https://github.com/OTRF/detection-hackathon-apt29/issues/1
+  - https://github.com/OTRF/ThreatHunter-Playbook/blob/2d4257f630f4c9770f78d0c1df059f891ffc3fec/docs/evals/apt29/detections/1.A.1_DFD6A782-9BDB-4550-AB6B-525E825B095E.md
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetObject|contains: \AppCompatFlags\Compatibility Assistant\Store\
+falsepositives:
+  - This rule is to explore new applications on an endpoint. False positives depends
+    on the organization.
+  - Newly setup system.
+  - Legitimate installation of new application.
+level: informational
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.execution
+  - attack.t1204.002
+  - DEMO

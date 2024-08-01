@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Usage of CVE_2021_34484 or CVE 2022_21919
+id: 52a85084-6989-40c3-8f32-091e12e17692
+status: test
+description: During exploitation of this vulnerability, two logs (Provider_Name:Microsoft-Windows-User
+    Profiles Service) with EventID 1511 and 1515 (maybe lot of false positives with
+    this event) are created. Moreover, it appears the directory \Users\TEMP is created
+    may be created during the exploitation. Viewed on 2008 Server
+author: Cybex
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/16 16:43:11
+references:
+  - https://packetstormsecurity.com/files/166692/Windows-User-Profile-Service-Privlege-Escalation.html
+logsource:
+    product: windows
+    service: application
+detection:
+    condition: selection
+    selection:
+        EventID: "1511"
+        Provider_Name: Microsoft-Windows-User Profiles Service
+falsepositives: Corrupted user profiles - https://social.technet.microsoft.com/wiki/contents/articles/3571.windows-user-profiles-service-event-1511-windows-cannot-find-the-local-profile-and-is-logging-you-on-with-a-temporary-profile.aspx
+level: low
+customer: 'demo'
+modified: 2023/05/02
+tags:
+  - attack.execution
+  - DEMO

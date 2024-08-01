@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Persistence Via Shim Database Modification
+id: dfb5b4e8-91d0-4291-b40a-e3b0d3942c45
+status: experimental
+description: |
+    Adversaries may establish persistence and/or elevate privileges by executing malicious content triggered by application shims.
+    The Microsoft Windows Application Compatibility Infrastructure/Framework (Application Shim) was created to allow for backward compatibility of software as the operating system codebase changes over time
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/12/30 19:49:31
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1546.011/T1546.011.md#atomic-test-3---registry-key-creation-andor-modification-events-for-sdb
+  - https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
+  - https://andreafortuna.org/2018/11/12/process-injection-and-persistence-using-application-shimming/
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_empty:
+        Details: ""
+    selection:
+        TargetObject|contains:
+          - \SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\InstalledSDB\
+          - \SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Custom\
+falsepositives: Legitimate custom SHIM installations will also trigger this rule
+level: medium
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.persistence
+  - attack.t1546.011
+  - DEMO

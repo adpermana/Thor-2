@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Google Cloud Kubernetes CronJob
+id: cd3a808c-c7b7-4c50-a2f3-f4cfcd436435
+status: test
+description: |
+    Identifies when a Google Cloud Kubernetes CronJob runs in Azure Cloud. Kubernetes Job is a controller that creates one or more pods and ensures that a specified number of them successfully terminate.
+    Kubernetes Job can be used to run containers that perform finite tasks for batch jobs. Kubernetes CronJob is used to schedule Jobs.
+    An Adversary may use Kubernetes CronJob for scheduling execution of malicious code that would run as a container in the cluster.
+author: Austin Songer @austinsonger
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/11/22 14:09:31
+references:
+  - https://cloud.google.com/kubernetes-engine/docs
+  - https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/
+  - https://kubernetes.io/docs/concepts/workloads/controllers/job/
+logsource:
+    product: gcp
+    service: gcp.audit
+detection:
+    condition: selection
+    selection:
+        gcp.audit.method_name:
+          - io.k8s.api.batch.v*.Job
+          - io.k8s.api.batch.v*.CronJob
+falsepositives:
+  - Google Cloud Kubernetes CronJob/Job may be done by a system administrator.
+  - If known behavior is causing false positives, it can be exempted from the rule.
+level: medium
+customer: 'demo'
+modified: 2022/12/25
+tags:
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.execution
+  - DEMO

@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Hypervisor Enforced Code Integrity Disabled
+id: 8b7273a4-ba5d-4d8a-b04f-11f2900d043a
+status: experimental
+description: Detects changes to the HypervisorEnforcedCodeIntegrity registry key and
+    the "Enabled" value being set to 0 in order to disable the Hypervisor Enforced
+    Code Integrity feature. This allows an attacker to load unsigned and untrusted
+    code to be run in the kernel
+author: Nasreddine Bencherchali (Nextron Systems), Anish Bogati
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/03/14 17:31:11
+references:
+  - https://www.welivesecurity.com/2023/03/01/blacklotus-uefi-bootkit-myth-confirmed/
+  - https://github.com/redcanaryco/atomic-red-team/blob/04e487c1828d76df3e834621f4f893ea756d5232/atomics/T1562.001/T1562.001.md#atomic-test-43---disable-hypervisor-enforced-code-integrity-hvci
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Details: DWORD (0x00000000)
+        EventType: SetValue
+        TargetObject|endswith:
+          - \Microsoft\Windows\DeviceGuard\HypervisorEnforcedCodeIntegrity
+          - \Control\DeviceGuard\HypervisorEnforcedCodeIntegrity
+          - \Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity\Enabled
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2024/01/10
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+  - DEMO

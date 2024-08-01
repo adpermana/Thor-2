@@ -1,0 +1,37 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: TrustedPath UAC Bypass Pattern
+id: 4ac47ed3-44c2-4b1f-9d51-bf46e8914126
+status: test
+description: Detects indicators of a UAC bypass method by mocking directories
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/27 13:49:31
+references:
+  - https://medium.com/tenable-techblog/uac-bypass-by-mocking-trusted-directories-24a96675f6e
+  - https://www.wietzebeukema.nl/blog/hijacking-dlls-in-windows
+  - https://github.com/netero1010/TrustedPath-UACBypass-BOF
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|contains: C:\Windows \System32\
+falsepositives: Unknown
+level: critical
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1548.002
+  - DEMO

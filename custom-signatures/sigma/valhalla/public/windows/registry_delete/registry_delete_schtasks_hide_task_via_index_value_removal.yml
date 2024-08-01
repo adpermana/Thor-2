@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Removal Of Index Value to Hide Schedule Task - Registry
+id: 526cc8bc-1cdc-48ad-8b26-f19bff969cec
+related:
+  - type: similar
+    id: acd74772-5f88-45c7-956b-6a7b36c294d2
+  - type: similar
+    id: 5b16df71-8615-4f7f-ac9b-6c43c0509e61
+status: test
+description: Detects when the "index" value of a scheduled task is removed or deleted
+    from the registry. Which effectively hides it from any tooling such as "schtasks
+    /query"
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/26 19:41:51
+references:
+  - https://blog.qualys.com/vulnerabilities-threat-research/2022/06/20/defending-against-scheduled-task-attacks-in-windows-environments
+logsource:
+    category: registry_delete
+    product: windows
+detection:
+    condition: selection
+    selection:
+        EventType: DeleteKey
+        TargetObject|contains|all:
+          - \SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree\
+          - Index
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/02/08
+tags:
+  - attack.defense_evasion
+  - attack.t1562
+  - DEMO

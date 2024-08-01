@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: NetNTLM Downgrade Attack
+id: d3abac66-f11c-4ed0-8acb-50cc29c97eed
+related:
+  - type: derived
+    id: d67572a0-e2ec-45d6-b8db-c100d14b8ef2
+status: test
+description: Detects NetNTLM downgrade attack
+author: Florian Roth (Nextron Systems), wagga
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2018/03/20 12:06:11
+references:
+  - https://www.optiv.com/blog/post-exploitation-using-netntlm-downgrade-attacks
+logsource:
+    product: windows
+    service: security
+    definition: 'Requirements: Audit Policy : Object Access > Audit Registry (Success)'
+detection:
+    condition: selection
+    selection:
+        EventID: "4657"
+        ObjectName|contains|all:
+          - \REGISTRY\MACHINE\SYSTEM
+          - ControlSet
+          - \Control\Lsa
+        ObjectValueName:
+          - LmCompatibilityLevel
+          - NtlmMinClientSec
+          - RestrictSendingNTLMTraffic
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+  - attack.t1112
+  - DEMO

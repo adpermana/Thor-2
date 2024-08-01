@@ -1,0 +1,58 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Non-privileged Usage of Reg or Powershell
+id: 8f02c935-effe-45b3-8fc9-ef8696a9e41d
+status: test
+description: Search for usage of reg or Powershell by non-privileged users to modify
+    service configuration in registry
+author: Teymur Kheirkhabarov (idea), Ryan Plas (rule), oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/05 16:42:51
+references:
+  - https://image.slidesharecdn.com/kheirkhabarovoffzonefinal-181117201458/95/hunting-for-privilege-escalation-in-windows-environment-20-638.jpg
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: (reg or powershell) and select_data
+    powershell:
+        CommandLine|contains:
+          - powershell
+          - set-itemproperty
+          - ' sp '
+          - new-itemproperty
+    reg:
+        CommandLine|contains|all:
+          - 'reg '
+          - add
+    select_data:
+        CommandLine|contains:
+          - ImagePath
+          - FailureCommand
+          - ServiceDLL
+        CommandLine|contains|all:
+          - ControlSet
+          - Services
+        IntegrityLevel: Medium
+fields:
+  - EventID
+  - IntegrityLevel
+  - CommandLine
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/07/07
+tags:
+  - attack.defense_evasion
+  - attack.t1112
+  - DEMO

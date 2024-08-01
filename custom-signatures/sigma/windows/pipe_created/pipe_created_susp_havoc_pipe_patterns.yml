@@ -1,0 +1,26 @@
+title: Havoc C2 Named Pipe Patterns
+id: d7d8c203-70e4-43de-926c-17a55746af8c
+status: test
+description: Detects the creation of a named pipe with a pattern found in Havoc C2
+references:
+    - https://github.com/HavocFramework/Havoc
+author: pH-T
+date: 2022/10/14
+modified: 2023/03/29
+tags:
+    - attack.defense_evasion
+    - attack.privilege_escalation
+    - attack.t1055
+logsource:
+    product: windows
+    category: pipe_created
+    definition: 'Note that you have to configure logging for Named Pipe Events in Sysmon config (Event ID 17 and Event ID 18). The basic configuration is in popular sysmon configuration (https://github.com/SwiftOnSecurity/sysmon-config), but it is worth verifying. You can also use other repo, e.g. https://github.com/Neo23x0/sysmon-config, https://github.com/olafhartong/sysmon-modular You can also use other repo, e.g. https://github.com/Neo23x0/sysmon-config, https://github.com/olafhartong/sysmon-modular.'
+detection:
+    selection_pipe:
+        PipeName|contains: 'demon_pipe'
+    selection_pipe_regex:
+        PipeName|re: '^mojo\.[0-9]{1,4}\.[0-9]{1,4}$' # mimics chrome
+    condition: 1 of selection_pipe*
+falsepositives:
+    - Unknown
+level: high

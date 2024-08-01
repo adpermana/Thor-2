@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Application Terminated Via Wmic.EXE
+id: 49d9671b-0a0a-4c09-8280-d215bfd30662
+related:
+  - type: derived
+    id: 847d5ff3-8a31-4737-a970-aeae8fe21765
+status: experimental
+description: Detects calls to the "terminate" function via wmic in order to kill an
+    application
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/09/11 14:58:51
+references:
+  - https://cyble.com/blog/lockfile-ransomware-using-proxyshell-attack-to-deploy-ransomware/
+  - https://www.bitdefender.com/files/News/CaseStudies/study/377/Bitdefender-Whitepaper-WMI-creat4871-en-EN-GenericUse.pdf
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains|all:
+          - call
+          - terminate
+    selection_img:
+      - Image|endswith: \WMIC.exe
+      - OriginalFileName: wmic.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.execution
+  - attack.t1047
+  - DEMO

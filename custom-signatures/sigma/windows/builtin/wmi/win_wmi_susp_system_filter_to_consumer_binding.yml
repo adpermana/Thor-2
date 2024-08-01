@@ -1,0 +1,28 @@
+title: Missing CreatorSID Field From WMI Event
+id: aad37220-93ad-4c9d-bb0c-001b6e609878
+status: test
+description: Detects the creation of an "FilterToConsumerBinding" that doesn't have the "CreatorSID" field. Which could be a sign of a creation by a "SYSTEM" process
+references:
+    - Internal Research
+author: Nasreddine Bencherchali
+date: 2022/11/22
+modified: 2023/03/29
+tags:
+    - attack.execution
+    - attack.t1047
+logsource:
+    product: windows
+    service: wmi
+detection:
+    selection:
+        # You could generate a similar event by creating this WMI binding with PsExec running as SYSTEM
+        EventID: 5861
+    filter_main:
+        PossibleCause|contains: 'CreatorSID = {' # This is not an FP filter but a logic filter used by the rule
+    filter_sccm:
+        Namespace: '//./ROOT/ccm/policy'
+        Consumer|contains: 'CCM_PolicyReplicationConsumer'
+    condition: selection and not 1 of filter_*
+falsepositives:
+    - Unknown
+level: medium

@@ -1,0 +1,32 @@
+title: EDR Sandblast Tool Execution
+id: ad72583c-ae68-4e2a-8ace-71264fd55513
+status: experimental
+description: Detects the use of EDRSAndblast hack tool that disables, unloads and manipulates EDRs and AV drivers to blind them
+author: Florian Roth
+references:
+    - https://github.com/wavestone-cdt/EDRSandblast
+date: 2021/12/07
+tags:
+    - attack.defense_evasion
+    - attack.t1562.001
+    - attack.t1562.002
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_imphash:
+        Imphash: 'AF2F5F6B11303BA97ADD499211CF3251'
+    selection_cmdline:
+        CommandLine|contains:
+            - ' credguard '
+            - ' dump '
+            - ' cmd '
+    selection_flags:
+        CommandLine|contains:
+            - ' --wdigest-offsets '
+            - ' --nt-offsets '
+            - ' --kernelmode'
+    condition: selection_imphash or ( selection_cmdline and selection_flags )
+falsepositives:
+    - Very unlikely
+level: critical

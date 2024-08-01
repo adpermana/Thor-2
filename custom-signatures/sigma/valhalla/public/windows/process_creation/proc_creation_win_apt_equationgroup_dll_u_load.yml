@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Equation Group DLL_U Export Function Load
+id: d465d1d8-27a2-4cca-9621-a800f37cf72e
+status: stable
+description: Detects a specific export function name used by one of EquationGroup
+    tools
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/03/04 16:31:11
+references:
+  - https://github.com/00derp/EquationGroupLeak/search?utf8=%E2%9C%93&q=dll_u&type=
+  - https://twitter.com/cyb3rops/status/972186477512839170
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - CommandLine|contains: -export dll_u
+      - CommandLine|endswith:
+          - ',dll_u'
+          - ' dll_u'
+falsepositives: Unlikely
+level: critical
+customer: 'demo'
+modified: 2023/03/09
+tags:
+  - attack.g0020
+  - attack.defense_evasion
+  - attack.t1218.011
+  - detection.emerging_threats
+  - DEMO

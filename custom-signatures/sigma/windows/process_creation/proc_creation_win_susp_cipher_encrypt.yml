@@ -1,0 +1,24 @@
+title: Encrypts Data with Cipher
+id: 9e92ca4a-895f-4e47-bd6e-a4fb032746e0
+status: experimental
+description: Detects usage of cipher to encrypt files on the system
+references:
+    - https://www.itprotoday.com/security/protect-your-data-cipher
+author: Nasreddine Bencherchali
+date: 2023/01/18
+tags:
+    - attack.impact
+    - attack.t1486
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        - OriginalFileName: 'CIPHER.EXE'
+        - Image|endswith: '\cipher.exe'
+    selection_cli:
+        CommandLine|contains: ' /e'
+    condition: all of selection_*
+falsepositives:
+    - Unknown
+level: medium

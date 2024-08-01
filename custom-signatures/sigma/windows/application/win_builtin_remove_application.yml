@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Application Uninstalled
+id: 570ae5ec-33dc-427c-b815-db86228ad43e
+status: test
+description: An application has been removed. Check if it is critical.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/28 12:27:51
+references:
+  - https://github.com/nasbench/EVTX-ETW-Resources/blob/f1b010ce0ee1b71e3024180de1a3e67f99701fe4/ETWProvidersManifests/Windows11/22H2/W11_22H2_Pro_20221220_22621.963/WEPExplorer/Microsoft-Windows-MsiServer.xml
+  - https://learn.microsoft.com/en-us/windows/win32/msi/event-logging
+logsource:
+    product: windows
+    service: application
+detection:
+    condition: selection
+    selection:
+        EventID:
+          - "1034"
+          - "11724"
+        Provider_Name: MsiInstaller
+falsepositives: Unknown
+level: low
+customer: 'demo'
+modified: 2022/09/17
+tags:
+  - attack.impact
+  - attack.t1489
+  - DEMO

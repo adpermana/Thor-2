@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Uncommon AddinUtil.EXE CommandLine Execution
+id: 4f2cd9b6-4a17-440f-bb2a-687abb65993a
+status: experimental
+description: |
+    Detects execution of the Add-In deployment cache updating utility (AddInutil.exe) with uncommon Addinroot or Pipelineroot paths. An adversary may execute AddinUtil.exe with uncommon Addinroot/Pipelineroot paths that point to the adversaries Addins.Store payload.
+author: Michael McKinley (@McKinleyMike), Tony Latteri (@TheLatteri)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/09/18 17:31:31
+references:
+  - https://www.blue-prints.blog/content/blog/posts/lolbin/addinutil-lolbas.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_* and not 1 of filter_main_*
+    filter_main_addinroot:
+        CommandLine|contains:
+          - -AddInRoot:"C:\Program Files (x86)\Common Files\Microsoft Shared\VSTA
+          - -AddInRoot:C:\Program Files (x86)\Common Files\Microsoft Shared\VSTA
+          - -PipelineRoot:"C:\Program Files (x86)\Common Files\Microsoft Shared\VSTA
+          - -PipelineRoot:C:\Program Files (x86)\Common Files\Microsoft Shared\VSTA
+    selection_cli:
+        CommandLine|contains:
+          - '-AddInRoot:'
+          - '-PipelineRoot:'
+    selection_img:
+      - Image|endswith: \addinutil.exe
+      - OriginalFileName: AddInUtil.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Extracting Information with PowerShell
+id: bd5971a7-626d-46ab-8176-ed643f694f68
+status: test
+description: |
+    Adversaries may search local file systems and remote file shares for files containing insecurely stored credentials.
+    These can be files created by users to store their own credentials, shared credential stores for a group of individuals,
+    configuration files containing passwords for a system or service, or source code/binary files containing embedded passwords.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/12/19 16:29:21
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1552.001/T1552.001.md
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: selection
+    selection:
+        ScriptBlockText|contains|all:
+          - ls
+          - ' -R'
+          - 'select-string '
+          - '-Pattern '
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/12/25
+tags:
+  - attack.credential_access
+  - attack.t1552.001
+  - DEMO

@@ -1,0 +1,126 @@
+title: System Processes CLI Anomaly
+id: ee7c40b8-8773-4f09-ba6a-44cb885813c5
+status: experimental
+description: Detects execution of Windows system processes with unexpected CLI arguments
+references:
+    - Internal Research
+author: Nasreddine Bencherchali
+date: 2022/07/03
+modified: 2023/09/07
+tags:
+    - attack.defense_evasion
+    - attack.execution
+    - attack.t1055
+    - attack.t1036
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    # RuntimeBroker.exe + unsecapp.exe
+    selection_embedding:
+        Image|endswith:
+            - '\RuntimeBroker.exe'
+            - '\unsecapp.exe'
+            - '\wmiprvse.exe'
+    filter_embedding:
+        - CommandLine|endswith:
+            - '.exe -Embedding'
+            - '.exe -secured -Embedding'
+        - CommandLine:
+            - null
+            - ''
+    filter_embedding_wmiprvse: # FP found in testing
+        ParentImage|endswith: '\svchost.exe'
+        ParentCommandLine|contains: '-k DcomLaunch'
+    # AggregatorHost.exe
+    selection_aggregatorHost:
+        Image|endswith: '\AggregatorHost.exe'
+    filter_aggregatorHost:
+        - CommandLine|endswith: 'AggregatorHost.exe'
+        - CommandLine:
+            - null
+            - ''
+    # ctfmon.exe
+    selection_ctfmon:
+        Image|endswith: '\ctfmon.exe'
+    filter_ctfmon:
+        - CommandLine|endswith:
+            - 'ctfmon.exe"'
+            - 'ctfmon.exe'
+            - 'ctfmon.exe" /n' # FP found in Azure EVTX dataset
+        - CommandLine:
+            - null
+            - ''
+    # dwm.exe
+    selection_dwm:
+        Image|endswith: '\dwm.exe'
+    filter_dwm:
+        - CommandLine|endswith:
+            - 'dwm.exe"'
+            - 'dwm.exe'
+        - CommandLine:
+            - null
+            - ''
+    # fontdrvhost.exe
+    selection_fontdrvhost:
+        Image|endswith: '\fontdrvhost.exe'
+    filter_fontdrvhost:
+        - CommandLine|endswith:
+            - 'fontdrvhost.exe"'
+            - 'fontdrvhost.exe'
+        - CommandLine:
+            - null
+            - ''
+    # services.exe
+    selection_services:
+        Image|endswith: '\services.exe'
+    filter_services:
+        - CommandLine|endswith: 'services.exe'
+        - CommandLine:
+            - ''
+            - null
+    # wininit.exe
+    selection_wininit:
+        Image|endswith: '\wininit.exe'
+    filter_wininit:
+        - CommandLine|endswith: 'wininit.exe'
+        - CommandLine:
+            - ''
+            - null
+    # winlogon.exe
+    selection_winlogon:
+        Image|endswith: '\winlogon.exe'
+    filter_winlogon:
+        - CommandLine|endswith: 'winlogon.exe'
+        - CommandLine:
+            - ''
+            - null
+            - 'C:\WINDOWS\System32\WinLogon.exe -SpecialSession'  # https://superuser.com/questions/536697/what-is-winlogon-exe-specialsession
+    # svchost.exe
+    selection_svchost:
+        Image|endswith: '\svchost.exe'
+    filter_svchost_generic:
+        - CommandLine|contains: 'svchost.exe -k ' # Svchost must start by mentioning the host group its hosting
+        - CommandLine:
+            - ''
+            - null
+    filter_svchost_defender:
+        # For some reason defender spwans an svchost instance without any CLI
+        ParentImage|startswith:
+            - 'C:\ProgramData\Microsoft\Windows Defender\Platform\'
+            - 'C:\Program Files\Windows Defender\'
+            - 'C:\Program Files\Microsoft Security Client\'
+        ParentImage|endswith: '\MsMpEng.exe'
+        #IntegrityLevel: 'System'
+        #TerminalSessionId: 0
+        Image: 'C:\Windows\System32\svchost.exe'
+    filter_svchost_without_exe:
+        ParentImage: 'C:\Windows\System32\services.exe'
+        CommandLine|contains: 'svchost -k TSLicensing'
+    # dllhost.exe without CLI options is covered in e7888eb1-13b0-4616-bd99-4bc0c2b054b9
+    # rundll32.exe without CLI options is covered in 1775e15e-b61b-4d14-a1a3-80981298085a
+    # smss.exe anomaly is covered in e422938f-6c45-4dcc-bdbb-be339b712c6c
+    condition: (selection_embedding and not 1 of filter_embedding*) or (selection_aggregatorHost and not filter_aggregatorHost) or (selection_ctfmon and not filter_ctfmon) or (selection_dwm and not filter_dwm) or (selection_fontdrvhost and not filter_fontdrvhost) or (selection_services and not filter_services) or (selection_wininit and not filter_wininit) or (selection_winlogon and not filter_winlogon) or (selection_svchost and not 1 of filter_svchost_*)
+falsepositives:
+    - Unknown
+level: high

@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: IIS Native-Code Module Command Line Installation
+id: 9465ddf4-f9e4-4ebd-8d98-702df3a93239
+status: test
+description: Detects suspicious IIS native-code module installations via command line
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/12/11 18:13:51
+references:
+  - https://researchcenter.paloaltonetworks.com/2018/01/unit42-oilrig-uses-rgdoor-iis-backdoor-targets-middle-east/
+  - https://www.microsoft.com/security/blog/2022/07/26/malicious-iis-extensions-quietly-open-persistent-backdoors-into-servers/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_* and not 1 of filter_*
+    filter_iis_setup:
+        ParentImage: C:\Windows\System32\inetsrv\iissetup.exe
+    selection_cli:
+        CommandLine|contains|all:
+          - install
+          - module
+        CommandLine|contains|windash: '-name:'
+    selection_img:
+      - Image|endswith: \appcmd.exe
+      - OriginalFileName: appcmd.exe
+falsepositives: Unknown as it may vary from organisation to organisation how admins
+    use to install IIS modules
+level: medium
+customer: 'demo'
+modified: 2024/03/13
+tags:
+  - attack.persistence
+  - attack.t1505.003
+  - DEMO

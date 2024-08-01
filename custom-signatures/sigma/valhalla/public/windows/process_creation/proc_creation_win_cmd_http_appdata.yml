@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Command Line Execution with Suspicious URL and AppData Strings
+id: 1ac8666b-046f-4201-8aba-1951aaec03a3
+status: test
+description: Detects a suspicious command line execution that includes an URL and
+    AppData string in the command line parameters as used by several droppers (js/vbs
+    > powershell)
+author: Florian Roth (Nextron Systems), Jonhnathan Ribeiro, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/01/16 22:04:11
+references:
+  - https://www.hybrid-analysis.com/sample/3a1f01206684410dbe8f1900bbeaaa543adfcd07368ba646b499fa5274b9edf6?environmentId=100
+  - https://www.hybrid-analysis.com/sample/f16c729aad5c74f19784a24257236a8bbe27f7cdc4a89806031ec7f1bebbd475?environmentId=100
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains|all:
+          - http
+          - ://
+          - '%AppData%'
+        Image|endswith: \cmd.exe
+fields:
+  - CommandLine
+  - ParentCommandLine
+falsepositives: High
+level: medium
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.execution
+  - attack.command_and_control
+  - attack.t1059.003
+  - attack.t1059.001
+  - attack.t1105
+  - DEMO

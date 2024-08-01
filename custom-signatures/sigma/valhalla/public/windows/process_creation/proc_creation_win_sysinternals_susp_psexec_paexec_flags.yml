@@ -1,0 +1,59 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Privilege Escalation To LOCAL SYSTEM
+id: 207b0396-3689-42d9-8399-4222658efc99
+related:
+  - type: similar
+    id: 8834e2f7-6b4b-4f09-8906-d2276470ee23
+status: test
+description: Detects unknown program using commandline flags usually used by tools
+    such as PsExec and PAExec to start programs with SYSTEM Privileges
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/05/22 17:24:51
+references:
+  - https://docs.microsoft.com/en-us/sysinternals/downloads/psexec
+  - https://www.poweradmin.com/paexec/
+  - https://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_exclude_coverage:
+        CommandLine|contains:
+          - paexec
+          - PsExec
+          - accepteula
+    selection:
+        CommandLine|contains|windash:
+          - ' -s cmd'
+          - ' -s -i cmd'
+          - ' -i -s cmd'
+          - ' -s pwsh'
+          - ' -s -i pwsh'
+          - ' -i -s pwsh'
+          - ' -s powershell'
+          - ' -s -i powershell'
+          - ' -i -s powershell'
+falsepositives:
+  - Weird admins that rename their tools
+  - Software companies that bundle PsExec/PAExec with their software and rename it,
+    so that it is less embarrassing
+level: high
+customer: 'demo'
+modified: 2024/03/05
+tags:
+  - attack.resource_development
+  - attack.t1587.001
+  - DEMO

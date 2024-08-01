@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Add or Remove Computer from DC
+id: 20d96d95-5a20-4cf1-a483-f3bda8a7c037
+status: test
+description: Detects the creation or removal of a computer. Can be used to detect
+    attacks such as DCShadow via the creation of a new SPN.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/10/14 13:28:21
+references:
+  - https://github.com/Yamato-Security/EnableWindowsLogSettings/blob/7f6d755d45ac7cc9fc35b0cbf498e6aa4ef19def/ConfiguringSecurityLogAuditPolicies.md
+  - https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4741
+  - https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4743
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: selection
+    selection:
+        EventID:
+          - "4741"
+          - "4743"
+falsepositives: Unknown
+level: low
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1207
+  - DEMO

@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PsExec Service Installation
+id: 42c575ea-e41e-41f1-b248-8093c3e82a28
+status: experimental
+description: Detects PsExec service installation and execution events
+author: Thomas Patzke
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/06/12 13:19:11
+references:
+  - https://www.jpcert.or.jp/english/pub/sr/ir_research.html
+  - https://jpcertcc.github.io/ToolAnalysisResultSheet
+logsource:
+    product: windows
+    service: system
+detection:
+    condition: all of selection_*
+    selection_eid:
+        EventID: "7045"
+        Provider_Name: Service Control Manager
+    selection_service:
+      - ServiceName: PSEXESVC
+      - ImagePath|endswith: \PSEXESVC.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/08/04
+tags:
+  - attack.execution
+  - attack.t1569.002
+  - attack.s0029
+  - DEMO

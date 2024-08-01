@@ -1,0 +1,81 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: File With Suspicious Extension Downloaded Via Bitsadmin
+id: 5b80a791-ad9b-4b75-bcc1-ad4e1e89c200
+status: experimental
+description: Detects usage of bitsadmin downloading a file with a suspicious extension
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/28 20:36:41
+references:
+  - https://blog.netspi.com/15-ways-to-download-a-file/#bitsadmin
+  - https://isc.sans.edu/diary/22264
+  - https://lolbas-project.github.io/lolbas/Binaries/Bitsadmin/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_extension:
+        CommandLine|contains:
+          - .7z
+          - .asax
+          - .ashx
+          - .asmx
+          - .asp
+          - .aspx
+          - .bat
+          - .cfm
+          - .cgi
+          - .chm
+          - .cmd
+          - .dll
+          - .gif
+          - .jpeg
+          - .jpg
+          - .jsp
+          - .jspx
+          - .log
+          - .png
+          - .ps1
+          - .psm1
+          - .rar
+          - .scf
+          - .sct
+          - .txt
+          - .vbe
+          - .vbs
+          - .war
+          - .wsf
+          - .wsh
+          - .xll
+          - .zip
+    selection_flags:
+        CommandLine|contains:
+          - ' /transfer '
+          - ' /create '
+          - ' /addfile '
+    selection_img:
+      - Image|endswith: \bitsadmin.exe
+      - OriginalFileName: bitsadmin.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/05/30
+tags:
+  - attack.defense_evasion
+  - attack.persistence
+  - attack.t1197
+  - attack.s0190
+  - attack.t1036.003
+  - DEMO

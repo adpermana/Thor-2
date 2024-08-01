@@ -1,0 +1,23 @@
+title: Detection of Lockbit Ransomware Attempting to Disable Windows Defender (via
+registry_event)
+id: f116bb73-cf5c-4aae-bba9-d510b60d0b71
+status: stable
+description: This Sigma rule for identifying signs of Lockbit ransomware activity by detecting
+attempts to disable Windows Defender through changes in registry keys.
+references:
+- https://mohitrajai.medium.com/malware-analysis-report-lockbit-black-ransomware8a0acd8e8282
+author: Mehmet Kadir CIRIK
+tags:
+- attack.persistence
+- attack.t1112
+logsource:
+ product: windows
+ category: registry_event
+detection:
+ selection:
+ TargetObject|contains:
+ - '\SYSTEM\ControlSet001\services\WinDefend\DeleteFlag'
+ condition: selection
+falsepositives:
+- Unknown
+level: medium

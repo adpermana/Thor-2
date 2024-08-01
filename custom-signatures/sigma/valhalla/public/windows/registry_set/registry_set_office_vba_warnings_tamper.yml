@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Office Macros Auto-Enabled
+id: 91239011-fe3c-4b54-9f24-15c86bb65913
+related:
+  - type: obsoletes
+    id: a166f74e-bf44-409d-b9ba-ea4b2dd8b3cd
+status: test
+description: Detects registry changes to Microsoft Office "VBAWarning" to a value
+    of "1" which enables the execution of all macros, whether signed or unsigned.
+author: Trent Liffick (@tliffick), Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/05/22 12:40:21
+references:
+  - https://twitter.com/inversecos/status/1494174785621819397
+  - https://www.mcafee.com/blogs/other-blogs/mcafee-labs/zloader-with-a-new-infection-technique/
+  - https://securelist.com/scarcruft-surveilling-north-korean-defectors-and-human-rights-activists/105074/
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Details: DWORD (0x00000001)
+        TargetObject|endswith: \Security\VBAWarnings
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.defense_evasion
+  - attack.t1112
+  - DEMO

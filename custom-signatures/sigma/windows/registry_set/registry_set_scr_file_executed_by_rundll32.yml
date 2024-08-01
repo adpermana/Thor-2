@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: ScreenSaver Registry Key Set
+id: 40b6e656-4e11-4c0c-8772-c1cc6dae34ce
+status: experimental
+description: Detects registry key established after masqueraded .scr file execution
+    using Rundll32 through desk.cpl
+author: Jose Luis Sanchez Martinez (@Joseliyo_Jstnk)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/05/04 13:25:11
+references:
+  - https://twitter.com/VakninHai/status/1517027824984547329
+  - https://twitter.com/pabraeken/status/998627081360695297
+  - https://jstnk9.github.io/jstnk9/research/InstallScreenSaver-SCR-files
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection and registry and not filter
+    filter:
+        Details|contains:
+          - C:\Windows\System32\
+          - C:\Windows\SysWOW64\
+    registry:
+        Details|endswith: .scr
+        TargetObject|contains: \Control Panel\Desktop\SCRNSAVE.EXE
+    selection:
+        Image|endswith: \rundll32.exe
+falsepositives: Legitimate use of screen saver
+level: medium
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.defense_evasion
+  - attack.t1218.011
+  - DEMO

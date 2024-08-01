@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: UEFI Persistence Via Wpbbin - FileCreation
+id: e94b9ddc-eec5-4bb8-8a58-b9dc5f4e185f
+status: test
+description: Detects creation of a file named "wpbbin" in the "%systemroot%\system32\"
+    directory. Which could be indicative of UEFI based persistence method
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/18 16:27:01
+references:
+  - https://grzegorztworek.medium.com/using-uefi-to-inject-executable-files-into-bitlocker-protected-drives-8ff4ca59c94c
+  - https://persistence-info.github.io/Data/wpbbin.html
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetFilename: C:\Windows\System32\wpbbin.exe
+falsepositives: Legitimate usage of the file by hardware manufacturer such as lenovo
+    (Thanks @0gtweet for the tip)
+level: high
+customer: 'demo'
+tags:
+  - attack.persistence
+  - attack.defense_evasion
+  - attack.t1542.001
+  - DEMO

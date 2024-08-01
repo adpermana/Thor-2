@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: User Added To Admin Group Via Sysadminctl
+id: 652c098d-dc11-4ba6-8566-c20e89042f2b
+related:
+  - type: obsoletes
+    id: 0c1ffcf9-efa9-436e-ab68-23a9496ebf5b
+status: test
+description: Detects attempts to create and add an account to the admin group via
+    "sysadminctl"
+author: Sohan G (D4rkCiph3r)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/03/19 16:22:11
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1078.003/T1078.003.md#atomic-test-3---create-local-account-with-admin-privileges-using-sysadminctl-utility---macos
+  - https://ss64.com/osx/sysadminctl.html
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains|all:
+          - ' -addUser '
+          - ' -admin '
+        Image|endswith: /sysadminctl
+falsepositives: Legitimate administration activities
+level: medium
+customer: 'demo'
+tags:
+  - attack.initial_access
+  - attack.privilege_escalation
+  - attack.t1078.003
+  - DEMO

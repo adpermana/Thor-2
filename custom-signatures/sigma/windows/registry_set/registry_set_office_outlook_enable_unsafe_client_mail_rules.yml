@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Outlook EnableUnsafeClientMailRules Setting Enabled - Registry
+id: 6763c6c8-bd01-4687-bc8d-4fa52cf8ba08
+related:
+  - type: similar
+    id: c3cefdf4-6703-4e1c-bad8-bf422fc5015a
+  - type: similar
+    id: 55f0a3a1-846e-40eb-8273-677371b8d912
+status: experimental
+description: Detects an attacker trying to enable the outlook security setting "EnableUnsafeClientMailRules"
+    which allows outlook to run applications or execute macros
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/02/08 22:29:41
+references:
+  - https://support.microsoft.com/en-us/topic/how-to-control-the-rule-actions-to-start-an-application-or-run-a-macro-in-outlook-2016-and-outlook-2013-e4964b72-173c-959d-5d7b-ead562979048
+  - https://speakerdeck.com/heirhabarov/hunting-for-persistence-via-microsoft-exchange-server-or-outlook?slide=44
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Details: DWORD (0x00000001)
+        TargetObject|endswith: \Outlook\Security\EnableUnsafeClientMailRules
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.defense_evasion
+  - attack.t1112
+  - DEMO

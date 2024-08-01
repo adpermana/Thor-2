@@ -1,0 +1,37 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: CobaltStrike Malleable (OCSP) Profile
+id: 37325383-740a-403d-b1a2-b2b4ab7992e7
+status: test
+description: Detects Malleable (OCSP) Profile with Typo (OSCP) in URL
+author: Markus Neis
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/11/12 15:14:11
+references:
+  - https://github.com/rsmudge/Malleable-C2-Profiles/blob/26323784672913923d20c5a638c6ca79459e8529/normal/ocsp.profile
+logsource:
+    category: proxy
+detection:
+    condition: selection
+    selection:
+        c-uri|contains: /oscp/
+        cs-host: ocsp.verisign.com
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.defense_evasion
+  - attack.command_and_control
+  - attack.t1071.001
+  - DEMO

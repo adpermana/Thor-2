@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Google Cloud DNS Zone Modified or Deleted
+id: 28268a8f-191f-4c17-85b2-f5aa4fa829c3
+status: test
+description: Identifies when a DNS Zone is modified or deleted in Google Cloud.
+author: Austin Songer @austinsonger
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/15 16:10:21
+references:
+  - https://cloud.google.com/dns/docs/reference/v1/managedZones
+logsource:
+    product: gcp
+    service: gcp.audit
+detection:
+    condition: selection
+    selection:
+        gcp.audit.method_name:
+          - Dns.ManagedZones.Delete
+          - Dns.ManagedZones.Update
+          - Dns.ManagedZones.Patch
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.impact
+  - DEMO

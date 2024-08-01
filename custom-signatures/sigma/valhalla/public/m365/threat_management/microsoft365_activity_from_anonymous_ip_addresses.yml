@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Activity from Anonymous IP Addresses
+id: d8b0a4fe-07a8-41be-bd39-b14afa025d95
+status: test
+description: Detects when a Microsoft Cloud App Security reported when users were
+    active from an IP address that has been identified as an anonymous proxy IP address.
+author: Austin Songer @austinsonger
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/23 15:36:11
+references:
+  - https://docs.microsoft.com/en-us/cloud-app-security/anomaly-detection-policy
+  - https://docs.microsoft.com/en-us/cloud-app-security/policy-template-reference
+logsource:
+    product: m365
+    service: threat_management
+detection:
+    condition: selection
+    selection:
+        eventName: Activity from anonymous IP addresses
+        eventSource: SecurityComplianceCenter
+        status: success
+falsepositives: User using a VPN or Proxy
+level: medium
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.command_and_control
+  - attack.t1573
+  - DEMO

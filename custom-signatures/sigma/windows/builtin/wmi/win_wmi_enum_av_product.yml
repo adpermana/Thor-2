@@ -1,0 +1,28 @@
+title: WMI SecurityCenter2 NameSpace Porperties Enumeration
+id: c6d36739-869b-4999-8cd0-26d6d417722b
+status: test
+description: Detects enumeration of different WMI classes such as the "AntiVirusProduct" class that are part of the SecurityCenter2 namespace.
+references:
+    - Internal Research
+author: Nasreddine Bencherchali, pH-T
+date: 2022/11/22
+modified: 2023/03/29
+tags:
+    - attack.execution
+    - attack.t1047
+logsource:
+    product: windows
+    service: wmi
+detection:
+    selection_main:
+        EventID: 11
+        Operation|contains: 'IWbemServices::ExecQuery'
+    selection_class:
+        Operation|contains:
+            - 'SELECT * FROM AntiVirusProduct'
+            - 'SELECT * FROM AntiSpywareProduct'
+            - 'SELECT * FROM FirewallProduct'
+    condition: all of selection_*
+falsepositives:
+    - Legitimate AV or third party software could use the same API in theory
+level: medium

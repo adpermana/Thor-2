@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Interactive Bash Suspicious Children
+id: ea3ecad2-db86-4a89-ad0b-132a10d2db55
+status: test
+description: Detects suspicious interactive bash as a parent to rather uncommon child
+    processes
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/03/14 15:46:01
+references:
+  - Internal Research
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    condition: selection and 1 of anomaly*
+    anomaly1:
+        CommandLine|contains:
+          - '-c import '
+          - base64
+          - pty.spawn
+    anomaly2:
+        Image|endswith:
+          - whoami
+          - iptables
+          - /ncat
+          - /nc
+          - /netcat
+    selection:
+        ParentCommandLine: bash -i
+falsepositives: Legitimate software that uses these patterns
+level: medium
+customer: 'demo'
+tags:
+  - attack.execution
+  - attack.defense_evasion
+  - attack.t1059.004
+  - attack.t1036
+  - DEMO

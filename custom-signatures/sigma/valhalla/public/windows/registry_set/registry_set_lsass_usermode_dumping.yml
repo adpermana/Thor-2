@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Lsass Full Dump Request Via DumpType Registry Settings
+id: 33efc23c-6ea2-4503-8cfe-bdf82ce8f719
+status: experimental
+description: Detects the setting of the "DumpType" registry value to "2" which stands
+    for a "Full Dump". Technique such as LSASS Shtinkering requires this value to
+    be "2" in order to dump LSASS.
+author: '@pbssubhash'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/12/08 20:12:21
+references:
+  - https://github.com/deepinstinct/Lsass-Shtinkering
+  - https://learn.microsoft.com/en-us/windows/win32/wer/collecting-user-mode-dumps
+  - https://media.defcon.org/DEF%20CON%2030/DEF%20CON%2030%20presentations/Asaf%20Gilboa%20-%20LSASS%20Shtinkering%20Abusing%20Windows%20Error%20Reporting%20to%20Dump%20LSASS.pdf
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Details: DWORD (0x00000002)
+        TargetObject|contains:
+          - \SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps\DumpType
+          - \SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps\lsass.exe\DumpType
+falsepositives: Legitimate application that needs to do a full dump of their process
+level: high
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.credential_access
+  - attack.t1003.001
+  - DEMO

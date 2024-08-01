@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-06-21 19:00
+# Generated for User: demo
+# Number of Rules: 3228
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: CosmicDuke Service Installation
+id: cb062102-587e-4414-8efa-dbe3c7bf19c6
+related:
+  - type: derived
+    id: 2cfe636e-317a-4bee-9f2c-1066d9f54d1a
+status: test
+description: |
+    Detects the installation of a service named "javamtsup" on the system.
+    The CosmicDuke info stealer uses Windows services typically named "javamtsup" for persistence.
+author: Florian Roth (Nextron Systems), Daniil Yugoslavskiy, oscd.community (update)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/03/27 14:28:21
+references:
+  - https://blog.f-secure.com/wp-content/uploads/2019/10/CosmicDuke.pdf
+logsource:
+    product: windows
+    service: security
+    definition: The 'System Security Extension' audit subcategory need to be enabled
+        to log the EID 4697
+detection:
+    condition: selection
+    selection:
+        EventID: "4697"
+        ServiceName: javamtsup
+falsepositives: Unlikely
+level: critical
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.persistence
+  - attack.t1543.003
+  - attack.t1569.002
+  - detection.emerging_threats
+  - DEMO

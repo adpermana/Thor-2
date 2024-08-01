@@ -1,0 +1,61 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious File Creation In Uncommon AppData Folder
+id: d7b50671-d1ad-4871-aa60-5aa5b331fe04
+status: test
+description: Detects the creation of suspicious files and folders inside the user's
+    AppData folder but not inside any of the common and well known directories (Local,
+    Romaing, LocalLow). This method could be used as a method to bypass detection
+    who exclude the AppData folder in fear of FPs
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/05 19:15:41
+references:
+  - Internal Research
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection and not filter_main
+    filter_main:
+        TargetFilename|contains:
+          - \AppData\Local\
+          - \AppData\LocalLow\
+          - \AppData\Roaming\
+        TargetFilename|startswith: C:\Users\
+    selection:
+        TargetFilename|contains: \AppData\
+        TargetFilename|endswith:
+          - .bat
+          - .cmd
+          - .cpl
+          - .dll
+          - .exe
+          - .hta
+          - .iso
+          - .lnk
+          - .msi
+          - .ps1
+          - .psm1
+          - .scr
+          - .vbe
+          - .vbs
+        TargetFilename|startswith: C:\Users\
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/02/23
+tags:
+  - attack.defense_evasion
+  - attack.execution
+  - DEMO

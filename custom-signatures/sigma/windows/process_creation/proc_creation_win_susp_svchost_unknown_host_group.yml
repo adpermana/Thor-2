@@ -1,0 +1,94 @@
+title: Unknown Svchost Host Groups
+id: 84233a6c-733b-40af-97b6-edaa1e92c8a4
+status: experimental
+description: Detects svchost processes spawning with the "-k" flag but without any of the known service host groups in the command line
+references:
+    - Internal Research
+author: Nasreddine Bencherchali
+date: 2022/06/30
+modified: 2023/01/25
+tags:
+    - attack.defense_evasion
+    - attack.t1055
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: '\svchost.exe'
+        CommandLine|contains: ' -k '
+    filter:
+        CommandLine|contains:
+            - ' AarSvcGroup'
+            - ' apphost'
+            - ' appmodel'
+            - ' AppReadiness'
+            - ' AssignedAccessManagerSvc'
+            - ' autoTimeSvc'
+            - ' AxInstSVGroup'
+            - ' AzureAttestService'  # https://docs.microsoft.com/en-us/azure/attestation/overview
+            - ' BcastDVRUserService'
+            - ' BthAppGroup'
+            - ' Camera'
+            - ' CameraMonitor'
+            - ' ClipboardSvcGroup'
+            - ' CloudIdServiceGroup'
+            - ' DcomLaunch'
+            - ' defragsvc'
+            - ' DevicesFlow'
+            - ' diagnostics'
+            - ' DialogBlockingService'
+            - ' ftpsvc'
+            - ' GPSvcGroup'
+            - ' GraphicsPerfSvcGroup'
+            - ' ICService'
+            - ' iissvcs'
+            - ' imgsvc'
+            - ' InvSvcGroup'
+            - ' KpsSvcGroup'
+            - ' LocalService'
+            - ' LocalServiceAndNoImpersonation'
+            - ' LocalServiceNetworkRestricted'
+            - ' LocalServiceNoNetwork'
+            - ' LocalServiceNoNetworkFirewall'
+            - ' LocalServicePeerNet'
+            - ' LocalSystemNetworkRestricted'
+            - ' LxssManagerUser'
+            - ' McpManagementServiceGroup'
+            - ' netprofm'
+            - ' netsvcs'
+            - ' NetworkService'
+            - ' NetworkServiceAndNoImpersonation'
+            - ' NetworkServiceNetworkRestricted'
+            - ' osprivacy'
+            - ' P9RdrService'
+            - ' PeerDist'
+            - ' PenService'
+            - ' print'
+            - ' PrintWorkflow'
+            - ' rdxgroup'
+            - ' regsvc'
+            - ' RPCHTTPLBS'
+            - ' RPCSS'
+            - ' sdrsvc'
+            - ' secsvcs'
+            - ' smbsvcs'
+            - ' smphost'
+            - ' swprv'
+            - ' termsvcs'
+            - ' tsgateway'
+            - ' TSLicensing'
+            - ' UdkSvcGroup'
+            - ' UnistackSvcGroup'
+            - ' UserProfileService'
+            - ' utcsvc'
+            - ' WbioSvcGroup'
+            - ' WebThreatDefense'
+            - ' WepHostSvcGroup'
+            - ' WerSvcGroup'
+            - ' wsappx'
+            - ' wusvcs'
+    condition: selection and not filter
+falsepositives:
+    - There may be other missing groups from older versions of windows or groups that are created under specific conditions
+level: high

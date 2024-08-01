@@ -1,0 +1,61 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - Certipy Execution
+id: 6938366d-8954-4ddc-baff-c830b3ba8fcd
+status: test
+description: Detects Certipy a tool for Active Directory Certificate Services enumeration
+    and abuse based on PE metadata characteristics and common command line arguments.
+author: pH-T (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/04/17 13:15:41
+references:
+  - https://github.com/ly4k/Certipy
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection_img or all of selection_cli_*
+    selection_cli_commands:
+        CommandLine|contains:
+          - ' auth '
+          - ' find '
+          - ' forge '
+          - ' relay '
+          - ' req '
+          - ' shadow '
+    selection_cli_flags:
+        CommandLine|contains:
+          - ' -bloodhound'
+          - ' -ca-pfx '
+          - ' -dc-ip '
+          - ' -kirbi'
+          - ' -old-bloodhound'
+          - ' -pfx '
+          - ' -target'
+          - ' -username '
+          - ' -vulnerable'
+          - auth -pfx
+          - shadow auto
+          - shadow list
+    selection_img:
+      - Image|endswith: \Certipy.exe
+      - OriginalFileName: Certipy.exe
+      - Description|contains: Certipy
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+tags:
+  - attack.discovery
+  - attack.credential_access
+  - attack.t1649
+  - DEMO

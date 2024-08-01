@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: SES Identity Has Been Deleted
+id: 20f754db-d025-4a8f-9d74-e0037e999a9a
+status: test
+description: Detects an instance of an SES identity being deleted via the "DeleteIdentity"
+    event. This may be an indicator of an adversary removing the account that carried
+    out suspicious or malicious activities
+author: Janantha Marasinghe
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/12/13 13:07:01
+references:
+  - https://unit42.paloaltonetworks.com/compromised-cloud-compute-credentials/
+logsource:
+    product: aws
+    service: cloudtrail
+detection:
+    condition: selection
+    selection:
+        eventName: DeleteIdentity
+        eventSource: ses.amazonaws.com
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/12/28
+tags:
+  - attack.defense_evasion
+  - attack.t1070
+  - DEMO

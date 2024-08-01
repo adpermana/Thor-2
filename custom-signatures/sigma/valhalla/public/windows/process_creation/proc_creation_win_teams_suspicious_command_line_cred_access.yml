@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potentially Suspicious Command Targeting Teams Sensitive Files
+id: d2eb17db-1d39-41dc-b57f-301f6512fa75
+status: experimental
+description: |
+    Detects a commandline containing references to the Microsoft Teams database or cookies files from a process other than Teams.
+    The database might contain authentication tokens and other sensitive information about the logged in accounts.
+author: '@SerkinValery'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/16 22:46:31
+references:
+  - https://www.bleepingcomputer.com/news/security/microsoft-teams-stores-auth-tokens-as-cleartext-in-windows-linux-macs/
+  - https://www.vectra.ai/blogpost/undermining-microsoft-teams-security-by-mining-tokens
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_legit_locations:
+        Image|endswith: \Microsoft\Teams\current\Teams.exe
+    selection:
+        CommandLine|contains:
+          - \Microsoft\Teams\Cookies
+          - \Microsoft\Teams\Local Storage\leveldb
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/12/18
+tags:
+  - attack.credential_access
+  - attack.t1528
+  - DEMO

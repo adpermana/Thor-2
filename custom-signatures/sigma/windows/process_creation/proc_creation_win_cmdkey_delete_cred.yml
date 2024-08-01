@@ -1,0 +1,28 @@
+title: Cmdkey Delete Stored Credential
+id: fb62154e-2a9f-4d88-b3f0-45e815d8a87a
+status: experimental
+description: Detects execution of cmdkey with the delete flag to delete stored credential. Can be a sign of an attacker trying to cover his tracks
+date: 2022/11/09
+references:
+    - https://github.com/Tylous/ZipExec/blob/f8d661fab20cb4d52e47f140f48f9ea34d176acb/Demo/Example.js
+    - https://ss64.com/nt/cmdkey.html
+author: Nasreddine Bencherchali
+tags:
+    - attack.execution
+    - attack.t1059
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_cmdkey:
+        - Image|endswith: '\cmdkey.exe'
+        - OriginalFileName: 'cmdkey.exe'
+    selection_cli:
+        CommandLine|contains:
+            # This covers the long and short form of the delete flag
+            - ' /d'
+            - ' -d'
+    condition: all of selection*
+falsepositives:
+    - Legitimate deletion of credential via the tool by an administrator
+level: medium

@@ -1,0 +1,65 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PowerShell Execution With Potential Decryption Capabilities
+id: 434c08ba-8406-4d15-8b24-782cb071a691
+status: experimental
+description: Detects PowerShell commands that decrypt an ".LNK" "file to drop the
+    next stage of the malware.
+author: X__Junior (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/06/30 22:02:41
+references:
+  - https://research.checkpoint.com/2023/chinese-threat-actors-targeting-europe-in-smugx-campaign/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli_dir:
+        CommandLine|contains:
+          - 'Get-ChildItem '
+          - 'dir '
+          - 'gci '
+          - 'ls '
+    selection_cli_gc:
+        CommandLine|contains:
+          - 'Get-Content '
+          - 'gc '
+          - 'cat '
+          - 'type '
+          - ReadAllBytes
+    selection_cli_specific:
+      - CommandLine|contains|all:
+          - ' ^| '
+          - \*.lnk
+          - -Recurse
+          - '-Skip '
+      - CommandLine|contains|all:
+          - ' -ExpandProperty '
+          - \*.lnk
+          - WriteAllBytes
+          - ' .length '
+    selection_img:
+        Image|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+        OriginalFileName:
+          - PowerShell.EXE
+          - pwsh.dll
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/12/05
+tags:
+  - attack.execution
+  - DEMO

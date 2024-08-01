@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Dumping Process via Sqldumper.exe
+id: 23ceaf5c-b6f1-4a32-8559-f2ff734be516
+status: test
+description: Detects process dump via legitimate sqldumper.exe binary
+author: Kirill Kiryanov, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/08 14:53:21
+references:
+  - https://twitter.com/countuponsec/status/910977826853068800
+  - https://twitter.com/countuponsec/status/910969424215232518
+  - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Sqldumper/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - "0x0110"
+          - 0x01100:40
+        Image|endswith: \sqldumper.exe
+falsepositives: Legitimate MSSQL Server actions
+level: medium
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.credential_access
+  - attack.t1003.001
+  - DEMO

@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Renamed NirCmd.EXE Execution
+id: 264982dc-dbad-4dce-b707-1e0d3e0f73d9
+status: experimental
+description: Detects the execution of a renamed "NirCmd.exe" binary based on the PE
+    metadata fields.
+author: X__Junior (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/03/11 13:06:11
+references:
+  - https://www.microsoft.com/en-us/security/blog/2024/01/17/new-ttps-observed-in-mint-sandstorm-campaign-targeting-high-profile-individuals-at-universities-and-research-orgs/
+  - https://www.nirsoft.net/utils/nircmd.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_img:
+        Image|endswith:
+          - \nircmd.exe
+          - \nircmdc.exe
+    selection:
+        OriginalFileName: NirCmd.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.execution
+  - attack.t1059
+  - attack.defense_evasion
+  - attack.t1202
+  - DEMO

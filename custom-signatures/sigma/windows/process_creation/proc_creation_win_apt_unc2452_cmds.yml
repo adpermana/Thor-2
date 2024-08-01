@@ -1,0 +1,68 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: UNC2452 Process Creation Patterns
+id: 9be34ad0-b6a7-4fbd-91cf-fc7ec1047f5f
+status: test
+description: Detects a specific process creation patterns as seen used by UNC2452
+    and provided by Microsoft as Microsoft Defender ATP queries
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/01/22 14:09:21
+references:
+  - https://www.microsoft.com/security/blog/2021/01/20/deep-dive-into-the-solorigate-second-stage-activation-from-sunburst-to-teardrop-and-raindrop/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_generic_*
+    selection_generic_1:
+        CommandLine|contains:
+          - 7z.exe a -v500m -mx9 -r0 -p
+          - 7z.exe a -mx9 -r0 -p
+        CommandLine|contains|all:
+          - .zip
+          - .txt
+    selection_generic_2:
+        CommandLine|contains:
+          - 7z.exe a -v500m -mx9 -r0 -p
+          - 7z.exe a -mx9 -r0 -p
+        CommandLine|contains|all:
+          - .zip
+          - .log
+    selection_generic_3:
+        CommandLine|contains|all:
+          - rundll32.exe
+          - C:\Windows
+          - .dll,Tk_
+        ParentCommandLine|contains|all:
+          - wscript.exe
+          - .vbs
+    selection_generic_4:
+        CommandLine|contains: 'cmd.exe /C '
+        ParentCommandLine|contains:
+          - C:\Windows
+          - .dll
+        ParentImage|endswith: \rundll32.exe
+    selection_generic_5:
+        CommandLine: ""
+        Image|endswith: \dllhost.exe
+        ParentImage|endswith: \rundll32.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/09/12
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - detection.emerging_threats
+  - DEMO

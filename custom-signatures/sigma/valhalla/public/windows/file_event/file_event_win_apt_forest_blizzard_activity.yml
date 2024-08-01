@@ -1,0 +1,62 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-06-21 19:00
+# Generated for User: demo
+# Number of Rules: 3228
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Forest Blizzard APT - File Creation Activity
+id: b92d1d19-f5c9-4ed6-bbd5-7476709dc389
+status: experimental
+description: |
+    Detects the creation of specific files inside of ProgramData directory.
+    These files were seen being created by Forest Blizzard as described by MSFT.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/04/23 17:02:51
+references:
+  - https://www.microsoft.com/en-us/security/blog/2024/04/22/analyzing-forest-blizzards-custom-post-compromise-tool-for-exploiting-cve-2022-38028-to-obtain-credentials/
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection_programdata_driver_store or (selection_programdata_main and
+        1 of selection_programdata_files_*)
+    selection_programdata_driver_store:
+        TargetFilename|contains:
+          - \pnms003.inf_
+          - \pnms009.inf_
+        TargetFilename|startswith:
+          - C:\ProgramData\Microsoft\v
+          - C:\ProgramData\Adobe\v
+          - C:\ProgramData\Comms\v
+          - C:\ProgramData\Intel\v
+          - C:\ProgramData\Kaspersky Lab\v
+          - C:\ProgramData\Bitdefender\v
+          - C:\ProgramData\ESET\v
+          - C:\ProgramData\NVIDIA\v
+          - C:\ProgramData\UbiSoft\v
+          - C:\ProgramData\Steam\v
+    selection_programdata_files_1:
+        TargetFilename|endswith:
+          - .save
+          - \doit.bat
+          - \execute.bat
+          - \servtask.bat
+    selection_programdata_files_2:
+        TargetFilename|contains: \wayzgoose
+        TargetFilename|endswith: .dll
+    selection_programdata_main:
+        TargetFilename|startswith: C:\ProgramData\
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1562.002
+  - DEMO

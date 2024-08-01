@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: ProxyLogon MSExchange OabVirtualDirectory
+id: 550d3350-bb8a-4ff3-9533-2ba533f4a1c0
+status: test
+description: Detects specific patterns found after a successful ProxyLogon exploitation
+    in relation to a Commandlet invocation of Set-OabVirtualDirectory
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/09 17:15:01
+references:
+  - https://bi-zone.medium.com/hunting-down-ms-exchange-attacks-part-1-proxylogon-cve-2021-26855-26858-27065-26857-6e885c5f197c
+logsource:
+    product: windows
+    service: msexchange-management
+detection:
+    condition: keywords_cmdlet and keywords_params
+    keywords_cmdlet:
+        '|all':
+          - OabVirtualDirectory
+          - ' -ExternalUrl '
+    keywords_params:
+      - eval(request
+      - http://f/<script
+      - '"unsafe"};'
+      - function Page_Load()
+falsepositives: Unlikely
+level: critical
+customer: 'demo'
+modified: 2023/01/23
+tags:
+  - attack.t1587.001
+  - attack.resource_development
+  - DEMO

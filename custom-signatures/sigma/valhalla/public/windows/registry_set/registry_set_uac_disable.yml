@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-06-21 19:00
+# Generated for User: demo
+# Number of Rules: 3228
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: UAC Disabled
+id: 48437c39-9e5f-47fb-af95-3d663c3f2919
+related:
+  - type: similar
+    id: c5f6a85d-b647-40f7-bbad-c10b66bab038
+  - type: similar
+    id: 0d7ceeef-3539-4392-8953-3dc664912714
+status: stable
+description: |
+    Detects when an attacker tries to disable User Account Control (UAC) by setting the registry value "EnableLUA" to 0.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/05 08:53:31
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/7e11e9b79583545f208a6dc3fa062f2ed443d999/atomics/T1548.002/T1548.002.md
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Details: DWORD (0x00000000)
+        TargetObject|contains: \Microsoft\Windows\CurrentVersion\Policies\System\EnableLUA
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2024/05/10
+tags:
+  - attack.privilege_escalation
+  - attack.defense_evasion
+  - attack.t1548.002
+  - DEMO

@@ -1,0 +1,42 @@
+title: Dsquery Usage
+id: b23fcb74-b1cb-4ff7-a31d-bfe2a7ba453b
+status: experimental
+description: Detects the execution of the dsquery tool used to query Active Directory
+references:
+    - https://posts.specterops.io/an-introduction-to-manual-active-directory-querying-with-dsquery-and-ldapsearch-84943c13d7eb
+    - https://thedfirreport.com/2021/05/12/conti-ransomware/
+    - https://unit42.paloaltonetworks.com/exchange-server-credential-harvesting/
+    - https://unit42.paloaltonetworks.com/xhunt-campaign-attacks-on-kuwait-shipping-and-transportation-organizations/
+    - https://app.any.run/tasks/57fc3cf4-7b7f-41e1-a27c-06eaad188c20/
+author: Nasreddine Bencherchali
+date: 2022/05/03
+tags:
+    - attack.discovery
+    - attack.t1087.002
+    - attack.t1482
+    - attack.t1069.002
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_image:
+        Image|endswith: '\dsquery.exe'
+    selection_cli_limit_1:
+        CommandLine|contains: ' -limit 0 '
+    selection_cli_limit_2:
+        CommandLine|contains:
+            - ' computer '
+            - ' group '
+            - ' user '
+            - ' subnet '
+    selection_cli_filter_1:
+        CommandLine|contains: ' -filter '
+    selection_cli_filter_2:
+        CommandLine|contains:
+            - 'sAMAccountName'
+            - 'objectcategory'
+            - 'objectclass'
+    condition: selection_image or all of selection_cli_limit* or all of selection_cli_filter*
+falsepositives:
+    - Legitimate use of dsquery
+level: medium

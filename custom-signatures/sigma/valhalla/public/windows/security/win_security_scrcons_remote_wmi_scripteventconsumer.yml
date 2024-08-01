@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Remote WMI ActiveScriptEventConsumers
+id: 9599c180-e3a8-4743-8f92-7fb96d3be648
+status: test
+description: Detect potential adversaries leveraging WMI ActiveScriptEventConsumers
+    remotely to move laterally in a network
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/09/02 16:04:31
+references:
+  - https://threathunterplaybook.com/hunts/windows/200902-RemoteWMIActiveScriptEventConsumers/notebook.html
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: selection and not filter
+    filter:
+        TargetLogonId: "0x3e7"
+    selection:
+        EventID: "4624"
+        LogonType: "3"
+        ProcessName|endswith: scrcons.exe
+falsepositives: SCCM
+level: high
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.lateral_movement
+  - attack.privilege_escalation
+  - attack.persistence
+  - attack.t1546.003
+  - DEMO

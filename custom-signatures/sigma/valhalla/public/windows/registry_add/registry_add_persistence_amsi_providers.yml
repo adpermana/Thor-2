@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Persistence Via New AMSI Providers - Registry
+id: 33efc23c-6ea2-4503-8cfe-bdf82ce8f705
+status: test
+description: Detects when an attacker registers a new AMSI provider in order to achieve
+    persistence
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/21 20:04:51
+references:
+  - https://persistence-info.github.io/Data/amsi.html
+  - https://github.com/gtworek/PSBits/blob/8d767892f3b17eefa4d0668f5d2df78e844f01d8/FakeAMSI/FakeAMSI.c
+logsource:
+    category: registry_add
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        Image|startswith:
+          - C:\Windows\System32\
+          - C:\Program Files\
+          - C:\Program Files (x86)\
+    selection:
+        EventType: CreateKey
+        TargetObject|contains:
+          - \SOFTWARE\Microsoft\AMSI\Providers\
+          - \SOFTWARE\WOW6432Node\Microsoft\AMSI\Providers\
+falsepositives: Legitimate security products adding their own AMSI providers. Filter
+    these according to your environment
+level: high
+customer: 'demo'
+modified: 2023/02/07
+tags:
+  - attack.persistence
+  - DEMO

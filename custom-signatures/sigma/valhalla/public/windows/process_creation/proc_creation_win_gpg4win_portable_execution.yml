@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Portable Gpg.EXE Execution
+id: 77df53a5-1d78-4f32-bc5a-0e7465bd8f41
+status: experimental
+description: Detects the execution of "gpg.exe" from uncommon location. Often used
+    by ransomware and loaders to decrypt/encrypt data.
+author: frack113, Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/08/06 12:39:11
+references:
+  - https://www.trendmicro.com/vinfo/vn/threat-encyclopedia/malware/ransom.bat.zarlock.a
+  - https://securelist.com/locked-out/68960/
+  - https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1486/T1486.md
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_legit_location:
+        Image|contains:
+          - :\Program Files (x86)\GNU\GnuPG\bin\
+          - :\Program Files (x86)\GnuPG VS-Desktop\
+          - :\Program Files (x86)\GnuPG\bin\
+          - :\Program Files (x86)\Gpg4win\bin\
+    selection:
+      - Image|endswith:
+          - \gpg.exe
+          - \gpg2.exe
+      - OriginalFileName: gpg.exe
+      - Description: GnuPG’s OpenPGP tool
+level: medium
+customer: 'demo'
+modified: 2023/11/10
+tags:
+  - attack.impact
+  - attack.t1486
+  - DEMO

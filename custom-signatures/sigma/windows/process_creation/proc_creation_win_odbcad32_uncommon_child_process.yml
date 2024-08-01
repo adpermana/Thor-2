@@ -1,0 +1,21 @@
+title: Odbcad32.EXE Uncommon Child Process
+id: fb7843cf-9939-446b-a2a5-256c16cf382d
+status: experimental
+description: Detects an uncommon child process of "odbcad32.exe" binary which normally should not have any child processes.
+references:
+    - Internal Research
+author: Nasreddine Bencherchali (Nextron Systems)
+date: 2023/05/22
+tags:
+    - attack.defense_evasion
+    - attack.t1218.008
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        ParentImage|endswith: '\odbcad32.exe'
+    condition: selection
+falsepositives:
+    - In rare occurrences where "odbcad32" crashes. It might spawn a "werfault" process
+level: medium

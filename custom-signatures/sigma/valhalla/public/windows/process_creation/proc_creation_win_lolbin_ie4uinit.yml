@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Ie4uinit Lolbin Use From Invalid Path
+id: d3bf399f-b0cf-4250-8bb4-dfc192ab81dc
+status: test
+description: Detect use of ie4uinit.exe to execute commands from a specially prepared
+    ie4uinit.inf file from a directory other than the usual directories
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/05/07 15:20:01
+references:
+  - https://lolbas-project.github.io/lolbas/Binaries/Ie4uinit/
+  - https://bohops.com/2018/03/10/leveraging-inf-sct-fetch-execute-techniques-for-bypass-evasion-persistence-part-2/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: lolbin and not 1 of filter_*
+    filter_correct:
+        CurrentDirectory:
+          - c:\windows\system32\
+          - c:\windows\sysWOW64\
+    filter_missing:
+        CurrentDirectory: []
+    lolbin:
+      - Image|endswith: \ie4uinit.exe
+      - OriginalFileName: IE4UINIT.EXE
+falsepositives: ViberPC updater calls this binary with the following commandline "ie4uinit.exe
+    -ClearIconCache"
+level: medium
+customer: 'demo'
+modified: 2022/05/16
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

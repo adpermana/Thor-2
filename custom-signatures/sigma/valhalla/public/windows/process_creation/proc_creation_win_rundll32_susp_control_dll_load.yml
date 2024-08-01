@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Control Panel DLL Load
+id: d7eb979b-c2b5-4a6f-a3a7-c87ce6763819
+status: test
+description: Detects suspicious Rundll32 execution from control.exe as used by Equation
+    Group and Exploit Kits
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/04/15 14:27:21
+references:
+  - https://twitter.com/rikvduijn/status/853251879320662017
+  - https://twitter.com/felixw3000/status/853354851128025088
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_* and not filter
+    filter:
+        CommandLine|contains: Shell32.dll
+    selection_img:
+      - Image|endswith: \rundll32.exe
+      - OriginalFileName: RUNDLL32.EXE
+    selection_parent:
+        ParentImage|endswith: \System32\control.exe
+fields:
+  - CommandLine
+  - ParentCommandLine
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/02/09
+tags:
+  - attack.defense_evasion
+  - attack.t1218.011
+  - DEMO

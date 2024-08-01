@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: JAMF MDM Execution
+id: be2e3a5c-9cc7-4d02-842a-68e9cb26ec49
+status: experimental
+description: |
+    Detects execution of the "jamf" binary to create user accounts and run commands. For example, the binary can be abused by attackers on the system in order to bypass security controls or remove application control polices.
+author: Jay Pandit
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/08/22 10:13:21
+references:
+  - https://github.com/MythicAgents/typhon/
+  - https://www.zoocoup.org/casper/jamf_cheatsheet.pdf
+  - https://docs.jamf.com/10.30.0/jamf-pro/administrator-guide/Components_Installed_on_Managed_Computers.html
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - createAccount
+          - manage
+          - removeFramework
+          - removeMdmProfile
+          - resetPassword
+          - setComputerName
+        Image|endswith: /jamf
+falsepositives: Legitimate use of the JAMF CLI tool by IT support and administrators
+level: low
+customer: 'demo'
+tags:
+  - attack.execution
+  - DEMO

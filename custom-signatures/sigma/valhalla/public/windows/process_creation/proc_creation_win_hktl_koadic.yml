@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - Koadic Execution
+id: 5cddf373-ef00-4112-ad72-960ac29bac34
+status: test
+description: Detects command line parameters used by Koadic hack tool
+author: wagga, Jonhnathan Ribeiro, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/01/12 12:50:51
+references:
+  - https://unit42.paloaltonetworks.com/unit42-sofacy-groups-parallel-attacks/
+  - https://github.com/offsecginger/koadic/blob/457f9a3ff394c989cdb4c599ab90eb34fb2c762c/data/stager/js/stdlib.js
+  - https://blog.f-secure.com/hunting-for-koadic-a-com-based-rootkit/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains|all:
+          - /q
+          - /c
+          - chcp
+    selection_img:
+      - Image|endswith: \cmd.exe
+      - OriginalFileName: Cmd.Exe
+fields:
+  - CommandLine
+  - ParentCommandLine
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/02/11
+tags:
+  - attack.execution
+  - attack.t1059.003
+  - attack.t1059.005
+  - attack.t1059.007
+  - DEMO

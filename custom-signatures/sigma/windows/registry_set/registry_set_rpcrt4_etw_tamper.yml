@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: ETW Logging Disabled For rpcrt4.dll
+id: 90f342e1-1aaa-4e43-b092-39fda57ed11e
+status: experimental
+description: Detects changes to the "ExtErrorInformation" key in order to disable
+    ETW logging for rpcrt4.dll
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/12/09 14:42:31
+references:
+  - http://redplait.blogspot.com/2020/07/whats-wrong-with-etw.html
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Details:
+          - DWORD (0x00000000)
+          - DWORD (0x00000002)
+        TargetObject|endswith: \Microsoft\Windows NT\Rpc\ExtErrorInformation
+falsepositives: Unknown
+level: low
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.defense_evasion
+  - attack.t1112
+  - attack.t1562
+  - DEMO

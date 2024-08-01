@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: User Added To Highly Privileged Group
+id: 10fb649c-3600-4d37-b1e6-56ea90bb7e09
+related:
+  - type: similar
+    id: ffa28e60-bdb1-46e0-9f82-05f7a61cc06e
+  - type: similar
+    id: ad720b90-25ad-43ff-9b5e-5c841facc8e5
+status: test
+description: Detects addition of users to highly privileged groups via "Net" or "Add-LocalGroupMember".
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/02/23 15:28:11
+references:
+  - https://www.huntress.com/blog/slashandgrab-screen-connect-post-exploitation-in-the-wild-cve-2024-1709-cve-2024-1708
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_group:
+        CommandLine|contains:
+          - Group Policy Creator Owners
+          - Schema Admins
+    selection_main:
+      - CommandLine|contains|all:
+          - 'localgroup '
+          - ' /add'
+      - CommandLine|contains|all:
+          - 'Add-LocalGroupMember '
+          - ' -Group '
+falsepositives: Administrative activity that must be investigated
+level: high
+customer: 'demo'
+tags:
+  - attack.persistence
+  - attack.t1098
+  - DEMO

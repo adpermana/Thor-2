@@ -1,0 +1,24 @@
+title: AdvancedRun Service Installation
+id: e8d90211-705e-4d37-84fd-8a48b5ac1178
+description: Detects installation of a temporary Windows service on the remote machine when AdvancedRun is executed
+references:
+    - https://www.nirsoft.net/utils/advanced_run.html
+status: test
+author: Nasreddine Bencherchali (Nextron Systems)
+date: 2022/04/30
+modified: 2023/03/28
+tags:
+    - attack.persistence
+    - attack.t1543.003
+logsource:
+    product: windows
+    service: system
+detection:
+    selection:
+        Provider_Name: 'Service Control Manager'
+        EventID: 7045
+        ImagePath|contains: 'NirSoftAdvancedRunService'
+    condition: selection
+falsepositives:
+    - Legitimate remote usage of AdvancedRun
+level: high

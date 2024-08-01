@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-06-21 19:00
+# Generated for User: demo
+# Number of Rules: 3228
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Arbitrary DLL or Csproj Code Execution Via Dotnet.EXE
+id: d80d5c81-04ba-45b4-84e4-92eba40e0ad3
+status: test
+description: Detects execution of arbitrary DLLs or unsigned code via a ".csproj"
+    files via Dotnet.EXE.
+author: Beyu Denis, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/18 19:11:11
+references:
+  - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Dotnet/
+  - https://twitter.com/_felamos/status/1204705548668555264
+  - https://bohops.com/2019/08/19/dotnet-core-a-vector-for-awl-bypass-defense-evasion/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|endswith:
+          - .csproj
+          - .csproj"
+          - .dll
+          - .dll"
+          - .csproj'
+          - .dll'
+    selection_img:
+      - Image|endswith: \dotnet.exe
+      - OriginalFileName: .NET Host
+falsepositives: Legitimate administrator usage
+level: medium
+customer: 'demo'
+modified: 2024/04/24
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

@@ -1,0 +1,111 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Linux HackTool Execution
+id: a015e032-146d-4717-8944-7a1884122111
+status: experimental
+description: Detects known hacktool execution based on image name.
+author: Nasreddine Bencherchali (Nextron Systems), Georg Lauenstein (sure[secure])
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/03 12:28:11
+references:
+  - https://github.com/Gui774ume/ebpfkit
+  - https://github.com/pathtofile/bad-bpf
+  - https://github.com/carlospolop/PEASS-ng
+  - https://github.com/t3l3machus/hoaxshell
+  - https://github.com/t3l3machus/Villain
+  - https://github.com/HavocFramework/Havoc
+  - https://github.com/1N3/Sn1per
+  - https://github.com/Ne0nd0g/merlin
+  - https://github.com/Pennyw0rth/NetExec/
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    condition: 1 of selection_*
+    selection_c2_framework_cobaltstrike:
+        Image|contains:
+          - /cobaltstrike
+          - /teamserver
+    selection_c2_frameworks:
+        Image|endswith:
+          - /crackmapexec
+          - /havoc
+          - /merlin-agent
+          - /merlinServer-Linux-x64
+          - /msfconsole
+          - /msfvenom
+          - /ps-empire server
+          - /ps-empire
+          - /sliver-client
+          - /sliver-server
+          - /Villain.py
+    selection_exploit_tools:
+        Image|endswith:
+          - /aircrack-ng
+          - /bloodhound-python
+          - /bpfdos
+          - /ebpfki
+          - /evil-winrm
+          - /hashcat
+          - /hoaxshell.py
+          - /hydra
+          - /john
+          - /ncrack
+          - /nxc-ubuntu-latest
+          - /pidhide
+          - /pspy32
+          - /pspy32s
+          - /pspy64
+          - /pspy64s
+          - /setoolkit
+          - /sqlmap
+          - /writeblocker
+    selection_linpeas:
+        Image|contains: /linpeas
+    selection_scanners:
+        Image|endswith:
+          - /autorecon
+          - /httpx
+          - /legion
+          - /naabu
+          - /netdiscover
+          - /nmap
+          - /nuclei
+          - /recon-ng
+          - /zenmap
+    selection_scanners_sniper:
+        Image|contains: /sniper
+    selection_web_enum:
+        Image|endswith:
+          - /dirb
+          - /dirbuster
+          - /eyewitness
+          - /feroxbuster
+          - /ffuf
+          - /gobuster
+          - /wfuzz
+          - /whatweb
+    selection_web_vuln:
+        Image|endswith:
+          - /joomscan
+          - /nikto
+          - /wpscan
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/10/25
+tags:
+  - attack.execution
+  - attack.resource_development
+  - attack.t1587
+  - DEMO

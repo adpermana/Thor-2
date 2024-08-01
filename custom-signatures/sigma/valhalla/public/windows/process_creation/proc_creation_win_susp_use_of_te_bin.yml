@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Malicious Windows Script Components File Execution by TAEF Detection
+id: 634b00d5-ccc3-4a06-ae3b-0ec8444dd51b
+status: test
+description: |
+    Windows Test Authoring and Execution Framework (TAEF) framework allows you to run automation by executing tests files written on different languages (C, C#, Microsoft COM Scripting interfaces
+    Adversaries may execute malicious code (such as WSC file with VBScript, dll and so on) directly by running te.exe
+author: Agro (@agro_sev) oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/13 23:45:41
+references:
+  - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Te/
+  - https://twitter.com/pabraeken/status/993298228840992768
+  - https://docs.microsoft.com/en-us/windows-hardware/drivers/taef/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - Image|endswith: \te.exe
+      - ParentImage|endswith: \te.exe
+      - OriginalFileName: \te.exe
+falsepositives: It's not an uncommon to use te.exe directly to execute legal TAEF
+    tests
+level: low
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

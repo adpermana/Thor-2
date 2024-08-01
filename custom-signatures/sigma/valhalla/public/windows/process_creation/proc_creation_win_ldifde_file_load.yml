@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Import LDAP Data Interchange Format File Via Ldifde.EXE
+id: 6f535e01-ca1f-40be-ab8d-45b19c0c8b7f
+status: test
+description: |
+    Detects the execution of "Ldifde.exe" with the import flag "-i". The can be abused to include HTTP-based arguments which will allow the arbitrary download of files from a remote server.
+author: '@gott_cyber'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/02 19:19:51
+references:
+  - https://twitter.com/0gtweet/status/1564968845726580736
+  - https://strontic.github.io/xcyclopedia/library/ldifde.exe-979DE101F5059CEC1D2C56967CA2BAC0.html
+  - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/cc731033(v=ws.11)
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains|all:
+          - -i
+          - -f
+    selection_img:
+      - Image|endswith: \ldifde.exe
+      - OriginalFileName: ldifde.exe
+falsepositives: Since the content of the files are unknown, false positives are expected
+level: medium
+customer: 'demo'
+modified: 2023/03/14
+tags:
+  - attack.command_and_control
+  - attack.defense_evasion
+  - attack.t1218
+  - attack.t1105
+  - DEMO

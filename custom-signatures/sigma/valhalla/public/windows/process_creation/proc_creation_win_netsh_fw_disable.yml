@@ -1,0 +1,52 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Firewall Disabled via Netsh.EXE
+id: 57c4bf16-227f-4394-8ec7-1b745ee061c3
+status: test
+description: Detects netsh commands that turns off the Windows firewall
+author: Fatih Sirin
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/11/01 13:49:21
+references:
+  - https://www.winhelponline.com/blog/enable-and-disable-windows-firewall-quickly-using-command-line/
+  - https://app.any.run/tasks/210244b9-0b6b-4a2c-83a3-04bd3175d017/
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.004/T1562.004.md#atomic-test-1---disable-microsoft-defender-firewall
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection_img and 1 of selection_cli_*
+    selection_cli_1:
+        CommandLine|contains|all:
+          - firewall
+          - set
+          - opmode
+          - disable
+    selection_cli_2:
+        CommandLine|contains|all:
+          - advfirewall
+          - set
+          - state
+          - "off"
+    selection_img:
+      - Image|endswith: \netsh.exe
+      - OriginalFileName: netsh.exe
+falsepositives: Legitimate administration activity
+level: medium
+customer: 'demo'
+modified: 2023/02/13
+tags:
+  - attack.defense_evasion
+  - attack.t1562.004
+  - attack.s0108
+  - DEMO

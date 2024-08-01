@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Okta Application Sign-On Policy Modified or Deleted
+id: 8f668cc4-c18e-45fe-ad00-624a981cf88a
+status: test
+description: Detects when an application Sign-on Policy is modified or deleted.
+author: Austin Songer @austinsonger
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/09/12 19:05:11
+references:
+  - https://developer.okta.com/docs/reference/api/system-log/
+  - https://developer.okta.com/docs/reference/api/event-types/
+logsource:
+    product: okta
+    service: okta
+detection:
+    condition: selection
+    selection:
+        eventtype:
+          - application.policy.sign_on.update
+          - application.policy.sign_on.rule.delete
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.impact
+  - DEMO

@@ -1,0 +1,82 @@
+title: Fake System Scheduled Task Execution
+id: 04d90fd5-3ac0-453f-ac1d-fd0d26f4de2e
+status: experimental
+description: Detects the execution of fake Scheduled Tasks that use similar task names as system Scheduled Tasks
+references:
+    - Internal Research
+author: Nasreddine Bencherchali (Nextron Systems)
+date: 2023/02/07
+modified: 2023/03/28
+tags:
+    - attack.persistence
+    - attack.t1053.005
+logsource:
+    product: windows
+    service: taskscheduler
+    definition: 'Requirements: The "Microsoft-Windows-TaskScheduler/Operational" is disabled by default and needs to be enabled in order for this detection to trigger'
+detection:
+    selection_eid:
+        EventID:
+            - 129 # Created Task Process
+            - 201 # Action Completed
+    # Microsoft Office Tasks
+    selection_task_office:
+        TaskName|contains:
+            - 'Subscription Heartbeat'
+            - 'OfficeTelemetryAgentFallBack'
+            - 'OfficeTelemetryAgentLogOn'
+    filter_task_office:
+        TaskName|startswith:
+            - '\Microsoft\Office\'
+            - 'NT TASK\Microsoft\Office\'
+    # Microsoft .NET Tasks
+    selection_task_dotnet:
+        TaskName|contains: '.NET Framework NGEN'
+    filter_task_dotnet:
+        TaskName|startswith:
+            - '\Microsoft\Windows\.NET Framework\'
+            - 'NT TASK\Microsoft\Windows\.NET Framework\'
+    # Microsoft WER Tasks
+    selection_task_wer:
+        TaskName|contains: 'QueueReporting'
+    filter_task_wer:
+        TaskName|startswith:
+            - '\Microsoft\Windows\Windows Error Reporting\'
+            - 'NT TASK\Microsoft\Windows\Windows Error Reporting\'
+    # Microsoft Windows Defender Tasks
+    selection_task_defender:
+        - TaskName|contains:
+            - 'Windows Defender'
+            - 'WindowsDefender'
+        - TaskName|endswith: '\MP Scheduled Scan'
+    filter_task_defender:
+        TaskName|startswith:
+            - '\Microsoft\Windows\Windows Defender\'
+            - 'NT TASK\Microsoft\Windows\Windows Defender\'
+            - '\Microsoft\Windows Defender\'
+            - 'NT TASK\Microsoft\Windows Defender\'
+    # Microsoft System Restore Tasks
+    selection_task_sr:
+        TaskName|endswith: '\SR'
+    filter_task_sr:
+        TaskName|startswith:
+            - '\Microsoft\Windows\SystemRestore\'
+            - 'NT TASK\Microsoft\Windows\SystemRestore\'
+    # Microsoft Bitlocker Tasks
+    selection_task_bitlocker:
+        TaskName|contains: 'Bitlocker'
+    filter_task_bitlocker:
+        TaskName|startswith:
+            - '\Microsoft\Windows\BitLocker\'
+            - 'NT TASK\Microsoft\Windows\BitLocker\'
+    condition: selection_eid and (
+        (selection_task_office and not filter_task_office) or
+        (selection_task_dotnet and not filter_task_dotnet) or
+        (selection_task_wer and not filter_task_wer) or
+        (selection_task_defender and not filter_task_defender) or
+        (selection_task_sr and not filter_task_sr) or
+        (selection_task_bitlocker and not filter_task_bitlocker)
+        )
+falsepositives:
+    - Unknown
+level: medium # TODO: Increase to high after further testing

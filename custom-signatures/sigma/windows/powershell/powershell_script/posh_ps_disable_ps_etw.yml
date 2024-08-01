@@ -1,0 +1,30 @@
+title: Disable PowerShell ETW via .NET Reflection
+id: c8129333-5ddd-4449-9192-b3733052fecb
+status: test
+description: Detects Request to "etwProvider" that can be used to disable PowerShell ETW
+author: Nasreddine Bencherchali
+references:
+    - https://github.com/S3cur3Th1sSh1t/Creds/blob/master/Csharp/DisablePSLogging.cs
+date: 2022/05/24
+modified: 2023/03/29
+tags:
+    - attack.defense_evasion
+    - attack.t1562.002
+logsource:
+    product: windows
+    category: ps_script
+    definition: Script Block Logging must be enabled
+detection:
+    selection:
+        ScriptBlockText|contains|all:
+            - 'System.Management.Automation.Tracing.PSEtwLogProvider'
+            - 'etwProvider'
+        ScriptBlockText|contains:
+            - '.SetValue(null'
+            - '.SetValue($'
+            - '.SetValue([Ref]'
+            - 'GetValue($null'
+    condition: selection
+falsepositives:
+    - Unlikely
+level: high

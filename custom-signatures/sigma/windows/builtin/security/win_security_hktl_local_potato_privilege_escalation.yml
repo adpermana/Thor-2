@@ -1,0 +1,28 @@
+title: Potential Privilege Escalation Using LocalPotato Technique
+id: 179d523d-c402-40d1-aa40-1b0855b6e5d5
+status: experimental
+description: Detects applications checking for admin share access permissions where the relative target name doesn't starts with typical path notation. This could indicate potential exploitation of LocalPotato technique using the PrintNotify CLSID for coercing privileged authentication.
+references:
+    - Internal Research
+author: Nasreddine Bencherchali (Nextron Systems)
+date: 2023/02/23
+tags:
+    - attack.defense_evasion
+    - attack.privilege_escalation
+logsource:
+    product: windows
+    service: security
+    definition: 'The advanced audit policy setting "Object Access > Audit Detailed File Share" must be configured for Success/Failure'
+detection:
+    selection:
+        EventID: 5145 # Detailed File Share
+        IpAddress: '127.0.0.1'
+        ObjectType: 'File'
+        ShareName|endswith: '\*\\C$' # Looking for: \\*\C$
+        RelativeTargetName|startswith:
+            - 'windows'
+            - 'users'
+    condition: selection
+falsepositives:
+    - Unlikely
+level: high

@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-06-21 19:00
+# Generated for User: demo
+# Number of Rules: 3228
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Forest Blizzard APT - Custom Protocol Handler Creation
+id: 5cdeb555-65de-4767-99fe-e26807465148
+status: experimental
+description: |
+    Detects the setting of a custom protocol handler with the name "rogue".
+    Seen being created by Forest Blizzard APT as reported by MSFT.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/04/23 19:47:51
+references:
+  - https://www.microsoft.com/en-us/security/blog/2024/04/22/analyzing-forest-blizzards-custom-post-compromise-tool-for-exploiting-cve-2022-38028-to-obtain-credentials/
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Details: '{026CC6D7-34B2-33D5-B551-CA31EB6CE345}'
+        TargetObject|contains: \PROTOCOLS\\Handler\rogue\CLSID
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+tags:
+  - attack.persistence
+  - attack.t1547.001
+  - DEMO

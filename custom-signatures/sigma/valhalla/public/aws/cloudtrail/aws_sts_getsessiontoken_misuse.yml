@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: AWS STS GetSessionToken Misuse
+id: b45ab1d2-712f-4f01-a751-df3826969807
+status: test
+description: Identifies the suspicious use of GetSessionToken. Tokens could be created
+    and used by attackers to move laterally and escalate privileges.
+author: Austin Songer @austinsonger
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/07/24 13:38:41
+references:
+  - https://github.com/elastic/detection-rules/pull/1213
+  - https://docs.aws.amazon.com/STS/latest/APIReference/API_GetSessionToken.html
+logsource:
+    product: aws
+    service: cloudtrail
+detection:
+    condition: selection
+    selection:
+        eventName: GetSessionToken
+        eventSource: sts.amazonaws.com
+        userIdentity.type: IAMUser
+falsepositives: GetSessionToken may be done by a system or network administrator.
+    Verify whether the user identity, user agent, and/or hostname should be making
+    changes in your environment. GetSessionToken from unfamiliar users or hosts should
+    be investigated. If known behavior is causing false positives, it can be exempted
+    from the rule.
+level: low
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.lateral_movement
+  - attack.privilege_escalation
+  - attack.t1548
+  - attack.t1550
+  - attack.t1550.001
+  - DEMO

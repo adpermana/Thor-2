@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PUA - CleanWipe Execution
+id: f44800ac-38ec-471f-936e-3fa7d9c53100
+status: test
+description: Detects the use of CleanWipe a tool usually used to delete Symantec antivirus.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/12/18 12:07:51
+references:
+  - https://github.com/3CORESec/MAL-CL/tree/master/Descriptors/Other/CleanWipe
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection*
+    selection1:
+        Image|endswith: \SepRemovalToolNative_x64.exe
+    selection2:
+        CommandLine|contains: --uninstall
+        Image|endswith: \CATClean.exe
+    selection3:
+        CommandLine|contains: -r
+        Image|endswith: \NetInstaller.exe
+    selection4:
+        CommandLine|contains|all:
+          - /uninstall
+          - /enterprise
+        Image|endswith: \WFPUnins.exe
+falsepositives: Legitimate administrative use (Should be investigated either way)
+level: high
+customer: 'demo'
+modified: 2023/02/14
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+  - DEMO

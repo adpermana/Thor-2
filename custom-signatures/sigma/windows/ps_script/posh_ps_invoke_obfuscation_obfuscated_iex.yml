@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Invoke-Obfuscation Obfuscated IEX Invocation - PowerShell
+id: 1b9dc62e-6e9e-42a3-8990-94d7a10007f7
+status: test
+description: Detects all variations of obfuscated powershell IEX invocation code generated
+    by Invoke-Obfuscation framework from the following code block \u2014
+author: Daniel Bohannon (@Mandiant/@FireEye), oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/11/08 20:52:01
+references:
+  - https://github.com/danielbohannon/Invoke-Obfuscation/blob/f20e7f843edd0a3a7716736e9eddfa423395dd26/Out-ObfuscatedStringCommand.ps1#L873-L888
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: selection_iex
+    selection_iex:
+      - ScriptBlockText|re: \$PSHome\[\s*\d{1,3}\s*\]\s*\+\s*\$PSHome\[
+      - ScriptBlockText|re: \$ShellId\[\s*\d{1,3}\s*\]\s*\+\s*\$ShellId\[
+      - ScriptBlockText|re: \$env:Public\[\s*\d{1,3}\s*\]\s*\+\s*\$env:Public\[
+      - ScriptBlockText|re: \$env:ComSpec\[(\s*\d{1,3}\s*,){2}
+      - ScriptBlockText|re: \*mdr\*\W\s*\)\.Name
+      - ScriptBlockText|re: \$VerbosePreference\.ToString\(
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/12/31
+tags:
+  - attack.defense_evasion
+  - attack.t1027
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

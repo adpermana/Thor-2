@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Windows Defender Firewall Has Been Reset To Its Default Configuration
+id: 04b60639-39c0-412a-9fbe-e82499c881a3
+status: experimental
+description: Detects activity when Windows Defender Firewall has been reset to its
+    default configuration
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/02/19 23:47:51
+references:
+  - https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-r2-and-2008/dd364427(v=ws.10)
+logsource:
+    product: windows
+    service: firewall-as
+detection:
+    condition: selection
+    selection:
+        EventID:
+          - "2032"
+          - "2060"
+level: low
+customer: 'demo'
+modified: 2023/04/21
+tags:
+  - attack.defense_evasion
+  - attack.t1562.004
+  - DEMO

@@ -1,0 +1,49 @@
+title: Pipe Creation by Images in Suspicious Locations
+id: 3b9147c9-0b47-4217-941c-9ef6d3ed9379
+status: test
+description: Detects the creation of named pipes from processes located in suspicious folders
+author: Nasreddine Bencherchali
+references:
+    - Internal Research
+date: 2022/07/08
+modified: 2023/03/29
+tags:
+    - attack.defense_evasion
+    - attack.privilege_escalation
+logsource:
+    product: windows
+    category: pipe_created
+detection:
+    selection:
+        Image|contains:
+            - '\Users\Public\'
+            - '\PerfLogs\'
+            - '\Desktop\'
+            - '\Downloads\'
+            - '\Microsoft\Windows\Start Menu\Programs\Startup\'
+            - '\AppData\Local\Temp\Rar$' # For files opened with WinRAR
+            - '\AppData\Local\Temp\7z' # For files opened with 7Zip
+            - '\AppData\Local\Temp\wz' # For files opened with WinZip
+            - '\AppData\Local\Temp\peazip-tmp' # For files opened with PeaZip
+            - '\AppData\Local\Temp\Temp1_' # For files opened with default explorer decompression function
+        # - Image|startswith:
+        #    # Possible mounted ISO files
+        #    - 'D:\'
+        #    - 'E:\'
+    filter:
+        # This section is only to avoid FPs in the test set. You could remove this to get more "accurate" results
+        - PipeName:
+            - '\wkssvc'
+            - '\srvsvc'
+            - '\spoolss'
+            - '\scerpc'
+            - '\ntsvcs'
+            - '\SearchTextHarvester'
+            - '\PGMessagePipe'
+            - '\MsFteWds'
+        - PipeName|contains: 'Anonymous Pipe'
+        - PipeName|startswith: '\dotnet-diagnostic-'
+    condition: selection and not filter
+falsepositives:
+    - Some FPs may occure with the partitions "D:" and "E:" if the org already uses these for normal usage
+level: medium

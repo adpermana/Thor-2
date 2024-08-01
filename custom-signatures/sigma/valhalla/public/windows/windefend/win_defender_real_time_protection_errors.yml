@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Windows Defender Real-Time Protection Failure/Restart
+id: dd80db93-6ec2-4f4c-a017-ad40da6ffe81
+status: stable
+description: Detects issues with Windows Defender Real-Time Protection features
+author: Nasreddine Bencherchali (Nextron Systems), Christopher Peacock '@securepeacock'
+    (Update)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/03/28 20:04:31
+references:
+  - Internal Research
+  - https://www.microsoft.com/en-us/security/blog/2023/04/11/guidance-for-investigating-attacks-using-cve-2022-21894-the-blacklotus-campaign/
+  - https://gist.github.com/nasbench/33732d6705cbdc712fae356f07666346
+logsource:
+    product: windows
+    service: windefend
+detection:
+    condition: selection and not 1 of filter_optional_*
+    filter_optional_network_inspection:
+        Feature_Name: '%%886'
+        Reason:
+          - '%%892'
+          - '%%858'
+    selection:
+        EventID:
+          - "3002"
+          - "3007"
+falsepositives: Some crashes can occur sometimes and the event doesn't provide enough
+    information to tune out these cases. Manual exception is required
+level: medium
+customer: 'demo'
+modified: 2023/05/05
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+  - DEMO

@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Get-ADDBAccount Usage
+id: b140afd9-474b-4072-958e-2ebb435abd68
+status: test
+description: Detects suspicious invocation of the Get-ADDBAccount script that reads
+    from a ntds.dit file and may be used to get access to credentials without using
+    any credential dumpers
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/03/16 14:13:31
+references:
+  - https://www.n00py.io/2022/03/manipulating-user-passwords-without-mimikatz/
+  - https://github.com/MichaelGrafnetter/DSInternals/blob/7ba59c12ee9a1cb430d7dc186a3366842dd612c8/Documentation/PowerShell/Get-ADDBAccount.md
+logsource:
+    category: ps_module
+    product: windows
+    definition: 0ad03ef1-f21b-4a79-8ce8-e6900c54b65b
+detection:
+    condition: selection
+    selection:
+        Payload|contains|all:
+          - Get-ADDBAccount
+          - 'BootKey '
+          - 'DatabasePath '
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.credential_access
+  - attack.t1003.003
+  - DEMO

@@ -1,0 +1,98 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: CobaltStrike Named Pipe Patterns
+id: 85adeb13-4fc9-4e68-8a4a-c7cb2c336eb7
+related:
+  - type: similar
+    id: 0e7163d4-9e19-4fa7-9be6-000c61aad77a
+  - type: similar
+    id: d5601f8c-b26f-4ab0-9035-69e11a8d4ad2
+status: test
+description: Detects the creation of a named pipe with a pattern found in CobaltStrike
+    malleable C2 profiles
+author: Florian Roth (Nextron Systems), Christian Burkard (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/07/30 14:28:31
+references:
+  - https://svch0st.medium.com/guide-to-named-pipes-and-hunting-for-cobalt-strike-pipes-dc46b2c5f575
+  - https://gist.github.com/MHaggis/6c600e524045a6d49c35291a21e10752
+logsource:
+    category: pipe_created
+    product: windows
+    definition: Note that you have to configure logging for Named Pipe Events in Sysmon
+        config (Event ID 17 and Event ID 18). The basic configuration is in popular
+        sysmon configuration (https://github.com/SwiftOnSecurity/sysmon-config), but
+        it is worth verifying. You can also use other repo, e.g. https://github.com/Neo23x0/sysmon-config,
+        https://github.com/olafhartong/sysmon-modular You can also use other repo,
+        e.g. https://github.com/Neo23x0/sysmon-config, https://github.com/olafhartong/sysmon-modular.
+        How to test detection? You can always use Cobalt Strike, but also you can
+        check powershell script from this site https://svch0st.medium.com/guide-to-named-pipes-and-hunting-for-cobalt-strike-pipes-dc46b2c5f575
+detection:
+    condition: 1 of selection_malleable_profile_* and not 1 of filter_main_* and not
+        1 of filter_optional_*
+    filter_main_generic:
+        PipeName:
+          - \wkssvc
+          - \spoolss
+          - \scerpc
+          - \ntsvcs
+          - \SearchTextHarvester
+          - \PGMessagePipe
+          - \MsFteWds
+    filter_optional_websense:
+        Image|contains:
+          - :\Program Files\Websense\
+          - :\Program Files (x86)\Websense\
+        PipeName|startswith:
+          - \DserNamePipeR
+          - \DserNamePipeW
+    selection_malleable_profile_catalog_change_listener:
+        PipeName|endswith: -0,
+        PipeName|startswith: \Winsock2\CatalogChangeListener-
+    selection_malleable_profile_generic:
+      - PipeName|startswith:
+          - \DserNamePipe
+          - \f4c3
+          - \f53f
+          - \fullduplex_
+          - \mojo.5688.8052.183894939787088877
+          - \mojo.5688.8052.35780273329370473
+          - \MsFteWds
+          - \msrpc_
+          - \mypipe-f
+          - \mypipe-h
+          - \ntsvcs
+          - \PGMessagePipe
+          - \rpc_
+          - \scerpc
+          - \SearchTextHarvester
+          - \spoolss
+          - \win_svc
+          - \win\msrpc_
+          - \windows.update.manager
+          - \wkssvc
+      - PipeName:
+          - \demoagent_11
+          - \demoagent_22
+falsepositives:
+  - Chrome instances using the exact same pipe name "mojo.xxx"
+  - Websense Endpoint using the pipe name "DserNamePipe(R|W)\d{1,5}"
+level: high
+customer: 'demo'
+modified: 2024/01/26
+tags:
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - attack.t1055
+  - stp.1k
+  - DEMO

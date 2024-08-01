@@ -1,0 +1,57 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Msiexec Quiet Installation
+id: 79a87aa6-e4bd-42fc-a5bb-5e6fbdcd62f5
+status: test
+description: |
+    Adversaries may abuse msiexec.exe to proxy execution of malicious payloads.
+    Msiexec.exe is the command-line utility for the Windows Installer and is thus commonly associated with executing installation packages (.msi)
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/16 13:08:01
+references:
+  - https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/msiexec
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218.007/T1218.007.md
+  - https://twitter.com/_st0pp3r_/status/1583914244344799235
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_* and not 1 of filter_*
+    filter_ccm:
+        IntegrityLevel: System
+        ParentImage: C:\Windows\CCM\Ccm32BitLauncher.exe
+    filter_system_temp:
+        ParentImage|startswith: C:\Windows\Temp\
+    filter_user_temp:
+        ParentImage|contains: \AppData\Local\Temp\
+        ParentImage|startswith: C:\Users\
+    selection_cli:
+        CommandLine|contains|windash:
+          - -i
+          - -package
+          - -a
+          - -j
+    selection_img:
+      - Image|endswith: \msiexec.exe
+      - OriginalFileName: msiexec.exe
+    selection_quiet:
+        CommandLine|contains|windash: -q
+falsepositives: WindowsApps installing updates via the quiet flag
+level: medium
+customer: 'demo'
+modified: 2024/03/13
+tags:
+  - attack.defense_evasion
+  - attack.t1218.007
+  - DEMO

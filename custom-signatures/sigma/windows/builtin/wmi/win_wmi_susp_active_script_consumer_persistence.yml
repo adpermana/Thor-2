@@ -1,0 +1,47 @@
+title: Suspicious WMI ActiveScript Event Consumer Registered
+id: 5b5755cd-0cd9-4219-b71d-a98bd179e2ff
+status: test
+description: Detects the creation of a suspicious WMI ActiveScriptEventConsumer
+references:
+    - Internal Research
+author: Nasreddine Bencherchali
+date: 2022/11/24
+modified: 2023/03/29
+tags:
+    - attack.execution
+    - attack.t1047
+logsource:
+    product: windows
+    service: wmi
+detection:
+    selection:
+        EventID: 5861
+        Consumer|contains: 'ActiveScriptEventConsumer='
+        PossibleCause|contains:
+            # Add more suspicious commands and paths
+            - 'Wscript.Shell'
+            - '.Run '
+            - '.regwrite'
+            - '%Public%'
+            - '%Temp%'
+            - '%Tmp%'
+            - '%UserProfile%'
+            - 'rundll32'
+            - 'regsvr32'
+            - 'System.Net.WebClient'
+            - 'FromBase64String'
+            - '-nop -c'
+            - '-enc '
+            - 'IEX '
+            - 'Invoke-Expression'
+            - 'DownloadString'
+            - '-w hidden'
+    filter_dell_power_manager:
+        PossibleCause|contains|all:
+            - 'DellCommandPowerManagerPolicyChangeEventConsumer'
+            - '\Dell\CommandPowerManager\InstallPath'
+            - '\Dell\CommandPowerManager\PolicySetup.exe'
+    condition: selection and not 1 of filter_*
+falsepositives:
+    - Legitimate software can create consumers of this type. Investigate the initiating process and the contents of the consumer to determine if its benign
+level: high

@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Access to Sensitive File Extensions
+id: 91c945bc-2ad1-4799-a591-4d00198a1215
+related:
+  - type: similar
+    id: 286b47ed-f6fe-40b3-b3a8-35129acd43bc
+status: test
+description: Detects known sensitive file extensions accessed on a network share
+author: Samir Bousseaden
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/04/03 18:25:01
+references:
+  - Internal Research
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: selection
+    selection:
+        EventID: "5145"
+        RelativeTargetName|endswith:
+          - .bak
+          - .dmp
+          - .edb
+          - .kirbi
+          - .msg
+          - .nsf
+          - .nst
+          - .oab
+          - .ost
+          - .pst
+          - .rdp
+          - \groups.xml
+falsepositives:
+  - Help Desk operator doing backup or re-imaging end user machine or backup software
+  - Users working with these data types or exchanging message files
+level: medium
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.collection
+  - attack.t1039
+  - DEMO

@@ -1,0 +1,33 @@
+title: Potentially Suspicious CatalogChangeListener NamedPipe Creation
+id: f9de1017-48e2-4b6c-be2c-b06d505f00ce
+status: test
+description: Detects the creation of the "CatalogChangeListener" named pipe which is usually used by system processes from a non-system location. Seen used by the hack tool LocalPotato during execution
+references:
+    - Internal Research
+author: Nasreddine Bencherchali (Nextron Systems)
+date: 2023/02/13
+modified: 2023/04/19
+tags:
+    - attack.privilege_escalation
+logsource:
+    product: windows
+    category: pipe_created
+    definition: 'Requirements: Note that you have to configure logging for Named Pipe Events in Sysmon config (Event ID 17 and Event ID 18). The basic configuration is in popular sysmon configuration (https://github.com/SwiftOnSecurity/sysmon-config), but it is worth verifying. You can also use other repo, e.g. https://github.com/Neo23x0/sysmon-config, https://github.com/olafhartong/sysmon-modular. How to test detection? You can check powershell script from this site https://svch0st.medium.com/guide-to-named-pipes-and-hunting-for-cobalt-strike-pipes-dc46b2c5f575'
+detection:
+    selection:
+        PipeName|startswith: '\Winsock2\CatalogChangeListener-'
+    filter_main_generic:
+        Image|startswith:
+            - 'C:\Windows\System32\'
+            - 'C:\Windows\SysWOW64\'
+            #- 'C:\Program Files\'
+            #- 'C:\Program Files (x86)\'
+    filter_optional_veeam:
+        Image|startswith:
+            - 'C:\Program Files \Veeam\'
+            - 'C:\Program Files (x86)\Veeam\'
+            - 'C:\Windows\Veeam\Backup\VeeamDeploymentSvc.exe'
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+falsepositives:
+    - Unknown
+level: medium

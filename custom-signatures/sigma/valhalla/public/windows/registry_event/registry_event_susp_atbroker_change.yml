@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Atbroker Registry Change
+id: 9577edbb-851f-4243-8c91-1d5b50c1a39b
+status: test
+description: Detects creation/modification of Assistive Technology applications and
+    persistence with usage of 'at'
+author: Mateusz Wydra, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/13 12:28:11
+references:
+  - http://www.hexacorn.com/blog/2016/07/22/beyond-good-ol-run-key-part-42/
+  - https://lolbas-project.github.io/lolbas/Binaries/Atbroker/
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    condition: selection and not 1 of filter_*
+    filter_atbroker:
+        Details: (Empty)
+        Image: C:\Windows\system32\atbroker.exe
+        TargetObject|contains: \Microsoft\Windows NT\CurrentVersion\Accessibility\Configuration
+    filter_uninstallers:
+        Image|startswith: C:\Windows\Installer\MSI
+        TargetObject|contains: Software\Microsoft\Windows NT\CurrentVersion\Accessibility\ATs
+    selection:
+        TargetObject|contains:
+          - Software\Microsoft\Windows NT\CurrentVersion\Accessibility\ATs
+          - Software\Microsoft\Windows NT\CurrentVersion\Accessibility\Configuration
+falsepositives: Creation of non-default, legitimate at usage
+level: medium
+customer: 'demo'
+modified: 2023/01/19
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - attack.persistence
+  - attack.t1547
+  - DEMO

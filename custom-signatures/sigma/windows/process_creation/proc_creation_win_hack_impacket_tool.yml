@@ -1,0 +1,26 @@
+title: Impacket Tool Process Patterns
+id: 472a4b7f-efda-40ea-82b9-ce61ff192250
+status: experimental
+description: Detects process patterns found being used by different Impacket tools
+references:
+    - https://github.com/login-securite/DonPAPI/blob/main/lib/secretsdump.py
+author: Florian Roth
+date: 2023/01/16
+modified: 2023/01/17
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection1:
+        CommandLine|contains:
+            - '\ADMIN$\Temp\__output'
+            - ' %TEMP%\execute.bat'
+    selection2:
+        CommandLine|contains|all:
+            - '%COMSPEC% /C copy '
+            - '%SYSTEMROOT%\Temp\'
+            - '.tmp'
+    condition: 1 of selection*
+falsepositives:
+    - Unlikely
+level: high

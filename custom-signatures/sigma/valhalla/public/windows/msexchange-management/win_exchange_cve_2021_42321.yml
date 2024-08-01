@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Possible Exploitation of Exchange RCE CVE-2021-42321
+id: c92f1896-d1d2-43c3-92d5-7a5b35c217bb
+status: test
+description: Detects log entries that appear in exploitation attempts against MS Exchange
+    RCE CVE-2021-42321
+author: Florian Roth (Nextron Systems), @testanull
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/11/18 17:51:21
+references:
+  - https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-42321
+logsource:
+    product: windows
+    service: msexchange-management
+detection:
+    condition: selection
+    selection:
+        Data|contains:
+          - 'Cmdlet failed. Cmdlet Get-App, '
+          - 'Task Get-App throwing unhandled exception: System.InvalidCastException:'
+        EventID:
+          - "6"
+          - "8"
+falsepositives: Unknown, please report false positives via https://github.com/SigmaHQ/sigma/issues
+level: high
+customer: 'demo'
+modified: 2022/07/12
+tags:
+  - attack.lateral_movement
+  - attack.t1210
+  - detection.emerging_threats
+  - DEMO

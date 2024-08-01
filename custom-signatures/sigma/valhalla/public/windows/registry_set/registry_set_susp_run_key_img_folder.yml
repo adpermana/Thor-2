@@ -1,0 +1,56 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: New RUN Key Pointing to Suspicious Folder
+id: 02ee49e2-e294-4d0f-9278-f5b3212fc588
+status: experimental
+description: Detects suspicious new RUN key element pointing to an executable in a
+    suspicious folder
+author: Florian Roth (Nextron Systems), Markus Neis, Sander Wiebing
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2018/08/25 16:30:21
+references:
+  - https://www.fireeye.com/blog/threat-research/2018/08/fin7-pursuing-an-enigmatic-and-evasive-global-criminal-operation.html
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_details:
+      - Details|contains:
+          - :\$Recycle.bin\
+          - :\Temp\
+          - :\Users\Default\
+          - :\Users\Desktop\
+          - :\Users\Public\
+          - :\Windows\Temp\
+          - \AppData\Local\Temp\
+          - '%temp%\'
+          - '%tmp%\'
+      - Details|startswith:
+          - '%Public%\'
+          - wscript
+          - cscript
+    selection_target:
+        TargetObject|contains:
+          - \SOFTWARE\Microsoft\Windows\CurrentVersion\Run\
+          - \SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce\
+fields:
+  - Image
+falsepositives: Software using weird folders for updates
+level: high
+customer: 'demo'
+modified: 2023/12/11
+tags:
+  - attack.persistence
+  - attack.t1547.001
+  - DEMO

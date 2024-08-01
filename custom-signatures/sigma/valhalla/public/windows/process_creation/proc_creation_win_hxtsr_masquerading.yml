@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Fake Instance Of Hxtsr.EXE Executed
+id: 4e762605-34a8-406d-b72e-c1a089313320
+status: test
+description: |
+    HxTsr.exe is a Microsoft compressed executable file called Microsoft Outlook Communications.
+    HxTsr.exe is part of Outlook apps, because it resides in a hidden "WindowsApps" subfolder of "C:\Program Files".
+    Any instances of hxtsr.exe not in this folder may be malware camouflaging itself as HxTsr.exe
+author: Sreeman
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/04/17 17:25:31
+references:
+  - Internal Research
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_hxtsr:
+        Image|contains: :\program files\windowsapps\microsoft.windowscommunicationsapps_
+        Image|endswith: \hxtsr.exe
+    selection:
+        Image|endswith: \hxtsr.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2024/02/08
+tags:
+  - attack.defense_evasion
+  - attack.t1036
+  - DEMO

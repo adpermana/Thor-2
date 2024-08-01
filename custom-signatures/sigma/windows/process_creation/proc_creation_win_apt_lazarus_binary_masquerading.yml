@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Lazarus System Binary Masquerading
+id: 3f7f5b0b-5b16-476c-a85f-ab477f6dd24b
+status: test
+description: Detects binaries used by the Lazarus group which use system names but
+    are executed and launched from non-default location
+author: Trent Liffick (@tliffick), Bartlomiej Czyz (@bczyz1)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/06/03 15:16:51
+references:
+  - https://media.kasperskycontenthub.com/wp-content/uploads/sites/43/2018/03/07180244/Lazarus_Under_The_Hood_PDF_final.pdf
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        Image|startswith:
+          - C:\Windows\System32\
+          - C:\Windows\SysWOW64\
+    selection:
+        Image|endswith:
+          - \msdtc.exe
+          - \gpsvc.exe
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/03/10
+tags:
+  - attack.defense_evasion
+  - attack.t1036.005
+  - detection.emerging_threats
+  - DEMO

@@ -1,0 +1,35 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Win Defender Restored Quarantine File
+id: bc92ca75-cd42-4d61-9a37-9d5aa259c88b
+status: test
+description: Detects the restoration of files from the defender quarantine
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/12/06 15:43:11
+references:
+  - https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/troubleshoot-microsoft-defender-antivirus?view=o365-worldwide
+logsource:
+    product: windows
+    service: windefend
+detection:
+    condition: selection
+    selection:
+        EventID: "1009"
+falsepositives: Legitimate administrator activity restoring a file
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+  - DEMO

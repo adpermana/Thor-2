@@ -1,0 +1,57 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Uncommon Extension Shim Database Installation Via Sdbinst.EXE
+id: 18ee686c-38a3-4f65-9f44-48a077141f42
+related:
+  - type: derived
+    id: 517490a7-115a-48c6-8862-1a481504d5a8
+status: test
+description: |
+    Detects installation of a potentially suspicious new shim with an uncommon extension using sdbinst.exe.
+    Adversaries may establish persistence and/or elevate privileges by executing malicious content triggered by application shims
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/08/01 21:56:01
+references:
+  - https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
+  - https://github.com/nasbench/Misc-Research/blob/8ee690e43a379cbce8c9d61107442c36bd9be3d3/Other/Undocumented-Flags-Sdbinst.md
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_empty:
+        CommandLine: ""
+    filter_main_legit_ext:
+        CommandLine|contains: .sdb
+    filter_main_null:
+        CommandLine: []
+    filter_main_svchost:
+      - CommandLine|endswith:
+          - ' -c'
+          - ' -f'
+          - ' -mm'
+          - ' -t'
+      - CommandLine|contains: ' -m -bg'
+    selection:
+      - Image|endswith: \sdbinst.exe
+      - OriginalFileName: sdbinst.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2024/01/10
+tags:
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1546.011
+  - DEMO

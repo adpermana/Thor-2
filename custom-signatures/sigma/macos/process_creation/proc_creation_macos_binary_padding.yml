@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Binary Padding - MacOS
+id: 95361ce5-c891-4b0a-87ca-e24607884a96
+status: test
+description: Adversaries may use binary padding to add junk data and change the on-disk
+    representation of malware. This rule detect using dd and truncate to add a junk
+    data to file.
+author: Igor Fits, Mikhail Larin, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/19 11:14:01
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1027.001/T1027.001.md
+  - https://linux.die.net/man/1/truncate
+  - https://linux.die.net/man/1/dd
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    condition: 1 of selection_*
+    selection_dd:
+        CommandLine|contains:
+          - if=/dev/zero
+          - if=/dev/random
+          - if=/dev/urandom
+        Image|endswith: /dd
+    selection_truncate:
+        CommandLine|contains: -s +
+        Image|endswith: /truncate
+falsepositives: Legitimate script work
+level: high
+customer: 'demo'
+modified: 2023/02/17
+tags:
+  - attack.defense_evasion
+  - attack.t1027.001
+  - DEMO

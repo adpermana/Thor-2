@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential RDP Exploit CVE-2019-0708
+id: aaa5b30d-f418-420b-83a0-299cb6024885
+status: test
+description: Detect suspicious error on protocol RDP, potential CVE-2019-0708
+author: Lionel PRAT, Christophe BROCAS, @atc_project (improvements)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/05/24 13:35:41
+references:
+  - https://github.com/zerosum0x0/CVE-2019-0708
+  - https://github.com/Ekultek/BlueKeep
+logsource:
+    product: windows
+    service: system
+detection:
+    condition: selection
+    selection:
+        EventID:
+          - "56"
+          - "50"
+        Provider_Name: TermDD
+falsepositives: Bad connections or network interruptions
+level: medium
+customer: 'demo'
+modified: 2022/12/25
+tags:
+  - attack.lateral_movement
+  - attack.t1210
+  - car.2013-07-002
+  - DEMO

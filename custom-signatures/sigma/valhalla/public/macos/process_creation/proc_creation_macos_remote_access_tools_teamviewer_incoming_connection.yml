@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Remote Access Tool - Team Viewer Session Started On MacOS Host
+id: f459ccb4-9805-41ea-b5b2-55e279e2424a
+related:
+  - type: similar
+    id: ab70c354-d9ac-4e11-bbb6-ec8e3b153357
+  - type: similar
+    id: 1f6b8cd4-3e60-47cc-b282-5aa1cbc9182d
+status: experimental
+description: |
+    Detects the command line executed when TeamViewer starts a session started by a remote host.
+    Once a connection has been started, an investigator can verify the connection details by viewing the "incoming_connections.txt" log file in the TeamViewer folder.
+author: Josh Nickels, Qi Nan
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/03/11 21:19:11
+references:
+  - Internal Research
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    condition: selection
+    selection:
+        CommandLine|endswith: /TeamViewer_Desktop --IPCport 5939 --Module 1
+        Image|endswith: /TeamViewer_Desktop
+        ParentImage|endswith: /TeamViewer_Service
+falsepositives: Legitimate usage of TeamViewer
+level: low
+customer: 'demo'
+tags:
+  - attack.initial_access
+  - attack.t1133
+  - DEMO

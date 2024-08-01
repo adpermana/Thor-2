@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Uncommon Child Processes Of SndVol.exe
+id: ba42babc-0666-4393-a4f7-ceaf5a69191e
+status: experimental
+description: Detects potentially uncommon child processes of SndVol.exe (the Windows
+    volume mixer)
+author: X__Junior (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/06/09 15:52:21
+references:
+  - https://twitter.com/Max_Mal_/status/1661322732456353792
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_rundll32:
+        CommandLine|contains: ' shell32.dll,Control_RunDLL '
+        Image|endswith: \rundll32.exe
+    selection:
+        ParentImage|endswith: \SndVol.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.execution
+  - DEMO

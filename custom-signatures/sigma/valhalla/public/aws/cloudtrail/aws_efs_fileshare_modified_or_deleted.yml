@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: AWS EFS Fileshare Modified or Deleted
+id: 25cb1ba1-8a19-4a23-a198-d252664c8cef
+status: test
+description: |
+    Detects when a EFS Fileshare is modified or deleted.
+    You can't delete a file system that is in use.
+    If the file system has any mount targets, the adversary must first delete them, so deletion of a mount will occur before deletion of a fileshare.
+author: Austin Songer @austinsonger
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/15 15:02:11
+references:
+  - https://docs.aws.amazon.com/efs/latest/ug/API_DeleteFileSystem.html
+logsource:
+    product: aws
+    service: cloudtrail
+detection:
+    condition: selection
+    selection:
+        eventName: DeleteFileSystem
+        eventSource: elasticfilesystem.amazonaws.com
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.impact
+  - DEMO

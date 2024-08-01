@@ -1,0 +1,22 @@
+title: PyLoggy Default Persistence Key
+id: 69e85b1e-827d-4dcf-9475-b9c32dfd29da
+status: test
+description: Detects manipulation of PyLoggy default persistence key
+author: Nasreddine Bencherchali
+references:
+    - https://github.com/D4Vinci/PyLoggy
+date: 2022/05/17
+modified: 2023/03/29
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    selection:
+        TargetObject|endswith: 'Software\Microsoft\Windows\CurrentVersion\Run\Im not a keylogger'
+    condition: selection
+falsepositives:
+    - Unknown
+level: critical
+tags:
+    - attack.persistence
+    - attack.t1547.001

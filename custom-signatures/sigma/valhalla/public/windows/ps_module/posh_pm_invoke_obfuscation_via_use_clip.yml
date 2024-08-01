@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Invoke-Obfuscation Via Use Clip - PowerShell Module
+id: ebdf49d8-b89c-46c9-8fdf-2c308406f6bd
+related:
+  - type: derived
+    id: db92dd33-a3ad-49cf-8c2c-608c3e30ace0
+status: test
+description: Detects Obfuscated Powershell via use Clip.exe in Scripts
+author: Nikita Nazarov, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/09 18:59:11
+references:
+  - https://github.com/SigmaHQ/sigma/issues/1009
+logsource:
+    category: ps_module
+    product: windows
+    definition: 0ad03ef1-f21b-4a79-8ce8-e6900c54b65b
+detection:
+    condition: selection_4103
+    selection_4103:
+        Payload|re: (?i).*?echo.*clip.*&&.*(Clipboard|i`?n`?v`?o`?k`?e`?).*
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/11/29
+tags:
+  - attack.defense_evasion
+  - attack.t1027
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

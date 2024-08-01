@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Waveedit.DLL Sideloading
+id: 71b31e99-9ad0-47d4-aeb5-c0ca3928eeeb
+status: experimental
+description: Detects potential DLL sideloading of "waveedit.dll", which is part of
+    the Nero WaveEditor audio editing software.
+author: X__Junior (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/06/14 14:57:01
+references:
+  - https://www.trendmicro.com/en_us/research/23/f/behind-the-scenes-unveiling-the-hidden-workings-of-earth-preta.html
+logsource:
+    category: image_load
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_legit_path:
+        Image:
+          - C:\Program Files (x86)\Nero\Nero Apps\Nero WaveEditor\waveedit.exe
+          - C:\Program Files\Nero\Nero Apps\Nero WaveEditor\waveedit.exe
+        ImageLoaded|startswith:
+          - C:\Program Files (x86)\Nero\Nero Apps\Nero WaveEditor\
+          - C:\Program Files\Nero\Nero Apps\Nero WaveEditor\
+    selection:
+        ImageLoaded|endswith: \waveedit.dll
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - attack.t1574.001
+  - attack.t1574.002
+  - DEMO

@@ -1,0 +1,53 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Rejetto HTTP File Server RCE
+id: a133193c-2daa-4a29-8022-018695fcf0ae
+status: test
+description: Detects attempts to exploit a Rejetto HTTP File Server (HFS) via CVE-2014-6287
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/19 12:42:21
+references:
+  - https://vk9-sec.com/hfs-code-execution-cve-2014-6287/
+  - https://www.exploit-db.com/exploits/39161
+  - https://github.com/Twigonometry/Cybersecurity-Notes/blob/c875b0f52df7d2c7a870e75e1f0c2679d417931d/Writeups/Hack%20the%20Box/Boxes/Optimum/10%20-%20Website.md
+logsource:
+    category: webserver
+detection:
+    condition: all of selection_*
+    selection_payload:
+        cs-uri-query|contains:
+          - save|
+          - powershell
+          - cmd.exe
+          - cmd /c
+          - cmd /r
+          - cmd /k
+          - cscript
+          - wscript
+          - python
+          - C:\Users\Public\
+          - '%comspec%'
+    selection_search:
+        cs-uri-query|contains: ?search=%00{.
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/01/02
+tags:
+  - attack.initial_access
+  - attack.t1190
+  - attack.t1505.003
+  - cve.2014.6287
+  - detection.emerging_threats
+  - DEMO

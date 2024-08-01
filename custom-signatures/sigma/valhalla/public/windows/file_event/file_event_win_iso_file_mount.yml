@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: ISO File Created Within Temp Folders
+id: 2f9356ae-bf43-41b8-b858-4496d83b2acb
+status: test
+description: Detects the creation of a ISO file in the Outlook temp folder or in the
+    Appdata temp folder. Typical of Qakbot TTP from end-July 2022.
+author: '@sam0x90'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/30 14:57:51
+references:
+  - https://twitter.com/Sam0x90/status/1552011547974696960
+  - https://securityaffairs.co/wordpress/133680/malware/dll-sideloading-spread-qakbot.html
+  - https://github.com/redcanaryco/atomic-red-team/blob/0f229c0e42bfe7ca736a14023836d65baa941ed2/atomics/T1553.005/T1553.005.md#atomic-test-1---mount-iso-image
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: 1 of selection*
+    selection_1:
+        TargetFilename|contains|all:
+          - \AppData\Local\Temp\
+          - .zip\
+        TargetFilename|endswith: .iso
+    selection_2:
+        TargetFilename|contains: \AppData\Local\Microsoft\Windows\INetCache\Content.Outlook\
+        TargetFilename|endswith: .iso
+fields:
+  - Image
+  - ComputerName
+  - TargetFileName
+falsepositives: Potential FP by sysadmin opening a zip file containing a legitimate
+    ISO file
+level: high
+customer: 'demo'
+tags:
+  - attack.initial_access
+  - attack.t1566.001
+  - DEMO

@@ -1,0 +1,64 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Scheduled Tasks Names Used By SVR For GraphicalProton Backdoor - Task Scheduler
+id: 2bfc1373-0220-4fbd-8b10-33ddafd2a142
+related:
+  - type: similar
+    id: 8fa65166-f463-4fd2-ad4f-1436133c52e1
+status: experimental
+description: Hunts for known SVR-specific scheduled task names
+author: CISA
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/12/18 01:51:01
+references:
+  - https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-347a
+logsource:
+    product: windows
+    service: taskscheduler
+    definition: 'Requirements: The "Microsoft-Windows-TaskScheduler/Operational" is
+        disabled by default and needs to be enabled in order for this detection to
+        trigger'
+detection:
+    condition: selection
+    selection:
+        EventID:
+          - "129"
+          - "140"
+          - "141"
+        TaskName:
+          - \defender
+          - \Microsoft\DefenderService
+          - \Microsoft\Windows\Application Experience\StartupAppTaskCheck
+          - \Microsoft\Windows\Application Experience\StartupAppTaskCkeck
+          - \Microsoft\Windows\ATPUpd
+          - \Microsoft\Windows\Data Integrity Scan\Data Integrity Update
+          - \Microsoft\Windows\DefenderUPDService
+          - \Microsoft\Windows\IISUpdateService
+          - \Microsoft\Windows\Speech\SpeechModelInstallTask
+          - \Microsoft\Windows\WiMSDFS
+          - \Microsoft\Windows\Windows Defender\Defender Update Service
+          - \Microsoft\Windows\Windows Defender\Service Update
+          - \Microsoft\Windows\Windows Error Reporting\CheckReporting
+          - \Microsoft\Windows\Windows Error Reporting\SubmitReporting
+          - \Microsoft\Windows\Windows Filtering Platform\BfeOnServiceStart
+          - \Microsoft\Windows\WindowsDefenderService
+          - \Microsoft\Windows\WindowsDefenderService2
+          - \Microsoft\Windows\WindowsUpdate\Scheduled AutoCheck
+          - \Microsoft\Windows\WindowsUpdate\Scheduled Check
+          - \WindowUpdate
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.persistence
+  - DEMO

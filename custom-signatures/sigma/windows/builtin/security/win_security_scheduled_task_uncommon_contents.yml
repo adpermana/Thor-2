@@ -1,0 +1,33 @@
+title: Uncommon Scheduled Task Contents
+id: 3a6be172-ec63-4f37-8965-c8f46ee34e9d
+description: Detects scheduled task creation and update events that include contents in the scheduled task configuration that are noteworthy, like uncommon script interpreters or locations
+status: test
+author: Florian Roth
+date: 2022/05/06
+modified: 2023/03/28
+references:
+    - https://twitter.com/matthewdunwoody/status/1352356685982146562
+    - https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4699
+logsource:
+    product: windows
+    service: security
+    definition: 'The Advanced Audit Policy setting Object Access > Audit Other Object Access Events has to be configured to allow this detection. We also recommend extracting the Command field from the embedded XML in the event data.'
+detection:
+    task_selection:
+        EventID:
+            - 4698
+            - 4702
+    selection_content1:
+        TaskContent|contains:
+            - 'wscript'
+            - 'vbscript'
+            - 'cscript'
+            - 'wmic '
+            - 'wmic.exe'
+            - 'regsvr32.exe'
+            - 'powershell'
+            - '\AppData\'
+    condition: task_selection and 1 of selection*
+falsepositives:
+    - Software installation
+level: medium

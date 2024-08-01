@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Time Travel Debugging Utility Usage - Image
+id: e76c8240-d68f-4773-8880-5c6f63595aaf
+status: test
+description: Detects usage of Time Travel Debugging Utility. Adversaries can execute
+    malicious processes and dump processes, such as lsass.exe, via tttracer.exe.
+author: Ensar Şamil, @sblmsrsn, @oscd_initiative
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/06 16:51:01
+references:
+  - https://lolbas-project.github.io/lolbas/Binaries/Tttracer/
+  - https://twitter.com/mattifestation/status/1196390321783025666
+  - https://twitter.com/oulusoyum/status/1191329746069655553
+logsource:
+    category: image_load
+    product: windows
+detection:
+    condition: selection
+    selection:
+        ImageLoaded|endswith:
+          - \ttdrecord.dll
+          - \ttdwriter.dll
+          - \ttdloader.dll
+falsepositives: Legitimate usage by software developers/testers
+level: high
+customer: 'demo'
+modified: 2022/12/02
+tags:
+  - attack.defense_evasion
+  - attack.credential_access
+  - attack.t1218
+  - attack.t1003.001
+  - DEMO

@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Persistence Via VMwareToolBoxCmd.EXE VM State Change Script
+id: 7aa4e81a-a65c-4e10-9f81-b200eb229d7d
+related:
+  - type: derived
+    id: 236d8e89-ed95-4789-a982-36f4643738ba
+status: experimental
+description: Detects execution of the "VMwareToolBoxCmd.exe" with the "script" and
+    "set" flag to setup a specific script to run for a specific VM state
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/06/14 23:38:51
+references:
+  - https://bohops.com/2021/10/08/analyzing-and-detecting-a-vmtools-persistence-technique/
+  - https://www.hexacorn.com/blog/2017/01/14/beyond-good-ol-run-key-part-53/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains|all:
+          - ' script '
+          - ' set '
+    selection_img:
+      - Image|endswith: \VMwareToolBoxCmd.exe
+      - OriginalFileName: toolbox-cmd.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.execution
+  - attack.persistence
+  - attack.t1059
+  - DEMO

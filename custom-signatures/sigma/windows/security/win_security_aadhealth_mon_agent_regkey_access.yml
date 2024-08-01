@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Azure AD Health Monitoring Agent Registry Keys Access
+id: ff151c33-45fa-475d-af4f-c2f93571f4fe
+status: test
+description: |
+    This detection uses Windows security events to detect suspicious access attempts to the registry key of Azure AD Health monitoring agent.
+    This detection requires an access control entry (ACE) on the system access control list (SACL) of the following securable object HKLM\SOFTWARE\Microsoft\Microsoft Online\Reporting\MonitoringAgent.
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research), MSTIC
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/26 19:35:41
+references:
+  - https://o365blog.com/post/hybridhealthagent/
+  - https://github.com/OTRF/Set-AuditRule/blob/c3dec5443414231714d850565d364ca73475ade5/rules/registry/aad_connect_health_monitoring_agent.yml
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: selection and not filter
+    filter:
+        ProcessName|contains:
+          - Microsoft.Identity.Health.Adfs.DiagnosticsAgent.exe
+          - Microsoft.Identity.Health.Adfs.InsightsService.exe
+          - Microsoft.Identity.Health.Adfs.MonitoringAgent.Startup.exe
+          - Microsoft.Identity.Health.Adfs.PshSurrogate.exe
+          - Microsoft.Identity.Health.Common.Clients.ResourceMonitor.exe
+    selection:
+        EventID:
+          - "4656"
+          - "4663"
+        ObjectName: \REGISTRY\MACHINE\SOFTWARE\Microsoft\Microsoft Online\Reporting\MonitoringAgent
+        ObjectType: Key
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.discovery
+  - attack.t1012
+  - DEMO

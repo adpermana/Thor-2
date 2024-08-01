@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: AD Groups Or Users Enumeration Using PowerShell - ScriptBlock
+id: 88f0884b-331d-403d-a3a1-b668cf035603
+status: test
+description: |
+    Adversaries may attempt to find domain-level groups and permission settings.
+    The knowledge of domain-level permission groups can help adversaries determine which groups exist and which users belong to a particular group.
+    Adversaries may use this information to determine which users have elevated permissions, such as domain administrators.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/12/15 21:37:11
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1069.002/T1069.002.md
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: 1 of test_*
+    test_2:
+        ScriptBlockText|contains: get-ADPrincipalGroupMembership
+    test_7:
+        ScriptBlockText|contains|all:
+          - get-aduser
+          - '-f '
+          - '-pr '
+          - DoesNotRequirePreAuth
+falsepositives: Unknown
+level: low
+customer: 'demo'
+modified: 2022/12/25
+tags:
+  - attack.discovery
+  - attack.t1069.001
+  - DEMO

@@ -1,0 +1,58 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential PowerShell Execution Via DLL
+id: 6812a10b-60ea-420c-832f-dfcc33b646ba
+status: test
+description: |
+    Detects potential PowerShell execution from a DLL instead of the usual PowerShell process as seen used in PowerShdll.
+    This detection assumes that PowerShell commands are passed via the CommandLine.
+author: Markus Neis, Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2018/08/25 15:52:51
+references:
+  - https://github.com/p3nt4/PowerShdll/blob/62cfa172fb4e1f7f4ac00ca942685baeb88ff356/README.md
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains:
+          - Default.GetString
+          - DownloadString
+          - FromBase64String
+          - 'ICM '
+          - 'IEX '
+          - Invoke-Command
+          - Invoke-Expression
+    selection_img:
+      - Image|endswith:
+          - \InstallUtil.exe
+          - \RegAsm.exe
+          - \RegSvcs.exe
+          - \regsvr32.exe
+          - \rundll32.exe
+      - OriginalFileName:
+          - InstallUtil.exe
+          - RegAsm.exe
+          - RegSvcs.exe
+          - REGSVR32.EXE
+          - RUNDLL32.EXE
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2024/03/07
+tags:
+  - attack.defense_evasion
+  - attack.t1218.011
+  - DEMO

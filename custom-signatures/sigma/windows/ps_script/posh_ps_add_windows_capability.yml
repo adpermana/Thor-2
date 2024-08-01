@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Add Windows Capability Via PowerShell Script
+id: 155c7fd5-47b4-49b2-bbeb-eb4fab335429
+related:
+  - type: similar
+    id: b36d01a3-ddaf-4804-be18-18a6247adfcd
+status: experimental
+description: Detects usage of the "Add-WindowsCapability" cmdlet to add Windows capabilities.
+    Notable capabilities could be "OpenSSH" and others.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/22 17:30:41
+references:
+  - https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse?tabs=powershell
+  - https://www.virustotal.com/gui/file/af1c82237b6e5a3a7cdbad82cc498d298c67845d92971bada450023d1335e267/content
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: all of selection_*
+    selection_capa:
+        ScriptBlockText|contains: -Name OpenSSH.
+    selection_cmdlet:
+        ScriptBlockText|contains: 'Add-WindowsCapability '
+falsepositives: Legitimate usage of the capabilities by administrators or users. Add
+    additional filters accordingly.
+level: medium
+customer: 'demo'
+modified: 2023/05/09
+tags:
+  - attack.execution
+  - DEMO

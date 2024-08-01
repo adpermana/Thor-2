@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PowerShell Called from an Executable Version Mismatch
+id: c70e019b-1479-4b65-b0cc-cd0c6093a599
+status: test
+description: Detects PowerShell called from an executable by the version mismatch
+    method
+author: Sean Metcalf (source), Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/03/05 19:59:11
+references:
+  - https://adsecurity.org/?p=2921
+logsource:
+    category: ps_classic_start
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_engine:
+        Data|contains:
+          - EngineVersion=2.
+          - EngineVersion=4.
+          - EngineVersion=5.
+    selection_host:
+        Data|contains: HostVersion=3.
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/10/27
+tags:
+  - attack.defense_evasion
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

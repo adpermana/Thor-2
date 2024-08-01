@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Commands Linux
+id: 1543ae20-cbdf-4ec1-8d12-7664d667a825
+status: test
+description: Detects relevant commands often related to malware or hacking activity
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/12/12 12:54:51
+references:
+  - Internal Research - mostly derived from exploit code including code in MSF
+logsource:
+    product: linux
+    service: auditd
+detection:
+    condition: 1 of cmd*
+    cmd1:
+        a0: chmod
+        a1: "777"
+        type: EXECVE
+    cmd2:
+        a0: chmod
+        a1: u+s
+        type: EXECVE
+    cmd3:
+        a0: cp
+        a1: /bin/ksh
+        type: EXECVE
+    cmd4:
+        a0: cp
+        a1: /bin/sh
+        type: EXECVE
+falsepositives: Admin activity
+level: medium
+customer: 'demo'
+modified: 2022/10/05
+tags:
+  - attack.execution
+  - attack.t1059.004
+  - DEMO

@@ -1,0 +1,61 @@
+title: Suspicious Children Of Compression Programs
+id: f0e6406b-56f8-4fb6-8a9b-bfea775f35e5
+status: experimental
+description: Detects file compression software such as 7Zip, Winrar spawning suspicious processes such as rundll32, wscript, etc.
+references:
+    - Internal Research
+author: Nasreddine Bencherchali
+date: 2022/06/24
+modified: 2022/11/04
+tags:
+    - attack.execution
+logsource:
+    product: windows
+    category: process_creation
+detection:
+    selection_parent:
+        - ProcessTree|contains:
+            - '\7zFM.exe|'
+            - '\winzip64.exe|'
+            - '\winzip.exe|'
+            - '\WinRAR.exe|'
+            - '\peazip.exe|'
+        - ParentImage|endswith:
+            - '\7zFM.exe'
+            - '\winzip64.exe'
+            - '\winzip.exe'
+            - '\WinRAR.exe'
+            - '\peazip.exe'
+    selection_img:
+        - Image|endswith:
+            - '\cmd.exe'
+            - '\powershell.exe'
+            - '\pwsh.exe'
+            - '\wscript.exe'
+            - '\cscript.exe'
+            - '\mshta.exe'
+            - '\rundll32.exe'
+            - '\regsvr32.exe'
+            - '\curl.exe'
+            - '\wsl.exe'
+        - OriginalFileName:
+            - 'Cmd.Exe'
+            - 'PowerShell.EXE'
+            - 'pwsh.dll'
+            - 'wscript.exe'
+            - 'cscript.exe'
+            - 'MSHTA.EXE'
+            - 'RUNDLL32.EXE'
+            - 'REGSVR32.EXE'
+            - 'curl.exe'
+            - 'wsl.exe'
+    filter_null:
+        CommandLine: null # For 4688 events that do not collect the commandline logs
+    filter_empty:
+        CommandLine: ''
+    filter_legitimate:
+        CommandLine|contains: 'cmd /c rmdir'
+    condition: all of selection_* and not 1 of filter_*
+falsepositives:
+    - Rare legitimate scripts inside of compressed files
+level: high

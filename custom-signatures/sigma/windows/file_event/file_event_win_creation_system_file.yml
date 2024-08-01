@@ -1,0 +1,150 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Files With System Process Name In Unsuspected Locations
+id: d5866ddf-ce8f-4aea-b28e-d96485a20d3d
+status: test
+description: |
+    Detects the creation of an executable with a system process name in folders other than the system ones (System32, SysWOW64, etc.).
+author: Sander Wiebing, Tim Shelton, Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/05/26 20:25:41
+references:
+  - Internal Research
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_dism_tiworker:
+        Image|endswith:
+          - \Windows\System32\dism.exe
+          - \TiWorker.exe
+        TargetFilename|contains:
+          - :\Windows\SoftwareDistribution\
+          - :\Windows\System32\
+          - :\Windows\SysWOW64\
+          - :\Windows\WinSxS\
+          - \SystemRoot\System32\
+    filter_main_explorer:
+        TargetFilename|endswith: :\Windows\explorer.exe
+    filter_main_healtray:
+        Image|endswith: \SecurityHealthSetup.exe
+        TargetFilename|contains: :\Windows\System32\SecurityHealth\
+        TargetFilename|endswith: \SecurityHealthSystray.exe
+    filter_main_msiexec:
+        Image|endswith: :\WINDOWS\system32\msiexec.exe
+        TargetFilename|endswith:
+          - :\Program Files\PowerShell\7\pwsh.exe
+          - :\Program Files\PowerShell\7-preview\pwsh.exe
+    filter_main_setuphost:
+        Image|endswith: :\$WINDOWS.~BT\Sources\SetupHost.exe
+        TargetFilename|contains: :\$WINDOWS.~BT\
+    filter_main_svchost:
+        Image|endswith: :\Windows\system32\svchost.exe
+        TargetFilename|contains:
+          - :\Windows\SoftwareDistribution\Download\
+          - :\Program Files\WindowsApps\
+    filter_main_wbengine:
+        Image|endswith: :\Windows\system32\wbengine.exe
+        TargetFilename|endswith: \RuntimeBroker.exe
+    filter_main_wuauclt:
+        Image|endswith: :\Windows\System32\wuauclt.exe
+    filter_main_wuaucltcore:
+        Image|contains: :\Windows\uus\
+        Image|endswith: \wuaucltcore.exe
+        TargetFilename|contains: :\$WinREAgent\
+    selection:
+        TargetFilename|endswith:
+          - \AtBroker.exe
+          - \audiodg.exe
+          - \backgroundTaskHost.exe
+          - \bcdedit.exe
+          - \bitsadmin.exe
+          - \cmdl32.exe
+          - \cmstp.exe
+          - \conhost.exe
+          - \csrss.exe
+          - \dasHost.exe
+          - \dfrgui.exe
+          - \dllhost.exe
+          - \dwm.exe
+          - \eventcreate.exe
+          - \eventvwr.exe
+          - \explorer.exe
+          - \extrac32.exe
+          - \fontdrvhost.exe
+          - \ipconfig.exe
+          - \iscsicli.exe
+          - \iscsicpl.exe
+          - \logman.exe
+          - \LogonUI.exe
+          - \LsaIso.exe
+          - \lsass.exe
+          - \lsm.exe
+          - \msiexec.exe
+          - \msinfo32.exe
+          - \mstsc.exe
+          - \nbtstat.exe
+          - \odbcconf.exe
+          - \powershell.exe
+          - \pwsh.exe
+          - \regini.exe
+          - \regsvr32.exe
+          - \rundll32.exe
+          - \RuntimeBroker.exe
+          - \schtasks.exe
+          - \SearchFilterHost.exe
+          - \SearchIndexer.exe
+          - \SearchProtocolHost.exe
+          - \SecurityHealthService.exe
+          - \SecurityHealthSystray.exe
+          - \services.exe
+          - \ShellAppRuntime.exe
+          - \sihost.exe
+          - \smartscreen.exe
+          - \smss.exe
+          - \spoolsv.exe
+          - \svchost.exe
+          - \SystemSettingsBroker.exe
+          - \taskhost.exe
+          - \taskhostw.exe
+          - \Taskmgr.exe
+          - \TiWorker.exe
+          - \vssadmin.exe
+          - \w32tm.exe
+          - \WerFault.exe
+          - \WerFaultSecure.exe
+          - \wermgr.exe
+          - \wevtutil.exe
+          - \wininit.exe
+          - \winlogon.exe
+          - \winrshost.exe
+          - \WinRTNetMUAHostServer.exe
+          - \wlanext.exe
+          - \wlrmdr.exe
+          - \WmiPrvSE.exe
+          - \wslhost.exe
+          - \WSReset.exe
+          - \WUDFHost.exe
+          - \WWAHost.exe
+falsepositives:
+  - System processes copied outside their default folders for testing purposes
+  - Third party software naming their software with the same names as the processes
+    mentioned here
+level: high
+customer: 'demo'
+modified: 2023/11/10
+tags:
+  - attack.defense_evasion
+  - attack.t1036.005
+  - DEMO

@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Code Execution via Pcwutl.dll
+id: 9386d78a-7207-4048-9c9f-a93a7c2d1c05
+status: test
+description: Detects launch of executable by calling the LaunchApplication function
+    from pcwutl.dll library.
+author: Julia Fomina, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/05 13:37:21
+references:
+  - https://lolbas-project.github.io/lolbas/Libraries/Pcwutl/
+  - https://twitter.com/harr0ey/status/989617817849876488
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains|all:
+          - pcwutl
+          - LaunchApplication
+    selection_img:
+      - Image|endswith: \rundll32.exe
+      - OriginalFileName: RUNDLL32.EXE
+falsepositives: Use of Program Compatibility Troubleshooter Helper
+level: medium
+customer: 'demo'
+modified: 2023/02/09
+tags:
+  - attack.defense_evasion
+  - attack.t1218.011
+  - DEMO

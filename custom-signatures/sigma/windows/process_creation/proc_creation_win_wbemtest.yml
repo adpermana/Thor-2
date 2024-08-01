@@ -1,0 +1,21 @@
+title: Wbemtest Usage
+id: 2bdfb330-a346-4dd2-b18f-bcec97f2ee03
+status: experimental
+description: Detects the execution of the wbemtest tool used to query WMI
+references:
+    - https://docs.microsoft.com/en-us/mem/configmgr/develop/core/understand/introduction-to-wbemtest
+author: Nasreddine Bencherchali
+date: 2022/05/11
+tags:
+    - attack.execution
+    - attack.t1047
+logsource:
+  category: process_creation
+  product: windows
+detection:
+    selection:
+        OriginalFileName: 'wbemtest.exe'
+    condition: selection
+falsepositives:
+    - Administrators that leverage this tool for WMI calls
+level: medium

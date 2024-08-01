@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Azure Firewall Modified or Deleted
+id: 512cf937-ea9b-4332-939c-4c2c94baadcd
+status: test
+description: Identifies when a firewall is created, modified, or deleted.
+author: Austin Songer @austinsonger
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/08 14:51:41
+references:
+  - https://docs.microsoft.com/en-us/azure/role-based-access-control/resource-provider-operations
+logsource:
+    product: azure
+    service: activitylogs
+detection:
+    condition: selection
+    selection:
+        operationName:
+          - MICROSOFT.NETWORK/AZUREFIREWALLS/WRITE
+          - MICROSOFT.NETWORK/AZUREFIREWALLS/DELETE
+falsepositives:
+  - Firewall being modified or deleted may be performed by a system administrator.
+    Verify whether the user identity, user agent, and/or hostname should be making
+    changes in your environment.
+  - Firewall modified or deleted from unfamiliar users should be investigated. If
+    known behavior is causing false positives, it can be exempted from the rule.
+level: medium
+customer: 'demo'
+modified: 2022/08/23
+tags:
+  - attack.impact
+  - attack.defense_evasion
+  - attack.t1562.004
+  - DEMO

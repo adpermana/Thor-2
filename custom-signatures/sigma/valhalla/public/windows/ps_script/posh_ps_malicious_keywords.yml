@@ -1,0 +1,57 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Malicious PowerShell Keywords
+id: f62176f3-8128-4faa-bf6c-83261322e5eb
+status: test
+description: Detects keywords from well-known PowerShell exploitation frameworks
+author: Sean Metcalf (source), Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/03/05 14:00:31
+references:
+  - https://adsecurity.org/?p=2921
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: selection
+    selection:
+        ScriptBlockText|contains:
+          - AdjustTokenPrivileges
+          - IMAGE_NT_OPTIONAL_HDR64_MAGIC
+          - Metasploit
+          - Microsoft.Win32.UnsafeNativeMethods
+          - Mimikatz
+          - MiniDumpWriteDump
+          - PAGE_EXECUTE_READ
+          - ReadProcessMemory.Invoke
+          - SE_PRIVILEGE_ENABLED
+          - SECURITY_DELEGATION
+          - TOKEN_ADJUST_PRIVILEGES
+          - TOKEN_ALL_ACCESS
+          - TOKEN_ASSIGN_PRIMARY
+          - TOKEN_DUPLICATE
+          - TOKEN_ELEVATION
+          - TOKEN_IMPERSONATE
+          - TOKEN_INFORMATION_CLASS
+          - TOKEN_PRIVILEGES
+          - TOKEN_QUERY
+falsepositives: Depending on the scripts, this rule might require some initial tuning
+    to fit the environment
+level: medium
+customer: 'demo'
+modified: 2023/06/20
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

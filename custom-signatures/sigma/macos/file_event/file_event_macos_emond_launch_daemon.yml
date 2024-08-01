@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: MacOS Emond Launch Daemon
+id: 23c43900-e732-45a4-8354-63e4a6c187ce
+status: test
+description: Detects additions to the Emond Launch Daemon that adversaries may use
+    to gain persistence and elevate privileges.
+author: Alejandro Ortuno, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/23 12:11:31
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1546.014/T1546.014.md
+  - https://posts.specterops.io/leveraging-emond-on-macos-for-persistence-a040a2785124
+logsource:
+    category: file_event
+    product: macos
+detection:
+    condition: 1 of selection_*
+    selection_1:
+        TargetFilename|contains: /etc/emond.d/rules/
+        TargetFilename|endswith: .plist
+    selection_2:
+        TargetFilename|contains: /private/var/db/emondClients/
+falsepositives: Legitimate administration activities
+level: medium
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1546.014
+  - DEMO

@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - XORDump Execution
+id: 66e563f9-1cbd-4a22-a957-d8b7c0f44372
+status: test
+description: Detects suspicious use of XORDump process memory dumping utility
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/28 13:02:11
+references:
+  - https://github.com/audibleblink/xordump
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - Image|endswith: \xordump.exe
+      - CommandLine|contains:
+          - ' -process lsass.exe '
+          - ' -m comsvcs '
+          - ' -m dbghelp '
+          - ' -m dbgcore '
+falsepositives: Another tool that uses the command line switches of XORdump
+level: high
+customer: 'demo'
+modified: 2023/02/08
+tags:
+  - attack.defense_evasion
+  - attack.t1036
+  - attack.t1003.001
+  - DEMO

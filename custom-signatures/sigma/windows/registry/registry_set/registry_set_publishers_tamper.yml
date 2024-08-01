@@ -1,0 +1,29 @@
+title: WINEVT Publishers Tamper
+id: 7bdad10c-d828-484e-843d-2fe4c198266c
+description: Detects tempering with the "Publishers" key in order to disable logging of a specific provider
+status: test
+date: 2022/08/19
+modified: 2023/03/29
+author: Nasreddine Bencherchali
+references:
+    - Internal Research
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection:
+        TargetObject|contains: '\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Publishers\'
+        TargetObject|endswith: '\Enabled'
+        Details: DWORD (0x00000000)
+    filter_svchost:
+        Image|endswith: '\svchost.exe'
+        User|contains: # covers many language settings
+            - 'AUTHORI'
+            - 'AUTORI'
+    condition: selection and not 1 of filter_*
+falsepositives:
+    - Unlikely
+level: high
+tags:
+    - attack.defense_evasion
+    - attack.t1562.002

@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: New Kernel Driver Via SC.EXE
+id: 431a1fdb-4799-4f3b-91c3-a683b003fc49
+status: test
+description: Detects creation of a new service (kernel driver) with the type "kernel"
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/14 12:34:11
+references:
+  - https://www.aon.com/cyber-solutions/aon_cyber_labs/yours-truly-signed-av-driver-weaponizing-an-antivirus-driver/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - create
+          - config
+        CommandLine|contains|all:
+          - binPath
+          - type
+          - kernel
+        Image|endswith: \sc.exe
+falsepositives: Rare legitimate installation of kernel drivers via sc.exe
+level: medium
+customer: 'demo'
+modified: 2022/08/08
+tags:
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1543.003
+  - DEMO

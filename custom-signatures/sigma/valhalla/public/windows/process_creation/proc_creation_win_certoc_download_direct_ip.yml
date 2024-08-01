@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: File Download From IP Based URL Via CertOC.EXE
+id: b86f6dea-0b2f-41f5-bdcc-a057bd19cd6a
+related:
+  - type: similar
+    id: 70ad0861-d1fe-491c-a45f-fa48148a300d
+status: experimental
+description: Detects when a user downloads a file from an IP based URL using CertOC.exe
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/10/18 16:35:51
+references:
+  - https://lolbas-project.github.io/lolbas/Binaries/Certoc/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection*
+    selection_cli:
+        CommandLine|contains: -GetCACAPS
+    selection_img:
+      - Image|endswith: \certoc.exe
+      - OriginalFileName: CertOC.exe
+    selection_ip:
+        CommandLine|re: ://[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.command_and_control
+  - attack.execution
+  - attack.t1105
+  - DEMO

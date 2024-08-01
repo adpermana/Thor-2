@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Arbitrary Binary Execution Using GUP Utility
+id: d65aee4d-2292-4cea-b832-83accd6cfa43
+status: test
+description: Detects execution of the Notepad++ updater (gup) to launch other commands
+    or executables
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/10 17:35:51
+references:
+  - https://twitter.com/nas_bench/status/1535322445439180803
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter*
+    filter:
+        CommandLine|contains: \Notepad++\notepad++.exe
+        Image|endswith: \explorer.exe
+    filter_null:
+        CommandLine: []
+    filter_parent:
+        ParentImage|contains: \Notepad++\updater\
+    selection:
+        Image|endswith: \explorer.exe
+        ParentImage|endswith: \gup.exe
+falsepositives: Other parent binaries using GUP not currently identified
+level: medium
+customer: 'demo'
+modified: 2023/03/02
+tags:
+  - attack.execution
+  - DEMO

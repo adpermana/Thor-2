@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Certificate Exported Via PowerShell
+id: 9e716b33-63b2-46da-86a4-bd3c3b9b5dfb
+related:
+  - type: similar
+    id: aa7a3fce-bef5-4311-9cc1-5f04bb8c308c
+status: experimental
+description: Detects calls to cmdlets that are used to export certificates from the
+    local certificate store. Threat actors were seen abusing this to steal private
+    keys from compromised machines.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/18 15:23:11
+references:
+  - https://us-cert.cisa.gov/ncas/analysis-reports/ar21-112a
+  - https://docs.microsoft.com/en-us/powershell/module/pki/export-pfxcertificate
+  - https://www.splunk.com/en_us/blog/security/breaking-the-chain-defending-against-certificate-services-abuse.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - 'Export-PfxCertificate '
+          - 'Export-Certificate '
+falsepositives: Legitimate certificate exports by administrators. Additional filters
+    might be required.
+level: medium
+customer: 'demo'
+tags:
+  - attack.credential_access
+  - attack.execution
+  - attack.t1552.004
+  - attack.t1059.001
+  - DEMO

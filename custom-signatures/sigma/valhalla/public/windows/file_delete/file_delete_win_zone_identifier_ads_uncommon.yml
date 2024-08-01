@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: ADS Zone.Identifier Deleted By Uncommon Application
+id: 3109530e-ab47-4cc6-a953-cac5ebcc93ae
+related:
+  - type: similar
+    id: 7eac0a16-5832-4e81-865f-0268a6d19e4b
+status: experimental
+description: Detects the deletion of the "Zone.Identifier" ADS by an uncommon process.
+    Attackers can leverage this in order to bypass security restrictions that make
+    use of the ADS such as Microsoft Office apps.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/09/04 19:07:51
+references:
+  - https://securityliterate.com/how-malware-abuses-the-zone-identifier-to-circumvent-detection-and-analysis/
+  - Internal Research
+logsource:
+    category: file_delete
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_generic:
+        Image|endswith:
+          - :\Program Files\PowerShell\7-preview\pwsh.exe
+          - :\Program Files\PowerShell\7\pwsh.exe
+          - :\Windows\explorer.exe
+          - :\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+          - :\Windows\SysWOW64\explorer.exe
+          - :\Windows\SysWOW64\WindowsPowerShell\v1.0\powershell.exe
+    selection:
+        TargetFilename|endswith: :Zone.Identifier
+falsepositives: Other third party applications not listed.
+level: medium
+customer: 'demo'
+modified: 2023/10/18
+tags:
+  - attack.defense_evasion
+  - attack.t1070.004
+  - DEMO

@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Unsigned AppX Installation Attempt Using Add-AppxPackage - PsScript
+id: 975b2262-9a49-439d-92a6-0709cccdf0b2
+related:
+  - type: similar
+    id: 37651c2a-42cd-4a69-ae0d-22a4349aa04a
+status: test
+description: Detects usage of the "Add-AppxPackage" or it's alias "Add-AppPackage"
+    to install unsigned AppX packages
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/31 23:16:51
+references:
+  - https://learn.microsoft.com/en-us/windows/msix/package/unsigned-package
+  - https://twitter.com/WindowsDocs/status/1620078135080325122
+logsource:
+    category: ps_script
+    product: windows
+    definition: Script Block Logging must be enable
+detection:
+    condition: all of selection_*
+    selection_cmdlet:
+        ScriptBlockText|contains:
+          - 'Add-AppPackage '
+          - 'Add-AppxPackage '
+    selection_flag:
+        ScriptBlockText|contains: ' -AllowUnsigned'
+falsepositives: Installation of unsigned packages for testing purposes
+level: medium
+customer: 'demo'
+tags:
+  - attack.persistence
+  - attack.defense_evasion
+  - DEMO

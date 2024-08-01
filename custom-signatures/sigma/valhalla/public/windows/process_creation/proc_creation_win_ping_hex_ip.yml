@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Ping Hex IP
+id: 1a0d4aba-7668-4365-9ce4-6d79ab088dfd
+status: test
+description: Detects a ping command that uses a hex encoded IP address
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2018/03/23 07:13:21
+references:
+  - https://github.com/vysecurity/Aggressor-VYSEC/blob/0d61c80387b9432dab64b8b8a9fb52d20cfef80e/ping.cna
+  - https://twitter.com/vysecurity/status/977198418354491392
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains: 0x
+        Image|endswith: \ping.exe
+fields:
+  - ParentCommandLine
+falsepositives: Unlikely, because no sane admin pings IP addresses in a hexadecimal
+    form
+level: high
+customer: 'demo'
+modified: 2022/01/07
+tags:
+  - attack.defense_evasion
+  - attack.t1140
+  - attack.t1027
+  - DEMO

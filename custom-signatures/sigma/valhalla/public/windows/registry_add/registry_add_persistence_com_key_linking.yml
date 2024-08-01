@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential COM Object Hijacking Via TreatAs Subkey - Registry
+id: 9b0f8a61-91b2-464f-aceb-0527e0a45020
+status: test
+description: Detects COM object hijacking via TreatAs subkey
+author: Kutepov Anton, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/23 21:05:51
+references:
+  - https://bohops.com/2018/08/18/abusing-the-com-registry-structure-part-2-loading-techniques-for-evasion-and-persistence/
+logsource:
+    category: registry_add
+    product: windows
+detection:
+    condition: selection and not 1 of filter_*
+    filter_svchost:
+        Image: C:\WINDOWS\system32\svchost.exe
+    selection:
+        EventType: CreateKey
+        TargetObject|contains|all:
+          - HKU\
+          - Classes\CLSID\
+          - \TreatAs
+falsepositives: Maybe some system utilities in rare cases use linking keys for backward
+    compatibility
+level: medium
+customer: 'demo'
+modified: 2023/02/07
+tags:
+  - attack.persistence
+  - attack.t1546.015
+  - DEMO

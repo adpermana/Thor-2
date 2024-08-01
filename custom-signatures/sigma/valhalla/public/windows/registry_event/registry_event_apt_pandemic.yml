@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Pandemic Registry Key
+id: 47e0852a-cf81-4494-a8e6-31864f8c86ed
+status: test
+description: Detects Pandemic Windows Implant
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/06/01 11:36:31
+references:
+  - https://wikileaks.org/vault7/#Pandemic
+  - https://twitter.com/MalwareJake/status/870349480356454401
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetObject|contains: \SYSTEM\CurrentControlSet\services\null\Instance
+fields:
+  - EventID
+  - CommandLine
+  - ParentCommandLine
+  - Image
+  - User
+  - TargetObject
+falsepositives: Unknown
+level: critical
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.command_and_control
+  - attack.t1105
+  - DEMO

@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: RestrictedAdminMode Registry Value Tampering - ProcCreation
+id: 28ac00d6-22d9-4a3c-927f-bbd770104573
+related:
+  - type: similar
+    id: d6ce7ebd-260b-4323-9768-a9631c8d4db2
+status: test
+description: |
+    Detects changes to the "DisableRestrictedAdmin" registry value in order to disable or enable RestrictedAdmin mode.
+    RestrictedAdmin mode prevents the transmission of reusable credentials to the remote system to which you connect using Remote Desktop.
+    This prevents your credentials from being harvested during the initial connection process if the remote server has been compromise
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/13 21:43:01
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/a8e3cf63e97b973a25903d3df9fd55da6252e564/atomics/T1112/T1112.md
+  - https://social.technet.microsoft.com/wiki/contents/articles/32905.remote-desktop-services-enable-restricted-admin-mode.aspx
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains|all:
+          - \System\CurrentControlSet\Control\Lsa\
+          - DisableRestrictedAdmin
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/12/15
+tags:
+  - attack.defense_evasion
+  - attack.t1112
+  - DEMO

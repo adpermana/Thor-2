@@ -1,0 +1,37 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Office Application Startup - Office Test
+id: 3d27f6dd-1c74-4687-b4fa-ca849d128d1c
+status: test
+description: Detects the addition of office test registry that allows a user to specify
+    an arbitrary DLL that will be executed every time an Office application is started
+author: omkar72
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/25 16:15:21
+references:
+  - https://unit42.paloaltonetworks.com/unit42-technical-walkthrough-office-test-persistence-method-used-in-recent-sofacy-attacks/
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetObject|contains: \Software\Microsoft\Office test\Special\Perf
+falsepositives: Unlikely
+level: medium
+customer: 'demo'
+modified: 2023/11/08
+tags:
+  - attack.persistence
+  - attack.t1137.002
+  - DEMO

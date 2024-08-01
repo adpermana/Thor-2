@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Renamed Plink Execution
+id: 1c12727d-02bf-45ff-a9f3-d49806a3cf43
+status: test
+description: Detects the execution of a renamed version of the Plink binary
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/06 12:10:21
+references:
+  - https://thedfirreport.com/2022/06/06/will-the-real-msiexec-please-stand-up-exploit-leads-to-data-exfiltration/
+  - https://the.earth.li/~sgtatham/putty/0.58/htmldoc/Chapter7.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        Image|endswith: \plink.exe
+    selection:
+      - OriginalFileName: Plink
+      - CommandLine|contains|all:
+          - ' -l forward'
+          - ' -P '
+          - ' -R '
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/02/03
+tags:
+  - attack.defense_evasion
+  - attack.t1036
+  - DEMO

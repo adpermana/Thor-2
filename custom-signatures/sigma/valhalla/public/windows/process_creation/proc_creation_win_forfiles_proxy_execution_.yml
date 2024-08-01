@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Forfiles Command Execution
+id: 9aa5106d-bce3-4b13-86df-3a20f1d5cf0b
+related:
+  - type: obsoletes
+    id: a85cf4e3-56ee-4e79-adeb-789f8fb209a8
+  - type: obsoletes
+    id: fa47597e-90e9-41cd-ab72-c3b74cfb0d02
+status: test
+description: |
+    Detects the execution of "forfiles" with the "/c" flag.
+    While this is an expected behavior of the tool, it can be abused in order to proxy execution through it with any binary.
+    Can be used to bypass application whitelisting.
+author: Tim Rauch, Elastic, E.M. Anhaus (originally from Atomic Blue Detections, Endgame),
+    oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/14 13:03:31
+references:
+  - https://lolbas-project.github.io/lolbas/Binaries/Forfiles/
+  - https://pentestlab.blog/2020/07/06/indirect-command-execution/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains|windash: ' -c '
+    selection_img:
+      - Image|endswith: \forfiles.exe
+      - OriginalFileName: forfiles.exe
+falsepositives: Legitimate use via a batch script or by an administrator.
+level: medium
+customer: 'demo'
+modified: 2024/03/05
+tags:
+  - attack.execution
+  - attack.t1059
+  - DEMO

@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Read Contents From Stdin Via Cmd.EXE
+id: 241e802a-b65e-484f-88cd-c2dc10f9206d
+related:
+  - type: obsoletes
+    id: 00a4bacd-6db4-46d5-9258-a7d5ebff4003
+status: test
+description: Detect the use of "<" to read and potentially execute a file via cmd.exe
+author: frack113, Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/03/07 14:43:21
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/40b77d63808dd4f4eafb83949805636735a1fd15/atomics/T1059.003/T1059.003.md
+  - https://web.archive.org/web/20220306121156/https://www.x86matthew.com/view_post?id=ntdll_pipe
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains: <
+    selection_cmd:
+      - OriginalFileName: Cmd.Exe
+      - Image|endswith: \cmd.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.execution
+  - attack.t1059.003
+  - DEMO

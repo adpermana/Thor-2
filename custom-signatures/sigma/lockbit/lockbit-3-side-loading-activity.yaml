@@ -1,0 +1,26 @@
+title: Suspicious DLL SideLoading Activity of LockBit Ransomware Use Legitimate Microsoft
+Defender Utility (via image_load)
+id: 4115f58b-846f-4806-bec7-7953d1951eec
+status: stable
+description: This rule detects dll sideload activity of LockBit Ransomware Side-loads Cobalt
+Strike Beacon.
+references:
+- https://www.sentinelone.com/blog/living-off-windows-defender-lockbit-ransomwaresideloads-cobalt-strike-through-microsoft-security-tool/
+author: vinzel
+tags:
+- attack.execution
+- attack.t1059.003
+- attack.t1574.002
+logsource:
+ product: windows
+ category: image_load
+detection:
+ selection:
+ Image|endswith:
+ - MpCmd.exe
+ ImageLoaded|contains:
+ - mpclient.dll
+ condition: selection
+falsepositives:
+- Unknown
+level: high

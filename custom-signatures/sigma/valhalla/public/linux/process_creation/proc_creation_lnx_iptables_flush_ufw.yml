@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Flush Iptables Ufw Chain
+id: 3be619f4-d9ec-4ea8-a173-18fdd01996ab
+status: test
+description: Detect use of iptables to flush all firewall rules, tables and chains
+    and allow all network traffic
+author: Joseliyo Sanchez, @Joseliyo_Jstnk
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/18 12:09:51
+references:
+  - https://blogs.blackberry.com/
+  - https://www.cyberciti.biz/tips/linux-iptables-how-to-flush-all-rules.html
+  - https://twitter.com/Joseliyo_Jstnk/status/1620131033474822144
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    condition: all of selection_*
+    selection_img:
+        Image|endswith:
+          - /iptables
+          - /xtables-legacy-multi
+          - /iptables-legacy-multi
+          - /ip6tables
+          - /ip6tables-legacy-multi
+    selection_params:
+        CommandLine|contains:
+          - -F
+          - -Z
+          - -X
+    selection_ufw:
+        CommandLine|contains:
+          - ufw-logging-deny
+          - ufw-logging-allow
+          - ufw6-logging-deny
+          - ufw6-logging-allow
+falsepositives: Network administrators
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1562.004
+  - DEMO

@@ -1,0 +1,83 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Browser Data Stealing
+id: 47147b5b-9e17-4d76-b8d2-7bac24c5ce1b
+related:
+  - type: derived
+    id: fc028194-969d-4122-8abe-0470d5b8f12f
+status: experimental
+description: |
+    Adversaries may acquire credentials from web browsers by reading files specific to the target browser.
+    Web browsers commonly save credentials such as website usernames and passwords so that they do not need to be entered manually in the future.
+    Web browsers typically store the credentials in an encrypted format within a credential store.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/12/23 14:16:51
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1555.003/T1555.003.md
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cmd:
+      - CommandLine|contains:
+          - copy-item
+          - 'copy '
+          - 'cpi '
+          - ' cp '
+          - 'move '
+          - move-item
+          - ' mi '
+          - ' mv '
+      - Image|endswith:
+          - \xcopy.exe
+          - \robocopy.exe
+      - OriginalFileName:
+          - XCOPY.EXE
+          - robocopy.exe
+    selection_path:
+        CommandLine|contains:
+          - \Amigo\User Data
+          - \BraveSoftware\Brave-Browser\User Data
+          - \CentBrowser\User Data
+          - \Chromium\User Data
+          - \CocCoc\Browser\User Data
+          - \Comodo\Dragon\User Data
+          - \Elements Browser\User Data
+          - \Epic Privacy Browser\User Data
+          - \Google\Chrome Beta\User Data
+          - \Google\Chrome SxS\User Data
+          - \Google\Chrome\User Data\
+          - \Kometa\User Data
+          - \Maxthon5\Users
+          - \Microsoft\Edge\User Data
+          - \Mozilla\Firefox\Profiles
+          - \Nichrome\User Data
+          - \Opera Software\Opera GX Stable\
+          - \Opera Software\Opera Neon\User Data
+          - \Opera Software\Opera Stable\
+          - \Orbitum\User Data
+          - \QIP Surf\User Data
+          - \Sputnik\User Data
+          - \Torch\User Data
+          - \uCozMedia\Uran\User Data
+          - \Vivaldi\User Data
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/08/29
+tags:
+  - attack.credential_access
+  - attack.t1555.003
+  - DEMO

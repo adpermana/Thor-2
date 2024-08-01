@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Driver/DLL Installation Via Odbcconf.EXE
+id: 3f5491e2-8db8-496b-9e95-1029fce852d4
+related:
+  - type: similar
+    id: cb0fe7c5-f3a3-484d-aa25-d350a7912729
+status: experimental
+description: Detects execution of "odbcconf" with "INSTALLDRIVER" which installs a
+    new ODBC driver. Attackers abuse this to install and run malicious DLLs.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/22 16:01:11
+references:
+  - https://lolbas-project.github.io/lolbas/Binaries/Odbcconf/
+  - https://web.archive.org/web/20191023232753/https://twitter.com/Hexacorn/status/1187143326673330176
+  - https://www.hexacorn.com/blog/2020/08/23/odbcconf-lolbin-trifecta/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains|all:
+          - 'INSTALLDRIVER '
+          - .dll
+    selection_img:
+      - Image|endswith: \odbcconf.exe
+      - OriginalFileName: odbcconf.exe
+falsepositives: Legitimate driver DLLs being registered via "odbcconf" will generate
+    false positives. Investigate the path of the DLL and its contents to determine
+    if the action is authorized.
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1218.008
+  - DEMO

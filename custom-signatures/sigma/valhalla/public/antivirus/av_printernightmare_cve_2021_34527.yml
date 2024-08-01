@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Antivirus PrinterNightmare CVE-2021-34527 Exploit Detection
+id: 6fe1719e-ecdf-4caf-bffe-4f501cb0a561
+status: stable
+description: Detects the suspicious file that is created from PoC code against Windows
+    Print Spooler Remote Code Execution Vulnerability CVE-2021-34527 (PrinterNightmare),
+    CVE-2021-1675 .
+author: Sittikorn S, Nuttakorn T, Tim Shelton
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/07/01 20:26:21
+references:
+  - https://twitter.com/mvelazco/status/1410291741241102338
+  - https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-1675
+  - https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-34527
+logsource:
+    category: antivirus
+detection:
+    condition: selection and not keywords
+    keywords: File submitted to Symantec
+    selection:
+        Filename|contains: :\Windows\System32\spool\drivers\x64\
+falsepositives: Unlikely, or pending PSP analysis
+level: critical
+customer: 'demo'
+modified: 2023/10/23
+tags:
+  - attack.privilege_escalation
+  - attack.t1055
+  - DEMO

@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: MSMQ Corrupted Packet Encountered
+id: ae94b10d-fee9-4767-82bb-439b309d5a27
+status: experimental
+description: Detects corrupted packets sent to the MSMQ service. Could potentially
+    be a sign of CVE-2023-21554 exploitation
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/04/21 14:39:01
+references:
+  - https://www.randori.com/blog/vulnerability-analysis-queuejumper-cve-2023-21554/
+logsource:
+    product: windows
+    service: application
+detection:
+    condition: selection
+    selection:
+        EventID: "2027"
+        Level: "2"
+        Provider_Name: MSMQ
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.execution
+  - detection.emerging_threats
+  - DEMO

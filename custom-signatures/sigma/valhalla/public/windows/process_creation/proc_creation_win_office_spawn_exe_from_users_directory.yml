@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Binary In User Directory Spawned From Office Application
+id: aa3a6f94-890e-4e22-b634-ffdfd54792cc
+status: test
+description: Detects an executable in the users directory started from one of the
+    Microsoft Office suite applications (Word, Excel, PowerPoint, Publisher, Visio)
+author: Jason Lynch
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/04/02 23:38:11
+references:
+  - https://blog.morphisec.com/fin7-not-finished-morphisec-spots-new-campaign
+  - https://www.virustotal.com/gui/file/23160972c6ae07f740800fa28e421a81d7c0ca5d5cab95bc082b4a986fbac57
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        Image|endswith: \Teams.exe
+    selection:
+        Image|endswith: .exe
+        Image|startswith: C:\users\
+        ParentImage|endswith:
+          - \WINWORD.EXE
+          - \EXCEL.EXE
+          - \POWERPNT.exe
+          - \MSPUB.exe
+          - \VISIO.exe
+          - \MSACCESS.exe
+          - \EQNEDT32.exe
+fields:
+  - CommandLine
+  - ParentCommandLine
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/02/04
+tags:
+  - attack.execution
+  - attack.t1204.002
+  - attack.g0046
+  - car.2013-05-002
+  - DEMO

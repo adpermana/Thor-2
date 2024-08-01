@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Password Protected ZIP File Opened (Email Attachment)
+id: 571498c8-908e-40b4-910b-d2369159a3da
+status: test
+description: Detects the extraction of password protected ZIP archives. See the filename
+    variable for more details on which file has been opened.
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/05/09 19:22:11
+references:
+  - https://twitter.com/sbousseaden/status/1523383197513379841
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: selection
+    selection:
+        EventID: "5379"
+        TargetName|contains|all:
+          - Microsoft_Windows_Shell_ZipFolder:filename
+          - \Temporary Internet Files\Content.Outlook
+falsepositives: Legitimate used of encrypted ZIP files
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.initial_access
+  - attack.t1027
+  - attack.t1566.001
+  - DEMO

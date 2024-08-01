@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Userinit Child Process
+id: b655a06a-31c0-477a-95c2-3726b83d649d
+status: test
+description: Detects a suspicious child process of userinit
+author: Florian Roth (Nextron Systems), Samir Bousseaden (idea)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/06/17 15:00:51
+references:
+  - https://twitter.com/SBousseaden/status/1139811587760562176
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter*
+    filter1:
+        CommandLine|contains: \netlogon\
+    filter2:
+      - Image|endswith: \explorer.exe
+      - OriginalFileName: explorer.exe
+    selection:
+        ParentImage|endswith: \userinit.exe
+fields:
+  - CommandLine
+  - ParentCommandLine
+falsepositives: Administrative scripts
+level: medium
+customer: 'demo'
+modified: 2022/12/09
+tags:
+  - attack.defense_evasion
+  - attack.t1055
+  - DEMO

@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Triple Cross eBPF Rootkit Default Persistence
+id: 1a2ea919-d11d-4d1e-8535-06cda13be20f
+status: test
+description: Detects the creation of "ebpfbackdoor" files in both "cron.d" and "sudoers.d"
+    directories. Which both are related to the TripleCross persistence method
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/05 17:46:11
+references:
+  - https://github.com/h3xduck/TripleCross/blob/12629558b8b0a27a5488a0b98f1ea7042e76f8ab/apps/deployer.sh
+logsource:
+    category: file_event
+    product: linux
+detection:
+    condition: selection
+    selection:
+        TargetFilename|endswith: ebpfbackdoor
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2022/12/31
+tags:
+  - attack.persistence
+  - attack.defense_evasion
+  - attack.t1053.003
+  - DEMO

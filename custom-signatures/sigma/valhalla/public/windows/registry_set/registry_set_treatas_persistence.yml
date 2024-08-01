@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: COM Hijacking via TreatAs
+id: dc5c24af-6995-49b2-86eb-a9ff62199e82
+status: experimental
+description: Detect modification of TreatAs key to enable "rundll32.exe -sta" command
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/28 12:12:31
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/40b77d63808dd4f4eafb83949805636735a1fd15/atomics/T1546.015/T1546.015.md
+  - https://www.youtube.com/watch?v=3gz1QmiMhss&t=1251s
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection and not 1 of filter_*
+    filter_misexec:
+        Image:
+          - C:\Windows\system32\msiexec.exe
+          - C:\Windows\SysWOW64\msiexec.exe
+    filter_office:
+        Image|endswith: \OfficeClickToRun.exe
+        Image|startswith: C:\Program Files\Common Files\Microsoft Shared\ClickToRun\
+    filter_office2:
+        Image: C:\Program Files (x86)\Microsoft Office\root\integration\integrator.exe
+    filter_svchost:
+        Image: C:\Windows\system32\svchost.exe
+    selection:
+        TargetObject|endswith: TreatAs\(Default)
+falsepositives: Legitimate use
+level: medium
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.persistence
+  - attack.t1546.015
+  - DEMO

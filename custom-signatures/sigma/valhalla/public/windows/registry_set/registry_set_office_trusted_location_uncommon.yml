@@ -1,0 +1,61 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Uncommon Microsoft Office Trusted Location Added
+id: f742bde7-9528-42e5-bd82-84f51a8387d2
+related:
+  - type: derived
+    id: a0bed973-45fa-4625-adb5-6ecdf9be70ac
+status: experimental
+description: Detects changes to registry keys related to "Trusted Location" of Microsoft
+    Office where the path is set to something uncommon. Attackers might add additional
+    trusted locations to avoid macro security restrictions.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/06/21 18:43:21
+references:
+  - Internal Research
+  - https://admx.help/?Category=Office2016&Policy=excel16.Office.Microsoft.Policies.Windows::L_TrustedLoc01
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_* and not 1 of filter_exclude_*
+    filter_exclude_known_paths:
+        Details|contains:
+          - '%APPDATA%\Microsoft\Templates'
+          - '%%APPDATA%%\Microsoft\Templates'
+          - '%APPDATA%\Microsoft\Word\Startup'
+          - '%%APPDATA%%\Microsoft\Word\Startup'
+          - :\Program Files (x86)\Microsoft Office\root\Templates\
+          - :\Program Files\Microsoft Office (x86)\Templates
+          - :\Program Files\Microsoft Office\root\Templates\
+          - :\Program Files\Microsoft Office\Templates\
+    filter_main_office_apps:
+        Image|contains:
+          - :\Program Files\Microsoft Office\
+          - :\Program Files (x86)\Microsoft Office\
+    filter_main_office_click_to_run:
+        Image|contains: :\Program Files\Common Files\Microsoft Shared\ClickToRun\
+        Image|endswith: \OfficeClickToRun.exe
+    selection:
+        TargetObject|contains: Security\Trusted Locations\Location
+        TargetObject|endswith: \Path
+falsepositives: Other unknown legitimate or custom paths need to be filtered to avoid
+    false positives
+level: high
+customer: 'demo'
+modified: 2023/09/29
+tags:
+  - attack.defense_evasion
+  - attack.t1112
+  - DEMO

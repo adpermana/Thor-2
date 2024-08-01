@@ -1,0 +1,58 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potentially Suspicious File Download From ZIP TLD
+id: 0bb4bbeb-fe52-4044-b40c-430a04577ebe
+status: experimental
+description: Detects the download of a file with a potentially suspicious extension
+    from a .zip top level domain.
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/18 18:34:31
+references:
+  - https://twitter.com/cyb3rops/status/1659175181695287297
+  - https://fabian-voith.de/2020/06/25/sysmon-v11-1-reads-alternate-data-streams/
+logsource:
+    category: create_stream_hash
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Contents|contains: .zip/
+        TargetFilename|contains:
+          - .bat:Zone
+          - .dat:Zone
+          - .dll:Zone
+          - .doc:Zone
+          - .docm:Zone
+          - .exe:Zone
+          - .hta:Zone
+          - .pptm:Zone
+          - .ps1:Zone
+          - .rar:Zone
+          - .rtf:Zone
+          - .sct:Zone
+          - .vbe:Zone
+          - .vbs:Zone
+          - .ws:Zone
+          - .wsf:Zone
+          - .xll:Zone
+          - .xls:Zone
+          - .xlsm:Zone
+          - .zip:Zone
+falsepositives: Legitimate file downloads from a websites and web services that uses
+    the ".zip" top level domain.
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - DEMO

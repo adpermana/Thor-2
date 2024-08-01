@@ -1,0 +1,52 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Automated Collection Command PowerShell
+id: c1dda054-d638-4c16-afc8-53e007f3fbc5
+status: test
+description: Once established within a system or network, an adversary may use automated
+    techniques for collecting internal data.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/07/28 16:32:41
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1119/T1119.md
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: all of selection*
+    selection_cmd:
+        ScriptBlockText|contains|all:
+          - Get-ChildItem
+          - ' -Recurse '
+          - ' -Include '
+    selection_ext:
+        ScriptBlockText|contains:
+          - .doc
+          - .docx
+          - .xls
+          - .xlsx
+          - .ppt
+          - .pptx
+          - .rtf
+          - .pdf
+          - .txt
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/12/25
+tags:
+  - attack.collection
+  - attack.t1119
+  - DEMO

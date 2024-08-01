@@ -1,0 +1,38 @@
+title: Villain Raw Payload - PowerShell
+id: b2237ca8-3e35-4406-a729-cc74c1582888
+related:
+    - id: 8872a358-e637-49aa-9f14-5ebb339756cd
+      type: similar
+status: test
+description: Detects the raw payload of Villain, an unconventional Windows reverse shell via PowerShell scriptblock logging
+author: Florian Roth
+references:
+    - https://github.com/t3l3machus/Villain/
+date: 2022/11/30
+modified: 2023/03/29
+tags:
+    - attack.defense_evasion
+    - attack.execution
+    - attack.t1059
+logsource:
+    product: windows
+    category: ps_script
+    definition: Script Block Logging must be enabled
+detection:
+    selection_outfile:
+        # HTTP(s) Payload Using Outfile
+        ScriptBlockText|contains|all:
+            - " ' ')} elseif ($"
+            - "});if (!(@("
+    selection_other:
+        # HTTP(s) Payload and encoded raw payload
+        ScriptBlockText|contains|all:
+            - '-Body ([System.Text.Encoding]::UTF8.GetBytes('
+            - ' -WindowStyle H'
+            - ' -ErrorAction s'
+    selection_specific:
+        ScriptBlockText|contains: "t')) {del C:\\Users\\$env:"
+    condition: 1 of selection*
+falsepositives:
+    - Unlikely
+level: high

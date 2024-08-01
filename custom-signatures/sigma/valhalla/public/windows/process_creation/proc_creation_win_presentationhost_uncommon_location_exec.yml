@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: XBAP Execution From Uncommon Locations Via PresentationHost.EXE
+id: d22e2925-cfd8-463f-96f6-89cec9d9bc5f
+status: test
+description: |
+    Detects the execution of ".xbap" (Browser Applications) files via PresentationHost.EXE from an uncommon location. These files can be abused to run malicious ".xbap" files any bypass AWL
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/01 22:19:31
+references:
+  - https://lolbas-project.github.io/lolbas/Binaries/Presentationhost/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection* and not 1 of filter_main_*
+    filter_main_generic:
+        CommandLine|contains:
+          - ' C:\Windows\'
+          - ' C:\Program Files'
+    selection_cli:
+        CommandLine|contains: .xbap
+    selection_img:
+      - Image|endswith: \presentationhost.exe
+      - OriginalFileName: PresentationHost.exe
+falsepositives: Legitimate ".xbap" being executed via "PresentationHost"
+level: medium
+customer: 'demo'
+modified: 2023/11/09
+tags:
+  - attack.defense_evasion
+  - attack.execution
+  - attack.t1218
+  - DEMO

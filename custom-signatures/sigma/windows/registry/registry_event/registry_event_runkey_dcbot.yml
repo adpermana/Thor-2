@@ -1,0 +1,22 @@
+title: DcBot Default Persistence Key
+id: fc9922a0-61c1-41a7-a50b-7582664c7a6c
+status: test
+description: Detects manipulation of DcBot default persistence key
+author: Nasreddine Bencherchali
+references:
+    - https://github.com/qwqdanchun/DcBot/blob/master/Client/Program.cs
+date: 2022/05/15
+modified: 2023/03/29
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    selection:
+        TargetObject|endswith: 'Software\Microsoft\Windows\CurrentVersion\Run\loader reg'
+    condition: selection
+falsepositives:
+    - Unknown
+level: critical
+tags:
+    - attack.persistence
+    - attack.t1547.001

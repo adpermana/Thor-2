@@ -1,0 +1,64 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Important Windows Event Auditing Disabled
+id: ab4561b1-6c7e-48a7-ad08-087cfb9ce8f1
+related:
+  - type: derived
+    id: 69aeb277-f15f-4d2d-b32a-55e883609563
+status: test
+description: Detects scenarios where system auditing for important events such as
+    "Process Creation" or "Logon" events is disabled.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/06/20 17:00:01
+references:
+  - https://docs.google.com/presentation/d/1dkrldTTlN3La-OjWtkWJBb4hVk6vfsSMBFBERs6R8zA/edit
+  - https://github.com/SigmaHQ/sigma/blob/master/documentation/logsource-guides/windows/service/security.md
+logsource:
+    product: windows
+    service: security
+    definition: dfd8c0f4-e6ad-4e07-b91b-f2fca0ddef64
+detection:
+    condition: 1 of selection_*
+    selection_state_success_and_failure:
+        AuditPolicyChanges|contains:
+          - '%%8448'
+          - '%%8450'
+        EventID: "4719"
+        SubcategoryGuid:
+          - '{0CCE9210-69AE-11D9-BED3-505054503030}'
+          - '{0CCE9211-69AE-11D9-BED3-505054503030}'
+          - '{0CCE9212-69AE-11D9-BED3-505054503030}'
+          - '{0CCE9215-69AE-11D9-BED3-505054503030}'
+          - '{0CCE921B-69AE-11D9-BED3-505054503030}'
+          - '{0CCE922B-69AE-11D9-BED3-505054503030}'
+          - '{0CCE922F-69AE-11D9-BED3-505054503030}'
+          - '{0CCE9230-69AE-11D9-BED3-505054503030}'
+          - '{0CCE9235-69AE-11D9-BED3-505054503030}'
+          - '{0CCE9236-69AE-11D9-BED3-505054503030}'
+          - '{0CCE9237-69AE-11D9-BED3-505054503030}'
+          - '{0CCE923F-69AE-11D9-BED3-505054503030}'
+          - '{0CCE9240-69AE-11D9-BED3-505054503030}'
+          - '{0CCE9242-69AE-11D9-BED3-505054503030}'
+    selection_state_success_only:
+        AuditPolicyChanges|contains: '%%8448'
+        EventID: "4719"
+        SubcategoryGuid: '{0CCE9217-69AE-11D9-BED3-505054503030}'
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/11/17
+tags:
+  - attack.defense_evasion
+  - attack.t1562.002
+  - DEMO

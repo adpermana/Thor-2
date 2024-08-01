@@ -1,0 +1,39 @@
+title: SharpWSUS Usage
+id: b3d69c36-f8d5-43a0-8734-e4862fa3caff
+status: experimental
+description: Detects usage of the SharpWSUS tool based on commandline flags
+author: Nasreddine Bencherchali
+references:
+    - https://github.com/nettitude/SharpWSUS
+date: 2022/05/20
+tags:
+    - attack.execution
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    img_orig:
+        - OriginalFileName: 'SharpWSUS.exe'
+        - Image|endswith: '\SharpWSUS.exe'
+    selection_create_cmd:
+        CommandLine|contains|all:
+            - ' create '
+            - ' /payload:'
+    selection_create_flags:
+        CommandLine|contains:
+            - ' /args:'
+            - ' /title:'
+            - ' /url:'
+            - ' /kb:'
+    selection_other_cmd:
+        CommandLine|contains:
+            - ' approve '
+            - ' check '
+    selection_other_flags:
+        CommandLine|contains|all:
+            - ' /updateid:'
+            - ' /computername:'
+    condition: img_orig or all of selection_create* or all of selection_other*
+falsepositives:
+    - Unlikely
+level: high

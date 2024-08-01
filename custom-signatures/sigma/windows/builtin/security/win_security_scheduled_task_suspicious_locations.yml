@@ -1,0 +1,25 @@
+title: Suspicious Scheduled Task File Path Content
+id: cff7b84d-11fd-45fe-8434-41b297f5b33c
+description: Detects scheduled task creation and update events that include suspicious file paths in the scheduled task configuration
+status: test
+author: Florian Roth
+date: 2022/05/06
+modified: 2023/03/28
+references:
+    - https://twitter.com/matthewdunwoody/status/1352356685982146562
+    - https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4699
+logsource:
+    product: windows
+    service: security
+    definition: 'The Advanced Audit Policy setting Object Access > Audit Other Object Access Events has to be configured to allow this detection. We also recommend extracting the Command field from the embedded XML in the event data.'
+detection:
+    task_selection:
+        EventID:
+            - 4698
+            - 4702
+    selection:
+        TaskContent|re: '([Cc]:\\[Pp]rogram[Dd]ata|%[Pp]rogram[Dd]ata%|%[Aa]pp[Dd]ata%|%[Ll]ocal[Aa]pp[Dd]ata%|\\AppData\\(Local|Roaming))\\[^\\]{1,20}\.(EXE|DLL|exe|dll|bat|BAT|vbs|vbe|VBS|VBE|ps1|psm1|PS1|PSM1)'
+    condition: task_selection and selection
+falsepositives:
+    - Software installation
+level: high

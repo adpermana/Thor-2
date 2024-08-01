@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Removal Of AMSI Provider Registry Keys
+id: 41d1058a-aea7-4952-9293-29eaaf516465
+status: test
+description: Detects the deletion of AMSI provider registry key entries in HKLM\Software\Microsoft\AMSI.
+    This technique could be used by an attacker in order to disable AMSI inspection.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/06/07 15:39:31
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.001/T1562.001.md
+  - https://seclists.org/fulldisclosure/2020/Mar/45
+logsource:
+    category: registry_delete
+    product: windows
+detection:
+    condition: selection
+    selection:
+        EventType: DeleteKey
+        TargetObject|endswith:
+          - '{2781761E-28E0-4109-99FE-B9D127C57AFE}'
+          - '{A7C452EF-8E9F-42EB-9F2B-245613CA0DC9}'
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/02/08
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+  - DEMO

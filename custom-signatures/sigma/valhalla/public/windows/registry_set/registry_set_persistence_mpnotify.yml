@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Persistence Via Mpnotify
+id: 92772523-d9c1-4c93-9547-b0ca500baba3
+status: experimental
+description: Detects when an attacker register a new SIP provider for persistence
+    and defense evasion
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/21 15:16:31
+references:
+  - https://persistence-info.github.io/Data/mpnotify.html
+  - https://www.youtube.com/watch?v=ggY3srD9dYs&ab_channel=GrzegorzTworek
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetObject|contains: \SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\mpnotify
+falsepositives: Might trigger if a legitimate new SIP provider is registered. But
+    this is not a common occurrence in an environment and should be investigated either
+    way
+level: high
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.persistence
+  - DEMO

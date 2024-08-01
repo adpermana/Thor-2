@@ -1,0 +1,55 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: RDP File Creation From Suspicious Application
+id: fccfb43e-09a7-4bd2-8b37-a5a7df33386d
+status: experimental
+description: Detects Rclone config file being created
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/04/18 17:43:01
+references:
+  - https://www.blackhillsinfosec.com/rogue-rdp-revisiting-initial-access-methods/
+  - https://blog.thickmints.dev/mintsights/detecting-rogue-rdp/
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith:
+          - \brave.exe
+          - \CCleaner Browser\Application\CCleanerBrowser.exe
+          - \chromium.exe
+          - \firefox.exe
+          - \Google\Chrome\Application\chrome.exe
+          - \iexplore.exe
+          - \microsoftedge.exe
+          - \msedge.exe
+          - \Opera.exe
+          - \Vivaldi.exe
+          - \Whale.exe
+          - \Outlook.exe
+          - \RuntimeBroker.exe
+          - \Thunderbird.exe
+          - \Discord.exe
+          - \Keybase.exe
+          - \msteams.exe
+          - \Slack.exe
+          - \teams.exe
+        TargetFilename|contains: .rdp
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - DEMO

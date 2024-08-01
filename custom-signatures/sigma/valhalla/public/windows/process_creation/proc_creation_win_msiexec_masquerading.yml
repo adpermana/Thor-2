@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential MsiExec Masquerading
+id: e22a6eb2-f8a5-44b5-8b44-a2dbd47b1144
+status: test
+description: Detects the execution of msiexec.exe from an uncommon directory
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/11/14 14:10:31
+references:
+  - https://twitter.com/200_okay_/status/1194765831911215104
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        Image|startswith:
+          - C:\Windows\System32\
+          - C:\Windows\SysWOW64\
+          - C:\Windows\WinSxS\
+    selection:
+      - Image|endswith: \msiexec.exe
+      - OriginalFileName: \msiexec.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/02/21
+tags:
+  - attack.defense_evasion
+  - attack.t1036.005
+  - DEMO

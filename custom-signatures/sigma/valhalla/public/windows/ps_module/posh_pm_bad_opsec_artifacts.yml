@@ -1,0 +1,53 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Bad Opsec Powershell Code Artifacts
+id: 8d31a8ce-46b5-4dd6-bdc3-680931f1db86
+related:
+  - type: derived
+    id: 73e733cc-1ace-3212-a107-ff2523cc9fc3
+status: test
+description: |
+    focuses on trivial artifacts observed in variants of prevalent offensive ps1 payloads, including
+    Cobalt Strike Beacon, PoshC2, Powerview, Letmein, Empire, Powersploit, and other attack payloads
+    that often undergo minimal changes by attackers due to bad opsec.
+author: ok @securonix invrep_de, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/09 15:04:21
+references:
+  - https://newtonpaul.com/analysing-fileless-malware-cobalt-strike-beacon/
+  - https://labs.sentinelone.com/top-tier-russian-organized-cybercrime-group-unveils-fileless-stealthy-powertrick-backdoor-for-high-value-targets/
+  - https://www.mdeditor.tw/pl/pgRt
+logsource:
+    category: ps_module
+    product: windows
+    definition: 0ad03ef1-f21b-4a79-8ce8-e6900c54b65b
+detection:
+    condition: selection_4103
+    selection_4103:
+        Payload|contains:
+          - $DoIt
+          - harmj0y
+          - mattifestation
+          - _RastaMouse
+          - tifkin_
+          - "0xdeadbeef"
+falsepositives: Moderate-to-low; Despite the shorter length/lower entropy for some
+    of these, because of high specificity, fp appears to be fairly limited in many
+    environments.
+level: critical
+customer: 'demo'
+modified: 2022/12/25
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

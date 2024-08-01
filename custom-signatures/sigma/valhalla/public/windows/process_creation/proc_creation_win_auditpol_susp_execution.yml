@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Audit Policy Tampering Via Auditpol
+id: 0a13e132-651d-11eb-ae93-0242ac130002
+related:
+  - type: similar
+    id: c6c56ada-612b-42d1-9a29-adad3c5c2c1e
+status: test
+description: |
+    Threat actors can use auditpol binary to change audit policy configuration to impair detection capability.
+    This can be carried out by selectively disabling/removing certain audit policies as well as restoring a custom policy owned by the threat actor.
+author: Janantha Marasinghe (https://github.com/blueteam0ps)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/02/02 15:12:01
+references:
+  - https://www.microsoft.com/security/blog/2021/01/20/deep-dive-into-the-solorigate-second-stage-activation-from-sunburst-to-teardrop-and-raindrop/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains:
+          - disable
+          - clear
+          - remove
+          - restore
+    selection_img:
+      - Image|endswith: \auditpol.exe
+      - OriginalFileName: AUDITPOL.EXE
+falsepositives: Administrator or administrator scripts might leverage the flags mentioned
+    in the detection section. Either way, it should always be monitored
+level: high
+customer: 'demo'
+modified: 2023/02/22
+tags:
+  - attack.defense_evasion
+  - attack.t1562.002
+  - DEMO

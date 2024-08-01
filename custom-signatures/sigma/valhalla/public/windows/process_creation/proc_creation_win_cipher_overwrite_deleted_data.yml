@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Deleted Data Overwritten Via Cipher.EXE
+id: 4b046706-5789-4673-b111-66f25fe99534
+status: test
+description: |
+    Detects usage of the "cipher" built-in utility in order to overwrite deleted data from disk.
+    Adversaries may destroy data and files on specific systems or in large numbers on a network to interrupt availability to systems, services, and network resources.
+    Data destruction is likely to render stored data irrecoverable by forensic techniques through overwriting files or data on local and remote drives
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/12/26 15:52:51
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1485/T1485.md#atomic-test-3---overwrite-deleted-data-on-c-drive
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains: ' /w:'
+    selection_img:
+      - OriginalFileName: CIPHER.EXE
+      - Image|endswith: \cipher.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/02/21
+tags:
+  - attack.impact
+  - attack.t1485
+  - DEMO

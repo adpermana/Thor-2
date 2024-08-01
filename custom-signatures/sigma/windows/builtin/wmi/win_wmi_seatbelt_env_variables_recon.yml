@@ -1,0 +1,26 @@
+title: Seatbelt Environment Variables Recon
+id: 77d04b56-992e-400a-8422-d49b8835fce5
+status: test
+description: Detects WMI query to obtain the list of environment variables on the system. This query has been seen used by Seatbelt
+references:
+    - https://github.com/GhostPack/Seatbelt/blob/f0b5cd5b4edf4325b613835b51a63705d2139c30/Seatbelt/Commands/Windows/EnvironmentVariableCommand.cs#LL31C86-L31C143
+author: Nasreddine Bencherchali
+date: 2022/11/22
+modified: 2023/03/29
+tags:
+    - attack.execution
+    - attack.t1047
+logsource:
+    product: windows
+    service: wmi
+detection:
+    selection:
+        # For an example see reference
+        EventID: 11
+        Operation|contains|all:
+            - 'IWbemServices::ExecQuery'
+            - 'Select UserName,Name,VariableValue from win32_environment'
+    condition: selection
+falsepositives:
+    - Legitimate WMI query to obtain the exact same fields (should be rare)
+level: medium

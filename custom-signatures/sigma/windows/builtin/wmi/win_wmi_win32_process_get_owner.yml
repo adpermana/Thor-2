@@ -1,0 +1,28 @@
+title: WMI Process Owner Reconnaissance
+id: 11bbbf74-fab4-4938-9238-83c554e1e3f7
+status: test
+description: Detects call to the "GetOwner" method of the "Win32_Process" class. The "GetOwner" method retrieves the username and domain name under which the process is running. It was seen abused by tools such as seatbelt to retrieve process information with the "InterestingProcesses" function
+references:
+    - https://github.com/GhostPack/Seatbelt/blob/f0b5cd5b4edf4325b613835b51a63705d2139c30/Seatbelt/Commands/Windows/InterestingProcessesCommand.cs#L787
+author: Nasreddine Bencherchali
+date: 2022/11/22
+modified: 2023/03/29
+tags:
+    - attack.execution
+    - attack.t1047
+logsource:
+    product: windows
+    service: wmi
+detection:
+    selection:
+        # For an example see reference
+        # This query could be enriched with CLI and Image information to be more specific
+        EventID: 11
+        Operation|contains|all:
+            - 'IWbemServices::ExecQuery'
+            - 'Win32_Process.Handle'
+            - '::GetOwner'
+    condition: selection
+falsepositives:
+    - Unknown
+level: medium

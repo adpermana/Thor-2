@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Query Tor Onion Address - DNS Client
+id: 8384bd26-bde6-4da9-8e5d-4174a7a47ca2
+related:
+  - type: similar
+    id: b55ca2a3-7cff-4dda-8bdd-c7bfa63bf544
+status: test
+description: Detects DNS resolution of an .onion address related to Tor routing networks
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/02/20 14:43:31
+references:
+  - https://www.logpoint.com/en/blog/detecting-tor-use-with-logpoint/
+logsource:
+    product: windows
+    service: dns-client
+    definition: 'Requirements: Microsoft-Windows-DNS Client Events/Operational Event
+        Log must be enabled/collected in order to receive the events.'
+detection:
+    condition: selection
+    selection:
+        EventID: "3008"
+        QueryName|contains: .onion
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+tags:
+  - attack.command_and_control
+  - attack.t1090.003
+  - DEMO

@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Arbitrary File Download Via MSEDGE_PROXY.EXE
+id: e84d89c4-f544-41ca-a6af-4b92fd38b023
+status: experimental
+description: Detects usage of "msedge_proxy.exe" to download arbitrary files
+author: Swachchhanda Shrawan Poudel
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/11/09 16:31:41
+references:
+  - https://lolbas-project.github.io/lolbas/Binaries/msedge_proxy/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains:
+          - http://
+          - https://
+    selection_img:
+      - Image|endswith: \msedge_proxy.exe
+      - OriginalFileName: msedge_proxy.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.execution
+  - attack.t1218
+  - DEMO

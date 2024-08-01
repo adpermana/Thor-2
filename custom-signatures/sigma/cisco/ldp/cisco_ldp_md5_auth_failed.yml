@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Cisco LDP Authentication Failures
+id: 50e606bf-04ce-4ca7-9d54-3449494bbd4b
+status: test
+description: Detects LDP failures which may be indicative of brute force attacks to
+    manipulate MPLS labels
+author: Tim Brown
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/09 14:39:21
+references:
+  - https://www.blackhat.com/presentations/bh-usa-03/bh-us-03-convery-franz-v3.pdf
+logsource:
+    product: cisco
+    service: ldp
+    definition: 'Requirements: cisco ldp logs need to be enabled and ingested'
+detection:
+    condition: selection_protocol and selection_keywords
+    selection_keywords:
+      - SOCKET_TCP_PACKET_MD5_AUTHEN_FAIL
+      - TCPMD5AuthenFail
+    selection_protocol: LDP
+fields:
+  - tcpConnLocalAddress
+  - tcpConnRemAddress
+falsepositives: Unlikely. Except due to misconfigurations
+level: low
+customer: 'demo'
+tags:
+  - attack.initial_access
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.defense_evasion
+  - attack.credential_access
+  - attack.collection
+  - attack.t1078
+  - attack.t1110
+  - attack.t1557
+  - DEMO

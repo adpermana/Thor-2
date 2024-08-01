@@ -1,0 +1,34 @@
+title: Suspicious MSHTA Invocation Pattern
+id: e6b24898-89c3-4316-bb72-3ffa81210987
+status: experimental
+description: Detects suspicious mshta invocations pointing to files in AppData folder as seen in Gamaredon activity
+author: Florian Roth
+date: 2022/02/05
+modified: 2022/11/04
+tags:
+    - attack.g0047
+    - attack.execution
+    - attack.t1059
+references:
+    - https://www.microsoft.com/security/blog/2022/02/04/actinium-targets-ukrainian-organizations/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_image:
+        - Image|endswith: '\mshta.exe'
+        - OriginalFileName: 'MSHTA.EXE'
+    selection1:
+        CommandLine|contains: '.dll'
+    selection2:
+        CommandLine|contains:
+            - '\Roaming'
+            - 'AppData\Local'
+            - '%AppData%'
+    condition: all of selection*
+fields:
+    - CommandLine
+    - ParentCommandLine
+falsepositives:
+    - Unknown
+level: high

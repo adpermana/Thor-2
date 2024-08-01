@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Enabled User Right in AD to Control User Objects
+id: 311b6ce2-7890-4383-a8c2-663a9f6b43cd
+status: test
+description: Detects scenario where if a user is assigned the SeEnableDelegationPrivilege
+    right in Active Directory it would allow control of other AD user objects.
+author: '@neu5ron'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/07/30 17:57:31
+references:
+  - https://blog.harmj0y.net/activedirectory/the-most-dangerous-user-right-you-probably-have-never-heard-of/
+logsource:
+    product: windows
+    service: security
+    definition: 'Requirements: Audit Policy : Policy Change > Audit Authorization
+        Policy Change, Group Policy : Computer Configuration\Windows Settings\Security
+        Settings\Advanced Audit Policy Configuration\Audit Policies\Policy Change\Audit
+        Authorization Policy Change'
+detection:
+    condition: all of selection*
+    selection_base:
+        EventID: "4704"
+    selection_keywords:
+        PrivilegeList|contains: SeEnableDelegationPrivilege
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2021/12/02
+tags:
+  - attack.persistence
+  - attack.t1098
+  - DEMO

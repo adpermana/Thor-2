@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Powerup Write Hijack DLL
+id: 602a1f13-c640-4d73-b053-be9a2fa58b96
+status: test
+description: |
+    Powerup tool's Write Hijack DLL exploits DLL hijacking for privilege escalation.
+    In it's default mode, it builds a self deleting .bat file which executes malicious command.
+    The detection rule relies on creation of the malicious bat file (debug.bat by default).
+author: Subhash Popuri (@pbssubhash)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/21 12:03:11
+references:
+  - https://powersploit.readthedocs.io/en/latest/Privesc/Write-HijackDll/
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+        TargetFilename|endswith: .bat
+falsepositives: Any powershell script that creates bat files
+level: high
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.defense_evasion
+  - attack.t1574.001
+  - DEMO

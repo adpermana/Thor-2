@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: WMIC Remote Command Execution
+id: 7773b877-5abb-4a3e-b9c9-fd0369b59b00
+related:
+  - type: obsoletes
+    id: e42af9df-d90b-4306-b7fb-05c863847ebd
+  - type: obsoletes
+    id: 09af397b-c5eb-4811-b2bb-08b3de464ebf
+status: test
+description: Detects the execution of WMIC to query information on a remote system
+author: frack113, Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/02/14 13:25:11
+references:
+  - https://securelist.com/moonbounce-the-dark-side-of-uefi-firmware/105468/
+  - https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/wmic
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_* and not 1 of filter_*
+    filter_localhost:
+        CommandLine|contains:
+          - '/node:127.0.0.1 '
+          - '/node:localhost '
+    selection_cli:
+        CommandLine|contains: '/node:'
+    selection_img:
+      - Image|endswith: \WMIC.exe
+      - OriginalFileName: wmic.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.execution
+  - attack.t1047
+  - DEMO

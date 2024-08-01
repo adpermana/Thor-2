@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Base64 MZ Header In CommandLine
+id: 22e58743-4ac8-4a9f-bf19-00a0428d8c5f
+status: test
+description: Detects encoded base64 MZ header in the commandline
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/12 13:20:31
+references:
+  - https://thedfirreport.com/2022/07/11/select-xmrig-from-sqlserver/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - TVqQAAMAAAAEAAAA
+          - TVpQAAIAAAAEAA8A
+          - TVqAAAEAAAAEABAA
+          - TVoAAAAAAAAAAAAA
+          - TVpTAQEAAAAEAAAA
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+tags:
+  - attack.execution
+  - DEMO

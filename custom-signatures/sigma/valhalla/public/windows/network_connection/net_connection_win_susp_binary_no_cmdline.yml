@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Network Connection Binary No CommandLine
+id: 20384606-a124-4fec-acbb-8bd373728613
+status: test
+description: Detects suspicious network connections made by a well-known Windows binary
+    run with no command line parameters
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/03 19:40:21
+references:
+  - https://redcanary.com/blog/raspberry-robin/
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    condition: selection and not 1 of filter*
+    filter_no_cmdline:
+        CommandLine: ""
+    filter_null:
+        CommandLine: []
+    selection:
+        CommandLine|endswith:
+          - \regsvr32.exe
+          - \rundll32.exe
+          - \dllhost.exe
+        Image|endswith:
+          - \regsvr32.exe
+          - \rundll32.exe
+          - \dllhost.exe
+        Initiated: "true"
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - DEMO

@@ -1,0 +1,24 @@
+title: Potential DcRat Network Activity
+id: 6e31fac8-c772-4fff-9a54-6c90aecb8d04
+status: experimental
+description: Detects potential suspicious network activity related DcRat
+references:
+    - https://github.com/silence-is-best/c2db
+    - https://www.mandiant.com/resources/blog/analyzing-dark-crystal-rat-backdoor
+    - https://tagteam.harvard.edu/hub_feeds/4280/feed_items/2818685
+author: X__Junior
+date: 2023/01/05
+tags:
+    - attack.command_and_control
+logsource:
+    category: proxy
+detection:
+    selection:
+        cs-method: 'GET'
+        c-uri|contains|all:
+            - '.php?type=__ds_setdata&__ds_setdata_user='
+            - '&__ds_setdata_data'
+    condition: selection
+falsepositives:
+    - Unknown
+level: medium

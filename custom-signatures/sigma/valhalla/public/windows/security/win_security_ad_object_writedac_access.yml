@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: AD Object WriteDAC Access
+id: 028c7842-4243-41cd-be6f-12f3cf1a26c7
+status: test
+description: Detects WRITE_DAC access to a domain object
+author: Roberto Rodriguez @Cyb3rWard0g
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/09/12 11:57:31
+references:
+  - https://threathunterplaybook.com/hunts/windows/180815-ADObjectAccessReplication/notebook.html
+  - https://threathunterplaybook.com/library/windows/active_directory_replication.html
+  - https://threathunterplaybook.com/hunts/windows/190101-ADModDirectoryReplication/notebook.html
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: selection
+    selection:
+        AccessMask: "0x40000"
+        EventID: "4662"
+        ObjectServer: DS
+        ObjectType:
+          - 19195a5b-6da0-11d0-afd3-00c04fd930c9
+          - domainDNS
+falsepositives: Unknown
+level: critical
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.defense_evasion
+  - attack.t1222.001
+  - DEMO

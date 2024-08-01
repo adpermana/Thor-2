@@ -1,0 +1,59 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - CrackMapExec Process Patterns
+id: f26307d8-14cd-47e3-a26b-4b4769f24af6
+status: test
+description: Detects suspicious process patterns found in logs when CrackMapExec is
+    used
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/03/12 16:17:31
+references:
+  - https://mpgn.gitbook.io/crackmapexec/smb-protocol/obtaining-credentials/dump-lsass
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection*
+    selection_lsass_dump1:
+        CommandLine|contains:
+          - 'cmd.exe /c '
+          - 'cmd.exe /r '
+          - 'cmd.exe /k '
+          - 'cmd /c '
+          - 'cmd /r '
+          - 'cmd /k '
+        CommandLine|contains|all:
+          - 'tasklist /fi '
+          - Imagename eq lsass.exe
+        User|contains:
+          - AUTHORI
+          - AUTORI
+    selection_lsass_dump2:
+        CommandLine|contains|all:
+          - do rundll32.exe C:\windows\System32\comsvcs.dll, MiniDump
+          - \Windows\Temp\
+          - ' full'
+          - '%%B'
+    selection_procdump:
+        CommandLine|contains|all:
+          - tasklist /v /fo csv
+          - findstr /i "lsass"
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/02/13
+tags:
+  - attack.credential_access
+  - attack.t1003.001
+  - DEMO

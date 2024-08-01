@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Rare Subscription-level Operations In Azure
+id: c1182e02-49a3-481c-b3de-0fadc4091488
+status: test
+description: Identifies IPs from which users grant access to other users on azure
+    resources and alerts when a previously unseen source IP address is used.
+author: sawwinnnaung
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/05/07 17:31:41
+references:
+  - https://github.com/Azure/Azure-Sentinel/blob/e534407884b1ec5371efc9f76ead282176c9e8bb/Detections/AzureActivity/RareOperations.yaml
+logsource:
+    product: azure
+    service: activitylogs
+detection:
+    condition: keywords
+    keywords:
+      - Microsoft.DocumentDB/databaseAccounts/listKeys/action
+      - Microsoft.Maps/accounts/listKeys/action
+      - Microsoft.Media/mediaservices/listKeys/action
+      - Microsoft.CognitiveServices/accounts/listKeys/action
+      - Microsoft.Storage/storageAccounts/listKeys/action
+      - Microsoft.Compute/snapshots/write
+      - Microsoft.Network/networkSecurityGroups/write
+falsepositives: Valid change
+level: medium
+customer: 'demo'
+modified: 2023/10/11
+tags:
+  - attack.t1003
+  - DEMO

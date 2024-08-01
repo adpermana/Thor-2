@@ -1,0 +1,62 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-06-21 19:00
+# Generated for User: demo
+# Number of Rules: 3228
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Forest Blizzard APT - Process Creation Activity
+id: 07db928c-8632-488e-ac7d-3db847489175
+status: experimental
+description: |
+    Detects the execution of specific processes and command line combination.
+    These were seen being created by Forest Blizzard as described by MSFT.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/04/23 18:01:21
+references:
+  - https://www.microsoft.com/en-us/security/blog/2024/04/22/analyzing-forest-blizzards-custom-post-compromise-tool-for-exploiting-cve-2022-38028-to-obtain-credentials/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_hashes:
+        Hashes|contains:
+          - 6b311c0a977d21e772ac4e99762234da852bbf84293386fbe78622a96c0b052f
+          - c60ead92cd376b689d1b4450f2578b36ea0bf64f3963cfa5546279fa4424c2a5
+    selection_powershell:
+        CommandLine|contains|all:
+          - Get-ChildItem
+          - .save
+          - Compress-Archive -DestinationPath C:\ProgramData\
+    selection_schtasks_create:
+        CommandLine|contains:
+          - servtask.bat
+          - execute.bat
+          - doit.bat
+        CommandLine|contains|all:
+          - Create
+          - /RU
+          - SYSTEM
+          - \Microsoft\Windows\WinSrv
+        Image|endswith: \schtasks.exe
+    selection_schtasks_delete:
+        CommandLine|contains|all:
+          - Delete
+          - '/F '
+          - \Microsoft\Windows\WinSrv
+        Image|endswith: \schtasks.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2024/05/11
+tags:
+  - attack.defense_evasion
+  - attack.execution
+  - DEMO

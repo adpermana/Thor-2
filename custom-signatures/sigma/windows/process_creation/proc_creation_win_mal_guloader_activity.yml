@@ -1,0 +1,24 @@
+title: Guloader Malware Activity
+id: 3123c0dc-de24-4d35-8db8-4a09bf00c917
+status: experimental
+description: Detectes specific commandline seen used by Guloader malware
+references:
+    - https://twitter.com/0xToxin/status/1559619321952976899
+    - https://twitter.com/ankit_anubhav/status/1557383863046791168
+author: X__Junior
+date: 2022/10/26
+tags:
+    - attack.execution
+    - attack.t1059
+logsource:
+    product: windows
+    category: process_creation
+detection:
+    selection:
+        # example : cmd /c sET /A "0x49^2"
+        Image|endswith: '\cmd.exe'
+        CommandLine|contains: '/c set /A "0x'
+    condition: selection
+falsepositives:
+    - Unknown
+level: high

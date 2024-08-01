@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: WMI Event Consumer Created Named Pipe
+id: 493fb4ab-cdcc-4c4f-818c-0e363bd1e4bb
+status: test
+description: Detects the WMI Event Consumer service scrcons.exe creating a named pipe
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/09/01 15:15:41
+references:
+  - https://github.com/RiccardoAncarani/LiquidSnake
+logsource:
+    category: pipe_created
+    product: windows
+    definition: Note that you have to configure logging for Named Pipe Events in Sysmon
+        config (Event ID 17 and Event ID 18). The basic configuration is in popular
+        sysmon configuration (https://github.com/SwiftOnSecurity/sysmon-config), but
+        it is worth verifying. You can also use other repo, e.g. https://github.com/Neo23x0/sysmon-config,
+        https://github.com/olafhartong/sysmon-modular. How to test detection? You
+        can check powershell script from this site https://svch0st.medium.com/guide-to-named-pipes-and-hunting-for-cobalt-strike-pipes-dc46b2c5f575
+detection:
+    condition: selection
+    selection:
+        Image|endswith: \scrcons.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/11/30
+tags:
+  - attack.t1047
+  - attack.execution
+  - DEMO

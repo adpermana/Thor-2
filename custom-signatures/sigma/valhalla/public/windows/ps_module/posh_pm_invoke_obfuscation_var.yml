@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Invoke-Obfuscation VAR+ Launcher - PowerShell Module
+id: 6bfb8fa7-b2e7-4f6c-8d9d-824e5d06ea9e
+related:
+  - type: derived
+    id: 0adfbc14-0ed1-11eb-adc1-0242ac120002
+status: test
+description: Detects Obfuscated use of Environment Variables to execute PowerShell
+author: Jonathan Cheong, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/15 19:12:41
+references:
+  - https://github.com/SigmaHQ/sigma/issues/1009
+logsource:
+    category: ps_module
+    product: windows
+    definition: 0ad03ef1-f21b-4a79-8ce8-e6900c54b65b
+detection:
+    condition: selection_4103
+    selection_4103:
+        Payload|re: .*cmd.{0,5}(?:/c|/r)(?:\s|)"set\s[a-zA-Z]{3,6}.*(?:\{\d\}){1,}\\"\s+?-f(?:.*\)){1,}.*"
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/12/02
+tags:
+  - attack.defense_evasion
+  - attack.t1027
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

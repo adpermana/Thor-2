@@ -1,0 +1,55 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: WScript or CScript Dropper - File
+id: 002bdb95-0cf1-46a6-9e08-d38c128a6127
+related:
+  - type: derived
+    id: cea72823-df4d-4567-950c-0b579eaf0846
+status: test
+description: Detects a file ending in jse, vbe, js, vba, vbs written by cscript.exe
+    or wscript.exe
+author: Tim Shelton
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/10 14:13:01
+references:
+  - WScript or CScript Dropper (cea72823-df4d-4567-950c-0b579eaf0846)
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith:
+          - \wscript.exe
+          - \cscript.exe
+        TargetFilename|endswith:
+          - .jse
+          - .vbe
+          - .js
+          - .vba
+          - .vbs
+        TargetFilename|startswith:
+          - C:\Users\
+          - C:\ProgramData
+fields:
+  - Image
+  - TargetFilename
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/12/02
+tags:
+  - attack.execution
+  - attack.t1059.005
+  - attack.t1059.007
+  - DEMO

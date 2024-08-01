@@ -1,0 +1,27 @@
+title: Symantec SSHelper COM Object LOLBIN
+id: a6d563b9-f776-4b90-9625-0f4545ef3987
+status: experimental
+description: Detects possible usage of Symantec.SSHelper COM object as a lolbin
+references:
+    - https://twitter.com/nas_bench/status/1385599433333686278
+    - https://nasbench.medium.com/symantec-endpoint-protection-meets-com-using-symantec-sshelper-as-a-lolbin-40d515a121ce
+author: Nasreddine Bencherchali
+date: 2022/05/05
+tags:
+    - attack.execution
+    - attack.t1559.001
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains: 'Symantec.SSHelper'
+    filter:
+        CommandLine|contains|all:
+            - "Job:AgentHIScript"
+            - "Helper.exe"
+            - "E:JScript"
+    condition: selection and not filter
+falsepositives:
+    - Unknown
+level: high

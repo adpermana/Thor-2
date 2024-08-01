@@ -1,0 +1,55 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PowerShell Download Pattern
+id: 3b6ab547-8ec2-4991-b9d2-2b06702a48d7
+related:
+  - type: derived
+    id: e6c54d94-498c-4562-a37c-b469d8e9a275
+status: test
+description: Detects a Powershell process that contains download commands in its command
+    line string
+author: Florian Roth (Nextron Systems), oscd.community, Jonhnathan Ribeiro
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/01/16 13:21:51
+references:
+  - https://blog.redteam.pl/2020/06/black-kingdom-ransomware.html
+  - https://lab52.io/blog/winter-vivern-all-summer/
+  - https://hatching.io/blog/powershell-analysis/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains:
+          - string(
+          - file(
+        CommandLine|contains|all:
+          - new-object
+          - net.webclient).
+          - download
+    selection_img:
+      - Image|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+      - OriginalFileName:
+          - PowerShell.EXE
+          - pwsh.dll
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/01/26
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

@@ -1,0 +1,66 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Remote PowerShell Session Initiated
+id: c539afac-c12a-46ed-b1bd-5a5567c9f045
+status: test
+description: |
+    Detects a process that initiated a network connection over ports 5985 or 5986 from a non-network service account.
+    This could potentially indicates a remote PowerShell connection.
+author: Roberto Rodriguez @Cyb3rWard0g
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/09/12 18:10:41
+references:
+  - https://threathunterplaybook.com/hunts/windows/190511-RemotePwshExecution/notebook.html
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+    filter_main_localhost:
+        DestinationIp:
+          - ::1
+          - 127.0.0.1
+        SourceIp:
+          - ::1
+          - 127.0.0.1
+    filter_main_service_users:
+      - User|contains:
+          - NETWORK SERVICE
+          - NETZWERKDIENST
+          - SERVICIO DE RED
+          - SERVIZIO DI RETE
+      - User|contains|all:
+          - SERVICE R
+          - SEAU
+    filter_optional_avast:
+        Image:
+          - C:\Program Files\Avast Software\Avast\AvastSvc.exe
+          - C:\Program Files (x86)\Avast Software\Avast\AvastSvc.exe
+    selection:
+        DestinationPort:
+          - "5985"
+          - "5986"
+        Initiated: "true"
+        SourceIsIpv6: "false"
+falsepositives:
+  - Legitimate usage of remote PowerShell, e.g. remote administration and monitoring.
+  - Network Service user name of a not-covered localization
+level: high
+customer: 'demo'
+modified: 2024/02/02
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - attack.lateral_movement
+  - attack.t1021.006
+  - DEMO

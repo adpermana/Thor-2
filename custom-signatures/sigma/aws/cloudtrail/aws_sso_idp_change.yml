@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: AWS Identity Center Identity Provider Change
+id: d3adb3ef-b7e7-4003-9092-1924c797db35
+status: experimental
+description: |
+    Detects a change in the AWS Identity Center (FKA AWS SSO) identity provider.
+    A change in identity provider allows an attacker to establish persistent access or escalate privileges via user impersonation.
+author: Michael McIntyre @wtfender
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/09/27 17:25:31
+references:
+  - https://docs.aws.amazon.com/singlesignon/latest/userguide/app-enablement.html
+  - https://docs.aws.amazon.com/singlesignon/latest/userguide/sso-info-in-cloudtrail.html
+  - https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsiamidentitycentersuccessortoawssinglesign-on.html
+logsource:
+    product: aws
+    service: cloudtrail
+detection:
+    condition: selection
+    selection:
+        eventName:
+          - AssociateDirectory
+          - DisableExternalIdPConfigurationForDirectory
+          - DisassociateDirectory
+          - EnableExternalIdPConfigurationForDirectory
+        eventSource:
+          - sso-directory.amazonaws.com
+          - sso.amazonaws.com
+falsepositives: Authorized changes to the AWS account's identity provider
+level: high
+customer: 'demo'
+tags:
+  - attack.persistence
+  - attack.t1556
+  - DEMO

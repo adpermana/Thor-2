@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Persistence Via Custom Protocol Handler
+id: fdbf0b9d-0182-4c43-893b-a1eaab92d085
+status: experimental
+description: Detects potential persistence activity via the registering of a new custom
+    protocole handlers. While legitimate applications register protocole handlers
+    often times during installation. And attacker can abuse this by setting a custom
+    handler to be used as a persistence mechanism.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/05/30 19:09:21
+references:
+  - https://ladydebug.com/blog/2019/06/21/custom-protocol-handler-cph/
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_generic_locations:
+        Image|startswith:
+          - C:\Program Files (x86)
+          - C:\Program Files\
+          - C:\Windows\System32\
+          - C:\Windows\SysWOW64\
+    filter_main_ms_trusted:
+        Details|startswith: URL:ms-
+    selection:
+        Details|startswith: 'URL:'
+        TargetObject|startswith: HKCR\
+falsepositives: Many legitimate applications can register a new custom protocol handler.
+    Additional filters needs to applied according to your environment.
+level: medium
+customer: 'demo'
+modified: 2023/05/12
+tags:
+  - attack.defense_evasion
+  - attack.t1112
+  - DEMO

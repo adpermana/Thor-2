@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential PHP Reverse Shell
+id: c6714a24-d7d5-4283-a36b-3ffd091d5f7e
+status: test
+description: |
+    Detects usage of the PHP CLI with the "-r" flag which allows it to run inline PHP code. The rule looks for calls to the "fsockopen" function which allows the creation of sockets.
+    Attackers often leverage this in combination with functions such as "exec" or "fopen" to initiate a reverse shell connection.
+author: '@d4ns4n_'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/04/07 12:58:01
+references:
+  - https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet
+  - https://www.revshells.com/
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - ash
+          - bash
+          - bsh
+          - csh
+          - ksh
+          - pdksh
+          - sh
+          - tcsh
+          - zsh
+        CommandLine|contains|all:
+          - ' -r '
+          - fsockopen
+        Image|contains: /php
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.execution
+  - DEMO

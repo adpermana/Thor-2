@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: UNC4841 - Email Exfiltration File Pattern
+id: 0785f462-60b0-4031-9ff4-b4f3a0ba589a
+status: experimental
+description: Detects filename pattern of email related data used by UNC4841 for staging
+    and exfiltration
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/06/16 15:47:11
+references:
+  - https://www.mandiant.com/resources/blog/barracuda-esg-exploited-globally
+logsource:
+    category: file_event
+    product: linux
+detection:
+    condition: selection
+    selection:
+        TargetFilename|re: /mail/tmp/[a-zA-Z0-9]{3}[0-9]{3}\.tar\.gz
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.execution
+  - attack.persistence
+  - attack.defense_evasion
+  - detection.emerging_threats
+  - DEMO

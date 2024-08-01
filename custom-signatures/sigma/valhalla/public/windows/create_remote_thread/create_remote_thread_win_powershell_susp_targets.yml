@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Remote Thread Creation Via PowerShell In Uncommon Target
+id: 99b97608-3e21-4bfe-8217-2a127c396a0e
+related:
+  - type: similar
+    id: eeb2e3dc-c1f4-40dd-9bd5-149ee465ad50
+status: experimental
+description: Detects the creation of a remote thread from a Powershell process in
+    an uncommon target process
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2018/06/25 20:30:41
+references:
+  - https://www.fireeye.com/blog/threat-research/2018/06/bring-your-own-land-novel-red-teaming-technique.html
+logsource:
+    category: create_remote_thread
+    product: windows
+detection:
+    condition: selection
+    selection:
+        SourceImage|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+        TargetImage|endswith:
+          - \rundll32.exe
+          - \regsvr32.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/11/10
+tags:
+  - attack.defense_evasion
+  - attack.execution
+  - attack.t1218.011
+  - attack.t1059.001
+  - DEMO

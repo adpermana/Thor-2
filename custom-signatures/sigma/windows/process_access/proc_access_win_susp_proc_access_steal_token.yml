@@ -1,0 +1,78 @@
+title: Potential Process Token Stealing
+id: 10b03629-96a7-4e8b-ab82-72acdd6876a7
+status: test
+description: Detects potential process token steal by processes located in suspicious locations. This is usually done to impersonate the process and gain higher privileges
+author: Nasreddine Bencherchali
+references:
+    - Internal Research
+date: 2022/06/27
+modified: 2023/03/29
+tags:
+    - attack.defense_evasion
+    - attack.privilege_escalation
+    - attack.t1134.001
+    - attack.t1134.002
+    - attack.t1134.003
+logsource:
+    category: process_access
+    product: windows
+detection:
+    selection_target:
+        TargetImage|endswith: #Add more susp processes that are used often to steal tokens
+            - '\winlogon.exe'
+            - '\wininit.exe'
+            - '\TrustedInstaller.exe' # Example: https://github.com/dosxuz/DefenderStop
+    selection_source:
+        - SourceImage|contains:
+            - '\AppData\Local\Temp\'
+            - '\Users\Public\'
+            - '\PerfLogs\'
+            - '\AppData\Roaming'
+            - '\Desktop\'
+            - '\Downloads\'
+            - '\Microsoft\Windows\Start Menu\Programs\Startup\'
+            - '\\\\' # Remote share
+        - SourceImage|startswith:
+            - 'C:\Windows\Temp\'
+            - 'C:\Temp\'
+    selection_access:
+        GrantedAccess|endswith: # Taken from: 9bd012ee-0dff-44d7-84a0-aa698cfd87a3
+            - '10'
+            - '30'
+            - '50'
+            - '70'
+            - '90'
+            - 'B0'
+            - 'D0'
+            - 'F0'
+            - '18'
+            - '38'
+            - '58'
+            - '78'
+            - '98'
+            - 'B8'
+            - 'D8'
+            - 'F8'
+            - '1A'
+            - '3A'
+            - '5A'
+            - '7A'
+            - '9A'
+            - 'BA'
+            - 'DA'
+            - 'FA'
+            - '0x14C2'  # https://github.com/b4rtik/ATPMiniDump/blob/master/ATPMiniDump/ATPMiniDump.c
+            - 'FF'
+    filter_optional_viber_updater:
+        SourceCommandLine|contains|all:
+            - 'updater.exe --pid='
+            - '--cmd=update'
+        SourceImage|startswith: 'C:\Users\'
+        SourceImage|contains: '\AppData\Roaming\ViberPC\'
+        SourceImage|endswith: '\updater.exe'
+        TargetImage|endswith: '\winlogon.exe'
+        GrantedAccess: '0x1fffff'
+    condition: all of selection_* and not 1 of filter_optional_*
+falsepositives:
+    - Some updaters located in %APPDATA% and %TEMP% were seen showcasing similar behaviour
+level: medium

@@ -1,0 +1,36 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: The Windows Defender Firewall Service Failed To Load Group Policy
+id: 7ec15688-fd24-4177-ba43-1a950537ee39
+status: test
+description: Detects activity when The Windows Defender Firewall service failed to
+    load Group Policy
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/02/19 22:35:31
+references:
+  - https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-r2-and-2008/dd364427(v=ws.10)
+logsource:
+    product: windows
+    service: firewall-as
+detection:
+    condition: selection
+    selection:
+        EventID: "2009"
+level: low
+customer: 'demo'
+modified: 2023/01/17
+tags:
+  - attack.defense_evasion
+  - attack.t1562.004
+  - DEMO

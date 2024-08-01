@@ -1,0 +1,30 @@
+title: Suspicious WMI LogonType Based Event Filter Has Been Registered
+id: f07d7eba-ae21-4fe3-b3a4-dc100e417e00
+status: test
+description: Detects the creation of a logon type WMI event filter
+references:
+    - https://github.com/xorrior/RandomPS-Scripts/blob/848c919bfce4e2d67b626cbcf4404341cfe3d3b6/WMIBackdoor.ps1
+    - https://github.com/xan7r/Misc/blob/9071927a8fc2c31fc5e89f2184405a594c7127ae/WMILogonBackdoor.ps1
+author: Nasreddine Bencherchali
+date: 2022/11/24
+modified: 2023/03/29
+tags:
+    - attack.execution
+    - attack.t1047
+logsource:
+    product: windows
+    service: wmi
+detection:
+    selection:
+        EventID: 5861
+        Consumer|contains:
+            - 'ActiveScriptEventConsumer='
+            - 'CommandLineEventConsumer='
+        PossibleCause|contains|all:
+            - 'FROM __InstanceCreationEvent'
+            - 'Win32_LogonSession'
+            - '.LogonType'
+    condition: selection
+falsepositives:
+    - Unknown
+level: medium

@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: CVE-2022-24527 Microsoft Connected Cache LPE
+id: e0a41412-c69a-446f-8e6e-0e6d7483dad7
+status: test
+description: Detects files created during the local privilege exploitation of CVE-2022-24527
+    Microsoft Connected Cache
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/04/13 15:36:01
+references:
+  - https://www.rapid7.com/blog/post/2022/04/12/cve-2022-24527-microsoft-connected-cache-local-privilege-escalation-fixed/
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        User|contains:
+          - AUTHORI
+          - AUTORI
+    selection:
+        TargetFilename|endswith: WindowsPowerShell\Modules\webAdministration\webAdministration.psm1
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.privilege_escalation
+  - attack.t1059.001
+  - cve.2022.24527
+  - detection.emerging_threats
+  - DEMO

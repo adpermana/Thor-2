@@ -1,0 +1,30 @@
+title: Inline HTA Application Via MSHTA
+id: 80bc1d10-dc91-4975-a106-0116eb646f26
+status: experimental
+description: Detects calling of inline HTA via the "about:<hta:application>" using mshta
+references:
+    - https://www.virustotal.com/gui/file/bfd1d627e9a88671f5d92e24d6277a38dc4a4b059bc8724530145a5d431cbe3a/
+    - https://app.any.run/tasks/63cd5e03-647a-4f1d-81b1-9c70bb793c73/
+author: Nasreddine Bencherchali
+date: 2022/06/07
+tags:
+    - attack.execution
+    - attack.t1059
+    - attack.t1218.005
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        - Image|endswith: '\mshta.exe'
+        - OriginalFileName: 'MSHTA.EXE'
+    selection_about:
+        CommandLine|contains: 'about:<hta:application>'
+    selection_values:
+        CommandLine|contains: # More variants will be added as they are discovered
+            - 'Wscript.Shell'
+            - 'ActiveXObject'
+    condition: all of selection*
+falsepositives:
+    - Legitimate application using inline mshta with JScript or VBscript
+level: high

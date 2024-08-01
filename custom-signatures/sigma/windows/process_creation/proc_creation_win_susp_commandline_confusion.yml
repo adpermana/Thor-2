@@ -1,0 +1,28 @@
+title: Potential CommandLine Confusion Via Path Escape Abuse
+id: 376e5108-02e6-4f89-98bf-8be09b97616a
+status: experimental
+description: Detects additional path escapes in the commandline, which could be a sign of obfuscation or defense evasion in order to confuse commandline logging
+references:
+    - https://twitter.com/max_mal_/status/1630277636021731330?s=12&t=CTdiUNa2DOwmpnNt8QUuaQ
+author: Nasreddine Bencherchali (Nextron Systems)
+date: 2023/02/28
+modified: 2023/03/16
+tags:
+    - attack.defense_evasion
+logsource:
+    product: windows
+    category: process_creation
+detection:
+    selection:
+        CommandLine|contains: '\\\\\\\\\\\\' # Looking for:  \\\\\\
+    filter_evernote:
+        Image:
+            - 'C:\Program Files\Evernote\Evernote.exe'
+            - 'C:\Program Files (x86)\Evernote\Evernote.exe'
+        CommandLine|contains|all:
+            - '--type=crashpad-handler '
+            - 'conduit-electron-worker'
+    condition: selection and not 1 of filter_*
+falsepositives:
+    - Unknown
+level: medium

@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Scheduled Task Executed From A Suspicious Location
+id: 424273ea-7cf8-43a6-b712-375f925e481f
+status: test
+description: Detects the execution of Scheduled Tasks where the Program being run
+    is located in a suspicious location or it's an unusale program to be run from
+    a Scheduled Task
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/12/05 19:04:01
+references:
+  - Internal Research
+logsource:
+    product: windows
+    service: taskscheduler
+    definition: 'Requirements: The "Microsoft-Windows-TaskScheduler/Operational" is
+        disabled by default and needs to be enabled in order for this detection to
+        trigger'
+detection:
+    condition: selection
+    selection:
+        EventID: "129"
+        Path|contains:
+          - C:\Windows\Temp\
+          - \AppData\Local\Temp\
+          - \Desktop\
+          - \Downloads\
+          - \Users\Public\
+          - C:\Temp\
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/02/07
+tags:
+  - attack.persistence
+  - attack.t1053.005
+  - DEMO

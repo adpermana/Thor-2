@@ -1,0 +1,27 @@
+title: Rootkit R77 Powershell With Registry Utilization
+id: b6497f32-a76a-45a4-a899-2c340735f2b3
+status: test
+description: Detects rootkit r77 persistence technique - powershell reflective loading of Assembly via registry
+author: pH-T
+date: 2022/05/17
+modified: 2023/03/29
+tags:
+    - attack.execution
+    - attack.t1059.001
+    - attack.defense_evasion
+    - attack.t1027
+references:
+    - https://github.com/bytecode77/r77-rootkit
+logsource:
+    category: ps_script
+    product: windows
+    definition: Script block logging must be enabled
+detection:
+    selection:
+        ScriptBlockText|contains: ".GetValue('$77stager')"
+    condition: selection
+fields:
+    - CommandLine
+falsepositives:
+    - Unlikely
+level: critical

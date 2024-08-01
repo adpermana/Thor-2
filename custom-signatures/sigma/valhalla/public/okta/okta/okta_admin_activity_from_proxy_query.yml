@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Okta Admin Functions Access Through Proxy
+id: 9058ca8b-f397-4fd1-a9fa-2b7aad4d6309
+status: experimental
+description: Detects access to Okta admin functions through proxy.
+author: Muhammad Faisal @faisalusuf
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/10/25 16:46:21
+references:
+  - https://www.beyondtrust.com/blog/entry/okta-support-unit-breach
+  - https://dataconomy.com/2023/10/23/okta-data-breach/
+  - https://blog.cloudflare.com/how-cloudflare-mitigated-yet-another-okta-compromise/
+logsource:
+    product: okta
+    service: okta
+detection:
+    condition: selection
+    selection:
+        debugContext.debugData.requestUri|contains: admin
+        securityContext.isProxy: "true"
+falsepositives: False positives are expected if administrators access these function
+    through proxy legitimatly. Apply additional filters if necessary
+level: medium
+customer: 'demo'
+tags:
+  - attack.credential_access
+  - DEMO

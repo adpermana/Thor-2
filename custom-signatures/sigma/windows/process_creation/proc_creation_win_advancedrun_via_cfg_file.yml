@@ -1,0 +1,44 @@
+title: Suspicious AdvancedRun Execution via CFG File
+id: 4c3646f1-0943-4325-969e-6ae2bd27bbed
+status: experimental
+description: Detects the execution of AdvancedRun utitlity via CFG file
+references:
+    - https://www.nirsoft.net/utils/advanced_run.html
+author: Nasreddine Bencherchali
+date: 2022/04/30
+modified: 2022/11/04
+tags:
+    - attack.discovery
+    - attack.t1018
+    - attack.t1135
+logsource:
+    product: windows
+    category: process_creation
+detection:
+    selection_program:
+        - Image|endswith: '\AdvancedRun.exe'
+        - OriginalFileName: 'AdvancedRun.exe'
+        - Imphash:
+            - 563f92d1cb750f339006b11e53047050
+            - 768ba42be886629cfffa6e416ba23b58
+            - 8e24b4601a888e17b37486cb5a1a807f
+            - b656ba064cde850454dd1be9c7308b59
+            - f34d5f2d4577ed6d9ceec516c1f5a744
+            - f6d9af2704721bc7d5abdc623b6fe8bb
+            - d525713a898e10b7da324912744bff08
+            - e4a1a000c5b934f9fe6ae4324bf0690c
+        - Hashes|contains:
+            - IMPHASH=563f92d1cb750f339006b11e53047050
+            - IMPHASH=768ba42be886629cfffa6e416ba23b58
+            - IMPHASH=8e24b4601a888e17b37486cb5a1a807f
+            - IMPHASH=b656ba064cde850454dd1be9c7308b59
+            - IMPHASH=f34d5f2d4577ed6d9ceec516c1f5a744
+            - IMPHASH=f6d9af2704721bc7d5abdc623b6fe8bb
+            - IMPHASH=d525713a898e10b7da324912744bff08
+            - IMPHASH=e4a1a000c5b934f9fe6ae4324bf0690c
+    selection_run:
+        CommandLine|endswith: '.exe /Run'
+    condition: all of selection*
+falsepositives:
+    - Unknown
+level: high

@@ -1,0 +1,32 @@
+title: Powershell Reflective Assembly Load Registry Via ScriptBlock Logging
+id: 0238c8b4-9637-4081-9184-bea6958d5d9f
+related:
+    - id: 47b28fd4-0f24-45a1-a536-dd46dfe4adf0
+      type: similar
+status: test
+description: Detects Powershell .NET reflective loading of Assembly via registry
+author: pH-T
+date: 2022/05/10
+modified: 2023/03/29
+tags:
+    - attack.execution
+    - attack.t1059.001
+    - attack.defense_evasion
+    - attack.t1027
+references:
+    - https://github.com/bytecode77/r77-rootkit
+logsource:
+    category: ps_script
+    product: windows
+    definition: Script block logging must be enabled
+detection:
+    selection:
+        ScriptBlockText|contains|all:
+            - '[Reflection.Assembly]::Load('
+            - '[Microsoft.Win32.Registry]::'
+            - '.GetValue('
+            - 'EntryPoint.Invoke('
+    condition: selection
+falsepositives:
+    - Unlikely
+level: high

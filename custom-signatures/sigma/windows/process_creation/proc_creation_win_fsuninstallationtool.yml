@@ -1,0 +1,24 @@
+title: FSecure FsUninstallationTool LOLBIN
+id: aa53a156-2c3e-4b67-bbe9-00aab0e3a07c
+status: experimental
+description: Detects possible usage of F-Secure FsUninstallationTool as a lolbin to execute arbitary lua commands
+references:
+    - https://twitter.com/nas_bench/status/1483523204597571591
+author: Nasreddine Bencherchali
+date: 2022/05/05
+tags:
+    - attack.defense_evasion
+    - attack.t1218
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains|all:
+            - ' -s '
+            - ' -p '
+            - ' --script '
+    condition: selection
+falsepositives:
+    - Programs that use the same command line flags
+level: medium

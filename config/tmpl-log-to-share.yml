@@ -1,0 +1,5 @@
+# The following command creates a plaintext log file on a share called "rep" on system "sys" 
+# if the user running the command has the respective access rights on the share.
+nohtml: true
+nocsv: true
+logfile: "\\\\sys\\rep\\%COMPUTERNAME%_thor.txt"

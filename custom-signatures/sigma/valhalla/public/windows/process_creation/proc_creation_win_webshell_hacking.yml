@@ -1,0 +1,104 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Webshell Hacking Activity Patterns
+id: 4ebc877f-4612-45cb-b3a5-8e3834db36c9
+status: test
+description: |
+    Detects certain parent child patterns found in cases in which a web shell is used to perform certain credential dumping or exfiltration activities on a compromised system
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/03/17 15:10:51
+references:
+  - https://youtu.be/7aemGhaE9ds?t=641
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_webserver_* and 1 of selection_child_*
+    selection_child_1:
+        CommandLine|contains|all:
+          - rundll32
+          - comsvcs
+    selection_child_2:
+        CommandLine|contains|all:
+          - ' -hp'
+          - ' a '
+          - ' -m'
+    selection_child_3:
+        CommandLine|contains|all:
+          - net
+          - ' user '
+          - ' /add'
+    selection_child_4:
+        CommandLine|contains|all:
+          - net
+          - ' localgroup '
+          - ' administrators '
+          - /add
+    selection_child_5:
+        Image|endswith:
+          - \ntdsutil.exe
+          - \ldifde.exe
+          - \adfind.exe
+          - \procdump.exe
+          - \Nanodump.exe
+          - \vssadmin.exe
+          - \fsutil.exe
+    selection_child_6:
+        CommandLine|contains:
+          - ' -decode '
+          - ' -NoP '
+          - ' -W Hidden '
+          - ' /decode '
+          - ' /ticket:'
+          - ' sekurlsa'
+          - .dmp full
+          - .downloadfile(
+          - .downloadstring(
+          - FromBase64String
+          - process call create
+          - 'reg save '
+          - whoami /priv
+    selection_webserver_characteristics_tomcat1:
+        ParentImage|contains:
+          - -tomcat-
+          - \tomcat
+        ParentImage|endswith:
+          - \java.exe
+          - \javaw.exe
+    selection_webserver_characteristics_tomcat2:
+        CommandLine|contains:
+          - catalina.jar
+          - CATALINA_HOME
+        ParentImage|endswith:
+          - \java.exe
+          - \javaw.exe
+    selection_webserver_image:
+        ParentImage|endswith:
+          - \caddy.exe
+          - \httpd.exe
+          - \nginx.exe
+          - \php-cgi.exe
+          - \w3wp.exe
+          - \ws_tomcatservice.exe
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/11/09
+tags:
+  - attack.persistence
+  - attack.t1505.003
+  - attack.t1018
+  - attack.t1033
+  - attack.t1087
+  - DEMO

@@ -1,0 +1,71 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Persistence Attempt Via Existing Service Tampering
+id: 38879043-7e1e-47a9-8d46-6bec88e201df
+status: test
+description: Detects the modification of an existing service in order to execute an
+    arbitrary payload when the service is started or killed as a potential method
+    for persistence.
+author: Sreeman
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/09/29 22:09:11
+references:
+  - https://pentestlab.blog/2020/01/22/persistence-modify-existing-service/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection_sc or all of selection_reg_*
+    selection_reg_ext:
+        CommandLine|contains:
+          - .sh
+          - .exe
+          - .dll
+          - .bin$
+          - .bat
+          - .cmd
+          - .js
+          - .msh$
+          - .reg$
+          - .scr
+          - .ps
+          - .vb
+          - .jar
+          - .pl
+    selection_reg_img:
+      - CommandLine|contains|all:
+          - 'reg '
+          - 'add '
+          - FailureCommand
+      - CommandLine|contains|all:
+          - 'reg '
+          - 'add '
+          - ImagePath
+    selection_sc:
+      - CommandLine|contains|all:
+          - 'sc '
+          - 'config '
+          - binpath=
+      - CommandLine|contains|all:
+          - 'sc '
+          - failure
+          - command=
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/02/04
+tags:
+  - attack.persistence
+  - attack.t1543.003
+  - attack.t1574.011
+  - DEMO

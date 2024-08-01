@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious PROCEXP152.sys File Created In TMP
+id: 3da70954-0f2c-4103-adff-b7440368f50e
+status: test
+description: |
+    Detects the creation of the PROCEXP152.sys file in the application-data local temporary folder.
+    This driver is used by Sysinternals Process Explorer but also by KDU (https://github.com/hfiref0x/KDU) or Ghost-In-The-Logs (https://github.com/bats3c/Ghost-In-The-Logs), which uses KDU.
+author: xknow (@xknow_infosec), xorxes (@xor_xes)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/04/08 16:39:31
+references:
+  - https://blog.dylan.codes/evading-sysmon-and-windows-event-logging/
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        Image|contains:
+          - \procexp64.exe
+          - \procexp.exe
+          - \procmon64.exe
+          - \procmon.exe
+    selection:
+        TargetFilename|contains: \AppData\Local\Temp\
+        TargetFilename|endswith: PROCEXP152.sys
+falsepositives: Other legimate tools using this driver and filename (like Sysinternals).
+    Note - Clever attackers may easily bypass this detection by just renaming the
+    driver filename. Therefore just Medium-level and don't rely on it.
+level: medium
+customer: 'demo'
+modified: 2022/11/22
+tags:
+  - attack.t1562.001
+  - attack.defense_evasion
+  - DEMO

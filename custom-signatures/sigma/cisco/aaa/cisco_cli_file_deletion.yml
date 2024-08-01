@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Cisco File Deletion
+id: 71d65515-c436-43c0-841b-236b1f32c21e
+status: test
+description: See what files are being deleted from flash file systems
+author: Austin Clark
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/08/12 10:54:11
+logsource:
+    product: cisco
+    service: aaa
+detection:
+    condition: keywords
+    keywords:
+      - erase
+      - delete
+      - format
+fields:
+  - CmdSet
+falsepositives: Will be used sometimes by admins to clean up local flash space
+level: medium
+customer: 'demo'
+modified: 2023/01/04
+tags:
+  - attack.defense_evasion
+  - attack.impact
+  - attack.t1070.004
+  - attack.t1561.001
+  - attack.t1561.002
+  - DEMO

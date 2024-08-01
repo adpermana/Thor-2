@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - EDRSilencer Execution - Filter Added
+id: 98054878-5eab-434c-85d4-72d4e5a3361b
+status: experimental
+description: |
+    Detects execution of EDRSilencer, a tool that abuses the Windows Filtering Platform (WFP) to block the outbound traffic of running EDR agents based on specific hardcoded filter names.
+author: Thodoris Polyzos (@SmoothDeploy)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/01/29 17:29:51
+references:
+  - https://github.com/netero1010/EDRSilencer
+logsource:
+    product: windows
+    service: security
+    definition: 'Requirements: Audit Filtering Platform Policy Change needs to be
+        enabled'
+detection:
+    condition: selection
+    selection:
+        EventID:
+          - "5441"
+          - "5447"
+        FilterName|contains: Custom Outbound Filter
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2024/01/30
+tags:
+  - attack.defense_evasion
+  - attack.t1562
+  - DEMO

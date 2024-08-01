@@ -1,0 +1,13 @@
+# this template is an example on how to run THOR in deep dive mode using templates.
+# Run THOR with -t config/tmpl-deepdive.yml -m <path-to-be-deepdived>, e.g. -t config/tmpl-deepdive.yml -m C:\
+modules:
+  - "DeepDive"
+# only use custom signatures
+customonly: true
+# log to a share
+rebase-dir: \\server\thor_output_share
+# restore files with min. score 50 to another drive
+restore_score: 50
+restore_directory: D:\restore
+# you could also define deepdive target in template file
+# image_file: C:\

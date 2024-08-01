@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Phishing Pattern ISO in Archive
+id: fcdf69e5-a3d3-452a-9724-26f2308bf2b1
+status: test
+description: Detects cases in which an ISO files is opend within an archiver like
+    7Zip or Winrar, which is a sign of phishing as threat actors put small ISO files
+    in archives as email attachments to bypass certain filters and protective measures
+    (mark of web)
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/07 13:54:01
+references:
+  - https://twitter.com/1ZRR4H/status/1534259727059787783
+  - https://app.any.run/tasks/e1fe6a62-bce8-4323-a49a-63795d9afd5d/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith:
+          - \isoburn.exe
+          - \PowerISO.exe
+          - \ImgBurn.exe
+        ParentImage|endswith:
+          - \Winrar.exe
+          - \7zFM.exe
+          - \peazip.exe
+falsepositives: Legitimate cases in which archives contain ISO or IMG files and the
+    user opens the archive and the image via clicking and not extraction
+level: high
+customer: 'demo'
+tags:
+  - attack.initial_access
+  - attack.t1566
+  - DEMO

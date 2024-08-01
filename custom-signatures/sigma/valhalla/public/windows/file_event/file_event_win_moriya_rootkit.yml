@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Moriya Rootkit File Created
+id: a1507d71-0b60-44f6-b17c-bf53220fdd88
+related:
+  - type: derived
+    id: 25b9c01c-350d-4b95-bed1-836d04a4f324
+status: test
+description: Detects the creation of a file named "MoriyaStreamWatchmen.sys" in a
+    specific location. This filename was reported to be related to the Moriya rootkit
+    as described in the securelist's Operation TunnelSnake report.
+author: Bhabesh Raj
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/05/06 13:04:51
+references:
+  - https://securelist.com/operation-tunnelsnake-and-moriya-rootkit/101831
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetFilename: C:\Windows\System32\drivers\MoriyaStreamWatchmen.sys
+falsepositives: Unknown
+level: critical
+customer: 'demo'
+modified: 2023/05/05
+tags:
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1543.003
+  - detection.emerging_threats
+  - DEMO

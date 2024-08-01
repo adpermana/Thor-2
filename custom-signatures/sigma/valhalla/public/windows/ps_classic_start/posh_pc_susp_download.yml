@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious PowerShell Download
+id: 3236fcd0-b7e3-4433-b4f8-86ad61a9af2d
+related:
+  - type: derived
+    id: 65531a81-a694-4e31-ae04-f8ba5bc33759
+status: test
+description: Detects suspicious PowerShell download command
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/03/05 14:19:21
+references:
+  - https://www.trendmicro.com/en_us/research/22/j/lv-ransomware-exploits-proxyshell-in-attack.html
+logsource:
+    category: ps_classic_start
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_download:
+        Data|contains:
+          - .DownloadFile(
+          - .DownloadString(
+    selection_webclient:
+        Data|contains: Net.WebClient
+falsepositives: PowerShell scripts that download content from the Internet
+level: medium
+customer: 'demo'
+modified: 2023/10/27
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

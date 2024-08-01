@@ -1,0 +1,22 @@
+title: Invoke-HuntSMBShares Powershell
+id: e036647d-b8b1-4053-b14c-1063d4697eb2
+status: test
+description: Detects Cmdlets name for PowerHuntShares powershell module that is used to audit smb shares on active directory domain.
+date: 2022/05/14
+modified: 2023/03/29
+references:
+    - https://github.com/NetSPI/PowerHuntShares
+author: Nasreddine Bencherchali
+tags:
+    - attack.reconnaissance
+logsource:
+    product: windows
+    category: ps_script
+    definition: Script Block Logging must be enabled
+detection:
+    selection:
+        ScriptBlockText|contains: Invoke-HuntSMBShares
+    condition: selection
+falsepositives:
+    - Administrator using the tool for a legitimate audit
+level: high

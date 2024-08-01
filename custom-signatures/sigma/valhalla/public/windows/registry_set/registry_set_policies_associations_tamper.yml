@@ -1,0 +1,53 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Attachment Manager Settings Associations Tamper
+id: a9b6c011-ab69-4ddb-bc0a-c4f21c80ec47
+status: experimental
+description: Detects tampering with attachment manager settings policies associations
+    to lower the default file type risks (See reference for more information)
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/01 21:27:41
+references:
+  - https://support.microsoft.com/en-us/topic/information-about-the-attachment-manager-in-microsoft-windows-c48a4dcd-8de5-2af5-ee9b-cd795ae42738
+  - https://www.virustotal.com/gui/file/2bcd5702a7565952c44075ac6fb946c7780526640d1264f692c7664c02c68465
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection_main and 1 of selection_value_*
+    selection_main:
+        TargetObject|contains: \SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Associations\
+    selection_value_default_file_type_rsik:
+        Details: DWORD (0x00006152)
+        TargetObject|endswith: \DefaultFileTypeRisk
+    selection_value_low_risk_filetypes:
+        Details|contains:
+          - .zip;
+          - .rar;
+          - .exe;
+          - .bat;
+          - .com;
+          - .cmd;
+          - .reg;
+          - .msi;
+          - .htm;
+          - .html;
+        TargetObject|endswith: \LowRiskFileTypes
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.defense_evasion
+  - DEMO

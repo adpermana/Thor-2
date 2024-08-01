@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - Covenant PowerShell Launcher
+id: c260b6db-48ba-4b4a-a76f-2f67644e99d2
+status: test
+description: Detects suspicious command lines used in Covenant luanchers
+author: Florian Roth (Nextron Systems), Jonhnathan Ribeiro, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/06/04 16:06:31
+references:
+  - https://posts.specterops.io/covenant-v0-5-eee0507b85ba
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_1:
+        CommandLine|contains:
+          - -Command
+          - -EncodedCommand
+        CommandLine|contains|all:
+          - -Sta
+          - -Nop
+          - -Window
+          - Hidden
+    selection_2:
+        CommandLine|contains:
+          - 'sv o (New-Object IO.MemorySteam);sv d '
+          - mshta file.hta
+          - GruntHTTP
+          - -EncodedCommand cwB2ACAAbwAgA
+level: high
+customer: 'demo'
+modified: 2023/02/21
+tags:
+  - attack.execution
+  - attack.defense_evasion
+  - attack.t1059.001
+  - attack.t1564.003
+  - DEMO

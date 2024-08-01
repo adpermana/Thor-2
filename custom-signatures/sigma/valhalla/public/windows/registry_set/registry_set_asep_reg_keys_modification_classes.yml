@@ -1,0 +1,77 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Classes Autorun Keys Modification
+id: 9df5f547-c86a-433e-b533-f2794357e242
+related:
+  - type: obsoletes
+    id: 17f878b8-9968-4578-b814-c4217fc5768c
+status: experimental
+description: Detects modification of autostart extensibility point (ASEP) in registry.
+author: Victor Sergeev, Daniil Yugoslavskiy, Gleb Sukhodolskiy, Timur Zinniatullin,
+    oscd.community, Tim Shelton, frack113 (split)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/25 14:55:41
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1547.001/T1547.001.md
+  - https://docs.microsoft.com/en-us/sysinternals/downloads/autoruns
+  - https://gist.github.com/GlebSukhodolskiy/0fc5fa5f482903064b448890db1eaf9d
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: all of selection_* and not 1 of filter_*
+    filter_drivers:
+        Image: C:\Windows\System32\drvinst.exe
+    filter_empty:
+        Details: (Empty)
+    filter_msoffice:
+        Details: '{807583E5-5146-11D5-A672-00B0D022E945}'
+    filter_svchost:
+        Image: C:\Windows\System32\svchost.exe
+        TargetObject|contains: \lnkfile\shellex\ContextMenuHandlers\
+    selection_classes_base:
+        TargetObject|contains: \Software\Classes
+    selection_classes_target:
+        TargetObject|contains:
+          - \Folder\ShellEx\ExtShellFolderViews
+          - \Folder\ShellEx\DragDropHandlers
+          - \Folder\Shellex\ColumnHandlers
+          - \Filter
+          - \Exefile\Shell\Open\Command\(Default)
+          - \Directory\Shellex\DragDropHandlers
+          - \Directory\Shellex\CopyHookHandlers
+          - \CLSID\{AC757296-3522-4E11-9862-C17BE5A1767E}\Instance
+          - \CLSID\{ABE3B9A4-257D-4B97-BD1A-294AF496222E}\Instance
+          - \CLSID\{7ED96837-96F0-4812-B211-F13C24117ED3}\Instance
+          - \CLSID\{083863F1-70DE-11d0-BD40-00A0C911CE86}\Instance
+          - \Classes\AllFileSystemObjects\ShellEx\DragDropHandlers
+          - \.exe
+          - \.cmd
+          - \ShellEx\PropertySheetHandlers
+          - \ShellEx\ContextMenuHandlers
+fields:
+  - SecurityID
+  - ObjectName
+  - OldValueType
+  - NewValueType
+falsepositives:
+  - Legitimate software automatically (mostly, during installation) sets up autorun
+    keys for legitimate reason
+  - Legitimate administrator sets up autorun keys for legitimate reason
+level: medium
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.persistence
+  - attack.t1547.001
+  - DEMO

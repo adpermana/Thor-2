@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Docker Container Discovery Via Dockerenv Listing
+id: 11701de9-d5a5-44aa-8238-84252f131895
+status: experimental
+description: Detects listing or file reading of ".dockerenv" which can be a sing of
+    potential container discovery
+author: Seth Hanford
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/08/23 18:45:01
+references:
+  - https://blog.skyplabs.net/posts/container-detection/
+  - https://stackoverflow.com/questions/20010199/how-to-determine-if-a-process-runs-inside-lxc-docker
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    condition: selection
+    selection:
+        CommandLine|endswith: .dockerenv
+        Image|endswith:
+          - /cat
+          - /dir
+          - /find
+          - /ls
+          - /stat
+          - /test
+          - grep
+falsepositives:
+  - Legitimate system administrator usage of these commands
+  - Some container tools or deployments may use these techniques natively to determine
+    how they proceed with execution, and will need to be filtered
+level: low
+customer: 'demo'
+tags:
+  - attack.discovery
+  - attack.t1082
+  - DEMO

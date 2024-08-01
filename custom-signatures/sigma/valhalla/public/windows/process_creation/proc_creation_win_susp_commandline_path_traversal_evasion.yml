@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Command Line Path Traversal Evasion Attempt
+id: 1327381e-6ab0-4f38-b583-4c1b8346a56b
+status: test
+description: Detects potential evasion or obfuscation attempts using bogus path traversal
+    via the commandline
+author: Christian Burkard (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/10/26 19:59:21
+references:
+  - https://twitter.com/hexacorn/status/1448037865435320323
+  - https://twitter.com/Gal_B1t/status/1062971006078345217
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_* and not 1 of filter_optional_*
+    filter_optional_citrix:
+        CommandLine|contains: \Citrix\Virtual Smart Card\Citrix.Authentication.VirtualSmartcard.Launcher.exe\..\
+    filter_optional_google_drive:
+        CommandLine|contains: \Google\Drive\googledrivesync.exe\..\
+    selection_1:
+        CommandLine|contains:
+          - \..\Windows\
+          - \..\System32\
+          - \..\..\
+        Image|contains: \Windows\
+    selection_2:
+        CommandLine|contains: .exe\..\
+falsepositives:
+  - Google Drive
+  - Citrix
+level: medium
+customer: 'demo'
+modified: 2023/03/29
+tags:
+  - attack.defense_evasion
+  - attack.t1036
+  - DEMO

@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Use of FSharp Interpreters
+id: b96b2031-7c17-4473-afe7-a30ce714db29
+status: test
+description: The FSharp Interpreters, FsiAnyCpu.exe and FSi.exe, can be used for AWL
+    bypass and is listed in Microsoft recommended block rules.
+author: Christopher Peacock @SecurePeacock, SCYTHE @scythe_io
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/02 12:52:51
+references:
+  - https://docs.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-block-rules
+  - https://bohops.com/2020/11/02/exploring-the-wdac-microsoft-recommended-block-rules-part-ii-wfc-fsi/
+  - https://lolbas-project.github.io/lolbas/OtherMSBinaries/FsiAnyCpu/
+  - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Fsi/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - Image|endswith: \fsianycpu.exe
+      - OriginalFileName: fsianycpu.exe
+      - Image|endswith: \fsi.exe
+      - OriginalFileName: fsi.exe
+falsepositives: Legitimate use by a software developer.
+level: medium
+customer: 'demo'
+tags:
+  - attack.execution
+  - attack.t1059
+  - DEMO

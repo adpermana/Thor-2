@@ -1,0 +1,26 @@
+title: Mstsc Connection Via RDP File
+id: 57eded77-b2c9-4d09-a15c-754da2a04101
+status: test
+description: Detects Mstsc.exe initiating a connection via a local ".rdp" file
+references:
+    - Internal Research
+author: Nasreddine Bencherchali (Nextron Systems)
+date: 2023/04/18
+tags:
+    - attack.lateral_movement
+    - attack.defense_evasion
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection:
+        Image|endswith: '\mstsc.exe'
+        CommandLine|endswith:
+            - '.rdp'
+            - '.rdp"'
+        DestinationPort: 3389
+        Initiated: 'true'
+    condition: selection
+falsepositives:
+    - Likely
+level: low

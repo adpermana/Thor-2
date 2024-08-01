@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential MSTSC Shadowing Activity
+id: 6ba5a05f-b095-4f0a-8654-b825f4f16334
+status: test
+description: Detects RDP session hijacking by using MSTSC shadowing
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/01/24 14:55:11
+references:
+  - https://twitter.com/kmkz_security/status/1220694202301976576
+  - https://github.com/kmkz/Pentesting/blob/47592e5e160d3b86c2024f09ef04ceb87d204995/Post-Exploitation-Cheat-Sheet
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains|all:
+          - noconsentprompt
+          - 'shadow:'
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/02/05
+tags:
+  - attack.lateral_movement
+  - attack.t1563.002
+  - DEMO

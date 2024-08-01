@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Google Cloud Storage Buckets Enumeration
+id: e2feb918-4e77-4608-9697-990a1aaf74c3
+status: test
+description: Detects when storage bucket is enumerated in Google Cloud.
+author: Austin Songer @austinsonger
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/14 16:40:11
+references:
+  - https://cloud.google.com/storage/docs/json_api/v1/buckets
+logsource:
+    product: gcp
+    service: gcp.audit
+detection:
+    condition: selection
+    selection:
+        gcp.audit.method_name:
+          - storage.buckets.list
+          - storage.buckets.listChannels
+falsepositives:
+  - Storage Buckets being enumerated may be performed by a system administrator. Verify
+    whether the user identity, user agent, and/or hostname should be making changes
+    in your environment.
+  - Storage Buckets enumerated from unfamiliar users should be investigated. If known
+    behavior is causing false positives, it can be exempted from the rule.
+level: low
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.discovery
+  - DEMO

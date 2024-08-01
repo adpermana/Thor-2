@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Recursive Takeown
+id: 554601fb-9b71-4bcc-abf4-21a611be4fde
+status: test
+description: Adversaries can interact with the DACLs using built-in Windows commands
+    takeown which can grant adversaries higher permissions on specific files and folders
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/30 13:50:41
+references:
+  - https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/takeown
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1222.001/T1222.001.md#atomic-test-1---take-ownership-using-takeown-utility
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains|all:
+          - '/f '
+          - /r
+        Image|endswith: \takeown.exe
+fields:
+  - CommandLine
+  - ParentCommandLine
+falsepositives:
+  - Scripts created by developers and admins
+  - Administrative activity
+level: medium
+customer: 'demo'
+modified: 2022/11/21
+tags:
+  - attack.defense_evasion
+  - attack.t1222.001
+  - DEMO

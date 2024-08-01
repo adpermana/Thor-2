@@ -1,0 +1,74 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Bad Opsec Defaults Sacrificial Processes With Improper Arguments
+id: a7c3d773-caef-227e-a7e7-c2f13c622329
+related:
+  - type: obsoletes
+    id: f5647edc-a7bf-4737-ab50-ef8c60dc3add
+status: experimental
+description: |
+    Detects attackers using tooling with bad opsec defaults.
+    E.g. spawning a sacrificial process to inject a capability into the process without taking into account how the process is normally run.
+    One trivial example of this is using rundll32.exe without arguments as a sacrificial process (default in CS, now highlighted by c2lint), running WerFault without arguments (Kraken - credit am0nsec), and other examples.
+author: Oleg Kolesnikov @securonix invrep_de, oscd.community, Florian Roth (Nextron
+    Systems), Christian Burkard (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/23 22:55:01
+references:
+  - https://blog.malwarebytes.com/malwarebytes-news/2020/10/kraken-attack-abuses-wer-service/
+  - https://www.cobaltstrike.com/help-opsec
+  - https://twitter.com/CyberRaiju/status/1251492025678983169
+  - https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/regsvr32
+  - https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/rundll32
+  - https://docs.microsoft.com/en-us/dotnet/framework/tools/regasm-exe-assembly-registration-tool
+  - https://docs.microsoft.com/en-us/dotnet/framework/tools/regsvcs-exe-net-services-installation-tool#feedback
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_* and not 1 of filter_main_* and not 1 of filter_optional_*
+    filter_main_edge_update:
+        ParentImage|contains|all:
+          - :\Users\
+          - \AppData\Local\Microsoft\EdgeUpdate\Install\{
+    filter_optional_chrome_installer:
+        CommandLine|endswith: rundll32.exe
+        Image|endswith: \rundll32.exe
+        ParentCommandLine|contains: --uninstall --channel=stable
+        ParentImage|contains|all:
+          - :\Users\
+          - \AppData\Local\Google\Chrome\Application\
+        ParentImage|endswith: \Installer\setup.exe
+    selection_regasm:
+        CommandLine|endswith: regasm.exe
+        Image|endswith: \regasm.exe
+    selection_regsvcs:
+        CommandLine|endswith: regsvcs.exe
+        Image|endswith: \regsvcs.exe
+    selection_regsvr32:
+        CommandLine|endswith: regsvr32.exe
+        Image|endswith: \regsvr32.exe
+    selection_rundll32:
+        CommandLine|endswith: rundll32.exe
+        Image|endswith: \rundll32.exe
+    selection_werfault:
+        CommandLine|endswith: WerFault.exe
+        Image|endswith: \WerFault.exe
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/12/02
+tags:
+  - attack.defense_evasion
+  - attack.t1218.011
+  - DEMO

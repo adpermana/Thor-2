@@ -1,0 +1,31 @@
+title: Mount ISO/VHD File
+id: f51181b4-7c2c-4dc4-a435-6d396c43cb68
+description: Detects when a user mounts an ISO/VHD file
+references:
+    - https://nasbench.medium.com/finding-forensic-goodness-in-obscure-windows-event-logs-60e978ea45a3
+status: stable
+author: Nasreddine Bencherchali (Nextron Systems)
+date: 2022/05/24
+modified: 2023/03/29
+tags:
+    - attack.defense_evasion
+    - attack.t1553.005
+logsource:
+    product: windows
+    service: vhd
+detection:
+    selection:
+        EventID: 12 # We use EID 12 because it contains more information about the mounted file
+    filter_other_rule:  # Covered in 50747654-6f20-4279-9c1a-48dbee759bf8
+        - VhdFile|contains:
+            - '\AppData\Local\'
+            - '\AppData\Roaming\'
+            - '\Users\Public\'
+            - '\Windows\Temp\'
+            - '\Documents\'
+            - '\Downloads\'
+        - VhdFile: 'C:\ProgramData\Microsoft\WSL\system.vhd' # This filter is when WSL is used. Comment this out if you don't use it in your environment
+    condition: selection and not filter_other_rule
+falsepositives:
+    - Legitimate use of ISO file by administrators or users
+level: medium

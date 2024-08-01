@@ -1,0 +1,52 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Msiexec Quiet Install From Remote Location
+id: 8150732a-0c9d-4a99-82b9-9efb9b90c40c
+related:
+  - type: similar
+    id: f7b5f842-a6af-4da5-9e95-e32478f3cd2f
+status: test
+description: Detects usage of Msiexec.exe to install packages hosted remotely quietly
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/10/28 20:07:31
+references:
+  - https://www.microsoft.com/en-us/security/blog/2022/10/27/raspberry-robin-worm-part-of-larger-ecosystem-facilitating-pre-ransomware-activity/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains|windash:
+          - -i
+          - -package
+          - -a
+          - -j
+    selection_img:
+      - Image|endswith: \msiexec.exe
+      - OriginalFileName: msiexec.exe
+    selection_quiet:
+        CommandLine|contains|windash: -q
+    selection_remote:
+        CommandLine|contains:
+          - http
+          - \\\\
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2024/03/13
+tags:
+  - attack.defense_evasion
+  - attack.t1218.007
+  - DEMO

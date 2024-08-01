@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Print History File Contents
+id: d7821ff1-4527-4e33-9f84-d0d57fa2fb66
+status: test
+description: Detects events in which someone prints the contents of history files
+    to the commandline or redirects it to a file for reconnaissance
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/20 13:14:11
+references:
+  - https://github.com/sleventyeleven/linuxprivchecker/
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1552.003/T1552.003.md
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    condition: all of selection*
+    selection:
+        Image|endswith:
+          - /cat
+          - /head
+          - /tail
+          - /more
+    selection_history:
+      - CommandLine|contains:
+          - /.bash_history
+          - /.zsh_history
+      - CommandLine|endswith:
+          - _history
+          - .history
+          - zhistory
+falsepositives: Legitimate administration activities
+level: medium
+customer: 'demo'
+modified: 2022/09/15
+tags:
+  - attack.reconnaissance
+  - attack.t1592.004
+  - DEMO

@@ -1,0 +1,57 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: CobaltStrike Service Installations - System
+id: 5a105d34-05fc-401e-8553-272b45c1522d
+status: test
+description: Detects known malicious service installs that appear in cases in which
+    a Cobalt Strike beacon elevates privileges or lateral movement
+author: Florian Roth (Nextron Systems), Wojciech Lesicki
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/05/26 17:30:31
+references:
+  - https://www.sans.org/webcasts/119395
+  - https://www.crowdstrike.com/blog/getting-the-bacon-from-cobalt-strike-beacon/
+  - https://thedfirreport.com/2021/08/29/cobalt-strike-a-defenders-guide/
+logsource:
+    product: windows
+    service: system
+detection:
+    condition: selection_id and (selection1 or selection2 or selection3 or selection4)
+    selection_id:
+        EventID: "7045"
+        Provider_Name: Service Control Manager
+    selection1:
+        ImagePath|contains|all:
+          - ADMIN$
+          - .exe
+    selection2:
+        ImagePath|contains|all:
+          - '%COMSPEC%'
+          - start
+          - powershell
+    selection3:
+        ImagePath|contains: powershell -nop -w hidden -encodedcommand
+    selection4:
+        ImagePath|base64offset|contains: 'IEX (New-Object Net.Webclient).DownloadString(''http://127.0.0.1:'
+falsepositives: Unknown
+level: critical
+customer: 'demo'
+modified: 2022/11/27
+tags:
+  - attack.execution
+  - attack.privilege_escalation
+  - attack.lateral_movement
+  - attack.t1021.002
+  - attack.t1543.003
+  - attack.t1569.002
+  - DEMO

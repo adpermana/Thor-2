@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - SharpLdapWhoami Execution
+id: d9367cbb-c2e0-47ce-bdc0-128cb6da898d
+status: test
+description: Detects SharpLdapWhoami, a whoami alternative that queries the LDAP service
+    on a domain controller
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/29 15:24:21
+references:
+  - https://github.com/bugch3ck/SharpLdapWhoami
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection*
+    selection_flags1:
+        CommandLine|endswith:
+          - ' /method:ntlm'
+          - ' /method:kerb'
+          - ' /method:nego'
+          - ' /m:nego'
+          - ' /m:ntlm'
+          - ' /m:kerb'
+    selection_name:
+        Image|endswith: \SharpLdapWhoami.exe
+    selection_pe:
+      - OriginalFileName|contains: SharpLdapWhoami
+      - Product: SharpLdapWhoami
+falsepositives: Programs that use the same command line flags
+level: high
+customer: 'demo'
+modified: 2023/02/04
+tags:
+  - attack.discovery
+  - attack.t1033
+  - car.2016-03-001
+  - DEMO

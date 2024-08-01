@@ -1,0 +1,125 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: DNS Events Related To Mining Pools
+id: bf74135c-18e8-4a72-a926-0e4f47888c19
+status: test
+description: Identifies clients that may be performing DNS lookups associated with
+    common currency mining pools.
+author: Saw Winn Naung, Azure-Sentinel, @neu5ron
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/19 14:28:51
+references:
+  - https://github.com/Azure/Azure-Sentinel/blob/fa0411f9424b6c47b4d5a20165e4f1b168c1f103/Detections/ASimDNS/imDNS_Miners.yaml
+logsource:
+    product: zeek
+    service: dns
+detection:
+    condition: selection and not 1 of exclude_*
+    exclude_answers:
+        answers:
+          - 127.0.0.1
+          - 0.0.0.0
+    exclude_rejected:
+        rejected: "true"
+    selection:
+        query|endswith:
+          - monerohash.com
+          - do-dear.com
+          - xmrminerpro.com
+          - secumine.net
+          - xmrpool.com
+          - minexmr.org
+          - hashanywhere.com
+          - xmrget.com
+          - mininglottery.eu
+          - minergate.com
+          - moriaxmr.com
+          - multipooler.com
+          - moneropools.com
+          - xmrpool.eu
+          - coolmining.club
+          - supportxmr.com
+          - minexmr.com
+          - hashvault.pro
+          - xmrpool.net
+          - crypto-pool.fr
+          - xmr.pt
+          - miner.rocks
+          - walpool.com
+          - herominers.com
+          - gntl.co.uk
+          - semipool.com
+          - coinfoundry.org
+          - cryptoknight.cc
+          - fairhash.org
+          - baikalmine.com
+          - tubepool.xyz
+          - fairpool.xyz
+          - asiapool.io
+          - coinpoolit.webhop.me
+          - nanopool.org
+          - moneropool.com
+          - miner.center
+          - prohash.net
+          - poolto.be
+          - cryptoescrow.eu
+          - monerominers.net
+          - cryptonotepool.org
+          - extrmepool.org
+          - webcoin.me
+          - kippo.eu
+          - hashinvest.ws
+          - monero.farm
+          - linux-repository-updates.com
+          - 1gh.com
+          - dwarfpool.com
+          - hash-to-coins.com
+          - pool-proxy.com
+          - hashfor.cash
+          - fairpool.cloud
+          - litecoinpool.org
+          - mineshaft.ml
+          - abcxyz.stream
+          - moneropool.ru
+          - cryptonotepool.org.uk
+          - extremepool.org
+          - extremehash.com
+          - hashinvest.net
+          - unipool.pro
+          - crypto-pools.org
+          - monero.net
+          - backup-pool.com
+          - mooo.com
+          - freeyy.me
+          - cryptonight.net
+          - shscrypto.net
+fields:
+  - id.orig_h
+  - id.resp_h
+  - query
+  - answers
+  - qtype_name
+  - rcode_name
+falsepositives: A DNS lookup does not necessarily  mean a successful attempt, verify
+    a) if there was a response using the zeek answers field, if there was then verify
+    the connections (conn.log) to those IPs. b) verify if HTTP, SSL, or TLS activity
+    to the domain that was queried. http.log field is 'host' and ssl/tls is 'server_name'.
+level: low
+customer: 'demo'
+modified: 2022/07/07
+tags:
+  - attack.execution
+  - attack.t1569.002
+  - attack.impact
+  - attack.t1496
+  - DEMO

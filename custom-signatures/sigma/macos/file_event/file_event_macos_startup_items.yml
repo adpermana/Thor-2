@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Startup Items
+id: dfe8b941-4e54-4242-b674-6b613d521962
+status: test
+description: Detects creation of startup item plist files that automatically get executed
+    at boot initialization to establish persistence.
+author: Alejandro Ortuno, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/14 09:36:51
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1037.005/T1037.005.md
+logsource:
+    category: file_event
+    product: macos
+detection:
+    condition: selection
+    selection:
+      - TargetFilename|contains: /Library/StartupItems/
+      - TargetFilename|endswith: .plist
+falsepositives: Legitimate administration activities
+level: low
+customer: 'demo'
+modified: 2022/07/11
+tags:
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1037.005
+  - DEMO

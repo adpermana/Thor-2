@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: TacticalRMM Service Installation
+id: 4bb79b62-ef12-4861-981d-2aab43fab642
+status: test
+description: Detects a TacticalRMM service installation. Tactical RMM is a remote
+    monitoring & management tool.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/11/28 14:35:21
+references:
+  - https://thedfirreport.com/2022/11/28/emotet-strikes-again-lnk-file-leads-to-domain-wide-ransomware/
+logsource:
+    product: windows
+    service: system
+detection:
+    condition: all of selection_*
+    selection_root:
+        EventID: "7045"
+        Provider_Name: Service Control Manager
+    selection_service:
+      - ImagePath|contains: tacticalrmm.exe
+      - ServiceName|contains: TacticalRMM Agent Service
+falsepositives: Legitimate use of the tool
+level: medium
+customer: 'demo'
+tags:
+  - attack.command_and_control
+  - attack.t1219
+  - DEMO

@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious CodePage Switch Via CHCP
+id: c7942406-33dd-4377-a564-0f62db0593a3
+status: test
+description: Detects a code page switch in command line or batch scripts to a rare
+    language
+author: Florian Roth (Nextron Systems), Jonhnathan Ribeiro, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/14 14:47:51
+references:
+  - https://docs.microsoft.com/en-us/windows/win32/intl/code-page-identifiers
+  - https://twitter.com/cglyer/status/1183756892952248325
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|endswith:
+          - ' 936'
+          - ' 1258'
+        Image|endswith: \chcp.com
+fields:
+  - ParentCommandLine
+falsepositives: Administrative activity (adjust code pages according to your organization's
+    region)
+level: medium
+customer: 'demo'
+modified: 2023/03/07
+tags:
+  - attack.t1036
+  - attack.defense_evasion
+  - DEMO

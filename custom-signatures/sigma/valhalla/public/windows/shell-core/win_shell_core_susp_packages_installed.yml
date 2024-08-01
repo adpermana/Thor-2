@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Application Installed
+id: 83c161b6-ca67-4f33-8ad0-644a0737cf07
+status: test
+description: Detects suspicious application installed by looking at the added shortcut
+    to the app resolver cache
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/14 14:55:11
+references:
+  - https://nasbench.medium.com/finding-forensic-goodness-in-obscure-windows-event-logs-60e978ea45a3
+logsource:
+    product: windows
+    service: shell-core
+detection:
+    condition: 1 of selection_*
+    selection_name:
+        EventID: "28115"
+        Name|contains:
+          - Zenmap
+          - AnyDesk
+          - wireshark
+          - openvpn
+    selection_packageid:
+        AppID|contains:
+          - zenmap.exe
+          - prokzult ad
+          - wireshark
+          - openvpn
+        EventID: "28115"
+falsepositives: Packages or applications being legitimately used by users or administrators
+level: medium
+customer: 'demo'
+tags:
+  - attack.execution
+  - DEMO

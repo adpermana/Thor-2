@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Windows Defender Folder Exclusion Added Via Reg.EXE
+id: 48917adc-a28e-4f5d-b729-11e75da8941f
+status: test
+description: Detects the usage of "reg.exe" to add Defender folder exclusions. Qbot
+    has been seen using this technique to add exclusions for folders within AppData
+    and ProgramData.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/02/13 21:52:51
+references:
+  - https://thedfirreport.com/2022/02/07/qbot-likes-to-move-it-move-it/
+  - https://redcanary.com/threat-detection-report/threats/qbot/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - SOFTWARE\Microsoft\Windows Defender\Exclusions\Paths
+          - SOFTWARE\Microsoft\Microsoft Antimalware\Exclusions\Paths
+        CommandLine|contains|all:
+          - 'ADD '
+          - '/t '
+          - 'REG_DWORD '
+          - '/v '
+          - '/d '
+          - "0"
+        Image|endswith: \reg.exe
+falsepositives: Legitimate use
+level: medium
+customer: 'demo'
+modified: 2023/02/04
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+  - DEMO

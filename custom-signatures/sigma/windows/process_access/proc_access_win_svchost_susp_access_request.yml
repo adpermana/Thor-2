@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Svchost Process Access
+id: 166e9c50-8cd9-44af-815d-d1f0c0e90dde
+status: test
+description: Detects suspicious access to the "svchost" process such as that used
+    by Invoke-Phantom to kill the thread of the Windows event logging service.
+author: Tim Burrell
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/01/02 15:01:41
+references:
+  - https://github.com/hlldz/Invoke-Phant0m
+  - https://twitter.com/timbmsft/status/900724491076214784
+logsource:
+    category: process_access
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_msbuild:
+        CallTrace|contains:
+          - Microsoft.Build.ni.dll
+          - System.ni.dll
+        SourceImage|contains: :\Program Files\Microsoft Visual Studio\
+        SourceImage|endswith: \MSBuild\Current\Bin\MSBuild.exe
+    selection:
+        CallTrace|contains: UNKNOWN
+        GrantedAccess: "0x1F3FFF"
+        TargetImage|endswith: :\Windows\System32\svchost.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/01/30
+tags:
+  - attack.defense_evasion
+  - attack.t1562.002
+  - DEMO

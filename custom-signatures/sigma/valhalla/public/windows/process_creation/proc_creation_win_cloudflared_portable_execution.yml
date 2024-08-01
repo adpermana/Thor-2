@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Cloudflared Portable Execution
+id: fadb84f0-4e84-4f6d-a1ce-9ef2bffb6ccd
+status: experimental
+description: |
+    Detects the execution of the "cloudflared" binary from a non standard location.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/12/20 14:13:41
+references:
+  - https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/do-more-with-tunnels/trycloudflare/
+  - https://github.com/cloudflare/cloudflared
+  - https://www.intrinsec.com/akira_ransomware/
+  - https://www.guidepointsecurity.com/blog/tunnel-vision-cloudflared-abused-in-the-wild/
+  - https://github.com/cloudflare/cloudflared/releases
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_admin_location:
+        Image|contains:
+          - :\Program Files (x86)\cloudflared\
+          - :\Program Files\cloudflared\
+    selection:
+        Image|endswith: \cloudflared.exe
+falsepositives: Legitimate usage of Cloudflared portable versions
+level: medium
+customer: 'demo'
+tags:
+  - attack.command_and_control
+  - attack.t1090.001
+  - DEMO

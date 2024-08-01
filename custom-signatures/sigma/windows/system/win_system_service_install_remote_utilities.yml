@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Remote Utilities Host Service Install
+id: 85cce894-dd8b-4427-a958-5cc47a4dc9b9
+status: test
+description: Detects Remote Utilities Host service installation on the target system.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/10/31 15:54:21
+references:
+  - https://www.remoteutilities.com/support/kb/host-service-won-t-start/
+logsource:
+    product: windows
+    service: system
+detection:
+    condition: all of selection_*
+    selection_root:
+        EventID: "7045"
+        Provider_Name: Service Control Manager
+    selection_service:
+      - ImagePath|contains|all:
+          - \rutserv.exe
+          - -service
+      - ServiceName: Remote Utilities - Host
+falsepositives: Legitimate use of the tool
+level: medium
+customer: 'demo'
+tags:
+  - attack.persistence
+  - DEMO

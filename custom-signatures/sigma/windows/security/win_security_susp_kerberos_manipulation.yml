@@ -1,0 +1,72 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Kerberos Manipulation
+id: f7644214-0eb0-4ace-9455-331ec4c09253
+status: test
+description: Detects failed Kerberos TGT issue operation. This can be a sign of manipulations
+    of TGT messages by an attacker.
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/02/10 11:54:21
+references:
+  - https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4771
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: selection
+    selection:
+        EventID:
+          - "675"
+          - "4768"
+          - "4769"
+          - "4771"
+        Status:
+          - "0x9"
+          - "0xA"
+          - "0xB"
+          - "0xF"
+          - "0x10"
+          - "0x11"
+          - "0x13"
+          - "0x14"
+          - "0x1A"
+          - "0x1F"
+          - "0x21"
+          - "0x22"
+          - "0x23"
+          - "0x24"
+          - "0x26"
+          - "0x27"
+          - "0x28"
+          - "0x29"
+          - "0x2C"
+          - "0x2D"
+          - "0x2E"
+          - "0x2F"
+          - "0x31"
+          - "0x32"
+          - "0x3E"
+          - "0x3F"
+          - "0x40"
+          - "0x41"
+          - "0x43"
+          - "0x44"
+falsepositives: Faulty legacy applications
+level: high
+customer: 'demo'
+modified: 2024/01/16
+tags:
+  - attack.credential_access
+  - attack.t1212
+  - DEMO

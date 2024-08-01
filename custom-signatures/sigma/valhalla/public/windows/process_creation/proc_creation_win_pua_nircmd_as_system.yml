@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PUA - NirCmd Execution As LOCAL SYSTEM
+id: d9047477-0359-48c9-b8c7-792cedcdc9c4
+status: test
+description: Detects the use of NirCmd tool for command execution as SYSTEM user
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/24 14:22:41
+references:
+  - https://www.nirsoft.net/utils/nircmd.html
+  - https://www.winhelponline.com/blog/run-program-as-system-localsystem-account-windows/
+  - https://www.nirsoft.net/utils/nircmd2.html#using
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains: ' runassystem '
+fields:
+  - CommandLine
+  - ParentCommandLine
+falsepositives: Legitimate use by administrators
+level: high
+customer: 'demo'
+modified: 2023/02/13
+tags:
+  - attack.execution
+  - attack.t1569.002
+  - attack.s0029
+  - DEMO

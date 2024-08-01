@@ -1,0 +1,25 @@
+title: Suspicious Alternate Data Stream Execution
+id: a87a8565-2768-41ce-bdde-36468be60613
+status: experimental
+description: Detects possible suspicious ADS (Alternate Data Stream) execution via the Image field
+references:
+    - Internal Research
+    - https://securelist.com/the-tetrade-brazilian-banking-malware/97779/
+    - https://www.crowdstrike.com/blog/big-game-hunting-the-evolution-of-indrik-spider-from-dridex-wire-fraud-to-bitpaymer-targeted-ransomware/
+    - https://www.welivesecurity.com/wp-content/uploads/2017/08/eset-gazer.pdf
+    - https://www.cybereason.com/blog/research/valak-more-than-meets-the-eye
+author: Nasreddine Bencherchali
+date: 2022/09/07
+tags:
+    - attack.defense_evasion
+    - attack.t1564.004
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|re: '[^\\]:[^\\]'
+    condition: selection
+falsepositives:
+    - Unknown
+level: high

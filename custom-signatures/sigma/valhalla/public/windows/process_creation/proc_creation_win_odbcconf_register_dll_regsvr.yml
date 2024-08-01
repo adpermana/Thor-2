@@ -1,0 +1,53 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: New DLL Registered Via Odbcconf.EXE
+id: 9f0a8bf3-a65b-440a-8c1e-5cb1547c8e70
+related:
+  - type: similar
+    id: ba4cfc11-d0fa-4d94-bf20-7c332c412e76
+status: experimental
+description: Detects execution of "odbcconf" with "REGSVR" in order to register a
+    new DLL (equivalent to running regsvr32). Attackers abuse this to install and
+    run malicious DLLs.
+author: Kirill Kiryanov, Beyu Denis, Daniil Yugoslavskiy, oscd.community, Nasreddine
+    Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/22 14:27:01
+references:
+  - https://learn.microsoft.com/en-us/sql/odbc/odbcconf-exe?view=sql-server-ver16
+  - https://lolbas-project.github.io/lolbas/Binaries/Odbcconf/
+  - https://redcanary.com/blog/raspberry-robin/
+  - https://web.archive.org/web/20191023232753/https://twitter.com/Hexacorn/status/1187143326673330176
+  - https://www.hexacorn.com/blog/2020/08/23/odbcconf-lolbin-trifecta/
+  - https://www.trendmicro.com/en_us/research/17/h/backdoor-carrying-emails-set-sights-on-russian-speaking-businesses.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains|all:
+          - 'REGSVR '
+          - .dll
+    selection_img:
+      - Image|endswith: \odbcconf.exe
+      - OriginalFileName: odbcconf.exe
+falsepositives: Legitimate DLLs being registered via "odbcconf" will generate false
+    positives. Investigate the path of the DLL and its content to determine if the
+    action is authorized.
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1218.008
+  - DEMO

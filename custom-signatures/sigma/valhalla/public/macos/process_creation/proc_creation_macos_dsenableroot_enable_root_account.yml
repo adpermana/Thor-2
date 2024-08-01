@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Root Account Enable Via Dsenableroot
+id: 821bcf4d-46c7-4b87-bc57-9509d3ba7c11
+status: experimental
+description: Detects attempts to enable the root account via "dsenableroot"
+author: Sohan G (D4rkCiph3r)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/08/22 15:24:21
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/b27a3cb25025161d49ac861cb216db68c46a3537/atomics/T1078.003/T1078.003.md
+  - https://github.com/elastic/detection-rules/blob/4312d8c9583be524578a14fe6295c3370b9a9307/rules/macos/persistence_enable_root_account.toml
+  - https://ss64.com/osx/dsenableroot.html
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_disable:
+        CommandLine|contains: ' -d '
+    selection:
+        Image|endswith: /dsenableroot
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.t1078
+  - attack.t1078.001
+  - attack.t1078.003
+  - attack.initial_access
+  - attack.persistence
+  - DEMO

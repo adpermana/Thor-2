@@ -1,0 +1,86 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PowerShell Base64 Encoded WMI Classes
+id: 1816994b-42e1-4fb1-afd2-134d88184f71
+related:
+  - type: obsoletes
+    id: 47688f1b-9f51-4656-b013-3cc49a166a36
+status: test
+description: Detects calls to base64 encoded WMI class such as "Win32_Shadowcopy",
+    "Win32_ScheduledJob", etc.
+author: Christian Burkard (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/30 15:07:51
+references:
+  - https://github.com/Neo23x0/Raccine/blob/20a569fa21625086433dcce8bb2765d0ea08dcb6/yara/mal_revil.yar
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection_img and 1 of selection_cli_*
+    selection_cli_loggedonuser:
+        CommandLine|contains:
+          - VwBpAG4AMwAyAF8ATABvAGcAZwBlAGQATwBuAFUAcwBlAHIA
+          - cAaQBuADMAMgBfAEwAbwBnAGcAZQBkAE8AbgBVAHMAZQByA
+          - XAGkAbgAzADIAXwBMAG8AZwBnAGUAZABPAG4AVQBzAGUAcg
+          - V2luMzJfTG9nZ2VkT25Vc2Vy
+          - dpbjMyX0xvZ2dlZE9uVXNlc
+          - XaW4zMl9Mb2dnZWRPblVzZX
+    selection_cli_process:
+        CommandLine|contains:
+          - VwBpAG4AMwAyAF8AUAByAG8AYwBlAHMAcw
+          - cAaQBuADMAMgBfAFAAcgBvAGMAZQBzAHMA
+          - XAGkAbgAzADIAXwBQAHIAbwBjAGUAcwBzA
+          - V2luMzJfUHJvY2Vzc
+          - dpbjMyX1Byb2Nlc3
+          - XaW4zMl9Qcm9jZXNz
+    selection_cli_scheduledJob:
+        CommandLine|contains:
+          - VwBpAG4AMwAyAF8AUwBjAGgAZQBkAHUAbABlAGQASgBvAGIA
+          - cAaQBuADMAMgBfAFMAYwBoAGUAZAB1AGwAZQBkAEoAbwBiA
+          - XAGkAbgAzADIAXwBTAGMAaABlAGQAdQBsAGUAZABKAG8AYg
+          - V2luMzJfU2NoZWR1bGVkSm9i
+          - dpbjMyX1NjaGVkdWxlZEpvY
+          - XaW4zMl9TY2hlZHVsZWRKb2
+    selection_cli_shadowcopy:
+        CommandLine|contains:
+          - VwBpAG4AMwAyAF8AUwBoAGEAZABvAHcAYwBvAHAAeQ
+          - cAaQBuADMAMgBfAFMAaABhAGQAbwB3AGMAbwBwAHkA
+          - XAGkAbgAzADIAXwBTAGgAYQBkAG8AdwBjAG8AcAB5A
+          - V2luMzJfU2hhZG93Y29we
+          - dpbjMyX1NoYWRvd2NvcH
+          - XaW4zMl9TaGFkb3djb3B5
+    selection_cli_useraccount:
+        CommandLine|contains:
+          - VwBpAG4AMwAyAF8AVQBzAGUAcgBBAGMAYwBvAHUAbgB0A
+          - cAaQBuADMAMgBfAFUAcwBlAHIAQQBjAGMAbwB1AG4AdA
+          - XAGkAbgAzADIAXwBVAHMAZQByAEEAYwBjAG8AdQBuAHQA
+          - V2luMzJfVXNlckFjY291bn
+          - dpbjMyX1VzZXJBY2NvdW50
+          - XaW4zMl9Vc2VyQWNjb3Vud
+    selection_img:
+      - Image|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+      - OriginalFileName:
+          - PowerShell.EXE
+          - pwsh.dll
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - attack.defense_evasion
+  - attack.t1027
+  - DEMO

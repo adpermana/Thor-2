@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: WinSxS Executable File Creation By Non-System Process
+id: 34746e8c-5fb8-415a-b135-0abc167e912a
+related:
+  - type: derived
+    id: 64827580-e4c3-4c64-97eb-c72325d45399
+status: experimental
+description: Detects the creation of binaries in the WinSxS folder by non-system processes
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/11 19:40:21
+references:
+  - https://media.defense.gov/2023/May/09/2003218554/-1/-1/0/JOINT_CSA_HUNTING_RU_INTEL_SNAKE_MALWARE_20230509.PDF
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_system_location:
+        Image|startswith:
+          - C:\Windows\Systems32\
+          - C:\Windows\SysWOW64\
+          - C:\Windows\WinSxS\
+    selection:
+        TargetFilename|endswith: .exe
+        TargetFilename|startswith: C:\Windows\WinSxS\
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.execution
+  - DEMO

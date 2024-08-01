@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PowerShell ShellCode
+id: 16b37b70-6fcf-4814-a092-c36bd3aafcbd
+status: test
+description: Detects Base64 encoded Shellcode
+author: David Ledbetter (shellcode), Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2018/11/17 11:24:01
+references:
+  - https://twitter.com/cyb3rops/status/1063072865992523776
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: selection
+    selection:
+        ScriptBlockText|contains:
+          - OiCAAAAYInlM
+          - OiJAAAAYInlM
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2024/01/25
+tags:
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - attack.t1055
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

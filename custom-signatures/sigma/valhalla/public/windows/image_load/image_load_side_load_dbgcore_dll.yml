@@ -1,0 +1,51 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential DLL Sideloading Of DBGCORE.DLL
+id: 9ca2bf31-0570-44d8-a543-534c47c33ed7
+status: test
+description: Detects DLL sideloading of "dbgcore.dll"
+author: Nasreddine Bencherchali (Nextron Systems), Wietze Beukema (project and research)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/10/25 15:20:41
+references:
+  - https://hijacklibs.net/
+logsource:
+    category: image_load
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+    filter_main_generic:
+        ImageLoaded|startswith:
+          - C:\Program Files (x86)\
+          - C:\Program Files\
+          - C:\Windows\SoftwareDistribution\
+          - C:\Windows\System32\
+          - C:\Windows\SystemTemp\
+          - C:\Windows\SysWOW64\
+          - C:\Windows\WinSxS\
+    filter_optional_steam:
+        ImageLoaded|endswith: \Steam\bin\cef\cef.win7x64\dbgcore.dll
+    selection:
+        ImageLoaded|endswith: \dbgcore.dll
+falsepositives: Legitimate applications loading their own versions of the DLL mentioned
+    in this rule
+level: medium
+customer: 'demo'
+modified: 2023/05/05
+tags:
+  - attack.defense_evasion
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1574.001
+  - attack.t1574.002
+  - DEMO

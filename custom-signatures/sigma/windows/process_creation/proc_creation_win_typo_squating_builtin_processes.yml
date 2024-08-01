@@ -1,0 +1,58 @@
+title: Windows Built-in Processes Typosquatting
+id: 01a85999-c274-41bb-a3e4-5b15b2bc75e2
+status: experimental
+description: Detects execution of typosquatted built-in windows processes
+references:
+    - Internal Research
+author: Nasreddine Bencherchali
+date: 2022/05/22
+modified: 2022/06/08
+tags:
+    - attack.defense_evasion
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    # Sync with filename-characteristics.txt: Detects typosquatted executables similar to built-in windows processes
+    selection:
+        - Image|endswith: #This list is not final and will grow as more names are found
+            - 'explorerr.exe'
+            - 'csrsss.exe'
+            - 'smsss.exe'
+            - 'taskhostt.exe'
+            - 'spoolsvc.exe'
+            - 'wininitt.exe'
+            - 'lsasss.exe'
+            - 'msbuildd.exe'
+            - 'lssass.exe'
+            - 'svchostt.exe'
+        - Image|contains:
+            - 'svch0st'
+            - 'svchost1'
+            - 'exp1orer'
+            - 'rundll33'
+            - 'rund1l32'
+            - 'rundl132'
+            - 'rund1132'
+            - 'expl0rer'
+            - 'dllh0st'
+            - 'dlllhost'
+            - 'taskh0st'
+            - 'spooolsv'
+            - 'conh0st'
+            - 'c0nhost'
+            - 'lsssass'
+            - '1ssass'
+            - 'winl0gon'
+            - 'winlog0n'
+            - 'winl0g0n'
+            - 'winninit'
+            - 'RuntimeBr0ker'
+            - 'wmiic'
+            - 'wsscript'
+            - 'regsvrr32'
+            - 'rundll64'
+    condition: selection
+falsepositives:
+    - Unlikely
+level: high

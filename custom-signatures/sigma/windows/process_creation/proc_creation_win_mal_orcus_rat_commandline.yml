@@ -1,0 +1,29 @@
+title: Commandline Used by Orcus RAT
+id: 992aefe1-5abd-49f8-962e-4ab3f719b0ee
+status: experimental
+description: Detectes specific commandline seen used by Orcus RAT
+references:
+    - https://any.run/cybersecurity-blog/orcus-rat-malware-analysis/?utm_source=twitter&utm_medium=article&utm_campaign=in-house&utm_content=orcus_3112022
+    - https://vms.drweb-av.es/virus/?i=20035695
+author: X__Junior
+date: 2022/11/14
+tags:
+    - attack.execution
+logsource:
+    product: windows
+    category: process_creation
+detection:
+    selection_1:
+        CommandLine|contains:
+            -' /protectFile'
+            -' "/protectFile"'
+    selection_2:
+        CommandLine|contains:
+            # example 1: "C:\Users\Admin\AppData\Roaming\JavaUpdater.exe" /launchSelfAndExit "C:\Users\Admin\AppData\Roaming\Java\javaUpdate.exe" 1684 /protectFile
+            # example 2: "C:\Users\Admin\AppData\Roaming\JavaUpdater.exe" /watchProcess "C:\Users\Admin\AppData\Roaming\Java\javaUpdate.exe" 1684 "/protectFile" 
+            - ' /watchProcess '
+            - ' /launchSelfAndExit '
+    condition: all of selection_*
+falsepositives:
+    - Rare FP could occur in processes with similar command line flags
+level: high

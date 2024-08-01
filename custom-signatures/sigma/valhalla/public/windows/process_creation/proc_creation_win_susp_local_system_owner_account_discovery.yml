@@ -1,0 +1,74 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Local Accounts Discovery
+id: 502b42de-4306-40b4-9596-6f590c81f073
+status: test
+description: Local accounts, System Owner/User discovery using operating systems utilities
+author: Timur Zinniatullin, Daniil Yugoslavskiy, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/21 12:29:51
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1033/T1033.md
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: (selection_cmd and not filter_cmd) or (selection_net and not filter_net)
+        or 1 of selection_other_*
+    filter_cmd:
+        CommandLine|contains: ' rmdir '
+    filter_net:
+        CommandLine|contains:
+          - /domain
+          - /add
+          - /delete
+          - /active
+          - /expires
+          - /passwordreq
+          - /scriptpath
+          - /times
+          - /workstations
+    selection_cmd:
+        CommandLine|contains|all:
+          - ' /c'
+          - 'dir '
+          - \Users\
+        Image|endswith: \cmd.exe
+    selection_net:
+        CommandLine|contains: user
+        Image|endswith:
+          - \net.exe
+          - \net1.exe
+    selection_other_cmdkey:
+        CommandLine|contains: ' /l'
+        Image|endswith: \cmdkey.exe
+    selection_other_img:
+        Image|endswith:
+          - \whoami.exe
+          - \quser.exe
+          - \qwinsta.exe
+    selection_other_wmi:
+        CommandLine|contains|all:
+          - useraccount
+          - get
+        Image|endswith: \wmic.exe
+falsepositives: Legitimate administrator or user enumerates local users for legitimate
+    reason
+level: low
+customer: 'demo'
+modified: 2023/01/03
+tags:
+  - attack.discovery
+  - attack.t1033
+  - attack.t1087.001
+  - DEMO

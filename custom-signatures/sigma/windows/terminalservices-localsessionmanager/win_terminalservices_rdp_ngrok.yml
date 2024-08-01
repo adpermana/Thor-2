@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Ngrok Usage with Remote Desktop Service
+id: 64d51a51-32a6-49f0-9f3d-17e34d640272
+status: test
+description: Detects cases in which ngrok, a reverse proxy tool, forwards events to
+    the local RDP port, which could be a sign of malicious behaviour
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/04/29 16:14:51
+references:
+  - https://twitter.com/tekdefense/status/1519711183162556416?s=12&t=OTsHCBkQOTNs1k3USz65Zg
+  - https://ngrok.com/
+logsource:
+    product: windows
+    service: terminalservices-localsessionmanager
+detection:
+    condition: selection
+    selection:
+        Address|contains: "16777216"
+        EventID: "21"
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.command_and_control
+  - attack.t1090
+  - DEMO

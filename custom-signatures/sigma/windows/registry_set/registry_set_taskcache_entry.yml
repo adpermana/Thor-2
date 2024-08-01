@@ -1,0 +1,72 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Scheduled TaskCache Change by Uncommon Program
+id: 4720b7df-40c3-48fd-bbdf-fd4b3c464f0d
+status: experimental
+description: Monitor the creation of a new key under 'TaskCache' when a new scheduled
+    task is registered by a process that is not svchost.exe, which is suspicious
+author: Syed Hasan (@syedhasan009)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/06/18 17:59:31
+references:
+  - https://thedfirreport.com/2021/03/29/sodinokibi-aka-revil-ransomware/
+  - https://labs.f-secure.com/blog/scheduled-task-tampering/
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection and not 1 of filter*
+    filter:
+        TargetObject|contains:
+          - Microsoft\Windows\UpdateOrchestrator
+          - Microsoft\Windows\SoftwareProtectionPlatform\SvcRestartTask\Index
+          - Microsoft\Windows\Flighting\OneSettings\RefreshCache\Index
+    filter_dropbox_updater:
+        Image:
+          - C:\Program Files (x86)\Dropbox\Update\DropboxUpdate.exe
+          - C:\Program Files\Dropbox\Update\DropboxUpdate.exe
+    filter_explorer:
+        Image: C:\Windows\explorer.exe
+        TargetObject|contains: \Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree\Microsoft\Windows\PLA\Server
+            Manager Performance Monitor\
+    filter_msiexec:
+        Image: C:\Windows\System32\msiexec.exe
+    filter_ngen:
+        Image|endswith: \ngen.exe
+        Image|startswith: C:\Windows\Microsoft.NET\Framework
+        TargetObject|contains:
+          - \Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks\{B66B135D-DA06-4FC4-95F8-7458E1D10129}
+          - \Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree\Microsoft\Windows\.NET
+            Framework\.NET Framework NGEN
+    filter_office_click_to_run:
+        Image:
+          - C:\Program Files\Microsoft Office\root\Integration\Integrator.exe
+          - C:\Program Files (x86)\Microsoft Office\root\Integration\Integrator.exe
+    filter_svchost:
+        Image: C:\WINDOWS\system32\svchost.exe
+    filter_system:
+        Image: System
+    filter_tiworker:
+        Image|endswith: \TiWorker.exe
+        Image|startswith: C:\Windows\
+    selection:
+        TargetObject|contains: SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.persistence
+  - attack.t1053
+  - attack.t1053.005
+  - DEMO

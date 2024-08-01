@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Discovery Using AzureHound
+id: 35b781cc-1a08-4a5a-80af-42fd7c315c6b
+status: test
+description: Detects AzureHound (A BloodHound data collector for Microsoft Azure)
+    activity via the default User-Agent that is used during its operation after successful
+    authentication.
+author: Janantha Marasinghe
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/11/27 13:07:11
+references:
+  - https://github.com/BloodHoundAD/AzureHound
+logsource:
+    product: azure
+    service: signinlogs
+detection:
+    condition: selection
+    selection:
+        ResultType: "0"
+        userAgent|contains: azurehound
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.discovery
+  - attack.t1087.004
+  - attack.t1526
+  - DEMO

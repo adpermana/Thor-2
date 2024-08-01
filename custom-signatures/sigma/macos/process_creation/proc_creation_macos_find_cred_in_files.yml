@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Credentials In Files
+id: 53b1b378-9b06-4992-b972-dde6e423d2b4
+status: test
+description: Detecting attempts to extract passwords with grep and laZagne
+author: Igor Fits, Mikhail Larin, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/19 11:13:21
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1552.001/T1552.001.md
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    condition: 1 of selection*
+    selection1:
+        CommandLine|contains: password
+        Image|endswith: /grep
+    selection2:
+        CommandLine|contains: laZagne
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.credential_access
+  - attack.t1552.001
+  - DEMO

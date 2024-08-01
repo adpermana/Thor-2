@@ -1,0 +1,52 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Reconnaissance Activity Using Get-LocalGroupMember Cmdlet
+id: c8a180d6-47a3-4345-a609-53f9c3d834fc
+related:
+  - type: similar
+    id: cef24b90-dddc-4ae1-a09a-8764872f69fc
+status: test
+description: Detects suspicious reconnaissance command line activity on Windows systems
+    using the PowerShell Get-LocalGroupMember Cmdlet
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/10/10 00:20:41
+references:
+  - https://www.absolomb.com/2018-01-26-Windows-Privilege-Escalation-Guide/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cmdlet:
+        CommandLine|contains: 'Get-LocalGroupMember '
+    selection_group:
+        CommandLine|contains:
+          - domain admins
+          - ' administrator'
+          - ' administrateur'
+          - enterprise admins
+          - Exchange Trusted Subsystem
+          - Remote Desktop Users
+          - Utilisateurs du Bureau à distance
+          - Usuarios de escritorio remoto
+fields:
+  - CommandLine
+  - ParentCommandLine
+falsepositives: Administrative activity
+level: medium
+customer: 'demo'
+tags:
+  - attack.discovery
+  - attack.t1087.001
+  - DEMO

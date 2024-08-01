@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: DLL Execution via Rasautou.exe
+id: cd3d1298-eb3b-476c-ac67-12847de55813
+status: test
+description: Detects using Rasautou.exe for loading arbitrary .DLL specified in -d
+    option and executes the export specified in -p.
+author: Julia Fomina, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/09 13:47:21
+references:
+  - https://lolbas-project.github.io/lolbas/Binaries/Rasautou/
+  - https://github.com/fireeye/DueDLLigence
+  - https://www.fireeye.com/blog/threat-research/2019/10/staying-hidden-on-the-endpoint-evading-detection-with-shellcode.html
+logsource:
+    category: process_creation
+    product: windows
+    definition: Since options '-d' and '-p' were removed in Windows 10 this rule is
+        relevant only for Windows before 10. And as Windows 7 doesn't log command
+        line in 4688 by default, to detect this attack you need Sysmon 1 configured
+        or KB3004375 installed for command-line auditing (https://support.microsoft.com/en-au/help/3004375/microsoft-security-advisory-update-to-improve-windows-command-line-aud)
+detection:
+    condition: all of selection*
+    selection_cli:
+        CommandLine|contains|all:
+          - ' -d '
+          - ' -p '
+    selection_img:
+      - Image|endswith: \rasautou.exe
+      - OriginalFileName: rasdlui.exe
+falsepositives: Unlikely
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

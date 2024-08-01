@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: UAC Bypass via Windows Firewall Snap-In Hijack
+id: e52cb31c-10ed-4aea-bcb7-593c9f4a315b
+status: test
+description: Detects attempts to bypass User Account Control (UAC) by hijacking the
+    Microsoft Management Console (MMC) Windows Firewall snap-in
+author: Tim Rauch, Elastic (idea)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/27 17:30:01
+references:
+  - https://www.elastic.co/guide/en/security/current/uac-bypass-via-windows-firewall-snap-in-hijack.html#uac-bypass-via-windows-firewall-snap-in-hijack
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        Image|endswith: \WerFault.exe
+    selection:
+        ParentCommandLine|contains: WF.msc
+        ParentImage|endswith: \mmc.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.privilege_escalation
+  - attack.t1548
+  - DEMO

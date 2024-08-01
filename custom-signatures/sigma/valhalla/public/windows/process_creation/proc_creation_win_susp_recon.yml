@@ -1,0 +1,52 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Recon Information for Export with Command Prompt
+id: aa2efee7-34dd-446e-8a37-40790a66efd7
+related:
+  - type: similar
+    id: 8e0bb260-d4b2-4fff-bb8d-3f82118e6892
+status: test
+description: Once established within a system or network, an adversary may use automated
+    techniques for collecting internal data.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/07/30 18:48:31
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1119/T1119.md
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection*
+    selection_image:
+      - Image|endswith:
+          - \tree.com
+          - \WMIC.exe
+          - \doskey.exe
+          - \sc.exe
+      - OriginalFileName:
+          - wmic.exe
+          - DOSKEY.EXE
+          - sc.exe
+    selection_redirect:
+        ParentCommandLine|contains:
+          - ' > %TEMP%\'
+          - ' > %TMP%\'
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/09/13
+tags:
+  - attack.collection
+  - attack.t1119
+  - DEMO

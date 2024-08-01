@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: WMIC Loading Scripting Libraries
+id: 06ce37c2-61ab-4f05-9ff5-b1a96d18ae32
+status: test
+description: Detects threat actors proxy executing code and bypassing application
+    controls by leveraging wmic and the `/FORMAT` argument switch to download and
+    execute an XSL file (i.e js, vbs, etc).
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/17 14:15:41
+references:
+  - https://securitydatasets.com/notebooks/atomic/windows/defense_evasion/SDWIN-201017061100.html
+  - https://twitter.com/dez_/status/986614411711442944
+  - https://lolbas-project.github.io/lolbas/Binaries/Wmic/
+logsource:
+    category: image_load
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith: \wmic.exe
+        ImageLoaded|endswith:
+          - \jscript.dll
+          - \vbscript.dll
+falsepositives:
+  - The command wmic os get lastboottuptime loads vbscript.dll
+  - The command wmic os get locale loads vbscript.dll
+  - Since the ImageLoad event doesn't have enough information in this case. It's better
+    to look at the recent process creation events that spawned the WMIC process and
+    investigate the command line and parent/child processes to get more insights
+level: medium
+customer: 'demo'
+modified: 2022/10/13
+tags:
+  - attack.defense_evasion
+  - attack.t1220
+  - DEMO

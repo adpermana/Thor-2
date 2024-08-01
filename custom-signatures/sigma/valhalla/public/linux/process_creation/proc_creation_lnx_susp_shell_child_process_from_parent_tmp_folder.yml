@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Shell Execution Of Process Located In Tmp Directory
+id: 2fade0b6-7423-4835-9d4f-335b39b83867
+status: experimental
+description: Detects execution of shells from a parent process located in a temporary
+    (/tmp) directory
+author: Joseliyo Sanchez, @Joseliyo_Jstnk
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/06/02 19:08:11
+references:
+  - https://blogs.jpcert.or.jp/en/2023/05/gobrat.html
+  - https://jstnk9.github.io/jstnk9/research/GobRAT-Malware/
+  - https://www.virustotal.com/gui/file/60bcd645450e4c846238cf0e7226dc40c84c96eba99f6b2cffcd0ab4a391c8b3/detection
+  - https://www.virustotal.com/gui/file/3e44c807a25a56f4068b5b8186eee5002eed6f26d665a8b791c472ad154585d1/detection
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    condition: selection
+    selection:
+        Image|endswith:
+          - /bash
+          - /csh
+          - /dash
+          - /fish
+          - /ksh
+          - /sh
+          - /zsh
+        ParentImage|startswith: /tmp/
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.execution
+  - DEMO

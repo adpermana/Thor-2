@@ -1,0 +1,62 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: New Netsh Helper DLL Registered From A Suspicious Location
+id: e7b18879-676e-4a0e-ae18-27039185a8e7
+related:
+  - type: similar
+    id: 56321594-9087-49d9-bf10-524fe8479452
+  - type: similar
+    id: c90362e0-2df3-4e61-94fe-b37615814cb1
+status: experimental
+description: |
+    Detects changes to the Netsh registry key to add a new DLL value that is located on a suspicious location. This change might be an indication of a potential persistence attempt by adding a malicious Netsh helper
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/11/28 20:44:31
+references:
+  - https://www.ired.team/offensive-security/persistence/t1128-netsh-helper-dll
+  - https://pentestlab.blog/2019/10/29/persistence-netsh-helper-dll/
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection_target and 1 of selection_folders_*
+    selection_folders_1:
+        Details|contains:
+          - :\Perflogs\
+          - :\Users\Public\
+          - :\Windows\Temp\
+          - \AppData\Local\Temp\
+          - \Temporary Internet
+    selection_folders_2:
+      - Details|contains|all:
+          - :\Users\
+          - \Favorites\
+      - Details|contains|all:
+          - :\Users\
+          - \Favourites\
+      - Details|contains|all:
+          - :\Users\
+          - \Contacts\
+      - Details|contains|all:
+          - :\Users\
+          - \Pictures\
+    selection_target:
+        TargetObject|contains: \SOFTWARE\Microsoft\NetSh
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.persistence
+  - attack.t1546.007
+  - DEMO

@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Systemd Service Creation
+id: 1bac86ba-41aa-4f62-9d6b-405eac99b485
+status: test
+description: Detects a creation of systemd services which could be used by adversaries
+    to execute malicious code.
+author: Pawel Mazur
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/02/03 12:31:51
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1543.002/T1543.002.md
+logsource:
+    product: linux
+    service: auditd
+detection:
+    condition: path and 1 of name_*
+    name_1:
+        name|startswith:
+          - /usr/lib/systemd/system/
+          - /etc/systemd/system/
+    name_2:
+        name|contains: /.config/systemd/user/
+    path:
+        nametype: CREATE
+        type: PATH
+falsepositives: Admin work like legit service installs.
+level: medium
+customer: 'demo'
+modified: 2022/02/06
+tags:
+  - attack.persistence
+  - attack.t1543.002
+  - DEMO

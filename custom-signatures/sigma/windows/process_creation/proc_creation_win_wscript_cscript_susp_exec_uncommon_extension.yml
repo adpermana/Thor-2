@@ -1,0 +1,55 @@
+title: Cscript/Wscript Uncommon Script Extension Execution From Suspicious Location
+id: abd9077b-9119-485c-bdf2-5925d8cc3513
+related:
+    - id: 99b7460d-c9f1-40d7-a316-1f36f61d52ee
+      type: similar
+status: experimental
+description: Detects Wscript/Cscript executing a file with an uncommon (i.e. non-script) extension from a suspicious location
+author: Nasreddine Bencherchali (Nextron Systems)
+date: 2023/06/19
+tags:
+    - attack.execution
+    - attack.t1059.005
+    - attack.t1059.007
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        - OriginalFileName:
+            - 'wscript.exe'
+            - 'cscript.exe'
+        - Image|endswith:
+            - '\wscript.exe'
+            - '\cscript.exe'
+    selection_folders_1:
+        CommandLine|contains:
+            - '\AppData\Local\Temp\'
+            - '\AppData\Roaming\Temp\'
+            - '\Temporary Internet'
+            - '\Windows\Temp\'
+            - ':\Temp\'
+            - ':\Perflogs\'
+            - ':\Users\Public\'
+    selection_folders_2:
+        - CommandLine|contains|all:
+            - ':\Users\'
+            - '\Favorites\'
+        - CommandLine|contains|all:
+            - ':\Users\'
+            - '\Favourites\'
+        - CommandLine|contains|all:
+            - ':\Users\'
+            - '\Contacts\'
+    filter_main_known_legit_extensions:
+        CommandLine|contains:
+            - '.js'
+            - '.jse'
+            - '.vba'
+            - '.vbe'
+            - '.vbs'
+            - '.wsf'
+    condition: selection_img and 1 of selection_folders_* and not 1 of filter_main_*
+falsepositives:
+    - Unknown
+level: high

@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential SolidPDFCreator.DLL Sideloading
+id: a2edbce1-95c8-4291-8676-0d45146862b3
+status: experimental
+description: Detects potential DLL sideloading of "SolidPDFCreator.dll"
+author: X__Junior (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/07 16:40:21
+references:
+  - https://lab52.io/blog/new-mustang-pandas-campaing-against-australia/
+logsource:
+    category: image_load
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_path:
+        Image|endswith: \SolidPDFCreator.exe
+        ImageLoaded|startswith:
+          - C:\Program Files (x86)\SolidDocuments\SolidPDFCreator\
+          - C:\Program Files\SolidDocuments\SolidPDFCreator\
+    selection:
+        ImageLoaded|endswith: \SolidPDFCreator.dll
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - attack.t1574.001
+  - attack.t1574.002
+  - DEMO

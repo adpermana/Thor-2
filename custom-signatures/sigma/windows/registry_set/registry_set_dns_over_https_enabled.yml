@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: DNS-over-HTTPS Enabled by Registry
+id: 04b45a8a-d11d-49e4-9acc-4a1b524407a5
+status: test
+description: |
+    Detects when a user enables DNS-over-HTTPS.
+    This can be used to hide internet activity or be used to hide the process of exfiltrating data.
+    With this enabled organization will lose visibility into data such as query type, response and originating IP that are used to determine bad actors.
+author: Austin Songer
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/07/22 14:23:31
+references:
+  - https://www.tenforums.com/tutorials/151318-how-enable-disable-dns-over-https-doh-microsoft-edge.html
+  - https://github.com/elastic/detection-rules/issues/1371
+  - https://chromeenterprise.google/policies/?policy=DnsOverHttpsMode
+  - https://admx.help/HKLM/Software/Policies/Mozilla/Firefox/DNSOverHTTPS
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_chrome:
+        Details: secure
+        TargetObject|endswith: \SOFTWARE\Google\Chrome\DnsOverHttpsMode
+    selection_edge:
+        Details: DWORD (0x00000001)
+        TargetObject|endswith: \SOFTWARE\Policies\Microsoft\Edge\BuiltInDnsClientEnabled
+    selection_firefox:
+        Details: DWORD (0x00000001)
+        TargetObject|endswith: \SOFTWARE\Policies\Mozilla\Firefox\DNSOverHTTPS\Enabled
+falsepositives: Unlikely
+level: medium
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.defense_evasion
+  - attack.t1140
+  - attack.t1112
+  - DEMO

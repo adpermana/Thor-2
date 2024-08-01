@@ -1,0 +1,23 @@
+title: Service Installation ADMIN Share
+id: 98308194-b144-49ba-bfbc-20f33f9c7cc4
+description: Detects a new service that contains suspicious strings in its ImagePath field
+status: test
+references:
+    - https://www.curatedintel.org/2022/01/hacktivist-group-shares-details-related.html
+author: Florian Roth (Nextron Systems)
+date: 2022/02/01
+modified: 2023/03/28
+logsource:
+    product: windows
+    service: system
+detection:
+    selection:
+        Provider_Name: 'Service Control Manager'
+        EventID: 7045
+        ImagePath:
+            - '\\\\127.0.0.1'
+            - '\ADMIN$'
+    condition: selection
+falsepositives:
+    - Unlikely
+level: high

@@ -1,0 +1,33 @@
+title: Hoaxshell Raw Payload - PowerShell
+id: 370eaf52-9cd2-402d-a87a-0150e09720f9
+related:
+    - id: 4ee6b667-1e91-42eb-a70d-d5a252766c72
+      type: similar
+status: test
+description: Detects the raw payload of hoaxshell, an unconventional Windows reverse shell via PowerShell scriptblock logging
+author: Nasreddine Bencherchali
+references:
+    - https://github.com/t3l3machus/hoaxshell/
+date: 2022/10/20
+modified: 2023/03/29
+tags:
+    - attack.defense_evasion
+    - attack.execution
+    - attack.t1059
+logsource:
+    product: windows
+    category: ps_script
+    definition: Script Block Logging must be enabled
+detection:
+    selection:
+        ScriptBlockText|contains|all:
+            - "($e+$r)"
+            - "-ErrorAction Stop -ErrorVariable e"
+            - " sleep "
+        ScriptBlockText|contains:
+            - "Invoke-RestMethod -UseBasicParsing -Uri"
+            - "Invoke-WebRequest -UseBasicParsing -Uri"
+    condition: selection
+falsepositives:
+    - Unlikely
+level: high

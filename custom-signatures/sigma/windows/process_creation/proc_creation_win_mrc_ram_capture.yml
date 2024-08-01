@@ -1,0 +1,25 @@
+title: MRC - Magnet RAM Capture Usage
+id: 4363c797-890e-4c1b-a118-1b877f59baf3
+status: experimental
+description: Detects execution of Magnet Forensics RAM capture tool, which can be misused by malicious threat actors
+references:
+    - https://support.magnetforensics.com/s/article/Acquire-Memory-with-MAGNET-RAM-Capture
+author: Florian Roth
+tags:
+    - attack.credential_access
+    - attack.t1003.001
+date: 2022/12/17
+modified: 2023/02/23
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_pe:
+        Description: 'Magnet RAM Capture'
+    selection_imphash:
+        - Imphash: '2d1e1973ab62e7f5a515d097b09b4a30'
+        - Hashes|contains: 'IMPHASH=2D1E1973AB62E7F5A515D097B09B4A30'
+    condition: 1 of selection*
+falsepositives:
+    - Legitimate use of Magnet Forensics RAM Capture
+level: high

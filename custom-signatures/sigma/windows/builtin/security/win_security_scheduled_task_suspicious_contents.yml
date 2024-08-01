@@ -1,0 +1,62 @@
+title: Suspicious Scheduled Task Contents
+id: ab356068-c573-4909-a47b-22028aca0b69
+description: Detects scheduled task creation and update events that include suspicious contents in the scheduled task configuration
+status: test
+author: Florian Roth
+date: 2021/01/22
+modified: 2023/03/28
+tags:
+    - attack.execution
+    - attack.privilege_escalation
+    - car.2013-08-001
+    - attack.t1053.005
+references:
+    - https://twitter.com/matthewdunwoody/status/1352356685982146562
+    - https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4699
+logsource:
+    product: windows
+    service: security
+    definition: 'The Advanced Audit Policy setting Object Access > Audit Other Object Access Events has to be configured to allow this detection. We also recommend extracting the Command field from the embedded XML in the event data.'
+detection:
+    task_selection:
+        EventID:
+            - 4698
+            - 4702
+    rundll:
+        TaskContent|contains: 'rundll32.exe'
+    rundll_contents:
+        TaskContent|contains:
+            - '\Windows\Temp\'
+            - '.tmp '
+            - '.bin '
+    selection_content1:
+        TaskContent|contains:
+            - '.dll",DllMain'
+            - 'cmd.exe /c sc config'
+            - 'cmd.exe /k sc config'
+            - 'cmd.exe /r sc config'
+            - 'cmd /c sc config'
+            - 'cmd /k sc config'
+            - 'cmd /r sc config'
+            - ' -windowstyle hidden'
+            - ' -w hidden'
+            - ' -e bypass'
+            - 'process call create'
+            - '\Users\Public\'
+            - '%Public%'
+            - '%Temp%'
+            - 'C:\Perflogs\'
+            - '\Windows\Temp\'
+            - ' IEX('
+            - 'mshta.exe'
+            - 'mshta '
+            - '<Command>\\'
+            - 'certutil'
+    selection_content2:
+        TaskContent|contains|all:
+            - '<Command>rundll32.exe</Command>'
+            - '.dat'
+    condition: task_selection and ( rundll and 1 of rundll_contents* or 1 of selection* )
+falsepositives:
+    - Software installation
+level: high

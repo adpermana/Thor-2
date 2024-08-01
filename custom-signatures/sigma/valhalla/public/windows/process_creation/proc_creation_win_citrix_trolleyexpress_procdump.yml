@@ -1,0 +1,56 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Process Access via TrolleyExpress Exclusion
+id: 4c0aaedc-154c-4427-ada0-d80ef9c9deb6
+status: test
+description: Detects a possible process memory dump that uses the white-listed Citrix
+    TrolleyExpress.exe filename as a way to dump the lsass process memory
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/02/10 17:44:01
+references:
+  - https://twitter.com/_xpn_/status/1491557187168178176
+  - https://www.youtube.com/watch?v=Ie831jF0bb0
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection or ( renamed and not 1 of filter* )
+    filter_empty:
+        OriginalFileName: []
+    filter_renamed:
+        OriginalFileName|contains: CtxInstall
+    renamed:
+        Image|endswith: \TrolleyExpress.exe
+    selection:
+        CommandLine|contains:
+          - \TrolleyExpress 7
+          - \TrolleyExpress 8
+          - \TrolleyExpress 9
+          - \TrolleyExpress.exe 7
+          - \TrolleyExpress.exe 8
+          - \TrolleyExpress.exe 9
+          - '\TrolleyExpress.exe -ma '
+fields:
+  - CommandLine
+  - ParentCommandLine
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/05/13
+tags:
+  - attack.defense_evasion
+  - attack.t1218.011
+  - attack.credential_access
+  - attack.t1003.001
+  - DEMO

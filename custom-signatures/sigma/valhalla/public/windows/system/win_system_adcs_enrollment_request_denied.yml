@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Active Directory Certificate Services Denied Certificate Enrollment Request
+id: 994bfd6d-0a2e-481e-a861-934069fcf5f5
+status: experimental
+description: |
+    Detects denied requests by Active Directory Certificate Services.
+    Example of these requests denial include issues with permissions on the certificate template or invalid signatures.
+author: '@SerkinValery'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/03/07 02:07:31
+references:
+  - https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/dd299871(v=ws.10)
+  - https://www.gradenegger.eu/en/details-of-the-event-with-id-53-of-the-source-microsoft-windows-certificationauthority/
+logsource:
+    product: windows
+    service: system
+detection:
+    condition: selection
+    selection:
+        EventID: "53"
+        Provider_Name: Microsoft-Windows-CertificationAuthority
+falsepositives: Unknown
+level: low
+customer: 'demo'
+tags:
+  - attack.credential_access
+  - attack.t1553.004
+  - DEMO

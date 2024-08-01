@@ -1,0 +1,21 @@
+title: Suspicious Files In Data Root Folders - FileCreation
+id: b6ad282e-a56d-4c79-929e-c59c5badb992
+status: test
+description: Detects creation of suspicious files inside of the appdata and programdata subfolders first level. Usually appdata and programdata stores binaries or other files inside of folders and not on at the root of the subfolder. A file placed at the root of these folders could be indicative of suspicious activity
+author: Nasreddine Bencherchali
+references:
+    - Internal Research
+date: 2022/08/16
+modified: 2023/03/29
+tags:
+    - attack.defense_evasion
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        TargetFilename|re: '(%[Aa]pp[Dd]ata%|%[Ll]ocal[Aa]pp[Dd]ata%|[Pp]rogram[Dd]ata|\\[Aa]pp[Dd]ata\\([Ll]ocal|[Rr]oaming|[Ll]ocal[Ll]ow))\\[^\\]{1,26}\.(EXE|exe|bat|BAT|msi|MSI|ps1|PS1|vbs|VBS|vbe|VBE|dll|DLL|hta|HTA)($|\s)'
+    condition: selection
+falsepositives:
+    - Unlikely
+level: high

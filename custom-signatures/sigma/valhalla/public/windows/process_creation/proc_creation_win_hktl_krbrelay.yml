@@ -1,0 +1,52 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - KrbRelay Execution
+id: e96253b8-6b3b-4f90-9e59-3b24b99cf9b4
+status: test
+description: Detects the use of KrbRelay, a Kerberos relaying tool
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/04/27 13:25:41
+references:
+  - https://github.com/cube0x0/KrbRelay
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_cli_1:
+        CommandLine|contains|all:
+          - ' -spn '
+          - ' -clsid '
+          - ' -rbcd '
+    selection_cli_2:
+        CommandLine|contains|all:
+          - shadowcred
+          - clsid
+          - spn
+    selection_cli_3:
+        CommandLine|contains|all:
+          - 'spn '
+          - 'session '
+          - 'clsid '
+    selection_img:
+      - Image|endswith: \KrbRelay.exe
+      - OriginalFileName: KrbRelay.exe
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/02/04
+tags:
+  - attack.credential_access
+  - attack.t1558.003
+  - DEMO

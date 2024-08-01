@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Execution of Powershell Script in Public Folder
+id: fb9d3ff7-7348-46ab-af8c-b55f5fbf39b4
+status: test
+description: This rule detects execution of PowerShell scripts located in the "C:\Users\Public"
+    folder
+author: Max Altgelt (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/04/06 18:24:51
+references:
+  - https://www.mandiant.com/resources/evolution-of-fin7
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - -f C:\Users\Public
+          - -f "C:\Users\Public
+          - -f %Public%
+          - -fi C:\Users\Public
+          - -fi "C:\Users\Public
+          - -fi %Public%
+          - -fil C:\Users\Public
+          - -fil "C:\Users\Public
+          - -fil %Public%
+          - -file C:\Users\Public
+          - -file "C:\Users\Public
+          - -file %Public%
+        Image|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+fields:
+  - CommandLine
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2022/07/14
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

@@ -1,0 +1,69 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Unix Shell Configuration Modification
+id: a94cdd87-6c54-4678-a6cc-2814ffe5a13d
+related:
+  - type: obsoletes
+    id: e74e15cc-c4b6-4c80-b7eb-dfe49feb7fe9
+status: test
+description: Detect unix shell configuration modification. Adversaries may establish
+    persistence through executing malicious commands triggered when a new shell is
+    opened.
+author: Peter Matkovski, IAI
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/03/06 16:04:21
+references:
+  - https://objective-see.org/blog/blog_0x68.html
+  - https://www.glitch-cat.com/p/green-lambert-and-attack
+  - https://www.anomali.com/blog/pulling-linux-rabbit-rabbot-malware-out-of-a-hat
+logsource:
+    product: linux
+    service: auditd
+detection:
+    condition: selection
+    selection:
+        name:
+          - /etc/shells
+          - /etc/profile
+          - /etc/profile.d/*
+          - /etc/bash.bashrc
+          - /etc/bashrc
+          - /etc/zsh/zprofile
+          - /etc/zsh/zshrc
+          - /etc/zsh/zlogin
+          - /etc/zsh/zlogout
+          - /etc/csh.cshrc
+          - /etc/csh.login
+          - /root/.bashrc
+          - /root/.bash_profile
+          - /root/.profile
+          - /root/.zshrc
+          - /root/.zprofile
+          - /home/*/.bashrc
+          - /home/*/.zshrc
+          - /home/*/.bash_profile
+          - /home/*/.zprofile
+          - /home/*/.profile
+          - /home/*/.bash_login
+          - /home/*/.bash_logout
+          - /home/*/.zlogin
+          - /home/*/.zlogout
+        type: PATH
+falsepositives: Admin or User activity are expected to generate some false positives
+level: medium
+customer: 'demo'
+modified: 2023/03/15
+tags:
+  - attack.persistence
+  - attack.t1546.004
+  - DEMO

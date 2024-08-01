@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Inveigh Execution Artefacts
+id: bb09dd3e-2b78-4819-8e35-a7c1b874e449
+status: test
+description: Detects the presence and execution of Inveigh via dropped artefacts
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/10/24 13:21:51
+references:
+  - https://github.com/Kevin-Robertson/Inveigh/blob/29d9e3c3a625b3033cdaf4683efaafadcecb9007/Inveigh/Support/Output.cs
+  - https://github.com/Kevin-Robertson/Inveigh/blob/29d9e3c3a625b3033cdaf4683efaafadcecb9007/Inveigh/Support/Control.cs
+  - https://thedfirreport.com/2020/11/23/pysa-mespinoza-ransomware/
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetFilename|endswith:
+          - \Inveigh-Log.txt
+          - \Inveigh-Cleartext.txt
+          - \Inveigh-NTLMv1Users.txt
+          - \Inveigh-NTLMv2Users.txt
+          - \Inveigh-NTLMv1.txt
+          - \Inveigh-NTLMv2.txt
+          - \Inveigh-FormInput.txt
+          - \Inveigh.dll
+          - \Inveigh.exe
+          - \Inveigh.ps1
+          - \Inveigh-Relay.ps1
+falsepositives: Unlikely
+level: critical
+customer: 'demo'
+tags:
+  - attack.command_and_control
+  - attack.t1219
+  - DEMO

@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: File Encoded To Base64 Via Certutil.EXE
+id: e62a9f0c-ca1e-46b2-85d5-a6da77f86d1a
+status: test
+description: Detects the execution of certutil with the "encode" flag to encode a
+    file to base64. This can be abused by threat actors and attackers for data exfiltration
+author: Florian Roth (Nextron Systems), Jonhnathan Ribeiro, oscd.community, Nasreddine
+    Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/02/24 15:13:01
+references:
+  - https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/certutil
+  - https://unit42.paloaltonetworks.com/new-babyshark-malware-targets-u-s-national-security-think-tanks/
+  - https://lolbas-project.github.io/lolbas/Binaries/Certutil/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains|windash: -encode
+    selection_img:
+      - Image|endswith: \certutil.exe
+      - OriginalFileName: CertUtil.exe
+falsepositives: As this is a general purpose rule, legitimate usage of the encode
+    functionality will trigger some false positives. Apply additional filters accordingly
+level: medium
+customer: 'demo'
+modified: 2024/03/05
+tags:
+  - attack.defense_evasion
+  - attack.t1027
+  - DEMO

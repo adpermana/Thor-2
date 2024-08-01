@@ -1,0 +1,57 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Important Scheduled Task Deleted
+id: 9e3cb244-bdb8-4632-8c90-6079c8f4f16d
+related:
+  - type: similar
+    id: dbc1f800-0fe0-4bc0-9c66-292c2abe3f78
+  - type: similar
+    id: 7595ba94-cf3b-4471-aa03-4f6baa9e5fad
+status: test
+description: |
+    Detects when adversaries try to stop system services or processes by deleting their respective scheduled tasks in order to conduct data destructive activities
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/13 14:30:51
+references:
+  - https://www.socinvestigation.com/most-common-windows-event-ids-to-hunt-mind-map/
+logsource:
+    product: windows
+    service: taskscheduler
+    definition: 'Requirements: The "Microsoft-Windows-TaskScheduler/Operational" is
+        disabled by default and needs to be enabled in order for this detection to
+        trigger'
+detection:
+    condition: selection and not filter
+    filter:
+        UserName|contains:
+          - AUTHORI
+          - AUTORI
+    selection:
+        EventID: "141"
+        TaskName|contains:
+          - \Windows\SystemRestore\SR
+          - \Windows\Windows Defender\
+          - \Windows\BitLocker
+          - \Windows\WindowsBackup\
+          - \Windows\WindowsUpdate\
+          - \Windows\UpdateOrchestrator\
+          - \Windows\ExploitGuard
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/02/07
+tags:
+  - attack.impact
+  - attack.t1489
+  - DEMO

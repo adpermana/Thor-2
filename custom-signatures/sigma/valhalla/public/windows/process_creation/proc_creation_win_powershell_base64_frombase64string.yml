@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PowerShell Base64 Encoded FromBase64String Cmdlet
+id: fdb62a13-9a81-4e5c-a38f-ea93a16f6d7c
+status: test
+description: Detects usage of a base64 encoded "FromBase64String" cmdlet in a process
+    command line
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/08/24 18:22:11
+references:
+  - Internal Research
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - CommandLine|base64offset|contains: ::FromBase64String
+      - CommandLine|contains:
+          - OgA6AEYAcgBvAG0AQgBhAHMAZQA2ADQAUwB0AHIAaQBuAGcA
+          - oAOgBGAHIAbwBtAEIAYQBzAGUANgA0AFMAdAByAGkAbgBnA
+          - 6ADoARgByAG8AbQBCAGEAcwBlADYANABTAHQAcgBpAG4AZw
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/04/06
+tags:
+  - attack.defense_evasion
+  - attack.t1140
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

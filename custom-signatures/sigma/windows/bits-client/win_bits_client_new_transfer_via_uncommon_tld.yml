@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: BITS Transfer Job With Uncommon Or Suspicious Remote TLD
+id: 6d44fb93-e7d2-475c-9d3d-54c9c1e33427
+status: test
+description: Detects a suspicious download using the BITS client from a FQDN that
+    is unusual. Adversaries may abuse BITS jobs to persistently execute or clean up
+    after malicious payloads.
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/10 20:03:01
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1197/T1197.md
+  - https://twitter.com/malmoeb/status/1535142803075960832
+logsource:
+    product: windows
+    service: bits-client
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_generic:
+        RemoteName|contains:
+          - .azureedge.net/
+          - .com/
+          - .sfx.ms/
+          - download.mozilla.org/
+    selection:
+        EventID: "16403"
+falsepositives: This rule doesn't exclude other known TLDs such as ".org" or ".net".
+    It's recommended to apply additional filters for software and scripts that leverage
+    the BITS service
+level: medium
+customer: 'demo'
+modified: 2023/03/27
+tags:
+  - attack.defense_evasion
+  - attack.persistence
+  - attack.t1197
+  - DEMO

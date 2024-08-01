@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Local User Creation
+id: 66b6be3d-55d0-4f47-9855-d69df21740ea
+status: test
+description: |
+    Detects local user creation on Windows servers, which shouldn't happen in an Active Directory environment. Apply this Sigma Use Case on your Windows server logs and not on your DC logs.
+author: Patrick Bareiss
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/04/18 10:58:31
+references:
+  - https://patrick-bareiss.com/detecting-local-user-creation-in-ad-with-sigma/
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: selection
+    selection:
+        EventID: "4720"
+falsepositives:
+  - Domain Controller Logs
+  - Local accounts managed by privileged account management tools
+level: low
+customer: 'demo'
+modified: 2021/01/17
+tags:
+  - attack.persistence
+  - attack.t1136.001
+  - DEMO

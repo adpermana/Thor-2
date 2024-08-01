@@ -1,0 +1,21 @@
+#
+# THOR Keyword Signatures
+# This file contains string definitions
+#
+# Important: Rename this template file from .txt.template to .txt
+#
+# APPLICATION ------------------------------------------------------------------
+#
+# Every line is treated as a case sensitive plain string.
+#
+# FORMAT -----------------------------------------------------------------------
+#
+# # COMMENT
+# STRING
+#
+# EXAMPLES ---------------------------------------------------------------------
+#
+# # Evil strings from our case
+# failed to create Service 'GAMEOVER'
+# kiwi.eo.oe
+#

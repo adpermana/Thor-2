@@ -1,0 +1,24 @@
+title: Service Name Masky Hacktool
+id: db5ab4b4-b80b-4c2e-a51a-deda8afd5920
+description: Detects a service hijacked by Masky hacktool and used to run
+status: test
+references:
+    - https://z4ksec.github.io/posts/masky-release-v0.0.3/
+    - https://github.com/Z4kSec/Masky/blob/4f304e35858f7d77de3e3cb4c3fa95e8200611ed/masky/lib/smb.py#L37
+author: Florian Roth (Nextron Systems)
+date: 2022/09/02
+modified: 2023/03/28
+logsource:
+    product: windows
+    service: system
+detection:
+    selection:
+        Provider_Name: 'Service Control Manager'
+        EventID: 7045
+        ServiceName: 'RasAuto'
+    filter:
+        ImagePath|contains: '\svchost.exe -k'
+    condition: selection and not filter
+falsepositives:
+    - Unknown
+level: high

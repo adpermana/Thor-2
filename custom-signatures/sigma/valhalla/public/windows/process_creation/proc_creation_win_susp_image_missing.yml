@@ -1,0 +1,53 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Execution Of Non-Existing File
+id: 71158e3f-df67-472b-930e-7d287acaa3e1
+status: test
+description: Checks whether the image specified in a process creation event is not
+    a full, absolute path (caused by process ghosting or other unorthodox methods
+    to start a process)
+author: Max Altgelt (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/12/09 13:46:01
+references:
+  - https://pentestlaboratories.com/2021/12/08/process-ghosting/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: not image_absolute_path and not 1 of filter*
+    filter_4688:
+      - Image:
+          - System
+          - Registry
+          - MemCompression
+          - vmmem
+      - CommandLine:
+          - Registry
+          - MemCompression
+          - vmmem
+    filter_empty:
+        Image:
+          - '-'
+          - ""
+    filter_null:
+        Image: []
+    image_absolute_path:
+        Image|contains: \
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/12/14
+tags:
+  - attack.defense_evasion
+  - DEMO

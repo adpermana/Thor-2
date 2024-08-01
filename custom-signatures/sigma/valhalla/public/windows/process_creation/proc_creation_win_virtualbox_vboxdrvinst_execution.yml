@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious VBoxDrvInst.exe Parameters
+id: b7b19cb6-9b32-4fc4-a108-73f19acfe262
+status: test
+description: |
+    Detect VBoxDrvInst.exe run with parameters allowing processing INF file.
+    This allows to create values in the registry and install drivers.
+    For example one could use this technique to obtain persistence via modifying one of Run or RunOnce registry keys
+author: Konstantin Grishchenko, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/06 16:08:41
+references:
+  - https://github.com/LOLBAS-Project/LOLBAS/blob/4db780e0f0b2e2bb8cb1fa13e09196da9b9f1834/yml/LOLUtilz/OtherBinaries/VBoxDrvInst.yml
+  - https://twitter.com/pabraeken/status/993497996179492864
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains|all:
+          - driver
+          - executeinf
+        Image|endswith: \VBoxDrvInst.exe
+fields:
+  - ComputerName
+  - User
+  - CommandLine
+  - ParentCommandLine
+falsepositives: Legitimate use of VBoxDrvInst.exe utility by VirtualBox Guest Additions
+    installation process
+level: medium
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.defense_evasion
+  - attack.t1112
+  - DEMO

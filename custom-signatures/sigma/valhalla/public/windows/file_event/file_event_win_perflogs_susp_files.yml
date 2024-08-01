@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious File Created In PerfLogs
+id: bbb7e38c-0b41-4a11-b306-d2a457b7ac2b
+status: test
+description: Detects suspicious file based on their extension being created in "C:\PerfLogs\".
+    Note that this directory mostly contains ".etl" files
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/05 15:05:21
+references:
+  - Internal Research
+  - https://labs.withsecure.com/publications/fin7-target-veeam-servers
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetFilename|endswith:
+          - .7z
+          - .bat
+          - .bin
+          - .chm
+          - .dll
+          - .exe
+          - .hta
+          - .lnk
+          - .ps1
+          - .psm1
+          - .py
+          - .scr
+          - .sys
+          - .vbe
+          - .vbs
+          - .zip
+        TargetFilename|startswith: C:\PerfLogs\
+falsepositives: Unlikely
+level: medium
+customer: 'demo'
+tags:
+  - attack.execution
+  - attack.t1059
+  - DEMO

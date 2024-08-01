@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Ruby Reverse Shell
+id: b8bdac18-c06e-4016-ac30-221553e74f59
+status: test
+description: Detects execution of ruby with the "-e" flag and calls to "socket" related
+    functions. This could be an indication of a potential attempt to setup a reverse
+    shell
+author: '@d4ns4n_'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/04/07 13:29:01
+references:
+  - https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet
+  - https://www.revshells.com/
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - ' ash'
+          - ' bash'
+          - ' bsh'
+          - ' csh'
+          - ' ksh'
+          - ' pdksh'
+          - ' sh'
+          - ' tcsh'
+        CommandLine|contains|all:
+          - ' -e'
+          - rsocket
+          - TCPSocket
+        Image|contains: ruby
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.execution
+  - DEMO

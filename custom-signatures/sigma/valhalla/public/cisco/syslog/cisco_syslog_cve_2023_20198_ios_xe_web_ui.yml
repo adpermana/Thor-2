@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-06-21 19:00
+# Generated for User: demo
+# Number of Rules: 3228
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Exploitation Indicators Of CVE-2023-20198
+id: 2ece8816-b7a0-4d9b-b0e8-ae7ad18bc02b
+status: experimental
+description: Detecting exploitation indicators of CVE-2023-20198 a privilege escalation
+    vulnerability in Cisco IOS XE Software Web UI.
+author: Lars B. P. Frydenskov (Trifork Security)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/10/20 15:21:21
+references:
+  - https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-iosxe-webui-privesc-j22SaA4z
+  - https://www.thestack.technology/security-experts-call-for-incident-response-exercises-after-mass-cisco-device-exploitation/
+logsource:
+    product: cisco
+    service: syslog
+    definition: 'Requirements: Cisco IOS XE system logs needs to be configured and
+        ingested'
+detection:
+    condition: keyword_event and keyword_user
+    keyword_event:
+      - '%WEBUI-6-INSTALL_OPERATION_INFO:'
+      - '%SYS-5-CONFIG_P:'
+      - '%SEC_LOGIN-5-WEBLOGIN_SUCCESS:'
+    keyword_user:
+      - cisco_tac_admin
+      - cisco_support
+      - cisco_sys_manager
+falsepositives: Rare false positives might occur if there are valid users named "cisco_tac_admin"
+    or "cisco_support", which are not created by default or CISCO representatives
+level: high
+customer: 'demo'
+tags:
+  - attack.privilege_escalation
+  - attack.initial_access
+  - detection.emerging_threats
+  - DEMO

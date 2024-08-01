@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Group Membership Reconnaissance Via Whoami.EXE
+id: bd8b828d-0dca-48e1-8a63-8a58ecf2644f
+status: test
+description: Detects the execution of whoami.exe with the /group command line flag
+    to show group membership for the current user, account type, security identifiers
+    (SID), and attributes.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/02/28 17:59:01
+references:
+  - https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/whoami
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains:
+          - ' /groups'
+          - ' -groups'
+    selection_img:
+      - Image|endswith: \whoami.exe
+      - OriginalFileName: whoami.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.discovery
+  - attack.t1033
+  - DEMO

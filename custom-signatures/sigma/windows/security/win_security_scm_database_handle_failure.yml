@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: SCM Database Handle Failure
+id: 13addce7-47b2-4ca0-a98f-1de964d1d669
+status: test
+description: Detects non-system users failing to get a handle of the SCM database.
+author: Roberto Rodriguez @Cyb3rWard0g
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/08/12 12:42:01
+references:
+  - https://threathunterplaybook.com/hunts/windows/190826-RemoteSCMHandle/notebook.html
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: selection and not filter
+    filter:
+        SubjectLogonId: "0x3e4"
+    selection:
+        AccessMask: "0xf003f"
+        EventID: "4656"
+        ObjectName: ServicesActive
+        ObjectType: SC_MANAGER OBJECT
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/07/11
+tags:
+  - attack.discovery
+  - attack.t1010
+  - DEMO

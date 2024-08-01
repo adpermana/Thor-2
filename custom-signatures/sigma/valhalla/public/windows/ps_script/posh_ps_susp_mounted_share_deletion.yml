@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PowerShell Deleted Mounted Share
+id: 66a4d409-451b-4151-94f4-a55d559c49b0
+status: test
+description: Detects when when a mounted share is removed. Adversaries may remove
+    share connections that are no longer useful in order to clean up traces of their
+    operation
+author: oscd.community, @redcanary, Zach Stanford @svch0st
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/08 14:28:31
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1070.005/T1070.005.md
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: selection
+    selection:
+        ScriptBlockText|contains:
+          - Remove-SmbShare
+          - Remove-FileShare
+falsepositives: Administrators or Power users may remove their shares via cmd line
+level: medium
+customer: 'demo'
+modified: 2022/12/25
+tags:
+  - attack.defense_evasion
+  - attack.t1070.005
+  - DEMO

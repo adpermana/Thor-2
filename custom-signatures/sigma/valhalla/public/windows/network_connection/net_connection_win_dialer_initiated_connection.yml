@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-06-21 19:00
+# Generated for User: demo
+# Number of Rules: 3228
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Outbound Network Connection Initiated By Microsoft Dialer
+id: 37e4024a-6c80-4d8f-b95d-2e7e94f3a8d1
+status: experimental
+description: |
+    Detects outbound network connection initiated by Microsoft Dialer.
+    The Microsoft Dialer, also known as Phone Dialer, is a built-in utility application included in various versions of the Microsoft Windows operating system. Its primary function is to provide users with a graphical interface for managing phone calls via a modem or a phone line connected to the computer.
+    This is an outdated process in the current conext of it's usage and is a common target for info stealers for process injection, and is used to make C2 connections, common example is "Rhadamanthys"
+author: CertainlyP
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/04/26 21:13:11
+references:
+  - hhttps://tria.ge/240301-rk34sagf5x/behavioral2
+  - https://app.any.run/tasks/6720b85b-9c53-4a12-b1dc-73052a78477d
+  - https://research.checkpoint.com/2023/rhadamanthys-v0-5-0-a-deep-dive-into-the-stealers-components/
+  - https://strontic.github.io/xcyclopedia/library/dialer.exe-0B69655F912619756C704A0BF716B61F.html
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_local_ranges:
+        DestinationIp|cidr:
+          - 127.0.0.0/8
+          - 10.0.0.0/8
+          - 172.16.0.0/12
+          - 192.168.0.0/16
+          - 169.254.0.0/16
+          - ::1/128
+          - fe80::/10
+          - fc00::/7
+    selection:
+        Image|endswith: :\Windows\System32\dialer.exe
+        Initiated: "true"
+falsepositives: In Modern Windows systems, unable to see legitimate usage of this
+    process, However, if an organization has legitimate purpose for this there can
+    be false positives.
+level: high
+customer: 'demo'
+tags:
+  - attack.execution
+  - attack.t1071.001
+  - DEMO

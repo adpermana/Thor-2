@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Signing Bypass Via Windows Developer Features
+id: a383dec4-deec-4e6e-913b-ed9249670848
+related:
+  - type: similar
+    id: b110ebaf-697f-4da1-afd5-b536fa27a2c1
+status: test
+description: Detects when a user enable developer features such as "Developer Mode"
+    or "Application Sideloading". Which allows the user to install untrusted packages.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/11 20:40:11
+references:
+  - Internal Research
+  - https://www.sentinelone.com/labs/inside-malicious-windows-apps-for-malware-deployment/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_flag:
+        CommandLine|contains: TurnOnDeveloperFeatures
+    selection_img:
+      - Image|endswith: \SystemSettingsAdminFlows.exe
+      - OriginalFileName: SystemSettingsAdminFlows.EXE
+    selection_options:
+        CommandLine|contains:
+          - DeveloperUnlock
+          - EnableSideloading
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - DEMO

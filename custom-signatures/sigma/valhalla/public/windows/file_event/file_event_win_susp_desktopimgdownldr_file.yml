@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Desktopimgdownldr Target File
+id: fc4f4817-0c53-4683-a4ee-b17a64bc1039
+status: test
+description: Detects a suspicious Microsoft desktopimgdownldr file creation that stores
+    a file to a suspicious location or contains a file with a suspicious extension
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/07/03 17:03:51
+references:
+  - https://labs.sentinelone.com/living-off-windows-land-a-new-native-file-downldr/
+  - https://twitter.com/SBousseaden/status/1278977301745741825
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection and not filter1 and not filter2
+    filter1:
+        TargetFilename|contains: C:\Windows\
+    filter2:
+        TargetFilename|contains:
+          - .jpg
+          - .jpeg
+          - .png
+    selection:
+        Image|endswith: \svchost.exe
+        TargetFilename|contains: \Personalization\LockScreenImage\
+fields:
+  - CommandLine
+  - ParentCommandLine
+falsepositives: False positives depend on scripts and administrative tools used in
+    the monitored environment
+level: high
+customer: 'demo'
+modified: 2022/06/02
+tags:
+  - attack.command_and_control
+  - attack.t1105
+  - DEMO

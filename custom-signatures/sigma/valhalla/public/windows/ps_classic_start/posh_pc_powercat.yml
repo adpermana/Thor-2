@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Netcat The Powershell Version
+id: c5b20776-639a-49bf-94c7-84f912b91c15
+related:
+  - type: derived
+    id: bf7286e7-c0be-460b-a7e8-5b2e07ecc2f2
+status: test
+description: Adversaries may use a non-application layer protocol for communication
+    between host and C2 server or among infected hosts within a network
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/07/21 13:45:51
+references:
+  - https://nmap.org/ncat/
+  - https://github.com/besimorhino/powercat
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1095/T1095.md
+logsource:
+    category: ps_classic_start
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Data|contains:
+          - 'powercat '
+          - powercat.ps1
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/10/27
+tags:
+  - attack.command_and_control
+  - attack.t1095
+  - DEMO

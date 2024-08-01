@@ -1,0 +1,53 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Backup Files Deleted
+id: 06125661-3814-4e03-bfa2-1e4411c60ac3
+status: test
+description: Detects deletion of files with extensions often used for backup files.
+    Adversaries may delete or remove built-in operating system data and turn off services
+    designed to aid in the recovery of a corrupted system to prevent recovery.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/02 11:09:21
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1490/T1490.md#atomic-test-6---windows---delete-backup-files
+logsource:
+    category: file_delete
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith:
+          - \cmd.exe
+          - \powershell.exe
+          - \pwsh.exe
+          - \wt.exe
+          - \rundll32.exe
+          - \regsvr32.exe
+        TargetFilename|endswith:
+          - .VHD
+          - .bac
+          - .bak
+          - .wbcat
+          - .bkf
+          - .set
+          - .win
+          - .dsk
+falsepositives: Legitime usage
+level: medium
+customer: 'demo'
+modified: 2023/02/15
+tags:
+  - attack.impact
+  - attack.t1490
+  - DEMO

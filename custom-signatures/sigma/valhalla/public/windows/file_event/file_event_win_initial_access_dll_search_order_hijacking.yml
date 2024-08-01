@@ -1,0 +1,73 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Initial Access via DLL Search Order Hijacking
+id: dbbd9f66-2ed3-4ca2-98a4-6ea985dd1a1c
+status: test
+description: Detects attempts to create a DLL file to a known desktop application
+    dependencies folder such as Slack, Teams or OneDrive and by an unusual process.
+    This may indicate an attempt to load a malicious module via DLL search order hijacking.
+author: Tim Rauch (rule), Elastic (idea)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/10/21 19:57:41
+references:
+  - https://github.com/elastic/protections-artifacts/commit/746086721fd385d9f5c6647cada1788db4aea95f#diff-5d46dd4ac6866b4337ec126be8cee0e115467b3e8703794ba6f6df6432c806bc
+  - https://posts.specterops.io/automating-dll-hijack-discovery-81c4295904b0
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        Image|endswith: \cmd.exe
+        TargetFilename|contains|all:
+          - \Users\
+          - \AppData\
+          - \Microsoft\OneDrive\
+          - \api-ms-win-core-
+    selection:
+        Image|endswith:
+          - \winword.exe
+          - \excel.exe
+          - \powerpnt.exe
+          - \MSACCESS.EXE
+          - \MSPUB.EXE
+          - \fltldr.exe
+          - \cmd.exe
+          - \certutil.exe
+          - \mshta.exe
+          - \cscript.exe
+          - \wscript.exe
+          - \curl.exe
+          - \powershell.exe
+          - \pwsh.exe
+        TargetFilename|contains:
+          - \Microsoft\OneDrive\
+          - \Microsoft OneDrive\
+          - \Microsoft\Teams\
+          - \Local\slack\app-
+          - \Local\Programs\Microsoft VS Code\
+        TargetFilename|contains|all:
+          - \Users\
+          - \AppData\
+        TargetFilename|endswith: .dll
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.t1566
+  - attack.t1566.001
+  - attack.initial_access
+  - attack.t1574
+  - attack.t1574.001
+  - attack.defense_evasion
+  - DEMO

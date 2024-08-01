@@ -1,0 +1,59 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Powershell In Registry Run Keys
+id: 8d85cf08-bf97-4260-ba49-986a2a65129c
+status: experimental
+description: Detects potential PowerShell commands or code within registry run keys
+author: frack113, Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/03/17 17:16:51
+references:
+  - https://github.com/frack113/atomic-red-team/blob/a9051c38de8a5320b31c7039efcbd3b56cf2d65a/atomics/T1547.001/T1547.001.md#atomic-test-9---systembc-malware-as-a-service-registry
+  - https://www.trendmicro.com/en_us/research/22/j/lv-ransomware-exploits-proxyshell-in-attack.html
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Details|contains:
+          - powershell
+          - 'pwsh '
+          - FromBase64String
+          - .DownloadFile(
+          - .DownloadString(
+          - ' -w hidden '
+          - ' -w 1 '
+          - -windowstyle hidden
+          - -window hidden
+          - ' -nop '
+          - ' -encodedcommand '
+          - -ExecutionPolicy Bypass
+          - Invoke-Expression
+          - IEX (
+          - Invoke-Command
+          - ICM -
+          - Invoke-WebRequest
+          - 'IWR '
+          - ' -noni '
+          - ' -noninteractive '
+        TargetObject|contains: \Software\Microsoft\Windows\CurrentVersion\Run
+falsepositives: Legitimate admin or third party scripts. Baseline according to your
+    environment
+level: medium
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.persistence
+  - attack.t1547.001
+  - DEMO

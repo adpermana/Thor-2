@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Add Debugger Entry To AeDebug For Persistence
+id: 092af964-4233-4373-b4ba-d86ea2890288
+status: experimental
+description: Detects when an attacker adds a new "Debugger" value to the "AeDebug"
+    key in order to achieve persistence which will get invoked when an application
+    crashes
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/21 17:22:01
+references:
+  - https://persistence-info.github.io/Data/aedebug.html
+  - https://docs.microsoft.com/en-us/windows/win32/debug/configuring-automatic-debugging
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        Details: '"C:\WINDOWS\system32\vsjitdebugger.exe" -p %ld -e %ld -j 0x%p'
+    selection:
+        Details|endswith: .dll
+        TargetObject|contains: \SOFTWARE\Microsoft\Windows NT\CurrentVersion\AeDebug\Debugger
+falsepositives: Legitimate use of the key to setup a debugger. Which is often the
+    case on developers machines
+level: medium
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.persistence
+  - DEMO

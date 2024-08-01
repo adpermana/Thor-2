@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Renamed Gpg.EXE Execution
+id: ec0722a3-eb5c-4a56-8ab2-bf6f20708592
+status: experimental
+description: Detects the execution of a renamed "gpg.exe". Often used by ransomware
+    and loaders to decrypt/encrypt data.
+author: Nasreddine Bencherchali (Nextron Systems), frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/08/09 12:18:21
+references:
+  - https://securelist.com/locked-out/68960/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_img:
+        Image|endswith:
+          - \gpg.exe
+          - \gpg2.exe
+    selection:
+        OriginalFileName: gpg.exe
+level: high
+customer: 'demo'
+tags:
+  - attack.impact
+  - attack.t1486
+  - DEMO

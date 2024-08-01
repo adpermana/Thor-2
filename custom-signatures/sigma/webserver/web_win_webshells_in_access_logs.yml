@@ -1,0 +1,81 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Windows Webshell Strings
+id: 7ff9db12-1b94-4a79-ba68-a2402c5d6729
+status: test
+description: Detects common commands used in Windows webshells
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/02/19 12:36:31
+references:
+  - https://bad-jubies.github.io/RCE-NOW-WHAT/
+  - https://m365internals.com/2022/10/07/hunting-in-on-premises-exchange-server-logs/
+logsource:
+    category: webserver
+detection:
+    condition: all of selection_*
+    selection_keywords:
+      - =whoami
+      - =net%20user
+      - =net+user
+      - =net%2Buser
+      - =cmd%20/c%
+      - =cmd+/c+
+      - =cmd%2B/c%
+      - =cmd%20/r%
+      - =cmd+/r+
+      - =cmd%2B/r%
+      - =cmd%20/k%
+      - =cmd+/k+
+      - =cmd%2B/k%
+      - =powershell%
+      - =powershell+
+      - =tasklist%
+      - =tasklist+
+      - =wmic%
+      - =wmic+
+      - =ssh%
+      - =ssh+
+      - =python%
+      - =python+
+      - =python3%
+      - =python3+
+      - =ipconfig
+      - =wget%
+      - =wget+
+      - =curl%
+      - =curl+
+      - =certutil
+      - =copy%20%5C%5C
+      - =dsquery%
+      - =dsquery+
+      - =nltest%
+      - =nltest+
+    selection_method:
+        cs-method: GET
+fields:
+  - client_ip
+  - vhost
+  - url
+  - response
+falsepositives:
+  - Web sites like wikis with articles on os commands and pages that include the os
+    commands in the URLs
+  - User searches in search boxes of the respective website
+level: high
+customer: 'demo'
+modified: 2022/11/18
+tags:
+  - attack.persistence
+  - attack.t1505.003
+  - DEMO

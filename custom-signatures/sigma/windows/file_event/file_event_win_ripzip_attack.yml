@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential RipZip Attack on Startup Folder
+id: a6976974-ea6f-4e97-818e-ea08625c52cb
+status: test
+description: |
+    Detects a phishing attack which expands a ZIP file containing a malicious shortcut.
+    If the victim expands the ZIP file via the explorer process, then the explorer process expands the malicious ZIP file and drops a malicious shortcut redirected to a backdoor into the Startup folder.
+    Additionally, the file name of the malicious shortcut in Startup folder contains {0AFACED1-E828-11D1-9187-B532F1E9575D} meaning the folder shortcut operation.
+author: Greg (rule)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/21 16:48:21
+references:
+  - https://twitter.com/jonasLyk/status/1549338335243534336?t=CrmPocBGLbDyE4p6zTX1cg&s=19
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith: \explorer.exe
+        TargetFilename|contains|all:
+          - \Microsoft\Windows\Start Menu\Programs\Startup
+          - .lnk.{0AFACED1-E828-11D1-9187-B532F1E9575D}
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/01/05
+tags:
+  - attack.persistence
+  - attack.t1547
+  - DEMO

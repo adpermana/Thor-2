@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: AWS Route 53 Domain Transferred to Another Account
+id: b056de1a-6e6e-4e40-a67e-97c9808cf41b
+status: test
+description: Detects when a request has been made to transfer a Route 53 domain to
+    another AWS account.
+author: Elastic, Austin Songer @austinsonger
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/07/22 18:31:11
+references:
+  - https://github.com/elastic/detection-rules/blob/c76a39796972ecde44cb1da6df47f1b6562c9770/rules/integrations/aws/persistence_route_53_domain_transferred_to_another_account.toml
+logsource:
+    product: aws
+    service: cloudtrail
+detection:
+    condition: selection
+    selection:
+        eventName: TransferDomainToAnotherAwsAccount
+        eventSource: route53.amazonaws.com
+falsepositives: A domain may be transferred to another AWS account by a system or
+    network administrator. Verify whether the user identity, user agent, and/or hostname
+    should be making changes in your environment. Domain transfers from unfamiliar
+    users or hosts should be investigated. If known behavior is causing false positives,
+    it can be exempted from the rule.
+level: low
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.persistence
+  - attack.credential_access
+  - attack.t1098
+  - DEMO

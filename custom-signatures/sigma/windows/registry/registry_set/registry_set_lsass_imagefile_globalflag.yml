@@ -1,0 +1,23 @@
+title: LSASS Image File Exection GlobalFlag Set
+id: 31af9e8a-82ef-41ba-b1bc-cb3736eee985
+description: Detects preparations of a method to dump LSASS through WerFault as used in NanoDump LSASS process memory dumper (and possibly other dumpers as well)
+status: test
+references:
+    - https://github.com/helpsystems/nanodump/commit/578116faea3d278d53d70ea932e2bbfe42569507
+    - https://pentestlab.blog/2020/01/13/persistence-image-file-execution-options-injection/
+author: Florian Roth
+date: 2022/06/27
+modified: 2023/03/29
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection:
+        TargetObject|endswith: '\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\lsass.exe\GlobalFlag'
+    condition: selection
+falsepositives:
+    - Unlikely
+level: critical
+tags:
+    - attack.credential_access
+    - attack.t1003.001

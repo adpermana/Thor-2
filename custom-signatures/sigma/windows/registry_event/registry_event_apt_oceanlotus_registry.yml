@@ -1,0 +1,53 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: OceanLotus Registry Activity
+id: 4ac5fc44-a601-4c06-955b-309df8c4e9d4
+status: test
+description: Detects registry keys created in OceanLotus (also known as APT32) attacks
+author: megan201296, Jonhnathan Ribeiro
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/04/14 13:44:31
+references:
+  - https://www.welivesecurity.com/2019/03/20/fake-or-fake-keeping-up-with-oceanlotus-decoys/
+  - https://github.com/eset/malware-ioc/tree/master/oceanlotus
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    condition: selection_clsid or selection_hkcu or all of selection_appx_*
+    selection_appx_1:
+        TargetObject|contains: \SOFTWARE\App\
+    selection_appx_2:
+        TargetObject|contains:
+          - AppXbf13d4ea2945444d8b13e2121cb6b663\
+          - AppX70162486c7554f7f80f481985d67586d\
+          - AppX37cc7fdccd644b4f85f4b22d5a3f105a\
+        TargetObject|endswith:
+          - Application
+          - DefaultIcon
+    selection_clsid:
+        TargetObject|contains: \SOFTWARE\Classes\CLSID\{E08A0F4B-1F65-4D4D-9A09-BD4625B9C5A1}\Model
+    selection_hkcu:
+        TargetObject|contains:
+          - Classes\AppXc52346ec40fb4061ad96be0e6cb7d16a\
+          - Classes\AppX3bbba44c6cae4d9695755183472171e2\
+          - Classes\CLSID\{E3517E26-8E93-458D-A6DF-8030BC80528B}\
+          - Classes\CLSID\{E08A0F4B-1F65-4D4D-9A09-BD4625B9C5A1}\Model
+falsepositives: Unknown
+level: critical
+customer: 'demo'
+modified: 2023/09/28
+tags:
+  - attack.defense_evasion
+  - attack.t1112
+  - DEMO

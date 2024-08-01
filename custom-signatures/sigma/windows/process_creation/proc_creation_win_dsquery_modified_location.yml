@@ -1,0 +1,44 @@
+title: Dsquery Execution From Non Default Location
+id: 185b60da-2834-40e7-bb71-6c5016e91468
+status: experimental
+description: Detects the execution of the dsquery tool used to query Active Directory from a non-default location
+references:
+    - https://posts.specterops.io/an-introduction-to-manual-active-directory-querying-with-dsquery-and-ldapsearch-84943c13d7eb
+    - https://thedfirreport.com/2021/05/12/conti-ransomware/
+    - https://unit42.paloaltonetworks.com/exchange-server-credential-harvesting/
+    - https://unit42.paloaltonetworks.com/xhunt-campaign-attacks-on-kuwait-shipping-and-transportation-organizations/
+    - https://app.any.run/tasks/57fc3cf4-7b7f-41e1-a27c-06eaad188c20/
+author: Nasreddine Bencherchali
+date: 2022/05/10
+tags:
+    - attack.discovery
+    - attack.t1087.002
+    - attack.t1482
+    - attack.t1069.002
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        OriginalFileName: 'dsquery.exe'
+    filter:
+        Image|endswith: '\Windows\System32\dsquery.exe'
+    selection_cli_limit_1:
+        CommandLine|contains: ' -limit 0 '
+    selection_cli_limit_2:
+        CommandLine|contains:
+            - ' computer '
+            - ' group '
+            - ' user '
+            - ' subnet '
+    selection_cli_filter_1:
+        CommandLine|contains: ' -filter '
+    selection_cli_filter_2:
+        CommandLine|contains:
+            - 'sAMAccountName'
+            - 'objectcategory'
+            - 'objectclass'
+    condition: selection and not filter and (all of selection_cli_limit* or all of selection_cli_filter*)
+falsepositives:
+    - Unknown
+level: high

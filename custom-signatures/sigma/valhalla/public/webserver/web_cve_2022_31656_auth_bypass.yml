@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: CVE-2022-31656 VMware Workspace ONE Access Auth Bypass
+id: fcf1101d-07c9-49b2-ad81-7e421ff96d80
+status: test
+description: |
+    Detects the exploitation of VMware Workspace ONE Access Authentication Bypass vulnerability as described in CVE-2022-31656
+    VMware Workspace ONE Access, Identity Manager and vRealize Automation contain an authentication bypass vulnerability affecting local domain users.
+    A malicious actor with network access to the UI may be able to obtain administrative access without the need to authenticate.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/12 18:04:41
+references:
+  - https://petrusviet.medium.com/dancing-on-the-architecture-of-vmware-workspace-one-access-eng-ad592ae1b6dd
+logsource:
+    category: webserver
+detection:
+    condition: selection
+    selection:
+        cs-uri-query|contains: /SAAS/t/_/;/
+falsepositives: Vulnerability scanners
+level: high
+customer: 'demo'
+modified: 2023/01/02
+tags:
+  - attack.initial_access
+  - attack.t1190
+  - cve.2022.31656
+  - detection.emerging_threats
+  - DEMO

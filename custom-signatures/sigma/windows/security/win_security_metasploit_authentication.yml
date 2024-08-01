@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Metasploit SMB Authentication
+id: 72124974-a68b-4366-b990-d30e0b2a190d
+status: test
+description: Alerts on Metasploit host's authentications on the domain.
+author: Chakib Gzenayi (@Chak092), Hosni Mribah
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/05/06 13:50:01
+references:
+  - https://github.com/rapid7/metasploit-framework/blob/1416b5776d963f21b7b5b45d19f3e961201e0aed/lib/rex/proto/smb/client.rb
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: 1 of selection*
+    selection1:
+        AuthenticationPackageName: NTLM
+        EventID:
+          - "4625"
+          - "4624"
+        LogonType: "3"
+        WorkstationName|re: ^[A-Za-z0-9]{16}$
+    selection2:
+        EventID: "4776"
+        Workstation|re: ^[A-Za-z0-9]{16}$
+falsepositives: Linux hostnames composed of 16 characters.
+level: high
+customer: 'demo'
+modified: 2024/01/25
+tags:
+  - attack.lateral_movement
+  - attack.t1021.002
+  - DEMO

@@ -1,0 +1,37 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: CrashControl CrashDump Disabled
+id: 2ff692c2-4594-41ec-8fcb-46587de769e0
+status: experimental
+description: Detects disabling the CrashDump per registry (as used by HermeticWiper)
+author: Tobias Michalski (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/02/24 14:18:51
+references:
+  - https://www.sentinelone.com/labs/hermetic-wiper-ukraine-under-attack/
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Details: DWORD (0x00000000)
+        TargetObject|contains: SYSTEM\CurrentControlSet\Control\CrashControl
+falsepositives: Legitimate disabling of crashdumps
+level: medium
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.t1564
+  - attack.t1112
+  - DEMO

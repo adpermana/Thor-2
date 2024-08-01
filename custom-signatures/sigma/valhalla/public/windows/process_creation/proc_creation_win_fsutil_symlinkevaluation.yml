@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Fsutil Behavior Set SymlinkEvaluation
+id: c0b2768a-dd06-4671-8339-b16ca8d1f27f
+status: test
+description: |
+    A symbolic link is a type of file that contains a reference to another file.
+    This is probably done to make sure that the ransomware is able to follow shortcuts on the machine in order to find the original file to encrypt
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/03/02 16:05:41
+references:
+  - https://www.cybereason.com/blog/cybereason-vs.-blackcat-ransomware
+  - https://docs.microsoft.com/fr-fr/windows-server/administration/windows-commands/fsutil-behavior
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains|all:
+          - 'behavior '
+          - 'set '
+          - SymlinkEvaluation
+    selection_img:
+      - Image|endswith: \fsutil.exe
+      - OriginalFileName: fsutil.exe
+falsepositives: Legitimate use
+level: medium
+customer: 'demo'
+modified: 2023/01/19
+tags:
+  - attack.execution
+  - attack.t1059
+  - DEMO

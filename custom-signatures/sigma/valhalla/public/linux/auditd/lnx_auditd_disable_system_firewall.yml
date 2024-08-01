@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Disable System Firewall
+id: 53059bc0-1472-438b-956a-7508a94a91f0
+status: test
+description: Detects disabling of system firewalls which could be used by adversaries
+    to bypass controls that limit usage of the network.
+author: Pawel Mazur
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/22 12:10:31
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.004/T1562.004.md
+  - https://firewalld.org/documentation/man-pages/firewall-cmd.html
+logsource:
+    product: linux
+    service: auditd
+detection:
+    condition: selection
+    selection:
+        type: SERVICE_STOP
+        unit:
+          - firewalld
+          - iptables
+          - ufw
+falsepositives: Admin activity
+level: high
+customer: 'demo'
+tags:
+  - attack.t1562.004
+  - attack.defense_evasion
+  - DEMO

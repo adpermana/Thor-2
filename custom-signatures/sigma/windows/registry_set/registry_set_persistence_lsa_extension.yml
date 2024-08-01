@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Persistence Via LSA Extensions
+id: 41f6531d-af6e-4c6e-918f-b946f2b85a36
+status: experimental
+description: |
+    Detects when an attacker modifies the "REG_MULTI_SZ" value named "Extensions" to include a custom DLL to achieve persistence via lsass.
+    The "Extensions" list contains filenames of DLLs being automatically loaded by lsass.exe. Each DLL has its InitializeLsaExtension() method called after loading.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/21 16:35:31
+references:
+  - https://persistence-info.github.io/Data/lsaaextension.html
+  - https://twitter.com/0gtweet/status/1476286368385019906
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetObject|contains: \SYSTEM\CurrentControlSet\Control\LsaExtensionConfig\LsaSrv\Extensions
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.persistence
+  - DEMO

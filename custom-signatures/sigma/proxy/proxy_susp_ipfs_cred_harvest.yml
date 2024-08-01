@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Network Communication With IPFS
+id: eb6c2004-1cef-427f-8885-9042974e5eb6
+status: test
+description: Detects connections to interplanetary file system (IPFS) containing a
+    user's email address which mirrors behaviours observed in recent phishing campaigns
+    leveraging IPFS to host credential harvesting webpages.
+author: Gavin Knapp
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/03/16 17:12:51
+references:
+  - https://blog.talosintelligence.com/ipfs-abuse/
+  - https://github.com/Cisco-Talos/IOCs/tree/80caca039988252fbb3f27a2e89c2f2917f582e0/2022/11
+  - https://isc.sans.edu/diary/IPFS%20phishing%20and%20the%20need%20for%20correctly%20set%20HTTP%20security%20headers/29638
+logsource:
+    category: proxy
+detection:
+    condition: selection
+    selection:
+        cs-uri|re: (?i)(ipfs\.io/|ipfs\.io\s).+\..+@.+\.[a-z]+
+falsepositives: Legitimate use of IPFS being used in the organisation. However the
+    cs-uri regex looking for a user email will likely negate this.
+level: low
+customer: 'demo'
+tags:
+  - attack.credential_access
+  - attack.t1056
+  - DEMO

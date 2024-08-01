@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Response File Execution Via Odbcconf.EXE
+id: 5f03babb-12db-4eec-8c82-7b4cb5580868
+related:
+  - type: similar
+    id: 2d32dd6f-3196-4093-b9eb-1ad8ab088ca5
+  - type: obsoletes
+    id: 65d2be45-8600-4042-b4c0-577a1ff8a60e
+status: experimental
+description: Detects execution of "odbcconf" with the "-f" flag in order to load a
+    response file which might contain a malicious action.
+author: Kirill Kiryanov, Beyu Denis, Daniil Yugoslavskiy, oscd.community, Nasreddine
+    Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/22 16:10:51
+references:
+  - https://learn.microsoft.com/en-us/sql/odbc/odbcconf-exe?view=sql-server-ver16
+  - https://lolbas-project.github.io/lolbas/Binaries/Odbcconf/
+  - https://www.cybereason.com/blog/threat-analysis-report-bumblebee-loader-the-high-road-to-enterprise-domain-control
+  - https://www.hexacorn.com/blog/2020/08/23/odbcconf-lolbin-trifecta/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains|windash: ' -f '
+    selection_img:
+      - Image|endswith: \odbcconf.exe
+      - OriginalFileName: odbcconf.exe
+    selection_rsp_ext:
+        CommandLine|contains: .rsp
+falsepositives: The rule is looking for any usage of response file, which might generate
+    false positive when this function is used legitimately. Investigate the contents
+    of the ".rsp" file to determine if it is malicious and apply additional filters
+    if necessary.
+level: medium
+customer: 'demo'
+modified: 2024/03/05
+tags:
+  - attack.defense_evasion
+  - attack.t1218.008
+  - DEMO

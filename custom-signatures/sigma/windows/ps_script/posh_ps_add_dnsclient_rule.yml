@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Powershell Add Name Resolution Policy Table Rule
+id: 4368354e-1797-463c-bc39-a309effbe8d7
+status: test
+description: |
+    Detects powershell scripts that adds a Name Resolution Policy Table (NRPT) rule for the specified namespace.
+    This will bypass the default DNS server and uses a specified server for answering the query.
+author: Borna Talebi
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/09/14 18:29:51
+references:
+  - https://twitter.com/NathanMcNulty/status/1569497348841287681
+  - https://docs.microsoft.com/en-us/powershell/module/dnsclient/add-dnsclientnrptrule?view=windowsserver2022-ps
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: selection
+    selection:
+        ScriptBlockText|contains|all:
+          - Add-DnsClientNrptRule
+          - -Namesp
+          - -NameSe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.impact
+  - attack.t1565
+  - DEMO

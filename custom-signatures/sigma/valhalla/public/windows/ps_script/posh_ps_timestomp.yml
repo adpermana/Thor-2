@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Powershell Timestomp
+id: c6438007-e081-42ce-9483-b067fbef33c3
+status: test
+description: |
+    Adversaries may modify file time attributes to hide new or changes to existing files.
+    Timestomping is a technique that modifies the timestamps of a file (the modify, access, create, and change times), often to mimic files that are in the same folder.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/03 11:42:31
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1070.006/T1070.006.md
+  - https://www.offensive-security.com/metasploit-unleashed/timestomp/
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: selection_ioc
+    selection_ioc:
+        ScriptBlockText|contains:
+          - .CreationTime =
+          - .LastWriteTime =
+          - .LastAccessTime =
+          - '[IO.File]::SetCreationTime'
+          - '[IO.File]::SetLastAccessTime'
+          - '[IO.File]::SetLastWriteTime'
+falsepositives: Legitimate admin script
+level: medium
+customer: 'demo'
+modified: 2022/12/25
+tags:
+  - attack.defense_evasion
+  - attack.t1070.006
+  - DEMO

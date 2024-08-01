@@ -1,0 +1,37 @@
+title: Suspicious Eventcreate.exe Usage
+id: c33b6dca-4646-4e4b-8491-c7d6ffa5a3c9
+status: experimental
+description: Detects usage of the 'eventcreate' utility which might be used to masquerade the parent process of a process execution
+references:
+    - https://www.proofpoint.com/us/blog/threat-insight/serpent-no-swiping-new-backdoor-targets-french-entities-unique-attack-chain
+author: Nasreddine Bencherchali
+date: 2023/01/19
+tags:
+    - attack.execution
+logsource:
+    product: windows
+    category: process_creation
+detection:
+    selection_parent_generic:
+        - ParentImage|endswith:
+            - '\powershelll.exe'
+            - '\pwsh.exe'
+            - '\wscript.exe'
+            - '\cscript.exe'
+        - ParentImage|contains:
+            - '\AppData\Local\Temp\'
+            - '\Users\Public\'
+    selection_parent_cmd:
+        # We put it into a seperate selection because its the most prone to FP
+        ParentImage|endswith: '\cmd.exe'
+        # TODO: Add other suspicious combinations in the CLI overtime
+        ParentCommandLine|contains:
+            - 'schtasks'
+            - 'whoami'
+    selection_child:
+        - Image|endswith: '\eventcreate.exe'
+        - OriginalFileName: 'evcreate.exe'
+    condition: selection_child and 1 of selection_parent_*
+falsepositives:
+    - Unknown
+level: medium

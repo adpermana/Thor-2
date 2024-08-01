@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Registry Explorer Policy Modification
+id: 1c3121ed-041b-4d97-a075-07f54f20fb4a
+status: test
+description: Detects registry modifications that disable internal tools or functions
+    in explorer (malware like Agent Tesla uses this technique)
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/03/18 16:10:41
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1112/T1112.md
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection_set_1
+    selection_set_1:
+        Details: DWORD (0x00000001)
+        TargetObject|endswith:
+          - SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer\NoLogOff
+          - SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer\NoDesktop
+          - SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer\NoRun
+          - SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer\NoFind
+          - SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer\NoControlPanel
+          - SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer\NoFileMenu
+          - SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer\NoClose
+          - SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer\NoSetTaskbar
+          - SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer\NoPropertiesMyDocuments
+          - SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer\NoTrayContextMenu
+falsepositives: Legitimate admin script
+level: medium
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.defense_evasion
+  - attack.t1112
+  - DEMO

@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Network Connection Initiated To Visual Studio Code Tunnels Domain
+id: 4b657234-038e-4ad5-997c-4be42340bce4
+related:
+  - type: similar
+    id: 9501f8e6-8e3d-48fc-a8a6-1089dd5d7ef4
+  - type: similar
+    id: b3e6418f-7c7a-4fad-993a-93b65027a9f1
+  - type: similar
+    id: 1cb0c6ce-3d00-44fc-ab9c-6d6d577bf20b
+status: experimental
+description: |
+    Detects network connections to Visual Studio Code tunnel domains initiated by a process on a system. Attackers can abuse that feature to establish a reverse shell or persistence on a machine.
+author: Kamran Saifullah
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/11/20 23:04:01
+references:
+  - https://ipfyx.fr/post/visual-studio-code-tunnel/
+  - https://badoption.eu/blog/2023/01/31/code_c2.html
+  - https://cydefops.com/vscode-data-exfiltration
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    condition: selection
+    selection:
+        DestinationHostname|endswith: .tunnels.api.visualstudio.com
+        Initiated: "true"
+falsepositives: Legitimate use of Visual Studio Code tunnel will also trigger this.
+level: medium
+customer: 'demo'
+tags:
+  - attack.exfiltration
+  - attack.t1567.001
+  - DEMO

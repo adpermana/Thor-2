@@ -1,0 +1,56 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Arbitrary File Download Via Squirrel.EXE
+id: 1e75c1cc-c5d4-42aa-ac3d-91b0b68b3b4c
+related:
+  - type: similar
+    id: 45239e6a-b035-4aaf-b339-8ad379fcb67e
+  - type: obsoletes
+    id: fa4b21c9-0057-4493-b289-2556416ae4d7
+status: experimental
+description: |
+    Detects the usage of the "Squirrel.exe" to download arbitrary files. This binary is part of multiple Electron based software installations (Slack, Teams, Discord, etc.)
+author: Nasreddine Bencherchali (Nextron Systems), Karneades / Markus Neis, Jonhnathan
+    Ribeiro, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/09 16:15:51
+references:
+  - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Squirrel/
+  - http://www.hexacorn.com/blog/2019/03/30/sqirrel-packages-manager-as-a-lolbin-a-k-a-many-electron-apps-are-lolbins-by-default/
+  - http://www.hexacorn.com/blog/2018/08/16/squirrel-as-a-lolbin/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_download_cli:
+        CommandLine|contains:
+          - ' --download '
+          - ' --update '
+          - ' --updateRollback='
+    selection_download_http_keyword:
+        CommandLine|contains: http
+    selection_img:
+        Image|endswith:
+          - \squirrel.exe
+          - \update.exe
+falsepositives: Expected FP with some Electron based applications such as (1Clipboard,
+    Beaker Browser, Caret, Discord, GitHub Desktop, etc.)
+level: medium
+customer: 'demo'
+modified: 2023/11/09
+tags:
+  - attack.defense_evasion
+  - attack.execution
+  - attack.t1218
+  - DEMO

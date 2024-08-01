@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Add Potential Suspicious New Download Source To Winget
+id: c15a46a0-07d4-4c87-b4b6-89207835a83b
+related:
+  - type: similar
+    id: 05ebafc8-7aa2-4bcd-a269-2aec93f9e842
+  - type: similar
+    id: 81a0ecb5-0a41-4ba1-b2ba-c944eb92bfa2
+status: experimental
+description: Detects usage of winget to add new potentially suspicious download sources
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/04/17 20:06:01
+references:
+  - https://learn.microsoft.com/en-us/windows/package-manager/winget/source
+  - https://github.com/nasbench/Misc-Research/tree/b9596e8109dcdb16ec353f316678927e507a5b8d/LOLBINs/Winget
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains|all:
+          - 'source '
+          - 'add '
+    selection_img:
+      - Image|endswith: \winget.exe
+      - OriginalFileName: winget.exe
+    selection_source_direct_ip:
+        CommandLine|re: ://\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/12/04
+tags:
+  - attack.defense_evasion
+  - attack.execution
+  - attack.t1059
+  - DEMO

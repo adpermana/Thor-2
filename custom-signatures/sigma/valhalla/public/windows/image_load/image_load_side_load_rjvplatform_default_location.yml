@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential RjvPlatform.DLL Sideloading From Default Location
+id: 259dda31-b7a3-444f-b7d8-17f96e8a7d0d
+status: experimental
+description: Detects loading of "RjvPlatform.dll" by the "SystemResetPlatform.exe"
+    binary which can be abused as a method of DLL side loading since the "$SysReset"
+    directory isn't created by default.
+author: X__Junior (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/06/09 21:29:01
+references:
+  - https://twitter.com/0gtweet/status/1666716511988330499
+logsource:
+    category: image_load
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image: C:\Windows\System32\SystemResetPlatform\SystemResetPlatform.exe
+        ImageLoaded: C:\$SysReset\Framework\Stack\RjvPlatform.dll
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - attack.t1574.001
+  - attack.t1574.002
+  - DEMO

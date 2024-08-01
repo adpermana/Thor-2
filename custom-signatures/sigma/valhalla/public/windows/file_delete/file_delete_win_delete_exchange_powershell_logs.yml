@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Exchange PowerShell Cmdlet History Deleted
+id: a55349d8-9588-4c5a-8e3b-1925fe2a4ffe
+status: test
+description: Detects the deletion of the Exchange PowerShell cmdlet History logs which
+    may indicate an attempt to destroy forensic evidence
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/10/26 17:08:21
+references:
+  - https://m365internals.com/2022/10/07/hunting-in-on-premises-exchange-server-logs/
+logsource:
+    category: file_delete
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetFilename|contains: _Cmdlet_
+        TargetFilename|startswith: \Logging\CmdletInfra\LocalPowerShell\Cmdlet\
+falsepositives: Possible FP during log rotation
+level: high
+customer: 'demo'
+modified: 2022/12/30
+tags:
+  - attack.defense_evasion
+  - attack.t1070
+  - DEMO

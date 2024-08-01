@@ -1,0 +1,37 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Too Many Global Admins
+id: 7bbc309f-e2b1-4eb1-8369-131a367d67d3
+status: experimental
+description: Identifies an event where there are there are too many accounts assigned
+    the Global Administrator role.
+author: Mark Morowczynski '@markmorow', Gloria Lee, '@gleeiamglo'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/09/14 11:34:01
+references:
+  - https://learn.microsoft.com/en-us/azure/active-directory/privileged-identity-management/pim-how-to-configure-security-alerts#there-are-too-many-global-administrators
+logsource:
+    product: azure
+    service: pim
+detection:
+    condition: selection
+    selection:
+        riskEventType: tooManyGlobalAdminsAssignedToTenantAlertIncident
+falsepositives: Investigate if threshold setting in PIM is too low.
+level: high
+customer: 'demo'
+tags:
+  - attack.t1078
+  - attack.persistence
+  - attack.privilege_escalation
+  - DEMO

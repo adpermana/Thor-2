@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Process Reconnaissance Via Wmic.EXE
+id: 221b251a-357a-49a9-920a-271802777cc0
+status: test
+description: Detects the execution of "wmic" with the "process" flag, which adversary
+    might use to list processes running on the compromised host or list installed
+    software hotfixes and patches.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/01 15:00:31
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1047/T1047.md
+  - https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/wmic
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection* and not 1 of filter_*
+    filter_main_creation:
+        CommandLine|contains|all:
+          - call
+          - create
+    selection_cli:
+        CommandLine|contains: process
+    selection_img:
+      - Image|endswith: \WMIC.exe
+      - OriginalFileName: wmic.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/02/14
+tags:
+  - attack.execution
+  - attack.t1047
+  - DEMO

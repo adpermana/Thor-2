@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: MacOS Network Service Scanning
+id: 84bae5d4-b518-4ae0-b331-6d4afd34d00f
+status: test
+description: Detects enumeration of local or remote network services.
+author: Alejandro Ortuno, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/21 13:49:11
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1046/T1046.md
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    condition: (selection_1 and not filter) or selection_2
+    filter:
+        CommandLine|contains: l
+    selection_1:
+        Image|endswith:
+          - /nc
+          - /netcat
+    selection_2:
+        Image|endswith:
+          - /nmap
+          - /telnet
+falsepositives: Legitimate administration activities
+level: low
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.discovery
+  - attack.t1046
+  - DEMO

@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Remove Exported Mailbox from Exchange Webserver
+id: 09570ae5-889e-43ea-aac0-0e1221fb3d95
+status: test
+description: Detects removal of an exported Exchange mailbox which could be to cover
+    tracks from ProxyShell exploit
+author: Christian Burkard (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/27 18:34:51
+references:
+  - https://github.com/rapid7/metasploit-framework/blob/1416b5776d963f21b7b5b45d19f3e961201e0aed/modules/exploits/windows/http/exchange_proxyshell_rce.rb#L430
+logsource:
+    product: windows
+    service: msexchange-management
+detection:
+    condition: keywords
+    keywords:
+        '|all':
+          - Remove-MailboxExportRequest
+          - ' -Identity '
+          - ' -Confirm "False"'
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/01/23
+tags:
+  - attack.defense_evasion
+  - attack.t1070
+  - DEMO

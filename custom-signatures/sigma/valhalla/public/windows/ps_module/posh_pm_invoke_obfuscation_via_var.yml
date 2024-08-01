@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Invoke-Obfuscation VAR++ LAUNCHER OBFUSCATION - PowerShell Module
+id: f3c89218-8c3d-4ba9-9974-f1d8e6a1b4a6
+related:
+  - type: derived
+    id: e54f5149-6ba3-49cf-b153-070d24679126
+status: test
+description: Detects Obfuscated Powershell via VAR++ LAUNCHER
+author: Timur Zinniatullin, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/13 21:06:01
+references:
+  - https://github.com/SigmaHQ/sigma/issues/1009
+logsource:
+    category: ps_module
+    product: windows
+    definition: 0ad03ef1-f21b-4a79-8ce8-e6900c54b65b
+detection:
+    condition: selection_4103
+    selection_4103:
+        Payload|re: (?i).*&&set.*(\{\d\}){2,}\\"\s+?-f.*&&.*cmd.*/c
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/12/02
+tags:
+  - attack.defense_evasion
+  - attack.t1027
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

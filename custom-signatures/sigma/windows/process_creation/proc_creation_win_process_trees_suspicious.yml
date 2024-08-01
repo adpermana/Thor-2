@@ -1,0 +1,58 @@
+title: Suspicious Process Execution Tree
+id: ef2bc16d-97d3-45cb-9ae2-273c404e3003
+related:
+    - id: 6316bcbe-7041-4d81-9087-abf0471db401
+      type: similar
+status: experimental
+description: Detects suspicious process execution trees, often seen by malware execute in a chain
+author: Nasreddine Bencherchali
+references:
+    - Internal Research
+date: 2023/02/06
+modified: 2023/05/29
+tags:
+    - attack.execution
+    - attack.t1204.002
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        ProcessTree|contains:
+            # Add more suspicious trees
+            # TODO: regsvr32, regasm, powershell, wscript, cscript
+            - '\cmd.exe|C:\Windows\System32\rundll32.exe|C:\Windows\System32\rundll32.exe'
+            - '\conhost.exe|C:\Windows\System32\conhost.exe|C:\Windows\System32\conhost.exe'
+            - '\mshta.exe|C:\Windows\System32\cmd.exe|C:\Windows\System32\rundll32.exe'
+            - '\mshta.exe|C:\Windows\System32\rundll32.exe|C:\Windows\System32\cmd.exe'
+            - '\regsvr32.exe|C:\Windows\System32\regsvr32.exe|C:\Windows\System32\regsvr32.exe'
+            - '\rundll32.exe|C:\Windows\System32\cmd.exe|C:\Windows\System32\rundll32.exe'
+            - '\rundll32.exe|C:\Windows\System32\rundll32.exe|C:\Windows\System32\rundll32.exe'
+            - '\rundll32.exe|C:\Windows\System32\wermgr.exe|C:\Windows\System32\cmd.exe'
+            - '\rundll32.exe|C:\Windows\System32\wermgr.exe|C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe'
+            - '\svchost.exe|C:\Program Files\PowerShell\7\pwsh.exe|C:\Windows\System32\cscript.exe'
+            - '\svchost.exe|C:\Program Files\PowerShell\7\pwsh.exe|C:\Windows\System32\mshta.exe'
+            - '\svchost.exe|C:\Program Files\PowerShell\7\pwsh.exe|C:\Windows\System32\regsvr32.exe'
+            - '\svchost.exe|C:\Program Files\PowerShell\7\pwsh.exe|C:\Windows\System32\rundll32.exe'
+            - '\svchost.exe|C:\Program Files\PowerShell\7\pwsh.exe|C:\Windows\System32\wscript.exe'
+            - '\svchost.exe|C:\Windows\System32\cmd.exe|C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe|'
+            - '\svchost.exe|C:\Windows\System32\cscript.exe|C:\Program Files\PowerShell\7\pwsh.exe'
+            - '\svchost.exe|C:\Windows\System32\cscript.exe|C:\Windows\System32\cmd.exe'
+            - '\svchost.exe|C:\Windows\System32\cscript.exe|C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe|'
+            - '\svchost.exe|C:\Windows\System32\mshta.exe|C:\Program Files\PowerShell\7\pwsh.exe'
+            - '\svchost.exe|C:\Windows\System32\mshta.exe|C:\Windows\System32\cmd.exe'
+            - '\svchost.exe|C:\Windows\System32\mshta.exe|C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe|'
+            - '\svchost.exe|C:\Windows\System32\regsvr32.exe|C:\Windows\System32\cmd.exe'
+            - '\svchost.exe|C:\Windows\System32\rundll32.exe|C:\Program Files\PowerShell\7\pwsh.exe'
+            - '\svchost.exe|C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe|C:\Windows\System32\cscript.exe'
+            - '\svchost.exe|C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe|C:\Windows\System32\mshta.exe'
+            - '\svchost.exe|C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe|C:\Windows\System32\regsvr32.exe'
+            - '\svchost.exe|C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe|C:\Windows\System32\rundll32.exe'
+            - '\svchost.exe|C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe|C:\Windows\System32\wscript.exe'
+            - '\svchost.exe|C:\Windows\System32\wscript.exe|C:\Program Files\PowerShell\7\pwsh.exe'
+            - '\svchost.exe|C:\Windows\System32\wscript.exe|C:\Windows\System32\cmd.exe'
+            - '\svchost.exe|C:\Windows\System32\wscript.exe|C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe|'
+    condition: selection
+falsepositives:
+    - Unlikely
+level: high

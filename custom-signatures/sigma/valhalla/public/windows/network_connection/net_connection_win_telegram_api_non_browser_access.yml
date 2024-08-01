@@ -1,0 +1,76 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Non-Browser Network Communication With Telegram API
+id: c3dbbc9f-ef1d-470a-a90a-d343448d5875
+status: experimental
+description: Detects an a non-browser process interacting with the Telegram API which
+    could indicate use of a covert C2
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/19 22:25:41
+references:
+  - https://www.ncsc.gov.uk/static-assets/documents/malware-analysis-reports/small-sieve/NCSC-MAR-Small-Sieve.pdf
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_brave:
+        Image|endswith: \brave.exe
+    filter_main_chrome:
+        Image:
+          - C:\Program Files\Google\Chrome\Application\chrome.exe
+          - C:\Program Files (x86)\Google\Chrome\Application\chrome.exe
+    filter_main_edge_1:
+      - Image|startswith: C:\Program Files (x86)\Microsoft\EdgeWebView\Application\
+      - Image|endswith: \WindowsApps\MicrosoftEdge.exe
+      - Image:
+          - C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+          - C:\Program Files\Microsoft\Edge\Application\msedge.exe
+    filter_main_edge_2:
+        Image|endswith:
+          - \msedge.exe
+          - \msedgewebview2.exe
+        Image|startswith:
+          - C:\Program Files (x86)\Microsoft\EdgeCore\
+          - C:\Program Files\Microsoft\EdgeCore\
+    filter_main_firefox:
+        Image:
+          - C:\Program Files\Mozilla Firefox\firefox.exe
+          - C:\Program Files (x86)\Mozilla Firefox\firefox.exe
+    filter_main_ie:
+        Image:
+          - C:\Program Files (x86)\Internet Explorer\iexplore.exe
+          - C:\Program Files\Internet Explorer\iexplore.exe
+    filter_main_maxthon:
+        Image|endswith: \maxthon.exe
+    filter_main_opera:
+        Image|endswith: \opera.exe
+    filter_main_safari:
+        Image|endswith: \safari.exe
+    filter_main_seamonkey:
+        Image|endswith: \seamonkey.exe
+    filter_main_vivaldi:
+        Image|endswith: \vivaldi.exe
+    filter_main_whale:
+        Image|endswith: \whale.exe
+    selection:
+        DestinationHostname|contains: api.telegram.org
+falsepositives: Legitimate applications communicating with the Telegram API e.g. web
+    browsers not in the exclusion list, app with an RSS  etc.
+level: medium
+customer: 'demo'
+tags:
+  - attack.command_and_control
+  - attack.t1102
+  - DEMO

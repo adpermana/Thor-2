@@ -1,0 +1,27 @@
+title: Volume ShadowCopy Instance Has Been Deleted Using WMI
+id: 7a71d783-02a2-4a3d-9a22-59c94c50d21a
+status: test
+description: Detects the deletion of Volume Shadow Copies using the "Win32_Shadowcopy" WMI class
+references:
+    - Internal Research
+author: Nasreddine Bencherchali
+date: 2022/11/22
+modified: 2023/03/29
+tags:
+    - attack.execution
+    - attack.t1047
+logsource:
+    product: windows
+    service: wmi
+detection:
+    selection:
+        # Example 1: wmic shadowcopy delete
+        # Example 2: Get-WmiObject Win32_Shadowcopy | ForEach-Object {$_.Delete();}
+        EventID: 11
+        Operation|contains|all:
+            - 'IWbemServices::DeleteInstance'
+            - 'Win32_ShadowCopy.ID'
+    condition: selection
+falsepositives:
+    - Rare legitimate instances of deletion of volume shadow copies by an administrator script that uses WMI. Inspect the PID of the processes initiating the command
+level: high

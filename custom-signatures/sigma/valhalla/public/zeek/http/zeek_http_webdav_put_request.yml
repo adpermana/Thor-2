@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: WebDav Put Request
+id: 705072a5-bb6f-4ced-95b6-ecfa6602090b
+status: test
+description: A General detection for WebDav user-agent being used to PUT files on
+    a WebDav network share. This could be an indicator of exfiltration.
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/05/02 10:41:51
+references:
+  - https://github.com/OTRF/detection-hackathon-apt29/issues/17
+logsource:
+    product: zeek
+    service: http
+detection:
+    condition: selection and not filter
+    filter:
+        id.resp_h|cidr:
+          - 10.0.0.0/8
+          - 127.0.0.0/8
+          - 172.16.0.0/12
+          - 192.168.0.0/16
+          - 169.254.0.0/16
+    selection:
+        method: PUT
+        user_agent|contains: WebDAV
+falsepositives: Unknown
+level: low
+customer: 'demo'
+modified: 2024/03/13
+tags:
+  - attack.exfiltration
+  - attack.t1048.003
+  - DEMO

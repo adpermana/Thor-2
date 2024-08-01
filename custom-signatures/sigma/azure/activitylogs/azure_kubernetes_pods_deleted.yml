@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Azure Kubernetes Pods Deleted
+id: b02f9591-12c3-4965-986a-88028629b2e1
+status: test
+description: Identifies the deletion of Azure Kubernetes Pods.
+author: Austin Songer @austinsonger
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/07/24 13:40:41
+references:
+  - https://docs.microsoft.com/en-us/azure/role-based-access-control/resource-provider-operations#microsoftkubernetes
+  - https://github.com/elastic/detection-rules/blob/065bf48a9987cd8bd826c098a30ce36e6868ee46/rules/integrations/azure/impact_kubernetes_pod_deleted.toml
+logsource:
+    product: azure
+    service: activitylogs
+detection:
+    condition: selection
+    selection:
+        operationName: MICROSOFT.KUBERNETES/CONNECTEDCLUSTERS/PODS/DELETE
+falsepositives:
+  - Pods may be deleted by a system administrator. Verify whether the user identity,
+    user agent, and/or hostname should be making changes in your environment.
+  - Pods deletions from unfamiliar users or hosts should be investigated. If known
+    behavior is causing false positives, it can be exempted from the rule.
+level: medium
+customer: 'demo'
+modified: 2022/08/23
+tags:
+  - attack.impact
+  - DEMO

@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Powershell Execute Batch Script
+id: b5522a23-82da-44e5-9c8b-e10ed8955f88
+status: test
+description: |
+    Adversaries may abuse the Windows command shell for execution.
+    The Windows command shell ([cmd](https://attack.mitre.org/software/S0106)) is the primary command prompt on Windows systems.
+    The Windows command prompt can be used to control almost any aspect of a system, with various permission levels required for different subsets of commands.
+    Batch files (ex: .bat or .cmd) also provide the shell with a list of sequential commands to run, as well as normal scripting operations such as conditionals and loops.
+    Common uses of batch files include long or repetitive tasks, or the need to run the same set of commands on multiple system
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/02 14:18:31
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1059.003/T1059.003.md#atomic-test-1---create-and-execute-batch-script
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: all of selection_*
+    selection_batch:
+        ScriptBlockText|contains:
+          - .cmd
+          - .bat
+    selection_start:
+        ScriptBlockText|contains: Start-Process
+falsepositives: Legitimate administration script
+level: medium
+customer: 'demo'
+tags:
+  - attack.execution
+  - attack.t1059.003
+  - DEMO

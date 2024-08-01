@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Windows Strings In URI
+id: 9f6a34b4-2688-4eb7-a7f5-e39fef573d0e
+status: test
+description: Detects suspicious Windows strings in URI which could indicate possible
+    exfiltration or webshell communication
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/06 14:40:31
+references:
+  - https://thedfirreport.com/2022/06/06/will-the-real-msiexec-please-stand-up-exploit-leads-to-data-exfiltration/
+logsource:
+    category: webserver
+detection:
+    condition: selection
+    selection:
+        cs-uri-query|contains:
+          - =C:/Users
+          - =C:/Program%20Files
+          - =C:/Windows
+          - =C%3A%5CUsers
+          - =C%3A%5CProgram%20Files
+          - =C%3A%5CWindows
+falsepositives: Legitimate application and websites that use windows paths in their
+    URL
+level: high
+customer: 'demo'
+modified: 2023/01/02
+tags:
+  - attack.persistence
+  - attack.exfiltration
+  - attack.t1505.003
+  - DEMO

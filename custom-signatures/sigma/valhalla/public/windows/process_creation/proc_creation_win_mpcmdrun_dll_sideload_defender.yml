@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Mpclient.DLL Sideloading Via Defender Binaries
+id: 7002aa10-b8d4-47ae-b5ba-51ab07e228b9
+related:
+  - type: similar
+    id: 418dc89a-9808-4b87-b1d7-e5ae0cb6effc
+status: experimental
+description: Detects potential sideloading of "mpclient.dll" by Windows Defender processes
+    ("MpCmdRun" and "NisSrv") from their non-default directory.
+author: Bhabesh Raj
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/01 20:29:51
+references:
+  - https://www.sentinelone.com/blog/living-off-windows-defender-lockbit-ransomware-sideloads-cobalt-strike-through-microsoft-security-tool
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_known_locations:
+        Image|startswith:
+          - C:\Program Files (x86)\Windows Defender\
+          - C:\Program Files\Microsoft Security Client\
+          - C:\Program Files\Windows Defender\
+          - C:\ProgramData\Microsoft\Windows Defender\Platform\
+          - C:\Windows\WinSxS\
+    selection:
+        Image|endswith:
+          - \MpCmdRun.exe
+          - \NisSrv.exe
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/08/04
+tags:
+  - attack.defense_evasion
+  - attack.t1574.002
+  - DEMO

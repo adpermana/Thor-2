@@ -1,0 +1,30 @@
+title: PowerShell Download Cradles
+id: 7a23774c-aeed-49ac-83c8-d2be7057b740
+status: experimental
+description: Detects a set of suspicious PowerShell cradles used to download stages from the Internet
+author: Florian Roth
+references:
+    - https://gist.github.com/HarmJ0y/bb48307ffa663256e239
+date: 2022/02/08
+modified: 2022/09/06
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains:
+            - 'IEX (New-Object Net.Webclient)'
+            - 'IEX(New-Object Net.Webclient)'
+            - 'nslookup -querytype=txt $'
+            - '(nslookup -querytype=TXT '
+            - 'nslookup -q=TXT '
+            - 'Import-Module bitstransfer'
+            - 'IEX ([System.Text.Encoding]::'
+            - 'IEX([System.Text.Encoding]::'
+            - ' -ComObject Msxml2.XMLHTTP;$'
+            - 'IEX (iwr '
+            - 'IEX(iwr '
+    condition: selection
+falsepositives:
+    - False positives depend on scripts and administrative tools used in the monitored environment
+level: high

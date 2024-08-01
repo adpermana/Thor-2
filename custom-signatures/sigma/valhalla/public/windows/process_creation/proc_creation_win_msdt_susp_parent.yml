@@ -1,0 +1,53 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious MSDT Parent Process
+id: 7a74da6b-ea76-47db-92cc-874ad90df734
+status: test
+description: Detects msdt.exe executed by a suspicious parent as seen in CVE-2022-30190
+    / Follina exploitation
+author: Nextron Systems
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/01 13:53:21
+references:
+  - https://twitter.com/nao_sec/status/1530196847679401984
+  - https://app.any.run/tasks/713f05d2-fe78-4b9d-a744-f7c133e3fafb/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_msdt:
+      - Image|endswith: \msdt.exe
+      - OriginalFileName: msdt.exe
+    selection_parent:
+        ParentImage|endswith:
+          - \cmd.exe
+          - \cscript.exe
+          - \mshta.exe
+          - \powershell.exe
+          - \pwsh.exe
+          - \regsvr32.exe
+          - \rundll32.exe
+          - \schtasks.exe
+          - \wmic.exe
+          - \wscript.exe
+          - \wsl.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/02/06
+tags:
+  - attack.defense_evasion
+  - attack.t1036
+  - attack.t1218
+  - DEMO

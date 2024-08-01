@@ -1,0 +1,57 @@
+title: Execution From Suspicious Domains Via CLI
+id: a1637ec2-5dc4-4a0d-ae96-165d55e825c1
+related:
+    - id: ea6f45e1-4eae-4de6-b6e1-9dfd0f4c5ed9
+      type: similar
+    - id: 6f1ae2fa-6697-4be6-a1a4-702cc6b69220
+      type: similar
+status: experimental
+description: Detects possible suspicious downloads and execution from websites often abused to download malware via CLI
+references:
+    - https://gist.github.com/jdgregson/bf871d5cbb8d456ec36ccbe4ee1442de
+    - https://twitter.com/Laughing_Mantis/status/1518766501385318406
+    - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/ransomware-hive-conti-avoslocker
+author: Nasreddine Bencherchali
+date: 2022/06/03
+modified: 2023/01/31
+tags:
+    - attack.execution
+    - attack.t1059
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_exec:
+        CommandLine|contains:
+            - 'iex '
+            - ';Invoke-'
+            - ';.\'
+            - 'csc '
+            - 'csc.exe '
+    selection_website:
+        CommandLine|contains:
+            - 'raw.githubusercontent.com'
+            - 'gist.githubusercontent.com'
+            - 'pastebin.com'
+            - 'cdn.discordapp.com/attachments/'
+            - 'mediafire.com'
+            - 'mega.nz'
+            - 'ddns.net/'
+            - 'anonfiles.com'
+            - 'ufile.io'
+            - 'send.exploit.in'
+            - '.paste.ee'
+            - '.hastebin.com'
+            - '.ghostbin.co/'
+            - 'storage.googleapis.com'
+            - 'transfer.sh'
+            - 'privatlab.net'
+            - 'privatlab.com'
+            - 'sendspace.com'
+            - 'pastetext.net'
+            - 'pastebin.pl'
+            - 'paste.ee'
+    condition: all of selection*
+falsepositives:
+    - Unlikely
+level: high

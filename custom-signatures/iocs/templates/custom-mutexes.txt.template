@@ -1,0 +1,12 @@
+#
+# THOR CUSTOM MUTEXES
+#
+# Important: Activate this template by renaming it from .txt.template to .txt 
+#
+# FORMAT -----------------------------------------------------------------------
+#
+# Mutex;Comment
+#
+# EXAMPLES ---------------------------------------------------------------------
+#
+# @_ZXSHELL_@;ZXShell Mutex http://goo.gl/9MU6Rh

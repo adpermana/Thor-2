@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Created Files by Microsoft Sync Center
+id: 409f8a98-4496-4aaa-818a-c931c0a8b832
+status: test
+description: This rule detects suspicious files created by Microsoft Sync Center (mobsync)
+author: elhoim
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/04/28 15:51:01
+references:
+  - https://redcanary.com/blog/intelligence-insights-november-2021/
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection_mobsync and filter_created_file
+    filter_created_file:
+        TargetFilename|endswith:
+          - .dll
+          - .exe
+    selection_mobsync:
+        Image|endswith: \mobsync.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/06/02
+tags:
+  - attack.t1055
+  - attack.t1218
+  - attack.execution
+  - attack.defense_evasion
+  - DEMO

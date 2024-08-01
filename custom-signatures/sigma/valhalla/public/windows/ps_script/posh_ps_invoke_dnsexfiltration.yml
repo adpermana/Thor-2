@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Powershell DNSExfiltration
+id: d59d7842-9a21-4bc6-ba98-64bfe0091355
+status: test
+description: DNSExfiltrator allows for transferring (exfiltrate) a file over a DNS
+    request covert channel
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/07 13:12:31
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1048/T1048.md#atomic-test-3---dnsexfiltration-doh
+  - https://github.com/Arno0x/DNSExfiltrator
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: selection_cmdlet
+    selection_cmdlet:
+      - ScriptBlockText|contains: Invoke-DNSExfiltrator
+      - ScriptBlockText|contains|all:
+          - ' -i '
+          - ' -d '
+          - ' -p '
+          - ' -doh '
+          - ' -t '
+falsepositives: Legitimate script
+level: high
+customer: 'demo'
+tags:
+  - attack.exfiltration
+  - attack.t1048
+  - DEMO

@@ -1,0 +1,66 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Remote Access Tool Services Have Been Installed - System
+id: 1a31b18a-f00c-4061-9900-f735b96c99fc
+related:
+  - type: similar
+    id: c8b00925-926c-47e3-beea-298fd563728e
+status: experimental
+description: Detects service installation of different remote access tools software.
+    These software are often abused by threat actors to perform
+author: Connor Martin, Nasreddine Bencherchali
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/12/23 20:10:41
+references:
+  - https://redcanary.com/blog/misbehaving-rats/
+logsource:
+    product: windows
+    service: system
+detection:
+    condition: selection
+    selection:
+        EventID:
+          - "7045"
+          - "7036"
+        Provider_Name: Service Control Manager
+        ServiceName|contains:
+          - AmmyyAdmin
+          - Atera
+          - BASupportExpressSrvcUpdater
+          - BASupportExpressStandaloneService
+          - chromoting
+          - GoToAssist
+          - GoToMyPC
+          - jumpcloud
+          - LMIGuardianSvc
+          - LogMeIn
+          - monblanking
+          - Parsec
+          - RManService
+          - RPCPerformanceService
+          - RPCService
+          - SplashtopRemoteService
+          - SSUService
+          - TeamViewer
+          - TightVNC
+          - vncserver
+          - Zoho
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/06/22
+tags:
+  - attack.persistence
+  - attack.t1543.003
+  - attack.t1569.002
+  - DEMO

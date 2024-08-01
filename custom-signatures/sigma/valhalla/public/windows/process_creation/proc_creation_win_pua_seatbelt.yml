@@ -1,0 +1,66 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PUA - Seatbelt Execution
+id: 38646daa-e78f-4ace-9de0-55547b2d30da
+status: test
+description: Detects the execution of the PUA/Recon tool Seatbelt via PE information
+    of command line parameters
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/10/18 11:56:31
+references:
+  - https://github.com/GhostPack/Seatbelt
+  - https://www.bluetangle.dev/2022/08/fastening-seatbelt-on-threat-hunting.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection_img or all of selection_group_*
+    selection_group_list:
+        CommandLine|contains:
+          - ' -group=misc'
+          - ' -group=remote'
+          - ' -group=chromium'
+          - ' -group=slack'
+          - ' -group=system'
+          - ' -group=user'
+          - ' -group=all'
+    selection_group_output:
+        CommandLine|contains: ' -outputfile='
+    selection_img:
+      - Image|endswith: \Seatbelt.exe
+      - OriginalFileName: Seatbelt.exe
+      - Description: Seatbelt
+      - CommandLine|contains:
+          - ' DpapiMasterKeys'
+          - ' InterestingProcesses'
+          - ' InterestingFiles'
+          - ' CertificateThumbprints'
+          - ' ChromiumBookmarks'
+          - ' ChromiumHistory'
+          - ' ChromiumPresence'
+          - ' CloudCredentials'
+          - ' CredEnum'
+          - ' CredGuard'
+          - ' FirefoxHistory'
+          - ' ProcessCreationEvents'
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/02/04
+tags:
+  - attack.discovery
+  - attack.t1526
+  - attack.t1087
+  - attack.t1083
+  - DEMO

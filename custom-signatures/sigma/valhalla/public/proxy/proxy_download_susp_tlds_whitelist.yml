@@ -1,0 +1,81 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Download From Suspicious TLD - Whitelist
+id: b5de2919-b74a-4805-91a7-5049accbaefe
+related:
+  - type: similar
+    id: 00d0b5ab-1f55-4120-8e83-487c0a7baf19
+status: test
+description: Detects executable downloads from suspicious remote systems
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/03/13 16:16:11
+references:
+  - Internal Research
+logsource:
+    category: proxy
+detection:
+    condition: selection and not filter
+    filter:
+        cs-host|endswith:
+          - .com
+          - .org
+          - .net
+          - .edu
+          - .gov
+          - .uk
+          - .ca
+          - .de
+          - .jp
+          - .fr
+          - .au
+          - .us
+          - .ch
+          - .it
+          - .nl
+          - .se
+          - .no
+          - .es
+    selection:
+        c-uri-extension:
+          - exe
+          - vbs
+          - bat
+          - rar
+          - ps1
+          - doc
+          - docm
+          - xls
+          - xlsm
+          - pptm
+          - rtf
+          - hta
+          - dll
+          - ws
+          - wsf
+          - sct
+          - zip
+fields:
+  - ClientIP
+  - c-uri
+falsepositives: All kind of software downloads
+level: low
+customer: 'demo'
+modified: 2023/05/18
+tags:
+  - attack.initial_access
+  - attack.t1566
+  - attack.execution
+  - attack.t1203
+  - attack.t1204.002
+  - DEMO

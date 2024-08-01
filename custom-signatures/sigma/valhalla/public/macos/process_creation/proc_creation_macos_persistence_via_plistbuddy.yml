@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Persistence Via PlistBuddy
+id: 65d506d3-fcfe-4071-b4b2-bcefe721bbbb
+status: test
+description: Detects potential persistence activity using LaunchAgents or LaunchDaemons
+    via the PlistBuddy utility
+author: Sohan G (D4rkCiph3r)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/02/18 15:45:31
+references:
+  - https://redcanary.com/blog/clipping-silver-sparrows-wings/
+  - https://www.manpagez.com/man/8/PlistBuddy/
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - LaunchAgents
+          - LaunchDaemons
+        CommandLine|contains|all:
+          - RunAtLoad
+          - "true"
+        Image|endswith: /PlistBuddy
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.persistence
+  - attack.t1543.001
+  - attack.t1543.004
+  - DEMO

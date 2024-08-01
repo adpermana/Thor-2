@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Persistence Via Logon Scripts - CommandLine
+id: 21d856f9-9281-4ded-9377-51a1a6e2a432
+related:
+  - type: derived
+    id: 0a98a10c-685d-4ab0-bddc-b6bdd1d48458
+status: experimental
+description: Detects the addition of a new LogonScript to the registry value "UserInitMprLogonScript"
+    for potential persistence
+author: Tom Ueltschi (@c_APT_ure)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/01/12 19:49:21
+references:
+  - https://cocomelonc.github.io/persistence/2022/12/09/malware-pers-20.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains: UserInitMprLogonScript
+falsepositives: Legitimate addition of Logon Scripts via the command line by administrators
+    or third party tools
+level: high
+customer: 'demo'
+modified: 2023/06/09
+tags:
+  - attack.persistence
+  - attack.t1037.001
+  - DEMO

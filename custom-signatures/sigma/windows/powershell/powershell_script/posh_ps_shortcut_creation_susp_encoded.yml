@@ -1,0 +1,72 @@
+title: Encoded PowerShell Script With Suspicious Shortcut Creation Capability
+id: a6a83a6e-94d6-4ba0-b4f4-e9620461adb2
+related:
+    - id: 04c01bfc-79b2-4c51-ae8a-376f9994f13a
+      type: similar
+status: experimental
+description: Detects encoded PowerShell script with shortcut creation capability via the WScript COM object, where the arguments of said shortcut use suspicious commands.
+date: 2023/06/19
+references:
+    - Internal Research
+    - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/shuckworm-russia-ukraine-military
+    - https://learn.microsoft.com/en-us/troubleshoot/windows-client/admin-development/create-desktop-shortcut-with-wsh
+author: Nasreddine Bencherchali
+tags:
+    - attack.execution
+logsource:
+    product: windows
+    category: ps_script
+    definition: Script Block Logging must be enabled
+detection:
+    selection_main_arguments:
+        ScriptBlockText|base64offset|contains: '.Arguments'
+    selection_main_creation:
+        ScriptBlockText|base64offset|contains: '.CreateShortcut('
+    selection_main_save:
+        ScriptBlockText|base64offset|contains: '.Save'
+    selection_main_targetpath:
+        ScriptBlockText|base64offset|contains: '.TargetPath'
+    selection_targets:
+        ScriptBlockText|base64offset|contains:
+            # Note: Add more LOLBIN binaries
+            - '\bash.exe'
+            - '\bitsadmin.exe'
+            - '\calc.exe'
+            - '\certutil.exe'
+            - '\cmd.exe'
+            - '\cmstp.exe'
+            - '\conhost.exe'
+            - '\cscript.exe'
+            - '\hh.exe'
+            - '\msbuild.exe'
+            - '\mshta.exe'
+            - '\msiexec.exe'
+            - '\notepad.exe'
+            - '\odbcconf.exe'
+            - '\powershell.exe'
+            - '\pwsh.exe'
+            - '\regsvr32.exe'
+            - '\rundll32.exe'
+            - '\wscript.exe'
+    selection_args:
+        ScriptBlockText|base64offset|contains:
+            # Note: Add more suspicious combinations
+            - 'http://'
+            - 'https://'
+            - 'Invoke-Expressions'
+            - 'Invoke-WebRequest'
+            - 'Invoke-Command'
+            - 'IEX'
+            - 'IWR'
+            - 'ICM'
+            - '-ep bypass'
+            - 'style hidden'
+            - '\Temp\'
+            - '\PerfLogs\'
+            - 'vbscript:'
+            - 'javascript:'
+            - '.vbe'
+    condition: all of selection_*
+falsepositives:
+    - Unknown
+level: high

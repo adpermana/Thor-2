@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Capabilities Discovery - Linux
+id: d8d97d51-122d-4cdd-9e2f-01b4b4933530
+status: test
+description: Detects usage of "getcap" binary. This is often used during recon activity
+    to determine potential binaries that can be abused as GTFOBins or other.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/12/28 13:54:31
+references:
+  - https://github.com/SaiSathvik1/Linux-Privilege-Escalation-Notes
+  - https://github.com/carlospolop/PEASS-ng
+  - https://github.com/diego-treitos/linux-smart-enumeration
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains|windash: ' -r '
+        Image|endswith: /getcap
+falsepositives: Unknown
+level: low
+customer: 'demo'
+modified: 2024/03/05
+tags:
+  - attack.discovery
+  - attack.t1083
+  - DEMO

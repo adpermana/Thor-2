@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Vulnerable WinRing0 Driver Load
+id: 1a42dfa6-6cb2-4df9-9b48-295be477e835
+status: test
+description: Detects the load of a signed WinRing0 driver often used by threat actors,
+    crypto miners (XMRIG) or malware for privilege escalation
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/26 14:01:41
+references:
+  - https://github.com/xmrig/xmrig/tree/master/bin/WinRing0
+  - https://www.rapid7.com/blog/post/2021/12/13/driver-based-attacks-past-and-present/
+logsource:
+    category: driver_load
+    product: windows
+detection:
+    condition: 1 of selection*
+    selection_name:
+        ImageLoaded|endswith:
+          - \WinRing0x64.sys
+          - \WinRing0.sys
+          - \WinRing0.dll
+          - \WinRing0x64.dll
+          - \winring00x64.sys
+    selection_other:
+        Imphash: d41fa95d4642dc981f10de36f4dc8cd7
+    selection_sysmon:
+        Hashes|contains: IMPHASH=D41FA95D4642DC981F10DE36F4DC8CD7
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/11/19
+tags:
+  - attack.privilege_escalation
+  - attack.t1543.003
+  - DEMO

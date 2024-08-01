@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Interactive AT Job
+id: 60fc936d-2eb0-4543-8a13-911c750a1dfc
+status: test
+description: Detects an interactive AT job, which may be used as a form of privilege
+    escalation.
+author: E.M. Anhaus (originally from Atomic Blue Detections, Endgame), oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/24 10:34:21
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1053.002/T1053.002.md
+  - https://eqllib.readthedocs.io/en/latest/analytics/d8db43cf-ed52-4f5c-9fb3-c9a4b95a0b56.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains: interactive
+        Image|endswith: \at.exe
+falsepositives: Unlikely (at.exe deprecated as of Windows 8)
+level: high
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.privilege_escalation
+  - attack.t1053.002
+  - DEMO

@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: WMI Event Subscription
+id: 0f06a3a5-6a09-413f-8743-e6cf35561297
+status: test
+description: Detects creation of WMI event subscription persistence method
+author: Tom Ueltschi (@c_APT_ure)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/01/12 11:50:01
+references:
+  - https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon#event-id-19-wmievent-wmieventfilter-activity-detected
+  - https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon#event-id-20-wmievent-wmieventconsumer-activity-detected
+  - https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon#event-id-21-wmievent-wmieventconsumertofilter-activity-detected
+logsource:
+    category: wmi_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        EventID:
+          - "19"
+          - "20"
+          - "21"
+falsepositives: Exclude legitimate (vetted) use of WMI event subscription in your
+    network
+level: medium
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.persistence
+  - attack.t1546.003
+  - DEMO

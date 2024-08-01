@@ -1,0 +1,51 @@
+title: MalSCCM Usage
+id: 7d7cac00-611c-4d96-8c0c-90c3dab57161
+status: experimental
+description: Detects usage of the MalSCCM tool based on commandline flags
+author: Nasreddine Bencherchali
+references:
+    - https://github.com/nettitude/MalSCCM
+date: 2022/05/20
+modified: 2022/06/03
+tags:
+    - attack.lateral_movement
+    - attack.execution
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    img_orig:
+        - OriginalFileName: 'MalSCCM.exe'
+        - Image|endswith: '\MalSCCM.exe'
+    server_flag:
+        CommandLine|contains: ' /server:'
+    selection_stand_app:
+        CommandLine|contains|all:
+            - ' app '
+            - ' /name:'
+    selection_stand_group:
+        CommandLine|contains|all:
+            - ' group '
+            - ' /groupname:'
+            - ' /grouptype:'
+    flags:
+        CommandLine|contains:
+            - ' /create /'
+            - ' /deploy /'
+            - ' /adduser /'
+            - ' /addhost /'
+    selection_inspect:
+        CommandLine|contains: ' inspect '
+    selection_inspect_cli:
+        CommandLine|contains:
+            - ' /computers'
+            - ' /deployments'
+            - ' /groups '
+            - ' /applications'
+            - ' /forest'
+            - ' /packages'
+            - ' /primaryusers'
+    condition: img_orig or server_flag and (all of selection_inspect* or (1 of selection_stand* and flags))
+falsepositives:
+    - Unlikely
+level: high

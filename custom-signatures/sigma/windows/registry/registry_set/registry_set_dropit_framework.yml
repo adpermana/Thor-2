@@ -1,0 +1,23 @@
+title: Dr0p1t-Framework Scheduled Task Name
+id: cb4beccc-6e1e-469f-bd39-2ab6aa7b18ba
+description: Detects the creation of a the Dr0p1t-Framework scheduled task
+status: test
+date: 2022/05/17
+modified: 2023/03/29
+author: Nasreddine Bencherchali
+references:
+    - https://github.com/D4Vinci/Dr0p1t-Framework/blob/master/resources/add2task.py
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection:
+        TargetObject|contains: '\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree\Windows.NET service'
+    condition: selection
+falsepositives:
+    - Unknown
+level: critical
+tags:
+    - attack.persistence
+    - attack.execution
+    - attack.t1053.005

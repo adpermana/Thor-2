@@ -1,0 +1,56 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PsExec Tool Execution From Suspicious Locations - PipeName
+id: 41504465-5e3a-4a5b-a5b4-2a0baadd4463
+related:
+  - type: derived
+    id: f3f3a972-f982-40ad-b63c-bca6afdfad7c
+status: experimental
+description: Detects PsExec default pipe creation where the image executed is located
+    in a suspicious location. Which could indicate that the tool is being used in
+    an attack
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/04 21:03:31
+references:
+  - https://www.jpcert.or.jp/english/pub/sr/ir_research.html
+  - https://jpcertcc.github.io/ToolAnalysisResultSheet
+logsource:
+    category: pipe_created
+    product: windows
+    definition: Note that you have to configure logging for Named Pipe Events in Sysmon
+        config (Event ID 17 and Event ID 18). The basic configuration is in popular
+        sysmon configuration (https://github.com/SwiftOnSecurity/sysmon-config), but
+        it is worth verifying. You can also use other repo, e.g. https://github.com/Neo23x0/sysmon-config,
+        https://github.com/olafhartong/sysmon-modular. How to test detection? You
+        can check powershell script from this site https://svch0st.medium.com/guide-to-named-pipes-and-hunting-for-cobalt-strike-pipes-dc46b2c5f575
+detection:
+    condition: selection
+    selection:
+        Image|contains:
+          - :\Users\Public\
+          - :\Windows\Temp\
+          - \AppData\Local\Temp\
+          - \Desktop\
+          - \Downloads\
+        PipeName: \PSEXESVC
+falsepositives: Rare legitimate use of psexec from the locations mentioned above.
+    This will require initial tuning based on your environment.
+level: medium
+customer: 'demo'
+modified: 2023/09/20
+tags:
+  - attack.execution
+  - attack.t1569.002
+  - attack.s0029
+  - DEMO

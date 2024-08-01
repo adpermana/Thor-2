@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious C2 Activities
+id: f7158a64-6204-4d6d-868a-6e6378b467e0
+status: test
+description: |
+    Detects suspicious activities as declared by Florian Roth in its 'Best Practice Auditd Configuration'.
+    This includes the detection of the following commands; wget, curl, base64, nc, netcat, ncat, ssh, socat, wireshark, rawshark, rdesktop, nmap.
+    These commands match a few techniques from the tactics "Command and Control", including not exhaustively the following; Application Layer Protocol (T1071), Non-Application Layer Protocol (T1095), Data Encoding (T1132)
+author: Marie Euler
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/05/18 12:24:11
+references:
+  - https://github.com/Neo23x0/auditd
+logsource:
+    product: linux
+    service: auditd
+detection:
+    condition: selection
+    selection:
+        key: susp_activity
+falsepositives: Admin or User activity
+level: medium
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.command_and_control
+  - DEMO

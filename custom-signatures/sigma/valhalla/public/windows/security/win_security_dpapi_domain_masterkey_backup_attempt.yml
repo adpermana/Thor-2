@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: DPAPI Domain Master Key Backup Attempt
+id: 39a94fd1-8c9a-4ff6-bf22-c058762f8014
+status: test
+description: Detects anyone attempting a backup for the DPAPI Master Key. This events
+    gets generated at the source and not the Domain Controller.
+author: Roberto Rodriguez @Cyb3rWard0g
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/08/10 15:22:41
+references:
+  - https://threathunterplaybook.com/hunts/windows/190620-DomainDPAPIBackupKeyExtraction/notebook.html
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: selection
+    selection:
+        EventID: "4692"
+fields:
+  - ComputerName
+  - SubjectDomainName
+  - SubjectUserName
+falsepositives: If a computer is a member of a domain, DPAPI has a backup mechanism
+    to allow unprotection of the data. Which will trigger this event.
+level: medium
+customer: 'demo'
+modified: 2023/03/15
+tags:
+  - attack.credential_access
+  - attack.t1003.004
+  - DEMO

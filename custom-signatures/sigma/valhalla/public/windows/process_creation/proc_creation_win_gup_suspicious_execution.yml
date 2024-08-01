@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious GUP Usage
+id: 0a4f6091-223b-41f6-8743-f322ec84930b
+status: test
+description: Detects execution of the Notepad++ updater in a suspicious directory,
+    which is often used in DLL side-loading attacks
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/02/06 11:13:21
+references:
+  - https://www.fireeye.com/blog/threat-research/2018/09/apt10-targeting-japanese-corporations-using-updated-ttps.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_*
+    filter_programfiles:
+        Image|endswith:
+          - \Program Files\Notepad++\updater\GUP.exe
+          - \Program Files (x86)\Notepad++\updater\GUP.exe
+    filter_user:
+        Image|contains: \Users\
+        Image|endswith:
+          - \AppData\Local\Notepad++\updater\GUP.exe
+          - \AppData\Roaming\Notepad++\updater\GUP.exe
+    selection:
+        Image|endswith: \GUP.exe
+falsepositives: Execution of tools named GUP.exe and located in folders different
+    than Notepad++\updater
+level: high
+customer: 'demo'
+modified: 2022/08/13
+tags:
+  - attack.defense_evasion
+  - attack.t1574.002
+  - DEMO

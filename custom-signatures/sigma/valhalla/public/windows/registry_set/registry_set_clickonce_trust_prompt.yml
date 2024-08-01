@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: ClickOnce Trust Prompt Tampering
+id: ac9159cc-c364-4304-8f0a-d63fc1a0aabb
+status: experimental
+description: Detects changes to the ClickOnce trust prompt registry key in order to
+    enable an installation from different locations such as the Internet.
+author: '@SerkinValery, Nasreddine Bencherchali (Nextron Systems)'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/06/12 14:35:41
+references:
+  - https://posts.specterops.io/less-smartscreen-more-caffeine-ab-using-clickonce-for-trusted-code-execution-1446ea8051c5
+  - https://learn.microsoft.com/en-us/visualstudio/deployment/how-to-configure-the-clickonce-trust-prompt-behavior
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Details: Enabled
+        TargetObject|contains: \SOFTWARE\MICROSOFT\.NETFramework\Security\TrustManager\PromptingLevel\
+        TargetObject|endswith:
+          - \Internet
+          - \LocalIntranet
+          - \MyComputer
+          - \TrustedSites
+          - \UntrustedSites
+falsepositives: Legitimate internal requirements.
+level: medium
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.defense_evasion
+  - attack.t1112
+  - DEMO

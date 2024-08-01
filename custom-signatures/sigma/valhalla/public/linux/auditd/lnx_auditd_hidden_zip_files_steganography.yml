@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Steganography Hide Zip Information in Picture File
+id: 45810b50-7edc-42ca-813b-bdac02fb946b
+status: test
+description: Detects appending of zip file to image
+author: Pawel Mazur
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/09/09 19:09:41
+references:
+  - https://zerotoroot.me/steganography-hiding-a-zip-in-a-jpeg-file/
+logsource:
+    product: linux
+    service: auditd
+detection:
+    condition: commands and a1 and a2
+    a1:
+        a1|endswith:
+          - .jpg
+          - .png
+    a2:
+        a2|endswith: .zip
+    commands:
+        a0: cat
+        type: EXECVE
+falsepositives: Unknown
+level: low
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.defense_evasion
+  - attack.t1027.003
+  - DEMO

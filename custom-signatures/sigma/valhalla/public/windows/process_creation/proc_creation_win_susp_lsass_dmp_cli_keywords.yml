@@ -1,0 +1,64 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: LSASS Dump Keyword In CommandLine
+id: ffa6861c-4461-4f59-8a41-578c39f3f23e
+related:
+  - type: derived
+    id: a5a2d357-1ab8-4675-a967-ef9990a59391
+status: test
+description: |
+    Detects the presence of the keywords "lsass" and ".dmp" in the commandline, which could indicate a potential attempt to dump or create a dump of the lsass process.
+author: E.M. Anhaus, Tony Lambert, oscd.community, Nasreddine Bencherchali (Nextron
+    Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/24 14:10:31
+references:
+  - https://github.com/Hackndo/lsassy
+  - https://medium.com/@markmotig/some-ways-to-dump-lsass-exe-c4a75fdc49bf
+  - https://github.com/elastic/detection-rules/blob/c76a39796972ecde44cb1da6df47f1b6562c9770/rules/windows/credential_access_lsass_memdump_file_created.toml
+  - https://www.whiteoaksecurity.com/blog/attacks-defenses-dumping-lsass-no-mimikatz/
+  - https://github.com/helpsystems/nanodump
+  - https://github.com/CCob/MirrorDump
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - CommandLine|contains:
+          - lsass.dmp
+          - lsass.zip
+          - lsass.rar
+          - Andrew.dmp
+          - Coredump.dmp
+          - NotLSASS.zip
+          - lsass_2
+          - lsassdump
+          - lsassdmp
+      - CommandLine|contains|all:
+          - lsass
+          - .dmp
+      - CommandLine|contains|all:
+          - SQLDmpr
+          - .mdmp
+      - CommandLine|contains|all:
+          - nanodump
+          - .dmp
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/08/29
+tags:
+  - attack.credential_access
+  - attack.t1003.001
+  - DEMO

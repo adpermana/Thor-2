@@ -1,0 +1,31 @@
+title: TrendMicro Deep Security Agent Tampering
+id: 29e86dc0-bc23-41ef-9d70-2d5bd8b56569
+status: experimental
+description: Detects activity of resetting trend micro Deep Security Agent to factory presets or disabling its self protection machanism.
+author: Nasreddine Bencherchali
+references:
+    - https://help.deepsecurity.trendmicro.com/20_0/on-premise/command-line-interface.html
+date: 2022/05/19
+tags:
+    - attack.defense_evasion
+    - attack.t1562.001
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_cli:
+        - Image|endswith: '\dsa.com'
+        - CommandLine|contains|all:
+            - 'dsa.com '
+            - '-a dsa_control'
+    selection_suspflags:
+        CommandLine|contains:
+            - ' -r'
+            - ' --reset'
+            - ' -s 0'
+            - ' --selfprotect=0'
+    condition: all of selection*
+falsepositives:
+    - Administrator troubleshooting
+level: high
+

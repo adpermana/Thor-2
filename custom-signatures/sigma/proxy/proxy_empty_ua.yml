@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Empty User Agent
+id: 21e44d78-95e7-421b-a464-ffd8395659c4
+status: test
+description: Detects suspicious empty user agent strings in proxy logs
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/07/08 10:10:11
+references:
+  - https://twitter.com/Carlos_Perez/status/883455096645931008
+logsource:
+    category: proxy
+detection:
+    condition: selection
+    selection:
+        c-useragent: ""
+fields:
+  - ClientIP
+  - c-uri
+  - c-useragent
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.defense_evasion
+  - attack.command_and_control
+  - attack.t1071.001
+  - DEMO

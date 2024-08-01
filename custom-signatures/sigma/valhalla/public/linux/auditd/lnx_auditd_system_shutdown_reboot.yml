@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: System Shutdown/Reboot - Linux
+id: 4cb57c2f-1f29-41f8-893d-8bed8e1c1d2f
+status: test
+description: Adversaries may shutdown/reboot systems to interrupt access to, or aid
+    in the destruction of, those systems.
+author: Igor Fits, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/15 13:53:21
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1529/T1529.md
+logsource:
+    product: linux
+    service: auditd
+detection:
+    condition: execve and (shutdowncmd or (init and initselection))
+    execve:
+        type: EXECVE
+    init:
+      - init
+      - telinit
+    initselection:
+      - "0"
+      - "6"
+    shutdowncmd:
+      - shutdown
+      - reboot
+      - halt
+      - poweroff
+falsepositives: Legitimate administrative activity
+level: informational
+customer: 'demo'
+modified: 2022/11/26
+tags:
+  - attack.impact
+  - attack.t1529
+  - DEMO

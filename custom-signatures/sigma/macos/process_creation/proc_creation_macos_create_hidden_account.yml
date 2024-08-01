@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Hidden User Creation
+id: b22a5b36-2431-493a-8be1-0bae56c28ef3
+status: test
+description: Detects creation of a hidden user account on macOS (UserID < 500) or
+    with IsHidden option
+author: Daniil Yugoslavskiy, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/10 11:14:41
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1564.002/T1564.002.md
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    condition: dscl_create and id_below_500 or dscl_create and (ishidden_option_declaration
+        and ishidden_option_confirmation)
+    dscl_create:
+        CommandLine|contains: create
+        Image|endswith: /dscl
+    id_below_500:
+        CommandLine|contains: UniqueID
+        CommandLine|re: ([0-9]|[1-9][0-9]|[1-4][0-9]{2})
+    ishidden_option_confirmation:
+        CommandLine|contains:
+          - "true"
+          - "yes"
+          - "1"
+    ishidden_option_declaration:
+        CommandLine|contains: IsHidden
+falsepositives: Legitimate administration activities
+level: medium
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.defense_evasion
+  - attack.t1564.002
+  - DEMO

@@ -1,0 +1,51 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Unauthorized System Time Modification
+id: faa031b5-21ed-4e02-8881-2591f98d82ed
+status: test
+description: Detect scenarios where a potentially unauthorized application or user
+    is modifying the system time.
+author: '@neu5ron'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/02/05 16:10:01
+references:
+  - Private Cuckoo Sandbox (from many years ago, no longer have hash, NDA as well)
+  - Live environment caused by malware
+  - https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4616
+logsource:
+    product: windows
+    service: security
+    definition: 'Requirements: Audit Policy : System > Audit Security State Change,
+        Group Policy : Computer Configuration\Windows Settings\Security Settings\Advanced
+        Audit Policy Configuration\Audit Policies\System\Audit Security State Change'
+detection:
+    condition: selection and not 1 of filter*
+    filter1:
+        ProcessName:
+          - C:\Program Files\VMware\VMware Tools\vmtoolsd.exe
+          - C:\Windows\System32\VBoxService.exe
+          - C:\Windows\System32\oobe\msoobe.exe
+    filter2:
+        ProcessName: C:\Windows\System32\svchost.exe
+        SubjectUserSid: S-1-5-19
+    selection:
+        EventID: "4616"
+falsepositives: HyperV or other virtualization technologies with binary not listed
+    in filter portion of detection
+level: low
+customer: 'demo'
+modified: 2022/08/03
+tags:
+  - attack.defense_evasion
+  - attack.t1070.006
+  - DEMO

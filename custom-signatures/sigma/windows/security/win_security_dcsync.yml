@@ -1,0 +1,57 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Mimikatz DC Sync
+id: 611eab06-a145-4dfa-a295-3ccc5c20f59a
+status: test
+description: Detects Mimikatz DC sync security events
+author: Benjamin Delpy, Florian Roth (Nextron Systems), Scott Dermott, Sorina Ionescu
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2018/06/03 10:01:41
+references:
+  - https://twitter.com/gentilkiwi/status/1003236624925413376
+  - https://gist.github.com/gentilkiwi/dcc132457408cf11ad2061340dcb53c2
+  - https://blog.blacklanternsecurity.com/p/detecting-dcsync?s=r
+  - https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4662
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: selection and not 1 of filter*
+    filter1:
+        SubjectDomainName: Window Manager
+    filter2:
+        SubjectUserName|startswith:
+          - NT AUT
+          - MSOL_
+    filter3:
+        SubjectUserName|endswith: $
+    selection:
+        AccessMask: "0x100"
+        EventID: "4662"
+        Properties|contains:
+          - Replicating Directory Changes All
+          - 1131f6ad-9c07-11d1-f79f-00c04fc2dcd2
+          - 1131f6aa-9c07-11d1-f79f-00c04fc2dcd2
+          - 9923a32a-3607-11d2-b9be-0000f87a36b2
+          - 89e95b76-444d-4c62-991a-0facbeda640c
+falsepositives:
+  - Valid DC Sync that is not covered by the filters; please report
+  - Local Domain Admin account used for Azure AD Connect
+level: high
+customer: 'demo'
+modified: 2022/04/26
+tags:
+  - attack.credential_access
+  - attack.s0002
+  - attack.t1003.006
+  - DEMO

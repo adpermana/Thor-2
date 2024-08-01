@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Indicator Removal on Host - Clear Mac System Logs
+id: acf61bd8-d814-4272-81f0-a7a269aa69aa
+status: test
+description: Detects deletion of local audit logs
+author: remotephone, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/11 18:12:51
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1070.002/T1070.002.md
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    condition: selection1 and 1 of selection_cli*
+    selection_cli_1:
+        CommandLine|contains: /var/log
+    selection_cli_2:
+        CommandLine|contains|all:
+          - /Users/
+          - /Library/Logs/
+    selection1:
+        Image|endswith:
+          - /rm
+          - /unlink
+          - /shred
+falsepositives: Legitimate administration activities
+level: medium
+customer: 'demo'
+modified: 2022/09/16
+tags:
+  - attack.defense_evasion
+  - attack.t1070.002
+  - DEMO

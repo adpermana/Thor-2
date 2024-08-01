@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: SyncAppvPublishingServer Bypass Powershell Restriction - PS Module
+id: fe5ce7eb-dad8-467c-84a9-31ec23bd644a
+related:
+  - type: derived
+    id: fde7929d-8beb-4a4c-b922-be9974671667
+  - type: derived
+    id: 9f7aa113-9da6-4a8d-907c-5f1a4b908299
+status: test
+description: Detects SyncAppvPublishingServer process execution which usually utilized
+    by adversaries to bypass PowerShell execution restrictions.
+author: Ensar Şamil, @sblmsrsn, OSCD Community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/05 23:41:51
+references:
+  - https://lolbas-project.github.io/lolbas/Binaries/Syncappvpublishingserver/
+logsource:
+    category: ps_module
+    product: windows
+    definition: 0ad03ef1-f21b-4a79-8ce8-e6900c54b65b
+detection:
+    condition: selection
+    selection:
+        ContextInfo|contains: SyncAppvPublishingServer.exe
+falsepositives: App-V clients
+level: medium
+customer: 'demo'
+modified: 2022/12/02
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Certificate Use With No Strong Mapping
+id: 993c2665-e6ef-40e3-a62a-e1a97686af79
+status: experimental
+description: |
+    Detects a user certificate that was valid but could not be mapped to a user in a strong way (such as via explicit mapping, key trust mapping, or a SID)
+    This could be a sign of exploitation of the elevation of privilege vulnerabilities (CVE-2022-34691, CVE-2022-26931, CVE-2022-26923) that can occur when the KDC allows certificate spoofing by not requiring a strong mapping.
+    Events where the AccountName and CN of the Subject do not match, or where the CN ends in a dollar sign indicating a machine, may indicate certificate spoofing.
+author: '@br4dy5'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/10/09 15:49:41
+references:
+  - https://support.microsoft.com/en-us/topic/kb5014754-certificate-based-authentication-changes-on-windows-domain-controllers-ad2c23b0-15d8-4340-a468-4d4f3b188f16
+logsource:
+    product: windows
+    service: system
+detection:
+    condition: selection
+    selection:
+        EventID:
+          - "39"
+          - "41"
+        Provider_Name: Kerberos-Key-Distribution-Center
+falsepositives:
+  - If prevalent in the environment, filter on events where the AccountName and CN
+    of the Subject do not reference the same user
+  - If prevalent in the environment, filter on CNs that end in a dollar sign indicating
+    it is a machine name
+level: medium
+customer: 'demo'
+tags:
+  - attack.privilege_escalation
+  - DEMO

@@ -1,0 +1,67 @@
+title: Possible Webshell Usage
+id: 13e6443b-85d4-4374-8af4-91ced601bf7c
+status: test
+description: Detects certain patterns in web server logs that could be an indicator of web shell usage
+author: Florian Roth
+date: 2022/10/24
+modified: 2023/03/28
+tags:
+    - attack.persistence
+    - attack.t1505.003
+references:
+    - https://m365internals.com/2022/10/09/hunting-exchange-webshell-activity/
+logsource:
+    category: webserver
+detection:
+    selection_a:
+        cs-uri-query|contains:
+            - 'whoami+/priv'
+            - '+-ma+lsass'
+            - '%20%2Dma%20lsass'
+    selection_a1:
+        cs-uri-query|contains|all:
+            - 'net%20user%20'
+            - '%20%2Fadd'
+    selection_a2:
+        cs-uri-query|contains|all:
+            - 'net+user+'
+            - '+/add'
+    selection_b1:
+        cs-uri-query|contains|all:
+            - 'schtasks'
+            - '%20%2Fcreate%20'
+            - '%20%2Ftn%20'
+    selection_b2:
+        cs-uri-query|contains|all:
+            - 'schtasks'
+            - '+/create+'
+            - '+/tn+'
+    selection_c1:
+        cs-uri-query|contains|all:
+            - 'rundll32'
+            - 'comsvcs.dll'
+            - 'MiniDump'
+            - 'full'
+    selection_d1:
+        cs-uri-query|contains|all:
+            - 'ntdsutil'
+            - 'create+full'
+            - 'ac+i+ntds'
+    selection_d2:
+        cs-uri-query|contains|all:
+            - 'ntdsutil'
+            - 'create%20full'
+            - 'ac%20i%20ntds'
+    selection_d3:
+        cs-uri-query|contains|all:
+            - 'ntdsutil'
+            - 'create%20full'
+            - 'activate%20instance%20ntds'
+    selection_e:
+        cs-uri-query|contains:
+            - 'wevtutil+cl+'
+            - 'wevtutil%20cl%20'
+    condition: 1 of selection_*
+falsepositives:
+    - Web applications that allow to query system commands in a search field (e.g. log management, system management)
+level: high

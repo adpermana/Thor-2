@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Cisco Collect Data
+id: cd072b25-a418-4f98-8ebc-5093fb38fe1a
+status: test
+description: Collect pertinent data from the configuration files
+author: Austin Clark
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/08/11 10:34:51
+references:
+  - https://blog.router-switch.com/2013/11/show-running-config/
+  - https://www.cisco.com/E-Learning/bulk/public/tac/cim/cib/using_cisco_ios_software/cmdrefs/show_startup-config.htm
+  - https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/config-mgmt/configuration/15-sy/config-mgmt-15-sy-book/cm-config-diff.html
+logsource:
+    product: cisco
+    service: aaa
+detection:
+    condition: keywords
+    keywords:
+      - show running-config
+      - show startup-config
+      - show archive config
+      - more
+falsepositives: Commonly run by administrators
+level: low
+customer: 'demo'
+modified: 2023/01/04
+tags:
+  - attack.discovery
+  - attack.credential_access
+  - attack.collection
+  - attack.t1087.001
+  - attack.t1552.001
+  - attack.t1005
+  - DEMO

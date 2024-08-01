@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: CreateDump Process Dump
+id: 515c8be5-e5df-4c5e-8f6d-a4a2f05e4b48
+related:
+  - type: similar
+    id: 1a1ed54a-2ba4-4221-94d5-01dee560d71e
+status: test
+description: Detects uses of the createdump.exe LOLOBIN utility to dump process memory
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/04 12:07:51
+references:
+  - https://www.crowdstrike.com/blog/overwatch-exposes-aquatic-panda-in-possession-of-log-4-shell-exploit-tools/
+  - https://twitter.com/bopin2020/status/1366400799199272960
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains:
+          - ' -u '
+          - ' --full '
+          - ' -f '
+          - ' --name '
+          - '.dmp '
+    selection_img:
+      - Image|endswith: \createdump.exe
+      - OriginalFileName: FX_VER_INTERNALNAME_STR
+falsepositives: Command lines that use the same flags
+level: high
+customer: 'demo'
+modified: 2022/08/19
+tags:
+  - attack.defense_evasion
+  - attack.t1036
+  - attack.t1003.001
+  - DEMO

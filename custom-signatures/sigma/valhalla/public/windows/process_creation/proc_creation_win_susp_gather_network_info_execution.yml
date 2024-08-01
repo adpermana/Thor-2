@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Reconnaissance Activity Via GatherNetworkInfo.VBS
+id: 07aa184a-870d-413d-893a-157f317f6f58
+related:
+  - type: similar
+    id: f92a6f1e-a512-4a15-9735-da09e78d7273
+  - type: similar
+    id: 575dce0c-8139-4e30-9295-1ee75969f7fe
+status: test
+description: Detects execution of the built-in script located in "C:\Windows\System32\gatherNetworkInfo.vbs".
+    Which can be used to gather information about the target machine
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/02/08 22:09:41
+references:
+  - https://posts.slayerlabs.com/living-off-the-land/#gathernetworkinfovbs
+  - https://www.mandiant.com/resources/blog/trojanized-windows-installers-ukrainian-government
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        Image|endswith:
+          - \cscript.exe
+          - \wscript.exe
+    selection:
+        CommandLine|contains: gatherNetworkInfo.vbs
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.discovery
+  - attack.execution
+  - attack.t1615
+  - attack.t1059.005
+  - DEMO

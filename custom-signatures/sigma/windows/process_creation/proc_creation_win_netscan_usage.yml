@@ -1,0 +1,33 @@
+title: SoftPerfect Network Scanner Usage
+id: f38735f5-2b9e-4a0c-a9d5-2815cc9e0236
+status: experimental
+description: Detects usage of the softPerfect network scanner (netscan.exe)
+references:
+    - https://www.softperfect.com/products/networkscanner/manual/
+    - https://github.com/silence-is-best/files
+    - https://github.com/3CORESec/MAL-CL/tree/master/Descriptors/Other/SoftPerfect%20Network%20Scanner
+author: Nasreddine Bencherchali
+date: 2022/05/01
+modified: 2022/11/04
+tags:
+    - attack.discovery
+    - attack.t1018
+    - attack.t1135
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith: '\netscan.exe'
+    selection_cli_hide:
+        CommandLine|contains: ' /hide:'
+    selection_cli_others:
+        CommandLine|contains:
+            - ' /live:'
+            - ' /auto:'
+            - ' /range:'
+    condition: selection_img or all of selection_cli_*
+falsepositives:
+    - Tools that use the same command line flags
+    - Legitimate use of netscan for network administration purposes
+level: high

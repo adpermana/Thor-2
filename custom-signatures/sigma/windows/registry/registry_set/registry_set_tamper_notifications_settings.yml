@@ -1,0 +1,29 @@
+title: Tamper Windows Notifications Settings
+id: 10b7ae00-4464-4268-8aad-d9aa1c0a3130
+description: Detects tampering of registry values of relevant windows notification settings in order to disable notifications
+status: test
+date: 2022/05/20
+modified: 2023/03/29
+author: Nasreddine Bencherchali
+references:
+    - https://www.virustotal.com/gui/file/e53ecb3a1beee860d65ed4bd13b58f0ae1ef154cab1f862fec9d593ca7f44029
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection:
+        TargetObject|contains:
+            - '\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.SecurityAndMaintenance'
+            - '\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.AutoPlay'
+            - '\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.Defender.SecurityCenter'
+        TargetObject|endswith:
+            - '\Enabled'
+            - '\ShowBanner'
+            - '\ShowInActionCenter'
+        Details: 'DWORD (0x00000000)'
+    condition: selection
+falsepositives:
+    - Legitimate users or administratorss disabling notifications
+level: high
+tags:
+    - attack.defense_evasion

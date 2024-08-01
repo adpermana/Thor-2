@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Active Directory Structure Export Via Csvde.EXE
+id: e5d36acd-acb4-4c6f-a13f-9eb203d50099
+status: test
+description: Detects the execution of "csvde.exe" in order to export organizational
+    Active Directory structure.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/03/14 18:12:11
+references:
+  - https://www.cybereason.com/blog/research/operation-ghostshell-novel-rat-targets-global-aerospace-and-telecoms-firms
+  - https://web.archive.org/web/20180725233601/https://www.pwc.co.uk/cyber-security/pdf/cloud-hopper-annex-b-final.pdf
+  - https://businessinsights.bitdefender.com/deep-dive-into-a-backdoordiplomacy-attack-a-study-of-an-attackers-toolkit
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_* and not 1 of filter_*
+    filter_import:
+        CommandLine|contains: ' -i'
+    selection_img:
+      - Image|endswith: \csvde.exe
+      - OriginalFileName: csvde.exe
+    selection_remote:
+        CommandLine|contains: ' -f'
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.exfiltration
+  - DEMO

@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Executable File Creation
+id: 74babdd6-a758-4549-9632-26535279e654
+status: test
+description: Detect creation of suspicious executable file name. Some strings look
+    for suspicious file extensions, others look for filenames that exploit unquoted
+    service paths.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/05 15:27:41
+references:
+  - https://medium.com/@SumitVerma101/windows-privilege-escalation-part-1-unquoted-service-path-c7a011a8d8ae
+  - https://app.any.run/tasks/76c69e2d-01e8-49d9-9aea-fb7cc0c4d3ad/
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_double:
+        TargetFilename|endswith:
+          - :\$Recycle.Bin.exe
+          - :\Documents and Settings.exe
+          - :\MSOCache.exe
+          - :\PerfLogs.exe
+          - :\Recovery.exe
+          - .bat.exe
+          - .sys.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/12/11
+tags:
+  - attack.defense_evasion
+  - attack.t1564
+  - DEMO

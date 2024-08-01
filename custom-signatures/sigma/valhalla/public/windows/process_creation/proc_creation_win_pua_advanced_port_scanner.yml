@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PUA - Advanced Port Scanner Execution
+id: 54773c5f-f1cc-4703-9126-2f797d96a69d
+status: test
+description: Detects the use of Advanced Port Scanner.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/12/18 15:11:21
+references:
+  - https://github.com/3CORESec/MAL-CL/tree/master/Descriptors/Other/Advanced%20Port%20Scanner
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_cli:
+        CommandLine|contains|all:
+          - /portable
+          - /lng
+    selection_img:
+      - Image|contains: \advanced_port_scanner
+      - OriginalFileName|contains: advanced_port_scanner
+      - Description|contains: Advanced Port Scanner
+falsepositives:
+  - Legitimate administrative use
+  - Tools with similar commandline (very rare)
+level: medium
+customer: 'demo'
+modified: 2023/02/07
+tags:
+  - attack.discovery
+  - attack.t1046
+  - attack.t1135
+  - DEMO

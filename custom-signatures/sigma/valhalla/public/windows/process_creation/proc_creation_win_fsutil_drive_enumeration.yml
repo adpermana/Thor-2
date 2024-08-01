@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Fsutil Drive Enumeration
+id: 63de06b9-a385-40b5-8b32-73f2b9ef84b6
+status: test
+description: Attackers may leverage fsutil to enumerated connected drives.
+author: Christopher Peacock '@securepeacock', SCYTHE '@scythe_io'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/03/29 12:33:21
+references:
+  - Turla has used fsutil fsinfo drives to list connected drives.
+  - https://github.com/elastic/detection-rules/blob/414d32027632a49fb239abb8fbbb55d3fa8dd861/rules/windows/discovery_peripheral_device.toml
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains: drives
+    selection_img:
+      - Image|endswith: \fsutil.exe
+      - OriginalFileName: fsutil.exe
+falsepositives: Certain software or administrative tasks may trigger false positives.
+level: low
+customer: 'demo'
+modified: 2022/07/14
+tags:
+  - attack.discovery
+  - attack.t1120
+  - DEMO

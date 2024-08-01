@@ -1,0 +1,63 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Mshta.EXE Execution Patterns
+id: e32f92d1-523e-49c3-9374-bdb13b46a3ba
+status: test
+description: Detects suspicious mshta process execution patterns
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/07/17 16:25:31
+references:
+  - https://en.wikipedia.org/wiki/HTML_Application
+  - https://www.echotrail.io/insights/search/mshta.exe
+  - https://app.any.run/tasks/34221348-072d-4b70-93f3-aa71f6ebecad/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_* or (selection_img and not filter_img)
+    filter_img:
+      - Image|startswith:
+          - C:\Windows\System32\
+          - C:\Windows\SysWOW64\
+      - CommandLine|contains:
+          - .htm
+          - .hta
+      - CommandLine|endswith:
+          - mshta.exe
+          - mshta
+    selection_img:
+      - Image|endswith: \mshta.exe
+      - OriginalFileName: MSHTA.EXE
+    selection_susp:
+        CommandLine|contains:
+          - \AppData\Local\
+          - C:\ProgramData\
+          - C:\Users\Public\
+          - C:\Windows\Temp\
+        ParentImage|endswith:
+          - \cmd.exe
+          - \cscript.exe
+          - \powershell.exe
+          - \pwsh.exe
+          - \regsvr32.exe
+          - \rundll32.exe
+          - \wscript.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/02/21
+tags:
+  - attack.execution
+  - attack.t1106
+  - DEMO

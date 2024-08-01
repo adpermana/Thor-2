@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: AspNetCompiler Execution
+id: a01b8329-5953-4f73-ae2d-aa01e1f35f00
+related:
+  - type: similar
+    id: 9ccba514-7cb6-4c5c-b377-700758f2f120
+  - type: similar
+    id: 4c7f49ee-2638-43bb-b85b-ce676c30b260
+  - type: similar
+    id: 9f50fe98-fe5c-4a2d-86c7-fad7f63ed622
+status: test
+description: Detects execution of "aspnet_compiler.exe" which can be abused to compile
+    and execute C# code.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/11/24 12:39:01
+references:
+  - https://lolbas-project.github.io/lolbas/Binaries/Aspnet_Compiler/
+  - https://ijustwannared.team/2020/08/01/the-curious-case-of-aspnet_compiler-exe/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|contains:
+          - C:\Windows\Microsoft.NET\Framework\
+          - C:\Windows\Microsoft.NET\Framework64\
+        Image|endswith: \aspnet_compiler.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/08/14
+tags:
+  - attack.defense_evasion
+  - attack.t1127
+  - DEMO

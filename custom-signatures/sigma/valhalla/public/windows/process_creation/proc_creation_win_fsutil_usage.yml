@@ -1,0 +1,52 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Fsutil Suspicious Invocation
+id: add64136-62e5-48ea-807e-88638d02df1e
+status: stable
+description: |
+    Detects suspicious parameters of fsutil (deleting USN journal, configuring it with small size, etc).
+    Might be used by ransomwares during the attack (seen by NotPetya and others).
+author: Ecco, E.M. Anhaus, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/09/26 13:50:41
+references:
+  - https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/fsutil-usn
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1070/T1070.md
+  - https://eqllib.readthedocs.io/en/latest/analytics/c91f422a-5214-4b17-8664-c5fcf115c0a2.html
+  - https://github.com/albertzsigovits/malware-notes/blob/558898932c1579ff589290092a2c8febefc3a4c9/Ransomware/Lockbit.md
+  - https://blog.cluster25.duskrise.com/2023/05/22/back-in-black-blackbyte-nt
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains:
+          - deletejournal
+          - createjournal
+          - setZeroData
+    selection_img:
+      - Image|endswith: \fsutil.exe
+      - OriginalFileName: fsutil.exe
+falsepositives:
+  - Admin activity
+  - Scripts and administrative tools used in the monitored environment
+level: high
+customer: 'demo'
+modified: 2023/09/09
+tags:
+  - attack.defense_evasion
+  - attack.impact
+  - attack.t1070
+  - attack.t1485
+  - DEMO

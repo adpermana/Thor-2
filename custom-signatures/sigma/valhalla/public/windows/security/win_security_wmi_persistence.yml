@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: WMI Persistence - Security
+id: f033f3f3-fd24-4995-97d8-a3bb17550a88
+related:
+  - type: derived
+    id: 0b7889b4-5577-4521-a60a-3376ee7f9f7b
+status: test
+description: Detects suspicious WMI event filter and command line event consumer based
+    on WMI and Security Logs.
+author: Florian Roth (Nextron Systems), Gleb Sukhodolskiy, Timur Zinniatullin oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/08/22 12:38:31
+references:
+  - https://twitter.com/mattifestation/status/899646620148539397
+  - https://www.eideon.com/2018-03-02-THL03-WMIBackdoors/
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: selection
+    selection:
+        EventID: "4662"
+        ObjectName|contains: subscription
+        ObjectType: WMI Namespace
+falsepositives: Unknown (data set is too small; further testing needed)
+level: medium
+customer: 'demo'
+modified: 2022/11/29
+tags:
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1546.003
+  - DEMO

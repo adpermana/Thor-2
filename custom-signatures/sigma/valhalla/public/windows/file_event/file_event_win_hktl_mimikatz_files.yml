@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Mimikatz Kirbi File Creation
+id: 9e099d99-44c2-42b6-a6d8-54c3545cab29
+related:
+  - type: obsoletes
+    id: 034affe8-6170-11ec-844f-0f78aa0c4d66
+status: test
+description: Detects the creation of files created by mimikatz such as ".kirbi", "mimilsa.log",
+    etc.
+author: Florian Roth (Nextron Systems), David ANDRE
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/11/08 13:19:21
+references:
+  - https://cobalt.io/blog/kerberoast-attack-techniques
+  - https://pentestlab.blog/2019/10/21/persistence-security-support-provider/
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetFilename|endswith:
+          - .kirbi
+          - mimilsa.log
+falsepositives: Unlikely
+level: critical
+customer: 'demo'
+modified: 2023/02/16
+tags:
+  - attack.credential_access
+  - attack.t1558
+  - DEMO

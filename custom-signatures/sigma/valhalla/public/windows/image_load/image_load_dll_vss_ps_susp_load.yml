@@ -1,0 +1,72 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Volume Shadow Copy VSS_PS.dll Load
+id: 333cdbe8-27bb-4246-bf82-b41a0dca4b70
+related:
+  - type: similar
+    id: 48bfd177-7cf2-412b-ad77-baf923489e82
+  - type: similar
+    id: 37774c23-25a1-4adb-bb6d-8bb9fd59c0f8
+status: experimental
+description: Detects the image load of vss_ps.dll by uncommon executables
+author: Markus Neis, @markus_neis
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/07/07 17:32:01
+references:
+  - https://www.virustotal.com/gui/file/ba88ca45589fae0139a40ca27738a8fc2dfbe1be5a64a9558f4e0f52b35c5add
+  - https://twitter.com/am0nsec/status/1412232114980982787
+logsource:
+    category: image_load
+    product: windows
+detection:
+    condition: selection and not 1 of filter_*
+    filter_image_null:
+        Image: []
+    filter_legit:
+        Image|endswith:
+          - \clussvc.exe
+          - \dismhost.exe
+          - \dllhost.exe
+          - \inetsrv\appcmd.exe
+          - \inetsrv\iissetup.exe
+          - \msiexec.exe
+          - \rundll32.exe
+          - \searchindexer.exe
+          - \srtasks.exe
+          - \svchost.exe
+          - \taskhostw.exe
+          - \thor.exe
+          - \thor64.exe
+          - \tiworker.exe
+          - \vssvc.exe
+          - \WmiPrvSE.exe
+          - \System32\SystemPropertiesAdvanced.exe
+        Image|startswith: C:\Windows\
+    filter_programfiles:
+        Image|startswith:
+          - C:\Program Files\
+          - C:\Program Files (x86)\
+    filter_update:
+        CommandLine|contains: \dismhost.exe {
+        CommandLine|startswith: C:\$WinREAgent\Scratch\
+    selection:
+        ImageLoaded|endswith: \vss_ps.dll
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/05/23
+tags:
+  - attack.defense_evasion
+  - attack.impact
+  - attack.t1490
+  - DEMO

@@ -1,0 +1,65 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Cross Site Scripting Strings
+id: 65354b83-a2ea-4ea6-8414-3ab38be0d409
+status: test
+description: Detects XSS attempts injected via GET requests in access logs
+author: Saw Win Naung, Nasreddine Bencherchali
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/15 13:32:41
+references:
+  - https://github.com/payloadbox/xss-payload-list
+  - https://portswigger.net/web-security/cross-site-scripting/contexts
+logsource:
+    category: webserver
+detection:
+    condition: select_method and keywords and not filter
+    filter:
+        sc-status: "404"
+    keywords:
+      - =<script>
+      - =%3Cscript%3E
+      - =%253Cscript%253E
+      - '<iframe '
+      - '%3Ciframe '
+      - '<svg '
+      - '%3Csvg '
+      - document.cookie
+      - document.domain
+      - ' onerror='
+      - ' onresize='
+      - ' onload="'
+      - onmouseover=
+      - ${alert
+      - javascript:alert
+      - javascript%3Aalert
+    select_method:
+        cs-method: GET
+fields:
+  - client_ip
+  - vhost
+  - url
+  - response
+falsepositives:
+  - JavaScripts,CSS Files and PNG files
+  - User searches in search boxes of the respective website
+  - Internal vulnerability scanners can cause some serious FPs when used, if you experience
+    a lot of FPs due to this think of adding more filters such as "User Agent" strings
+    and more response codes
+level: high
+customer: 'demo'
+modified: 2022/06/14
+tags:
+  - attack.initial_access
+  - attack.t1189
+  - DEMO

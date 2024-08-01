@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Permission Misconfiguration Reconnaissance Via Findstr.EXE
+id: 47e4bab7-c626-47dc-967b-255608c9a920
+status: experimental
+description: Detects usage of findstr with the "EVERYONE" or "BUILTIN" keywords. This
+    is seen being used in combination with "icacls" to look for misconfigured files
+    or folders permissions
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/12 21:38:41
+references:
+  - https://www.absolomb.com/2018-01-26-Windows-Privilege-Escalation-Guide/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_findstr_* or selection_special
+    selection_findstr_cli:
+        CommandLine|contains:
+          - '"Everyone"'
+          - '''Everyone'''
+          - '"BUILTIN\\"'
+          - '''BUILTIN\'''
+    selection_findstr_img:
+      - Image|endswith:
+          - \find.exe
+          - \findstr.exe
+      - OriginalFileName:
+          - FIND.EXE
+          - FINDSTR.EXE
+    selection_special:
+        CommandLine|contains|all:
+          - 'icacls '
+          - 'findstr '
+          - Everyone
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/11/11
+tags:
+  - attack.credential_access
+  - attack.t1552.006
+  - DEMO

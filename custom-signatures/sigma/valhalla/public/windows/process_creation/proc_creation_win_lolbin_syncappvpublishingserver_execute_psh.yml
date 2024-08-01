@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: SyncAppvPublishingServer Execute Arbitrary PowerShell Code
+id: fbd7c32d-db2a-4418-b92c-566eb8911133
+related:
+  - type: obsoletes
+    id: fde7929d-8beb-4a4c-b922-be9974671667
+status: test
+description: Executes arbitrary PowerShell code using SyncAppvPublishingServer.exe.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/07/12 21:49:51
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218/T1218.md
+  - https://lolbas-project.github.io/lolbas/Binaries/Syncappvpublishingserver/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains: '"n; '
+    selection_img:
+      - Image|endswith: \SyncAppvPublishingServer.exe
+      - OriginalFileName: syncappvpublishingserver.exe
+fields:
+  - ComputerName
+  - User
+  - CommandLine
+  - ParentCommandLine
+falsepositives: App-V clients
+level: medium
+customer: 'demo'
+modified: 2022/10/04
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

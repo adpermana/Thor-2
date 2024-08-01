@@ -1,0 +1,76 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential PowerShell Obfuscation Via Reversed Commands
+id: b6b49cd1-34d6-4ead-b1bf-176e9edba9a4
+status: test
+description: Detects the presence of reversed PowerShell commands in the CommandLine.
+    This is often used as a method of obfuscation by attackers
+author: Teymur Kheirkhabarov (idea), Vasiliy Burov (rule), oscd.community, Tim Shelton
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/11 20:30:01
+references:
+  - https://2019.offzone.moscow/ru/report/hunting-for-powershell-abuses/
+  - https://speakerdeck.com/heirhabarov/hunting-for-powershell-abuse?slide=66
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_* and not 1 of filter_main_*
+    filter_main_encoded_keyword:
+        CommandLine|contains:
+          - ' -EncodedCommand '
+          - ' -enc '
+    selection_cli:
+        CommandLine|contains:
+          - hctac
+          - kaerb
+          - dnammoc
+          - ekovn
+          - eliFd
+          - rahc
+          - etirw
+          - golon
+          - tninon
+          - eddih
+          - tpircS
+          - ssecorp
+          - llehsrewop
+          - esnopser
+          - daolnwod
+          - tneilCbeW
+          - tneilc
+          - ptth
+          - elifotevas
+          - 46esab
+          - htaPpmeTteG
+          - tcejbO
+          - maerts
+          - hcaerof
+          - retupmoc
+    selection_img:
+      - Image|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+      - OriginalFileName:
+          - PowerShell.EXE
+          - pwsh.dll
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/05/31
+tags:
+  - attack.defense_evasion
+  - attack.t1027
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

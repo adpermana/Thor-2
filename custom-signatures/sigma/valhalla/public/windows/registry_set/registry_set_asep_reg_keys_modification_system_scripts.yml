@@ -1,0 +1,58 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: System Scripts Autorun Keys Modification
+id: e7a2fd40-3ae1-4a85-bf80-15cf624fb1b1
+related:
+  - type: obsoletes
+    id: 17f878b8-9968-4578-b814-c4217fc5768c
+status: test
+description: Detects modification of autostart extensibility point (ASEP) in registry.
+author: Victor Sergeev, Daniil Yugoslavskiy, Gleb Sukhodolskiy, Timur Zinniatullin,
+    oscd.community, Tim Shelton, frack113 (split)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/25 16:52:51
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1547.001/T1547.001.md
+  - https://docs.microsoft.com/en-us/sysinternals/downloads/autoruns
+  - https://gist.github.com/GlebSukhodolskiy/0fc5fa5f482903064b448890db1eaf9d
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: scripts_base and scripts and not filter
+    filter:
+        Details: (Empty)
+    scripts:
+        TargetObject|contains:
+          - \Startup
+          - \Shutdown
+          - \Logon
+          - \Logoff
+    scripts_base:
+        TargetObject|contains: \Software\Policies\Microsoft\Windows\System\Scripts
+fields:
+  - SecurityID
+  - ObjectName
+  - OldValueType
+  - NewValueType
+falsepositives:
+  - Legitimate software automatically (mostly, during installation) sets up autorun
+    keys for legitimate reason
+  - Legitimate administrator sets up autorun keys for legitimate reason
+level: medium
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.persistence
+  - attack.t1547.001
+  - DEMO

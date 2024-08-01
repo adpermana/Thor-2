@@ -1,0 +1,110 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: CodeIntegrity - Unmet Signing Level Requirements By File Under Validation
+id: f8931561-97f5-4c46-907f-0a4a592e47a7
+status: experimental
+description: |
+    Detects attempted file load events that did not meet the signing level requirements. It often means the file's signature is revoked or a signature with the Lifetime Signing EKU has expired.
+    This event is best correlated with EID 3089 to determine the error of the validation.
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/20 00:55:51
+references:
+  - https://twitter.com/SBousseaden/status/1483810148602814466
+  - https://github.com/MicrosoftDocs/windows-itpro-docs/blob/40fe118976734578f83e5e839b9c63ae7a4af82d/windows/security/threat-protection/windows-defender-application-control/event-id-explanations.md#windows-codeintegrity-operational-log
+  - https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/event-tag-explanations
+  - https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/event-id-explanations
+logsource:
+    product: windows
+    service: codeintegrity-operational
+detection:
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+    filter_main_gac:
+        FileNameBuffer|contains: \Windows\assembly\GAC\
+        ProcessNameBuffer|contains: \Windows\Microsoft.NET\
+        ProcessNameBuffer|endswith: \mscorsvw.exe
+        RequestedPolicy: "8"
+    filter_optional_av_generic:
+        FileNameBuffer|contains: \Windows\System32\DriverStore\FileRepository\
+        FileNameBuffer|endswith: \igd10iumd64.dll
+        RequestedPolicy: "7"
+    filter_optional_avast:
+        FileNameBuffer|endswith:
+          - \Program Files\Avast Software\Avast\aswAMSI.dll
+          - \Program Files (x86)\Avast Software\Avast\aswAMSI.dll
+        RequestedPolicy:
+          - "8"
+          - "12"
+    filter_optional_bonjour:
+        FileNameBuffer|endswith: \Program Files\Bonjour\mdnsNSP.dll
+        ProcessNameBuffer|endswith:
+          - \Windows\System32\svchost.exe
+          - \Windows\System32\SIHClient.exe
+        RequestedPolicy:
+          - "8"
+          - "12"
+    filter_optional_dtrace:
+        FileNameBuffer|endswith: \Program Files\DTrace\dtrace.dll
+        ProcessNameBuffer|endswith: \Windows\System32\svchost.exe
+        RequestedPolicy: "12"
+    filter_optional_electron_based_app:
+        FileNameBuffer|endswith: \Windows\System32\nvspcap64.dll
+        ProcessNameBuffer|endswith:
+          - \AppData\Local\Keybase\Gui\Keybase.exe
+          - \Microsoft\Teams\stage\Teams.exe
+        RequestedPolicy: "8"
+    filter_optional_eset:
+        FileNameBuffer|endswith: \Program Files\ESET\ESET Security\eamsi.dll
+    filter_optional_firefox:
+        FileNameBuffer|endswith:
+          - \Mozilla Firefox\mozavcodec.dll
+          - \Mozilla Firefox\mozavutil.dll
+        ProcessNameBuffer|endswith: \Mozilla Firefox\firefox.exe
+        RequestedPolicy: "8"
+    filter_optional_google_drive:
+        FileNameBuffer|contains: \Program Files\Google\Drive File Stream\
+        FileNameBuffer|endswith: \crashpad_handler.exe
+        ProcessNameBuffer|endswith: \Windows\ImmersiveControlPanel\SystemSettings.exe
+        RequestedPolicy: "8"
+    filter_optional_mcafee:
+        FileNameBuffer|endswith:
+          - \Program Files\McAfee\Endpoint Security\Threat Prevention\MfeAmsiProvider.dll
+          - \Program Files\McAfee\MfeAV\AMSIExt.dll
+    filter_optional_mdns_responder:
+        FileNameBuffer|endswith: '\Program Files\National Instruments\Shared\mDNS
+            Responder\nimdnsNSP.dll '
+    filter_optional_msoffice:
+        FileNameBuffer|contains: \Microsoft Office\root\vfs\ProgramFilesCommonX64\Microsoft
+            Shared\OFFICE
+        FileNameBuffer|endswith: \MSOXMLMF.DLL
+        RequestedPolicy: "7"
+    filter_optional_slack:
+        FileNameBuffer|endswith: \Windows\System32\nvspcap64.dll
+        ProcessNameBuffer|contains: \AppData\Local\slack\app-
+        ProcessNameBuffer|endswith: \slack.exe
+        RequestedPolicy: "8"
+    filter_optional_trend_micro:
+        FileNameBuffer|endswith: \Trend Micro\Client Server Security Agent\perficrcperfmonmgr.dll
+        RequestedPolicy: "8"
+    selection:
+        EventID:
+          - "3033"
+          - "3034"
+falsepositives: Antivirus and other third party products are known to trigger this
+    rule quite a lot. Initial filters and tuning is required before using this rule.
+level: low
+customer: 'demo'
+modified: 2023/11/15
+tags:
+  - attack.execution
+  - DEMO

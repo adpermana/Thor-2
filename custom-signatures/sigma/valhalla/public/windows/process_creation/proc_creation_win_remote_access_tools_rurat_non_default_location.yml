@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Remote Access Tool - RURAT Execution From Unusual Location
+id: e01fa958-6893-41d4-ae03-182477c5e77d
+status: test
+description: Detects execution of Remote Utilities RAT (RURAT) from an unusual location
+    (outside of 'C:\Program Files')
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/19 20:35:31
+references:
+  - https://redcanary.com/blog/misbehaving-rats/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        Image|startswith:
+          - C:\Program Files\Remote Utilities
+          - C:\Program Files (x86)\Remote Utilities
+    selection:
+      - Image|endswith:
+          - \rutserv.exe
+          - \rfusclient.exe
+      - Product: Remote Utilities
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/03/05
+tags:
+  - attack.defense_evasion
+  - DEMO

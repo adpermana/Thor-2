@@ -1,0 +1,57 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Disable Security Tools
+id: ff39f1a6-84ac-476f-a1af-37fcdf53d7c0
+status: test
+description: Detects disabling security tools
+author: Daniil Yugoslavskiy, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/19 11:56:51
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.001/T1562.001.md
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    condition: (launchctl_unload and security_plists) or disable_gatekeeper
+    disable_gatekeeper:
+        CommandLine|contains: disable
+        Image: /usr/sbin/spctl
+    launchctl_unload:
+        CommandLine|contains: unload
+        Image: /bin/launchctl
+    security_plists:
+        CommandLine|contains:
+          - com.objective-see.lulu.plist
+          - com.objective-see.blockblock.plist
+          - com.google.santad.plist
+          - com.carbonblack.defense.daemon.plist
+          - com.carbonblack.daemon.plist
+          - at.obdev.littlesnitchd.plist
+          - com.tenablesecurity.nessusagent.plist
+          - com.opendns.osx.RoamingClientConfigUpdater.plist
+          - com.crowdstrike.falcond.plist
+          - com.crowdstrike.userdaemon.plist
+          - osquery
+          - filebeat
+          - auditbeat
+          - packetbeat
+          - td-agent
+falsepositives: Legitimate activities
+level: medium
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+  - DEMO

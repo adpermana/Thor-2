@@ -1,0 +1,76 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Removal of Potential COM Hijacking Registry Keys
+id: 96f697b0-b499-4e5d-9908-a67bec11cdb6
+status: test
+description: |
+    Detects any deletion of entries in ".*\shell\open\command" registry keys.
+    These registry keys might have been used for COM hijacking activities by a threat actor or an attacker and the deletion could indicate steps to remove its tracks.
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/05/02 18:25:11
+references:
+  - https://github.com/OTRF/detection-hackathon-apt29/issues/7
+  - https://github.com/OTRF/ThreatHunter-Playbook/blob/2d4257f630f4c9770f78d0c1df059f891ffc3fec/docs/evals/apt29/detections/3.C.1_22A46621-7A92-48C1-81BF-B3937EB4FDC3.md
+  - https://docs.microsoft.com/en-us/windows/win32/shell/launch
+  - https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-iexecutecommand
+  - https://docs.microsoft.com/en-us/windows/win32/shell/shell-and-managed-code
+logsource:
+    category: registry_delete
+    product: windows
+detection:
+    condition: selection and not 1 of filter_*
+    filter_dropbox:
+        Image|endswith: \Dropbox.exe
+        TargetObject|contains: \Dropbox.
+    filter_everything:
+        Image|endswith: \Everything.exe
+        TargetObject|contains: \Everything.
+    filter_integrator:
+        Image: C:\Program Files (x86)\Microsoft Office\root\integration\integrator.exe
+    filter_java:
+        Image|endswith: \installer.exe
+        Image|startswith: C:\Program Files (x86)\Java\
+        TargetObject|contains: \Classes\WOW6432Node\CLSID\{4299124F-F2C3-41b4-9C73-9236B2AD0E8F}
+    filter_office:
+        Image|endswith: \OfficeClickToRun.exe
+        Image|startswith:
+          - C:\Program Files\Common Files\Microsoft Shared\ClickToRun\
+          - C:\Program Files\Common Files\Microsoft Shared\ClickToRun\Updates\
+    filter_opera:
+        Image|endswith: \installer.exe
+        Image|startswith:
+          - C:\Program Files\Opera\
+          - C:\Program Files (x86)\Opera\
+    filter_peazip:
+        Image|contains: peazip
+        TargetObject|contains: \PeaZip.
+    filter_svchost:
+        Image: C:\Windows\system32\svchost.exe
+    filter_uninstallers:
+        Image|startswith: C:\Windows\Installer\MSI
+    filter_wireshark:
+        Image|endswith: \AppData\Local\Temp\Wireshark_uninstaller.exe
+        TargetObject|contains: \wireshark-capture-file\
+    selection:
+        EventType: DeleteKey
+        TargetObject|endswith: \shell\open\command
+falsepositives: Legitimate software (un)installations are known to cause some false
+    positives. Please add them as a filter when encountered
+level: medium
+customer: 'demo'
+modified: 2023/01/19
+tags:
+  - attack.defense_evasion
+  - attack.t1112
+  - DEMO

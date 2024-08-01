@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: VSSAudit Security Event Source Registration
+id: e9faba72-4974-4ab2-a4c5-46e25ad59e9b
+status: test
+description: Detects the registration of the security event source VSSAudit. It would
+    usually trigger when volume shadow copy operations happen.
+author: Roberto Rodriguez @Cyb3rWard0g, Open Threat Research (OTR)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/20 17:32:11
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1003.002/T1003.002.md#atomic-test-3---esentutlexe-sam-copy
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: selection
+    selection:
+        AuditSourceName: VSSAudit
+        EventID:
+          - "4904"
+          - "4905"
+falsepositives: Legitimate use of VSSVC. Maybe backup operations. It would usually
+    be done by C:\Windows\System32\VSSVC.exe.
+level: informational
+customer: 'demo'
+modified: 2022/04/28
+tags:
+  - attack.credential_access
+  - attack.t1003.002
+  - DEMO

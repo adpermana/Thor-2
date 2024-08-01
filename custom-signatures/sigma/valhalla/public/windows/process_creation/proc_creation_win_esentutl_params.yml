@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Esentutl Gather Credentials
+id: 7df1713a-1a5b-4a4b-a071-dc83b144a101
+status: test
+description: Conti recommendation to its affiliates to use esentutl to access NTDS
+    dumped file. Trickbot also uses this utilities to get MSEdge info via its module
+    pwgrab.
+author: sam0x90
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/06 13:22:11
+references:
+  - https://twitter.com/vxunderground/status/1423336151860002816
+  - https://attack.mitre.org/software/S0404/
+  - https://thedfirreport.com/2021/08/01/bazarcall-to-conti-ransomware-via-trickbot-and-cobalt-strike/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains|all:
+          - esentutl
+          - ' /p'
+fields:
+  - User
+  - CommandLine
+  - ParentCommandLine
+  - CurrentDirectory
+falsepositives: To be determined
+level: medium
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.credential_access
+  - attack.t1003
+  - attack.t1003.003
+  - DEMO

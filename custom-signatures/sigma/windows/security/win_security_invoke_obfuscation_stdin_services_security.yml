@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Invoke-Obfuscation STDIN+ Launcher - Security
+id: 0c718a5e-4284-4fb9-b4d9-b9a50b3a1974
+related:
+  - type: derived
+    id: 72862bf2-0eb1-11eb-adc1-0242ac120002
+status: test
+description: Detects Obfuscated use of stdin to execute PowerShell
+author: Jonathan Cheong, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/15 17:21:41
+references:
+  - https://github.com/SigmaHQ/sigma/issues/1009
+logsource:
+    product: windows
+    service: security
+    definition: The 'System Security Extension' audit subcategory need to be enabled
+        to log the EID 4697
+detection:
+    condition: all of selection*
+    selection:
+        EventID: "4697"
+        ServiceFileName|contains|all:
+          - cmd
+          - powershell
+    selection2:
+        ServiceFileName|contains:
+          - ${input}
+          - noexit
+    selection3:
+        ServiceFileName|contains:
+          - ' /c '
+          - ' /r '
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/11/29
+tags:
+  - attack.defense_evasion
+  - attack.t1027
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

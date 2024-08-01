@@ -1,0 +1,26 @@
+title: Query Protection Status Via WMI
+id: 1d2ebdbc-9a7f-441d-b46e-93d33cb1e23e
+status: test
+description: Detects potential protection status reconnaissance via calls to "GetProtectionStatus" method that's part of the "Win32_EncryptableVolume" class. Often use to get Bitlocker status.
+references:
+    - https://www.welivesecurity.com/2023/03/01/blacklotus-uefi-bootkit-myth-confirmed/
+    - https://learn.microsoft.com/en-us/windows/win32/secprov/getprotectionstatus-win32-encryptablevolume
+author: Nasreddine Bencherchali
+date: 2023/03/14
+modified: 2023/03/29
+tags:
+    - attack.reconnaissance
+logsource:
+    product: windows
+    service: wmi
+detection:
+    selection:
+        EventID: 11
+        Operation|contains|all:
+            - 'IWbemServices::ExecMethod'
+            - 'Win32_EncryptableVolume'
+            - 'GetProtectionStatus'
+    condition: selection
+falsepositives:
+    - Unknown
+level: medium

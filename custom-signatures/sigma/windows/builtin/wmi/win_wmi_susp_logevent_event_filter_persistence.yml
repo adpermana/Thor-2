@@ -1,0 +1,29 @@
+title: Suspicious WMI EventLog Based Event Filter Has Been Registered
+id: 99cc8d94-c36d-4d4e-996b-2169f4cbdabc
+status: test
+description: Detects the creation of a an event log based WMI event filter
+references:
+    - https://github.com/rapid7/metasploit-framework/blob/0aa0884e2607c5ea65531d4485aa0291554a8af2/modules/exploits/windows/local/wmi_persistence.rb#L160
+author: Nasreddine Bencherchali
+date: 2022/11/24
+modified: 2023/03/29
+tags:
+    - attack.execution
+    - attack.t1047
+logsource:
+    product: windows
+    service: wmi
+detection:
+    selection:
+        EventID: 5861
+        Consumer|contains:
+            - 'ActiveScriptEventConsumer='
+            - 'CommandLineEventConsumer='
+        PossibleCause|contains|all:
+            - '__InstanceCreationEvent'
+            - 'Win32_NTLogEvent'
+            - '.EventCode'
+    condition: selection
+falsepositives:
+    - Unknown
+level: medium

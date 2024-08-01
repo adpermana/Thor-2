@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Bypass UAC via WSReset.exe
+id: d797268e-28a9-49a7-b9a8-2f5039011c5c
+related:
+  - type: obsoletes
+    id: bdc8918e-a1d5-49d1-9db7-ea0fd91aa2ae
+status: test
+description: Detects use of WSReset.exe to bypass User Account Control (UAC). Adversaries
+    use this technique to execute privileged processes.
+author: E.M. Anhaus (originally from Atomic Blue Detections, Tony Lambert), oscd.community,
+    Florian Roth
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/24 12:25:21
+references:
+  - https://eqllib.readthedocs.io/en/latest/analytics/532b5ed4-7930-11e9-8f5c-d46d6d62a49e.html
+  - https://lolbas-project.github.io/lolbas/Binaries/Wsreset/
+  - https://www.activecyber.us/activelabs/windows-uac-bypass
+  - https://twitter.com/ReaQta/status/1222548288731217921
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+      - Image|endswith: \conhost.exe
+      - OriginalFileName: CONHOST.EXE
+    selection:
+        ParentImage|endswith: \wsreset.exe
+falsepositives: Unknown sub processes of Wsreset.exe
+level: high
+customer: 'demo'
+modified: 2022/05/13
+tags:
+  - attack.privilege_escalation
+  - attack.defense_evasion
+  - attack.t1548.002
+  - DEMO

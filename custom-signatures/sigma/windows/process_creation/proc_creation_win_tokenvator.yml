@@ -1,0 +1,58 @@
+title: Tokenvator Usage
+id: d2bdb25d-4b6e-43d5-9109-d0e7b6684256
+status: experimental
+description: Detects usage of the Tokenvator tool based on commandline flags
+author: Nasreddine Bencherchali
+references:
+    - https://github.com/0xbadjuju/Tokenvator/
+date: 2022/05/21
+tags:
+    - attack.defense_evasion
+    - attack.privilege_escalation
+    - attack.t1134.001
+    - attack.t1134.002
+    - attack.t1134.003
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    img_orig:
+        - OriginalFileName: 'Tokenvator.exe'
+        - Image|endswith: '\Tokenvator.exe'
+    selection_priv_root:
+        CommandLine|contains:
+            - ' add_privileges '
+            - ' enable_privilege '
+    selection_priv_flag:
+        CommandLine|contains: ' /Privilege:Se'
+    selection_command_root:
+        CommandLine|contains:
+            - ' create_token '
+            - ' clone_token '
+            - ' runpowershell '
+            - ' bypassuac '
+    selection_command_flag:
+        CommandLine|contains: ' /Command:'
+    selection_stealtoken:
+        CommandLine|contains|all:
+            - ' steal_token '
+            - ' /Process:'
+    selection_pipe:
+        CommandLine|contains|all:
+            - ' steal_pipe_token '
+            - ' /PipeName:'
+    selection_drivers_root:
+        CommandLine|contains:
+            - ' install_driver '
+            - ' start_driver '
+            - ' uninstall_driver '
+    selection_drivers_flag:
+        CommandLine|contains: ' /ServiceName:'
+    standalone:
+        CommandLine|endswith:
+            - ' clear_desktop_acl'
+            - ' nuke_privileges'
+    condition: img_orig or all of selection_priv* or all of selection_command* or selection_stealtoken or selection_pipe or all of selection_drivers* or standalone
+falsepositives:
+    - Unlikely
+level: high

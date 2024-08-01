@@ -1,0 +1,129 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Download from Suspicious Dyndns Hosts
+id: 195c1119-ef07-4909-bb12-e66f5e07bf3c
+status: test
+description: Detects download of certain file types from hosts with dynamic DNS names
+    (selected list)
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/11/08 16:03:21
+references:
+  - https://www.alienvault.com/blogs/security-essentials/dynamic-dns-security-and-potential-threats
+logsource:
+    category: proxy
+detection:
+    condition: selection
+    selection:
+        c-uri-extension:
+          - exe
+          - vbs
+          - bat
+          - rar
+          - ps1
+          - doc
+          - docm
+          - xls
+          - xlsm
+          - pptm
+          - rtf
+          - hta
+          - dll
+          - ws
+          - wsf
+          - sct
+          - zip
+        cs-host|endswith:
+          - .hopto.org
+          - .no-ip.org
+          - .no-ip.info
+          - .no-ip.biz
+          - .no-ip.com
+          - .noip.com
+          - .ddns.name
+          - .myftp.org
+          - .myftp.biz
+          - .serveblog.net
+          - .servebeer.com
+          - .servemp3.com
+          - .serveftp.com
+          - .servequake.com
+          - .servehalflife.com
+          - .servehttp.com
+          - .servegame.com
+          - .servepics.com
+          - .myvnc.com
+          - .ignorelist.com
+          - .jkub.com
+          - .dlinkddns.com
+          - .jumpingcrab.com
+          - .ddns.info
+          - .mooo.com
+          - .dns-dns.com
+          - .strangled.net
+          - .adultdns.net
+          - .craftx.biz
+          - .ddns01.com
+          - .dns53.biz
+          - .dnsapi.info
+          - .dnsd.info
+          - .dnsdynamic.com
+          - .dnsdynamic.net
+          - .dnsget.org
+          - .fe100.net
+          - .flashserv.net
+          - .ftp21.net
+          - .http01.com
+          - .http80.info
+          - .https443.com
+          - .imap01.com
+          - .kadm5.com
+          - .mysq1.net
+          - .ns360.info
+          - .ntdll.net
+          - .ole32.com
+          - .proxy8080.com
+          - .sql01.com
+          - .ssh01.com
+          - .ssh22.net
+          - .tempors.com
+          - .tftpd.net
+          - .ttl60.com
+          - .ttl60.org
+          - .user32.com
+          - .voip01.com
+          - .wow64.net
+          - .x64.me
+          - .xns01.com
+          - .dyndns.org
+          - .dyndns.info
+          - .dyndns.tv
+          - .dyndns-at-home.com
+          - .dnsomatic.com
+          - .zapto.org
+          - .webhop.net
+          - .25u.com
+          - .slyip.net
+fields:
+  - cs-ip
+  - c-uri
+falsepositives: Software downloads
+level: medium
+customer: 'demo'
+modified: 2023/05/18
+tags:
+  - attack.defense_evasion
+  - attack.command_and_control
+  - attack.t1105
+  - attack.t1568
+  - DEMO

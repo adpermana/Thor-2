@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Program Location with Network Connections
+id: 7b434893-c57d-4f41-908d-6a17bf1ae98f
+status: test
+description: Detects programs with network connections running in suspicious files
+    system locations
+author: Florian Roth (Nextron Systems), Tim Shelton
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/03/19 20:16:11
+references:
+  - https://docs.google.com/spreadsheets/d/17pSTDNpa0sf6pHeRhusvWG6rThciE8CsXTSlDUAZDyo
+logsource:
+    category: network_connection
+    product: windows
+    definition: Use the following config to generate the necessary Event ID 3 Network
+        Connection events
+detection:
+    condition: selection and not 1 of filter_optional_*
+    filter_optional_ibm:
+        Image|contains: :\Users\Public\IBM\ClientSolutions\Start_Programs\
+    selection:
+        Image|contains:
+          - :\$Recycle.bin
+          - :\Perflogs\
+          - :\Users\Default\
+          - :\Users\Public\
+          - :\Windows\Fonts\
+          - :\Windows\IME\
+          - \config\systemprofile\
+          - \Windows\addins\
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/12/11
+tags:
+  - attack.command_and_control
+  - attack.t1105
+  - DEMO

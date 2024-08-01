@@ -1,0 +1,71 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Load Of RstrtMgr.DLL By An Uncommon Process
+id: 3669afd2-9891-4534-a626-e5cf03810a61
+related:
+  - type: derived
+    id: b48492dc-c5ef-4572-8dff-32bc241c15c8
+status: experimental
+description: |
+    Detects the load of RstrtMgr DLL (Restart Manager) by an uncommon process.
+    This library has been used during ransomware campaigns to kill processes that would prevent file encryption by locking them (e.g. Conti ransomware, Cactus ransomware). It has also recently been seen used by the BiBi wiper for Windows.
+    It could also be used for anti-analysis purposes by shut downing specific processes.
+author: Luc Génaux
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/11/28 16:33:31
+references:
+  - https://www.crowdstrike.com/blog/windows-restart-manager-part-1/
+  - https://www.crowdstrike.com/blog/windows-restart-manager-part-2/
+  - https://www.swascan.com/cactus-ransomware-malware-analysis/
+  - https://taiwan.postsen.com/business/88601/Hamas-hackers-use-data-destruction-software-BiBi-which-consumes-a-lot-of-processor-resources-to-wipe-Windows-computer-data--iThome.html
+logsource:
+    category: image_load
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_admin_software_installations:
+        Image|contains: :\Windows\Temp\
+    filter_main_generic:
+        Image|contains:
+          - :\$WINDOWS.~BT\
+          - :\$WinREAgent\
+          - :\Program Files (x86)\
+          - :\Program Files\
+          - :\ProgramData\
+          - :\Windows\explorer.exe
+          - :\Windows\SoftwareDistribution\
+          - :\Windows\SysNative\
+          - :\Windows\System32\
+          - :\Windows\SysWOW64\
+          - :\Windows\WinSxS\
+          - :\WUDownloadCache\
+    filter_main_user_software_installations:
+        Image|contains|all:
+          - :\Users\
+          - \AppData\Local\Temp\is-
+          - .tmp\
+        Image|endswith: .tmp
+    selection:
+      - ImageLoaded|endswith: \RstrtMgr.dll
+      - OriginalFileName: RstrtMgr.dll
+falsepositives:
+  - Other legitimate Windows processes not currently listed
+  - Processes related to software installation
+level: low
+customer: 'demo'
+tags:
+  - attack.impact
+  - attack.defense_evasion
+  - attack.t1486
+  - attack.t1562.001
+  - DEMO

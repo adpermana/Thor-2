@@ -1,0 +1,58 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Schtasks Creation Or Modification With SYSTEM Privileges
+id: 89ca78fd-b37c-4310-b3d3-81a023f83936
+status: experimental
+description: Detects the creation or update of a scheduled task to run with "NT AUTHORITY\SYSTEM"
+    privileges
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/28 20:31:11
+references:
+  - https://www.elastic.co/security-labs/exploring-the-qbot-attack-pattern
+  - https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_* and not 1 of filter_optional_*
+    filter_optional_avira:
+        CommandLine|contains:
+          - '/Create /F /RU System /SC WEEKLY /TN AviraSystemSpeedupVerify /TR '
+          - :\Program Files (x86)\Avira\System Speedup\setup\avira_speedup_setup.exe
+          - /VERIFY /VERYSILENT /NOSTART /NODOTNET /NORESTART" /RL HIGHEST
+    filter_optional_teamviewer:
+        CommandLine|contains|all:
+          - /TN TVInstallRestore
+          - \TeamViewer_.exe
+        Image|endswith: \schtasks.exe
+    selection_root:
+        CommandLine|contains:
+          - ' /change '
+          - ' /create '
+        Image|endswith: \schtasks.exe
+    selection_run:
+        CommandLine|contains: '/ru '
+    selection_user:
+        CommandLine|contains:
+          - NT AUT
+          - ' SYSTEM '
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/10/11
+tags:
+  - attack.execution
+  - attack.persistence
+  - attack.t1053.005
+  - DEMO

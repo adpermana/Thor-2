@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious MacOS Firmware Activity
+id: 7ed2c9f7-c59d-4c82-a7e2-f859aa676099
+status: test
+description: Detects when a user manipulates with Firmward Password on MacOS. NOTE
+    - this command has been disabled on silicon-based apple computers.
+author: Austin Songer @austinsonger
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/09/30 15:07:21
+references:
+  - https://github.com/usnistgov/macos_security/blob/932a51f3e819dd3e02ebfcf3ef433cfffafbe28b/rules/os/os_firmware_password_require.yaml
+  - https://www.manpagez.com/man/8/firmwarepasswd/
+  - https://support.apple.com/guide/security/firmware-password-protection-sec28382c9ca/web
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    condition: selection1
+    selection1:
+        CommandLine|contains:
+          - setpasswd
+          - full
+          - delete
+          - check
+        Image: /usr/sbin/firmwarepasswd
+falsepositives: Legitimate administration activities
+level: medium
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.impact
+  - DEMO

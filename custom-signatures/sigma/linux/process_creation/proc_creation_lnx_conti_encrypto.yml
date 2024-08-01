@@ -1,0 +1,23 @@
+title: Conti Encryptor Flags - Linux
+id: ea164ef6-93f4-4595-b968-2faf4464b797
+status: test
+description: Detects command line flags used by Conti's encryptor for the Linux platform
+references:
+    - https://www.fortiguard.com/threat-signal-report/4736/new-conti-ransomware-campaign-observed-in-the-wild-1
+author: Florian Roth
+date: 2022/12/12
+modified: 2023/03/28
+tags:
+    - attack.command_and_control
+logsource:
+    product: linux
+    category: process_creation
+detection:
+    selection:
+        CommandLine|contains:
+            - ' --vmkiller'
+            - ' --prockiller'
+    condition: selection
+falsepositives:
+    - Unlikely
+level: high

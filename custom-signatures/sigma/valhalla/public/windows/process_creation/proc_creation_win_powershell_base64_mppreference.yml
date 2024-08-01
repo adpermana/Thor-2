@@ -1,0 +1,56 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Powershell Base64 Encoded MpPreference Cmdlet
+id: c6fb44c6-71f5-49e6-9462-1425d328aee3
+status: test
+description: Detects base64 encoded "MpPreference" PowerShell cmdlet code that tries
+    to modifies or tamper with Windows Defender AV
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/03/04 17:36:11
+references:
+  - https://docs.microsoft.com/en-us/microsoft-365/security/defender-endpoint/configure-process-opened-file-exclusions-microsoft-defender-antivirus
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.001/T1562.001.md
+  - https://twitter.com/AdamTheAnalyst/status/1483497517119590403
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - CommandLine|base64offset|contains:
+          - 'Add-MpPreference '
+          - 'Set-MpPreference '
+          - 'add-mppreference '
+          - 'set-mppreference '
+      - CommandLine|contains:
+          - QQBkAGQALQBNAHAAUAByAGUAZgBlAHIAZQBuAGMAZQAgA
+          - EAZABkAC0ATQBwAFAAcgBlAGYAZQByAGUAbgBjAGUAIA
+          - BAGQAZAAtAE0AcABQAHIAZQBmAGUAcgBlAG4AYwBlACAA
+          - UwBlAHQALQBNAHAAUAByAGUAZgBlAHIAZQBuAGMAZQAgA
+          - MAZQB0AC0ATQBwAFAAcgBlAGYAZQByAGUAbgBjAGUAIA
+          - TAGUAdAAtAE0AcABQAHIAZQBmAGUAcgBlAG4AYwBlACAA
+          - YQBkAGQALQBtAHAAcAByAGUAZgBlAHIAZQBuAGMAZQAgA
+          - EAZABkAC0AbQBwAHAAcgBlAGYAZQByAGUAbgBjAGUAIA
+          - hAGQAZAAtAG0AcABwAHIAZQBmAGUAcgBlAG4AYwBlACAA
+          - cwBlAHQALQBtAHAAcAByAGUAZgBlAHIAZQBuAGMAZQAgA
+          - MAZQB0AC0AbQBwAHAAcgBlAGYAZQByAGUAbgBjAGUAIA
+          - zAGUAdAAtAG0AcABwAHIAZQBmAGUAcgBlAG4AYwBlACAA
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/01/30
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+  - DEMO

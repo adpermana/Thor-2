@@ -1,0 +1,23 @@
+title: PuTTY Secure Copy Execution
+id: 1af0c3d8-b0f7-4cef-9c78-2129ad7a9bc5
+status: experimental
+description: Detects execution of PuTTY Secure Copy (PSCP)
+references:
+    - https://the.earth.li/~sgtatham/putty/0.60/htmldoc/Chapter5.html
+    - https://www.microsoft.com/en-us/security/blog/2022/10/18/defenders-beware-a-case-for-post-ransomware-investigations/
+author: Nasreddine Bencherchali
+date: 2022/11/10
+tags:
+    - attack.exfiltration
+    - attack.t1048.003
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        - Image|endswith: '\pscp.exe'
+        - OriginalFileName: 'PSCP'
+    condition: selection
+falsepositives:
+    - Legitimate use of the tool for administration purposes
+level: low

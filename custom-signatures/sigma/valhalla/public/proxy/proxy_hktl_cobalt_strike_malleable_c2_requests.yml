@@ -1,0 +1,78 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - CobaltStrike Malleable Profile Patterns - Proxy
+id: f3f21ce1-cdef-4bfc-8328-ed2e826f5fac
+related:
+  - type: obsoletes
+    id: 953b895e-5cc9-454b-b183-7f3db555452e
+  - type: obsoletes
+    id: 41b42a36-f62c-4c34-bd40-8cb804a34ad8
+  - type: obsoletes
+    id: 37325383-740a-403d-b1a2-b2b4ab7992e7
+  - type: obsoletes
+    id: c9b33401-cc6a-4cf6-83bb-57ddcb2407fc
+status: test
+description: Detects cobalt strike malleable profiles patterns (URI, User-Agents,
+    Methods).
+author: Markus Neis, Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/02/15 20:49:31
+references:
+  - https://github.com/rsmudge/Malleable-C2-Profiles/blob/26323784672913923d20c5a638c6ca79459e8529/normal/amazon.profile
+  - https://www.hybrid-analysis.com/sample/ee5eca8648e45e2fea9dac0d920ef1a1792d8690c41ee7f20343de1927cc88b9?environmentId=100
+  - https://github.com/rsmudge/Malleable-C2-Profiles/blob/26323784672913923d20c5a638c6ca79459e8529/normal/ocsp.profile
+  - https://github.com/yeyintminthuhtut/Malleable-C2-Profiles-Collection/
+  - https://github.com/rsmudge/Malleable-C2-Profiles/blob/26323784672913923d20c5a638c6ca79459e8529/normal/onedrive_getonly.profile
+logsource:
+    category: proxy
+detection:
+    condition: 1 of selection_* and not 1 of filter_main_*
+    filter_main_onedrive:
+        c-uri|contains: ://onedrive.live.com/
+        c-uri|startswith: http
+    selection_amazon_1:
+        c-uri: /s/ref=nb_sb_noss_1/167-3294888-0262949/field-keywords=books
+        c-useragent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like
+            Gecko
+        cs-cookie|endswith: =csm-hit=s-24KU11BB82RZSYGJ3BDK|1419899012996
+        cs-host: www.amazon.com
+        cs-method: GET
+    selection_amazon_2:
+        c-uri: /N4215/adj/amzn.us.sr.aps
+        c-useragent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like
+            Gecko
+        cs-host: www.amazon.com
+        cs-method: POST
+    selection_generic_1:
+        c-useragent:
+          - Mozilla/4.0 (compatible; MSIE 6.0;Windows NT 5.1)
+          - Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; WOW64; Trident/4.0;
+            SLCC2; .NET CLR 3.0.30729; .NET4.0C; .NET4.0E )
+          - Mozilla/5.0 (Windows; U; MSIE 7.0; Windows NT 5.2) Java/1.5.0_08
+    selection_generic_2:
+        c-useragent|endswith: ; MANM; MANM)
+    selection_onedrive:
+        c-uri|endswith: \?manifest=wac
+        cs-host: onedrive.live.com
+        cs-method: GET
+    selection_oscp:
+        c-uri|contains: /oscp/
+        cs-host: ocsp.verisign.com
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.command_and_control
+  - attack.t1071.001
+  - DEMO

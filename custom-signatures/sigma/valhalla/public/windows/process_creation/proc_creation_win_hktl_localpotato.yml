@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - LocalPotato Execution
+id: 6bd75993-9888-4f91-9404-e1e4e4e34b77
+status: test
+description: Detects the execution of the LocalPotato POC based on basic PE metadata
+    information and default CLI examples
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/02/14 14:20:01
+references:
+  - https://www.localpotato.com/localpotato_html/LocalPotato.html
+  - https://github.com/decoder-it/LocalPotato
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_cli:
+        CommandLine|contains|all:
+          - .exe -i C:\
+          - -o Windows\
+    selection_hash_ext:
+        Imphash:
+          - E1742EE971D6549E8D4D81115F88F1FC
+          - DD82066EFBA94D7556EF582F247C8BB5
+    selection_hash_plain:
+        Hashes|contains:
+          - IMPHASH=E1742EE971D6549E8D4D81115F88F1FC
+          - IMPHASH=DD82066EFBA94D7556EF582F247C8BB5
+    selection_img:
+        Image|endswith: \LocalPotato.exe
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - cve.2023.21746
+  - DEMO

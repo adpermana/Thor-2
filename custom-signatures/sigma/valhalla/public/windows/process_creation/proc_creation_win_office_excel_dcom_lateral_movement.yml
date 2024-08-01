@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Excel.EXE DCOM Lateral Movement Via ActivateMicrosoftApp
+id: 551d9c1f-816c-445b-a7a6-7a3864720d60
+status: experimental
+description: |
+    Detects suspicious child processes of Excel which could be an indicator of lateral movement leveraging the "ActivateMicrosoftApp" Excel DCOM object.
+author: Aaron Stratton
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/11/13 22:55:21
+references:
+  - https://posts.specterops.io/lateral-movement-abuse-the-power-of-dcom-excel-application-3c016d0d9922
+  - https://github.com/grayhatkiller/SharpExShell
+  - https://learn.microsoft.com/en-us/office/vba/api/excel.xlmsapplication
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_child:
+      - OriginalFileName:
+          - foxprow.exe
+          - schdplus.exe
+          - winproj.exe
+      - Image|endswith:
+          - \foxprow.exe
+          - \schdplus.exe
+          - \winproj.exe
+    selection_parent:
+        ParentImage|endswith: \excel.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.t1021.003
+  - attack.lateral_movement
+  - DEMO

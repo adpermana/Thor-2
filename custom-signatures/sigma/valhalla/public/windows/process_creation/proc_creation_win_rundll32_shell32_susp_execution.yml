@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Shell32 DLL Execution in Suspicious Directory
+id: 32b96012-7892-429e-b26c-ac2bf46066ff
+status: test
+description: Detects shell32.dll executing a DLL in a suspicious directory
+author: Christian Burkard (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/11/24 17:36:01
+references:
+  - https://www.group-ib.com/resources/threat-research/red-curl-2.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains:
+          - '%AppData%'
+          - '%LocalAppData%'
+          - '%Temp%'
+          - '%tmp%'
+          - \AppData\
+          - \Temp\
+          - \Users\Public\
+        CommandLine|contains|all:
+          - shell32.dll
+          - Control_RunDLL
+    selection_img:
+      - Image|endswith: \rundll32.exe
+      - OriginalFileName: RUNDLL32.EXE
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/02/09
+tags:
+  - attack.defense_evasion
+  - attack.execution
+  - attack.t1218.011
+  - DEMO

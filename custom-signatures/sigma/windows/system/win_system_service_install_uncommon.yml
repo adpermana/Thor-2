@@ -1,0 +1,66 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Uncommon Service Installation Image Path
+id: 26481afe-db26-4228-b264-25a29fe6efc7
+related:
+  - type: obsoletes
+    id: ca83e9f3-657a-45d0-88d6-c1ac280caf53
+  - type: derived
+    id: 1d61f71d-59d2-479e-9562-4ff5f4ead16b
+status: test
+description: |
+    Detects uncommon service installation commands by looking at suspicious or uncommon image path values containing references to encoded powershell commands, temporary paths, etc.
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/03/18 16:39:51
+references:
+  - Internal Research
+logsource:
+    product: windows
+    service: system
+detection:
+    condition: selection and ( suspicious_paths or all of suspicious_encoded_* ) and
+        not 1 of filter_main_* and not 1 of filter_optional_*
+    filter_main_defender_def_updates:
+        ImagePath|contains: :\ProgramData\Microsoft\Windows Defender\Definition Updates\
+    filter_optional_thor_remote:
+        ImagePath|startswith: :\WINDOWS\TEMP\thor10-remote\thor64.exe
+    selection:
+        EventID: "7045"
+        Provider_Name: Service Control Manager
+    suspicious_encoded_flag:
+        ImagePath|contains: ' -e'
+    suspicious_encoded_keywords:
+        ImagePath|contains:
+          - ' aQBlAHgA'
+          - ' aWV4I'
+          - ' IAB'
+          - ' JAB'
+          - ' PAA'
+          - ' SQBFAFgA'
+          - ' SUVYI'
+    suspicious_paths:
+        ImagePath|contains:
+          - \\\\.\\pipe
+          - \Users\Public\
+          - \Windows\Temp\
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/12/04
+tags:
+  - attack.persistence
+  - attack.privilege_escalation
+  - car.2013-09-005
+  - attack.t1543.003
+  - DEMO

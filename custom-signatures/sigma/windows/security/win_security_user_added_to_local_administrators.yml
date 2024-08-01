@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: User Added to Local Administrator Group
+id: c265cf08-3f99-46c1-8d59-328247057d57
+status: stable
+description: Detects the addition of a new member to the local administrator group,
+    which could be legitimate activity or a sign of privilege escalation activity
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/03/14 16:10:11
+references:
+  - https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4732
+  - https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-identifiers
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: all of selection_* and not 1 of filter_*
+    filter_main_computer_accounts:
+        SubjectUserName|endswith: $
+    selection_eid:
+        EventID: "4732"
+    selection_group:
+      - TargetUserName|startswith: Administr
+      - TargetSid: S-1-5-32-544
+falsepositives: Legitimate administrative activity
+level: medium
+customer: 'demo'
+modified: 2021/01/17
+tags:
+  - attack.privilege_escalation
+  - attack.t1078
+  - attack.persistence
+  - attack.t1098
+  - DEMO

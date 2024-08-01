@@ -1,0 +1,71 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Group And Account Reconnaissance Activity Using Net.EXE
+id: d95de845-b83c-4a9a-8a6a-4fc802ebf6c0
+status: test
+description: |
+    Detects suspicious reconnaissance command line activity on Windows systems using Net.EXE
+    Check if the user that executed the commands is suspicious (e.g. service accounts, LOCAL_SYSTEM)
+author: Florian Roth (Nextron Systems), omkar72, @svch0st, Nasreddine Bencherchali
+    (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/01/16 23:13:41
+references:
+  - https://redcanary.com/blog/how-one-hospital-thwarted-a-ryuk-ransomware-outbreak/
+  - https://thedfirreport.com/2020/10/18/ryuk-in-5-hours/
+  - https://research.nccgroup.com/2022/08/19/back-in-black-unlocking-a-lockbit-3-0-ransomware-attack/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection_img and ((all of selection_group_* and not filter_group_add)
+        or all of selection_accounts_*)
+    filter_group_add:
+        CommandLine|contains: ' /add'
+    selection_accounts_flags:
+        CommandLine|contains: ' /do'
+    selection_accounts_root:
+        CommandLine|contains: ' accounts '
+    selection_group_flags:
+        CommandLine|contains:
+          - domain admins
+          - ' administrator'
+          - ' administrateur'
+          - enterprise admins
+          - Exchange Trusted Subsystem
+          - Remote Desktop Users
+          - Utilisateurs du Bureau à distance
+          - Usuarios de escritorio remoto
+          - ' /do'
+    selection_group_root:
+        CommandLine|contains:
+          - ' group '
+          - ' localgroup '
+    selection_img:
+      - Image|endswith:
+          - \net.exe
+          - \net1.exe
+      - OriginalFileName:
+          - net.exe
+          - net1.exe
+falsepositives:
+  - Inventory tool runs
+  - Administrative activity
+level: medium
+customer: 'demo'
+modified: 2023/03/02
+tags:
+  - attack.discovery
+  - attack.t1087.001
+  - attack.t1087.002
+  - DEMO

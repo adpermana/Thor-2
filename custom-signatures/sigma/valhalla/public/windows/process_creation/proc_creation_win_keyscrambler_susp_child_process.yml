@@ -1,0 +1,60 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-06-21 19:00
+# Generated for User: demo
+# Number of Rules: 3228
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potentially Suspicious Child Process of KeyScrambler.exe
+id: ca5583e9-8f80-46ac-ab91-7f314d13b984
+related:
+  - type: similar
+    id: d2451be2-b582-4e15-8701-4196ac180260
+status: experimental
+description: Detects potentially suspicious child processes of KeyScrambler.exe
+author: Swachchhanda Shrawan Poudel
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/05/13 21:05:21
+references:
+  - https://twitter.com/DTCERT/status/1712785421845790799
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_binaries:
+      - Image|endswith:
+          - \cmd.exe
+          - \cscript.exe
+          - \mshta.exe
+          - \powershell.exe
+          - \pwsh.exe
+          - \regsvr32.exe
+          - \rundll32.exe
+          - \wscript.exe
+      - OriginalFileName:
+          - Cmd.Exe
+          - cscript.exe
+          - mshta.exe
+          - PowerShell.EXE
+          - pwsh.dll
+          - regsvr32.exe
+          - RUNDLL32.EXE
+          - wscript.exe
+    selection_parent:
+        ParentImage|endswith: \KeyScrambler.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.execution
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - attack.t1203
+  - attack.t1574.002
+  - DEMO

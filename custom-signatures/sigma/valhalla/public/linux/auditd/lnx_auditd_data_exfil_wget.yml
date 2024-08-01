@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Data Exfiltration with Wget
+id: cb39d16b-b3b6-4a7a-8222-1cf24b686ffc
+status: test
+description: |
+    Detects attempts to post the file with the usage of wget utility.
+    The adversary can bypass the permission restriction with the misconfigured sudo permission for wget utility which could allow them to read files like /etc/shadow.
+author: Pawel Mazur
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/11/18 13:13:01
+references:
+  - https://linux.die.net/man/1/wget
+  - https://gtfobins.github.io/gtfobins/wget/
+logsource:
+    product: linux
+    service: auditd
+detection:
+    condition: selection
+    selection:
+        a0: wget
+        a1|startswith: --post-file=
+        type: EXECVE
+falsepositives: Legitimate usage of wget utility to post a file
+level: medium
+customer: 'demo'
+modified: 2022/12/25
+tags:
+  - attack.exfiltration
+  - attack.t1048.003
+  - DEMO

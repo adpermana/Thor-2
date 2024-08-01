@@ -1,0 +1,26 @@
+title: Disable Key Protectors Via WMI
+id: 3b9efea3-b115-4e66-bfdc-6146275fa4aa
+status: test
+description: |
+    Detects calls to the "DisableKeyProtectors" method that's part of the "Win32_EncryptableVolume" class in order to disable or suspends all key protectors associated with a volume. Often used to disable Bitlocker
+references:
+    - https://www.welivesecurity.com/2023/03/01/blacklotus-uefi-bootkit-myth-confirmed/
+    - https://learn.microsoft.com/en-us/windows/win32/secprov/disablekeyprotectors-win32-encryptablevolume
+author: Nasreddine Bencherchali
+date: 2023/03/14
+modified: 2023/03/29
+tags:
+    - attack.defense_evasion
+logsource:
+    product: windows
+    service: wmi
+detection:
+    selection:
+        EventID: 11
+        Operation|contains|all:
+            - 'Win32_EncryptableVolume'
+            - 'DisableKeyProtectors'
+    condition: selection
+falsepositives:
+    - Unknown
+level: high

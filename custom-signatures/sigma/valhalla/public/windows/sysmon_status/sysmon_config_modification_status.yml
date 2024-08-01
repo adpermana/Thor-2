@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Sysmon Configuration Modification
+id: 1f2b5353-573f-4880-8e33-7d04dcf97744
+status: test
+description: Detects when an attacker tries to hide from Sysmon by disabling or stopping
+    it
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/06/04 15:13:11
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.001/T1562.001.md
+  - https://talesfrominfosec.blogspot.com/2017/12/killing-sysmon-silently.html
+logsource:
+    category: sysmon_status
+    product: windows
+detection:
+    condition: 1 of selection_* and not filter
+    filter:
+        State: Started
+    selection_conf: Sysmon config state changed
+    selection_stop:
+        State: Stopped
+falsepositives: Legitimate administrative action
+level: high
+customer: 'demo'
+modified: 2022/08/02
+tags:
+  - attack.defense_evasion
+  - attack.t1564
+  - DEMO

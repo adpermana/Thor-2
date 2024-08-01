@@ -1,0 +1,58 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Silence.EDA Detection
+id: 3ceb2083-a27f-449a-be33-14ec1b7cc973
+status: test
+description: Detects Silence EmpireDNSAgent as described in the Group-IP report
+author: Alina Stepchenkova, Group-IB, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/11/01 11:19:01
+references:
+  - https://www.group-ib.com/resources/threat-research/silence_2.0.going_global.pdf
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: empire and dnscat
+    dnscat:
+        ScriptBlockText|contains|all:
+          - set type=$LookupType`nserver
+          - $Command | nslookup 2>&1 | Out-String
+          - New-RandomDNSField
+          - '[Convert]::ToString($SYNOptions, 16)'
+          - $Session.Dead = $True
+          - $Session["Driver"] -eq
+    empire:
+        ScriptBlockText|contains|all:
+          - System.Diagnostics.Process
+          - Stop-Computer
+          - Restart-Computer
+          - Exception in execution
+          - $cmdargs
+          - Close-Dnscat2Tunnel
+falsepositives: Unknown
+level: critical
+customer: 'demo'
+modified: 2023/04/03
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - attack.command_and_control
+  - attack.t1071.004
+  - attack.t1572
+  - attack.impact
+  - attack.t1529
+  - attack.g0091
+  - attack.s0363
+  - DEMO

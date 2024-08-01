@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential ShellDispatch.DLL Sideloading
+id: 844f8eb2-610b-42c8-89a4-47596e089663
+status: experimental
+description: Detects potential DLL sideloading of "ShellDispatch.dll"
+author: X__Junior (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/06/20 16:19:31
+references:
+  - https://www.hexacorn.com/blog/2023/06/07/this-lolbin-doesnt-exist/
+logsource:
+    category: image_load
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_legit_path:
+      - ImageLoaded|contains|all:
+          - :\Users\
+          - \AppData\Local\Temp\
+      - ImageLoaded|contains: :\Windows\Temp\
+    selection:
+        ImageLoaded|endswith: \ShellDispatch.dll
+falsepositives: Some installers may trigger some false positives
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - attack.t1574.001
+  - attack.t1574.002
+  - DEMO

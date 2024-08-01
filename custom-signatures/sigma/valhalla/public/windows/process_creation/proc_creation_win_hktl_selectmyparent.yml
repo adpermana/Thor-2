@@ -1,0 +1,68 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - PPID Spoofing SelectMyParent Tool Execution
+id: 52ff7941-8211-46f9-84f8-9903efb7077d
+status: test
+description: Detects the use of parent process ID spoofing tools like Didier Stevens
+    tool SelectMyParent
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/23 19:45:01
+references:
+  - https://pentestlab.blog/2020/02/24/parent-pid-spoofing/
+  - https://www.picussecurity.com/resource/blog/how-to-detect-parent-pid-ppid-spoofing-attacks
+  - https://www.ired.team/offensive-security/defense-evasion/parent-process-id-ppid-spoofing
+  - https://www.virustotal.com/gui/search/filename%253A*spoof*%2520filename%253A*ppid*/files
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - Image|endswith: \SelectMyParent.exe
+      - CommandLine|contains:
+          - PPID-spoof
+          - ppid_spoof
+          - spoof-ppid
+          - spoof_ppid
+          - ppidspoof
+          - spoofppid
+          - spoofedppid
+          - ' -spawnto '
+      - OriginalFileName|contains:
+          - PPID-spoof
+          - ppid_spoof
+          - spoof-ppid
+          - spoof_ppid
+          - ppidspoof
+          - spoofppid
+          - spoofedppid
+      - Description: SelectMyParent
+      - Imphash:
+          - 04d974875bd225f00902b4cad9af3fbc
+          - a782af154c9e743ddf3f3eb2b8f3d16e
+          - 89059503d7fbf470e68f7e63313da3ad
+          - ca28337632625c8281ab8a130b3d6bad
+      - Hashes|contains:
+          - IMPHASH=04D974875BD225F00902B4CAD9AF3FBC
+          - IMPHASH=A782AF154C9E743DDF3F3EB2B8F3D16E
+          - IMPHASH=89059503D7FBF470E68F7E63313DA3AD
+          - IMPHASH=CA28337632625C8281AB8A130B3D6BAD
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/03/07
+tags:
+  - attack.defense_evasion
+  - attack.t1134.004
+  - DEMO

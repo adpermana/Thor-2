@@ -1,0 +1,104 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Persistence Via COM Search Order Hijacking
+id: a0ff33d8-79e4-4cef-b4f3-9dc4133ccd12
+status: experimental
+description: Detects potential COM object hijacking leveraging the COM Search Order
+author: Maxime Thiebaut (@0xThiebaut), oscd.community, Cédric Hien
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/04/14 19:22:21
+references:
+  - https://www.cyberbit.com/blog/endpoint-security/com-hijacking-windows-overlooked-security-vulnerability/
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_bonjourlib:
+        Details|endswith:
+          - :\Windows\system32\dnssdX.dll
+          - :\Windows\SysWOW64\dnssdX.dll
+    filter_main_defender:
+        Image|contains:
+          - :\ProgramData\Microsoft\Windows Defender\Platform\
+          - :\Program Files\Windows Defender\
+        Image|endswith: \MsMpEng.exe
+    filter_main_dropbox:
+        Details|contains|all:
+          - \AppData\Roaming\Dropbox\
+          - \DropboxExt64.*.dll
+    filter_main_dx:
+        Image|endswith: :\WINDOWS\SYSTEM32\dxdiag.exe
+    filter_main_edge:
+        Image|endswith: \MicrosoftEdgeUpdateComRegisterShell64.exe
+    filter_main_gameservice:
+        Details|contains: :\WINDOWS\system32\GamingServicesProxy.dll
+    filter_main_generic:
+        Details|contains:
+          - '%%systemroot%%\system32\'
+          - '%%systemroot%%\SysWow64\'
+    filter_main_health_service:
+        Image|endswith: :\WINDOWS\system32\SecurityHealthService.exe
+    filter_main_inprocserver:
+        Image|endswith:
+          - :\Windows\System32\poqexec.exe
+          - :\Windows\System32\regsvr32.exe
+        TargetObject|endswith: \InProcServer32\(Default)
+    filter_main_nvidia:
+        Details|contains: \FileRepository\nvmdi.inf
+    filter_main_onedrive:
+        Details|contains:
+          - \AppData\Local\Microsoft\OneDrive\
+          - \FileCoAuthLib64.dll
+          - \FileSyncShell64.dll
+          - \FileSyncApi64.dll
+    filter_main_poqexec:
+        Details|contains: :\Windows\System32\Autopilot.dll
+        Image|endswith: :\Windows\System32\poqexec.exe
+    filter_main_printextensionmanager:
+        Details|endswith: :\Windows\system32\spool\drivers\x64\3\PrintConfig.dll
+    filter_main_programdata:
+        Details|contains: :\ProgramData\Microsoft\
+    filter_main_programfiles:
+        Details|contains:
+          - :\Program Files\
+          - :\Program Files (x86)\
+    filter_main_python:
+        Details|endswith:
+          - :\Windows\pyshellext.amd64.dll
+          - :\Windows\pyshellext.dll
+    filter_main_sec_health_svc:
+        Details|contains: :\Windows\System32\SecurityHealth
+        Image|endswith: :\Windows\system32\SecurityHealthService.exe
+    filter_main_teams:
+        Details|contains|all:
+          - \AppData\Local\Microsoft\TeamsMeetingAddin\
+          - \Microsoft.Teams.AddinLoader.dll
+    filter_main_trend_micro:
+        Details|endswith: TmopIEPlg.dll
+    filter_main_update:
+        Image|endswith:
+          - :\WINDOWS\system32\wuauclt.exe
+          - :\WINDOWS\system32\svchost.exe
+    selection:
+        TargetObject|contains: \CLSID\
+        TargetObject|endswith: \InprocServer32\(Default)
+falsepositives: Some installed utilities (i.e. OneDrive) may serve new COM objects
+    at user-level
+level: medium
+customer: 'demo'
+modified: 2023/09/28
+tags:
+  - attack.persistence
+  - attack.t1546.015
+  - DEMO

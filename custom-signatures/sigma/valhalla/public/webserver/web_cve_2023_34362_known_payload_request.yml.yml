@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: MOVEit CVE-2023-34362 Exploitation Attempt - Potential Web Shell Request
+id: 435e41f2-48eb-4c95-8a2b-ed24b50ec30b
+status: experimental
+description: Detects get requests to specific files used during the exploitation of
+    MOVEit CVE-2023-34362
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/06/03 22:56:01
+references:
+  - https://community.progress.com/s/article/MOVEit-Transfer-Critical-Vulnerability-31May2023
+  - https://www.mandiant.com/resources/blog/zero-day-moveit-data-theft
+logsource:
+    category: webserver
+detection:
+    condition: selection
+    selection:
+        cs-method: GET
+        cs-uri-stem|contains:
+          - /human2.aspx
+          - /_human2.aspx
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/07/28
+tags:
+  - cve.2023.34362
+  - detection.emerging_threats
+  - attack.persistence
+  - attack.t1505.003
+  - DEMO

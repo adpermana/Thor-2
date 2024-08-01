@@ -1,0 +1,51 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Reconnaissance Activity
+id: 968eef52-9cff-4454-8992-1e74b9cbad6c
+status: test
+description: Detects activity as "net user administrator /domain" and "net group domain
+    admins /domain"
+author: Florian Roth (Nextron Systems), Jack Croock (method), Jonhnathan Ribeiro (improvements),
+    oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/03/07 12:28:11
+references:
+  - https://findingbad.blogspot.de/2017/01/hunting-what-does-it-look-like.html
+logsource:
+    product: windows
+    service: security
+    definition: The volume of Event ID 4661 is high on Domain Controllers and therefore
+        "Audit SAM" and "Audit Kernel Object" advanced audit policy settings are not
+        configured in the recommendations for server systems
+detection:
+    condition: selection
+    selection:
+        AccessMask: "0x2d"
+        EventID: "4661"
+        ObjectName|endswith:
+          - "-500"
+          - "-512"
+        ObjectName|startswith: S-1-5-21-
+        ObjectType:
+          - SAM_USER
+          - SAM_GROUP
+falsepositives: Administrator activity
+level: high
+customer: 'demo'
+modified: 2022/08/22
+tags:
+  - attack.discovery
+  - attack.t1087.002
+  - attack.t1069.002
+  - attack.s0039
+  - DEMO

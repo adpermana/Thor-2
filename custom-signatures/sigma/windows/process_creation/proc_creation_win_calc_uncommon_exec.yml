@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Calculator Usage
+id: 737e618a-a410-49b5-bec3-9e55ff7fbc15
+status: test
+description: |
+    Detects suspicious use of 'calc.exe' with command line parameters or in a suspicious directory, which is likely caused by some PoC or detection evasion.
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/02/09 13:26:21
+references:
+  - https://twitter.com/ItsReallyNick/status/1094080242686312448
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection_1 or ( selection_2 and not filter_main_known_locations )
+    filter_main_known_locations:
+        Image|contains:
+          - :\Windows\System32\
+          - :\Windows\SysWOW64\
+          - :\Windows\WinSxS\
+    selection_1:
+        CommandLine|contains: '\calc.exe '
+    selection_2:
+        Image|endswith: \calc.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/11/09
+tags:
+  - attack.defense_evasion
+  - attack.t1036
+  - DEMO

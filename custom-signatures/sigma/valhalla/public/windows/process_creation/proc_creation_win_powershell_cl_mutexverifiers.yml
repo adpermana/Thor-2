@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Script Proxy Execution Via CL_Mutexverifiers.ps1
+id: 1e0e1a81-e79b-44bc-935b-ddb9c8006b3d
+status: experimental
+description: Detects the use of the Microsoft signed script "CL_mutexverifiers" to
+    proxy the execution of additional PowerShell script commands
+author: Nasreddine Bencherchali (Nextron Systems), oscd.community, Natalia Shornikova,
+    frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/05/21 21:30:11
+references:
+  - https://lolbas-project.github.io/lolbas/Scripts/CL_mutexverifiers/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_pwsh:
+        CommandLine|contains: ' -nologo -windowstyle minimized -file '
+        Image|endswith: \powershell.exe
+        ParentImage|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+    selection_temp:
+        CommandLine|contains:
+          - \AppData\Local\Temp\
+          - \Windows\Temp\
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.defense_evasion
+  - attack.t1216
+  - DEMO

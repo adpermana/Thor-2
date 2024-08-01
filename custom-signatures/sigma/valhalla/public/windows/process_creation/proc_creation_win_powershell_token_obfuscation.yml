@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Powershell Token Obfuscation - Process Creation
+id: deb9b646-a508-44ee-b7c9-d8965921c6b6
+related:
+  - type: similar
+    id: f3a98ce4-6164-4dd4-867c-4d83de7eca51
+status: test
+description: Detects TOKEN OBFUSCATION technique from Invoke-Obfuscation
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/12/27 18:27:21
+references:
+  - https://github.com/danielbohannon/Invoke-Obfuscation
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - CommandLine|re: \w+`(\w+|-|.)`[\w+|\s]
+      - CommandLine|re: '"(\{\d\})+"\s*-f'
+      - CommandLine|re: \$\{((e|n|v)*`(e|n|v)*)+:path\}|\$\{((e|n|v)*`(e|n|v)*)+:((p|a|t|h)*`(p|a|t|h)*)+\}|\$\{env:((p|a|t|h)*`(p|a|t|h)*)+\}
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/12/30
+tags:
+  - attack.defense_evasion
+  - attack.t1027.009
+  - DEMO

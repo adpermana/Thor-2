@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PwnDrp Access
+id: 2b1ee7e4-89b6-4739-b7bb-b811b6607e5e
+status: test
+description: Detects downloads from PwnDrp web servers developed for red team testing
+    and most likely also used for criminal activity
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/04/15 09:24:51
+references:
+  - https://breakdev.org/pwndrop/
+logsource:
+    category: proxy
+detection:
+    condition: selection
+    selection:
+        c-uri|contains: /pwndrop/
+fields:
+  - ClientIP
+  - c-uri
+  - c-useragent
+falsepositives: Unknown
+level: critical
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.command_and_control
+  - attack.t1071.001
+  - attack.t1102.001
+  - attack.t1102.003
+  - DEMO

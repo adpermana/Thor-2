@@ -1,0 +1,27 @@
+title: C2 - ReverseTCPShell Payload - Module Logging
+id: a0a8387a-3e39-4673-ae34-fe0f27cca454
+status: test
+description: Detects PowerShell payload used by ReverseTCPShell C2 via PowerShell module logging
+references:
+    - https://github.com/ZHacker13/ReverseTCPShell
+author: Nasreddine Bencherchali (Nextron Systems)
+date: 2023/04/03
+tags:
+    - attack.execution
+    - attack.t1059.001
+logsource:
+    product: windows
+    category: ps_module
+    definition: 0ad03ef1-f21b-4a79-8ce8-e6900c54b65b
+detection:
+    selection:
+        Payload|contains|all:
+            - '::CreateInstance'
+            - 'FromBase64String'
+            - 'SecureStringToBSTR'
+            - '))));While('
+            - '::PtrToStringAuto('
+    condition: selection
+falsepositives:
+    - Unlikely
+level: high

@@ -1,0 +1,76 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Program Location Whitelisted In Firewall Via Netsh.EXE
+id: a35f5a72-f347-4e36-8895-9869b0d5fc6d
+status: test
+description: Detects Netsh command execution that whitelists a program located in
+    a suspicious location in the Windows Firewall
+author: Sander Wiebing, Jonhnathan Ribeiro, Daniil Yugoslavskiy, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/05/25 22:55:31
+references:
+  - https://www.virusradar.com/en/Win32_Kasidet.AD/description
+  - https://www.hybrid-analysis.com/sample/07e789f4f2f3259e7559fdccb36e96814c2dbff872a21e1fa03de9ee377d581f?environmentId=100
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+      - CommandLine|contains|all:
+          - firewall
+          - add
+          - allowedprogram
+      - CommandLine|contains|all:
+          - advfirewall
+          - firewall
+          - add
+          - rule
+          - action=allow
+          - program=
+    selection_img:
+      - Image|endswith: \netsh.exe
+      - OriginalFileName: netsh.exe
+    selection_paths:
+        CommandLine|contains:
+          - :\$Recycle.bin\
+          - :\RECYCLER.BIN\
+          - :\RECYCLERS.BIN\
+          - :\SystemVolumeInformation\
+          - :\Temp\
+          - :\Users\Default\
+          - :\Users\Desktop\
+          - :\Users\Public\
+          - :\Windows\addins\
+          - :\Windows\cursors\
+          - :\Windows\debug\
+          - :\Windows\drivers\
+          - :\Windows\fonts\
+          - :\Windows\help\
+          - :\Windows\system32\tasks\
+          - :\Windows\Tasks\
+          - :\Windows\Temp\
+          - \Downloads\
+          - \Local Settings\Temporary Internet Files\
+          - \Temporary Internet Files\Content.Outlook\
+          - '%Public%\'
+          - '%TEMP%'
+          - '%TMP%'
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/12/11
+tags:
+  - attack.defense_evasion
+  - attack.t1562.004
+  - DEMO

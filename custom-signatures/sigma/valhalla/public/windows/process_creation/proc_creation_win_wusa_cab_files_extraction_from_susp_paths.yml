@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Wusa.EXE Extracting Cab Files From Suspicious Paths
+id: c74c0390-3e20-41fd-a69a-128f0275a5ea
+status: test
+description: Detects usage of the "wusa.exe" (Windows Update Standalone Installer)
+    utility to extract cab using the "/extract" argument from suspicious paths
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/05 19:00:51
+references:
+  - https://web.archive.org/web/20180331144337/https://www.fireeye.com/blog/threat-research/2018/03/sanny-malware-delivery-method-updated-in-recently-observed-attacks.html
+  - https://www.echotrail.io/insights/search/wusa.exe/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_paths:
+        CommandLine|contains:
+          - :\PerfLogs\
+          - :\Users\Public\
+          - :\Windows\Temp\
+          - \Appdata\Local\Temp\
+    selection_root:
+        CommandLine|contains: '/extract:'
+        Image|endswith: \wusa.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/11/28
+tags:
+  - attack.execution
+  - DEMO

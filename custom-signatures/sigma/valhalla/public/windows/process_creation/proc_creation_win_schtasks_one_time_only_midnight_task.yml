@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Uncommon One Time Only Scheduled Task At 00:00
+id: 970823b7-273b-460a-8afc-3a6811998529
+status: test
+description: Detects scheduled task creation events that include suspicious actions,
+    and is run once at 00:00
+author: pH-T (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/15 16:53:41
+references:
+  - https://www.trendmicro.com/vinfo/us/security/news/ransomware-spotlight/ransomware-spotlight-blackbyte
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains:
+          - wscript
+          - vbscript
+          - cscript
+          - 'wmic '
+          - wmic.exe
+          - regsvr32.exe
+          - powershell
+          - \AppData\
+    selection_img:
+      - Image|contains: \schtasks.exe
+      - OriginalFileName: schtasks.exe
+    selection_time:
+        CommandLine|contains|all:
+          - once
+          - "00:00"
+falsepositives: Software installation
+level: high
+customer: 'demo'
+modified: 2023/02/03
+tags:
+  - attack.execution
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1053.005
+  - DEMO

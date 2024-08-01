@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Remote Thread Creation In Mstsc.Exe From Suspicious Location
+id: c0aac16a-b1e7-4330-bab0-3c27bb4987c7
+status: experimental
+description: |
+    Detects remote thread creation in the "mstsc.exe" process by a process located in a potentially suspicious location.
+    This technique is often used by attackers in order to hook some APIs used by DLLs loaded by "mstsc.exe" during RDP authentications in order to steal credentials.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/07/28 21:35:41
+references:
+  - https://github.com/S12cybersecurity/RDPCredentialStealer/blob/1b8947cdd065a06c1b62e80967d3c7af895fcfed/APIHookInjectorBin/APIHookInjectorBin/Inject.h#L25
+logsource:
+    category: create_remote_thread
+    product: windows
+detection:
+    condition: selection
+    selection:
+        SourceImage|contains:
+          - :\Temp\
+          - :\Users\Public\
+          - :\Windows\PerfLogs\
+          - :\Windows\Tasks\
+          - :\Windows\Temp\
+          - \AppData\Local\Temp\
+        TargetImage|endswith: \mstsc.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2024/01/22
+tags:
+  - attack.credential_access
+  - DEMO

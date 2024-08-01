@@ -1,0 +1,58 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Remote Access Tool - ScreenConnect Potential Suspicious Remote Command Execution
+id: 7b582f1a-b318-4c6a-bf4e-66fe49bf55a5
+related:
+  - type: derived
+    id: d1a401ab-8c47-4e86-a7d8-2460b6a53e4a
+status: test
+description: |
+    Detects potentially suspicious child processes launched via the ScreenConnect client service.
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems),
+    @Kostastsale
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/02/25 03:02:51
+references:
+  - https://www.mandiant.com/resources/telegram-malware-iranian-espionage
+  - https://docs.connectwise.com/ConnectWise_Control_Documentation/Get_started/Host_client/View_menu/Backstage_mode
+  - https://www.huntress.com/blog/slashandgrab-screen-connect-post-exploitation-in-the-wild-cve-2024-1709-cve-2024-1708
+  - https://www.trendmicro.com/en_us/research/24/b/threat-actor-groups-including-black-basta-are-exploiting-recent-.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith:
+          - \bitsadmin.exe
+          - \cmd.exe
+          - \curl.exe
+          - \dllhost.exe
+          - \net.exe
+          - \nltest.exe
+          - \powershell.exe
+          - \pwsh.exe
+          - \rundll32.exe
+          - \wevtutil.exe
+        ParentCommandLine|contains|all:
+          - :\Windows\TEMP\ScreenConnect\
+          - run.cmd
+falsepositives: If the script being executed make use of any of the utilities mentioned
+    in the detection then they should filtered out or allowed.
+level: medium
+customer: 'demo'
+modified: 2024/02/28
+tags:
+  - attack.command_and_control
+  - attack.t1219
+  - DEMO

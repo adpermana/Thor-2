@@ -1,0 +1,30 @@
+title: Malicious Content Detected Via AMSI
+id: 7828bd4a-5d38-4264-ad47-a00bc6d906d0
+status: experimental
+description: Detects malicious content via the Antimalware-Scan-Interface (AMSI)
+references:
+    - Internal Research
+author: Nasreddine Bencherchali (Nextron Systems)
+date: 2023/03/28
+tags:
+    - attack.execution
+    - attack.defense_evasion
+logsource:
+    product: windows
+    service: amsi
+detection:
+    selection:
+        - ScanResult:
+            - 32768 # 0x8000 / AMSI_RESULT_DETECTED
+            - 16384 # 0x4000 / AMSI_RESULT_BLOCKED_BY_ADMIN_BEGIN
+        - ScanResult|startswith:
+            # Since the range of "AMSI_RESULT_BLOCKED_BY_ADMIN_END" can be anything between 0x4000-0x4FFF
+            - 16
+            - 17
+            - 18
+            - 19
+            - 20
+    condition: selection
+falsepositives:
+    - Unlikely
+level: high

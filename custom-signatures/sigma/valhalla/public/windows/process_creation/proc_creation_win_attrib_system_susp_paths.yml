@@ -1,0 +1,66 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Set Suspicious Files as System Files Using Attrib.EXE
+id: efec536f-72e8-4656-8960-5e85d091345b
+related:
+  - type: derived
+    id: bb19e94c-59ae-4c15-8c12-c563d23fe52b
+status: test
+description: |
+    Detects the usage of attrib with the "+s" option to set scripts or executables located in suspicious locations as system files to hide them from users and make them unable to be deleted with simple rights. The rule limits the search to specific extensions and directories to avoid FPs
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/28 19:30:21
+references:
+  - https://app.any.run/tasks/c28cabc8-a19f-40f3-a78b-cae506a5c0d4
+  - https://app.any.run/tasks/cfc8870b-ccd7-4210-88cf-a8087476a6d0
+  - https://unit42.paloaltonetworks.com/unit42-sure-ill-take-new-combojack-malware-alters-clipboards-steal-cryptocurrency/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection* and not filter
+    filter:
+        CommandLine|contains|all:
+          - \Windows\TEMP\
+          - .exe
+    selection_cli:
+        CommandLine|contains: ' +s'
+    selection_ext:
+        CommandLine|contains:
+          - .bat
+          - .dll
+          - .exe
+          - .hta
+          - .ps1
+          - .vbe
+          - .vbs
+    selection_img:
+      - Image|endswith: \attrib.exe
+      - OriginalFileName: ATTRIB.EXE
+    selection_paths:
+        CommandLine|contains:
+          - ' %'
+          - \Users\Public\
+          - \AppData\Local\
+          - \ProgramData\
+          - \Downloads\
+          - \Windows\Temp\
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/03/14
+tags:
+  - attack.defense_evasion
+  - attack.t1564.001
+  - DEMO

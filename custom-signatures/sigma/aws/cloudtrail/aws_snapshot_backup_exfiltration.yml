@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: AWS Snapshot Backup Exfiltration
+id: abae8fec-57bd-4f87-aff6-6e3db989843d
+status: test
+description: Detects the modification of an EC2 snapshot's permissions to enable access
+    from another account
+author: Darin Smith
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/05/17 14:28:21
+references:
+  - https://www.justice.gov/file/1080281/download
+logsource:
+    product: aws
+    service: cloudtrail
+detection:
+    condition: selection_source
+    selection_source:
+        eventName: ModifySnapshotAttribute
+        eventSource: ec2.amazonaws.com
+falsepositives: Valid change to a snapshot's permissions
+level: medium
+customer: 'demo'
+modified: 2021/08/19
+tags:
+  - attack.exfiltration
+  - attack.t1537
+  - DEMO

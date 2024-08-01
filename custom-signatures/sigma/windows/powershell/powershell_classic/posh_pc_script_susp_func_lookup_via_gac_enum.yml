@@ -1,0 +1,24 @@
+title: Suspicious Function Lookup Via GAC - Classic Logging
+id: 25b85d83-c1e1-4c45-90a2-82480654ee63
+status: test
+description: Detects suspicious function lookup via GlobalAssemblyCache (GAC) enumeration
+references:
+    - https://learn.microsoft.com/en-gb/dotnet/api/system.reflection.assembly.gettype?view=net-7.0
+author: Nasreddine Bencherchali (Nextron Systems)
+date: 2023/04/03
+tags:
+    - attack.defense_evasion
+logsource:
+    product: windows
+    category: ps_classic_script
+detection:
+    selection:
+        Data|contains|all:
+            - 'CurrentDomain.GetAssemblies()'
+            - '$_.GlobalAssemblyCache'
+            - 'GetType('
+            - '.Equals'
+    condition: selection
+falsepositives:
+    - Unknown
+level: medium

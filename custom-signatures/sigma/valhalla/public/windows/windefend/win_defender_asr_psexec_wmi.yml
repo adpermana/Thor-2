@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PSExec and WMI Process Creations Block
+id: 97b9ce1e-c5ab-11ea-87d0-0242ac130003
+status: test
+description: Detects blocking of process creations originating from PSExec and WMI
+    commands
+author: Bhabesh Raj
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/07/14 15:29:41
+references:
+  - https://docs.microsoft.com/en-us/windows/security/threat-protection/microsoft-defender-atp/attack-surface-reduction?WT.mc_id=twitter#block-process-creations-originating-from-psexec-and-wmi-commands
+  - https://twitter.com/duff22b/status/1280166329660497920
+logsource:
+    product: windows
+    service: windefend
+    definition: 'Requirements:Enabled Block process creations originating from PSExec
+        and WMI commands from Attack Surface Reduction (GUID: d1e49aac-8f56-4280-b9ba-993a6d77406c)'
+detection:
+    condition: selection
+    selection:
+        EventID: "1121"
+        ProcessName|endswith:
+          - \wmiprvse.exe
+          - \psexesvc.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/12/25
+tags:
+  - attack.execution
+  - attack.lateral_movement
+  - attack.t1047
+  - attack.t1569.002
+  - DEMO

@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: New Remote Desktop Connection Initiated Via Mstsc.EXE
+id: 954f0af7-62dd-418f-b3df-a84bc2c7a774
+status: test
+description: |
+    Detects the usage of "mstsc.exe" with the "/v" flag to initiate a connection to a remote server.
+    Adversaries may use valid accounts to log into a computer using the Remote Desktop Protocol (RDP). The adversary may then perform actions as the logged-on user.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/07 19:34:11
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1021.001/T1021.001.md#t1021001---remote-desktop-protocol
+  - https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/mstsc
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_* and not 1 of filter_optional_*
+    filter_optional_wsl:
+        CommandLine|contains: C:\ProgramData\Microsoft\WSL\wslg.rdp
+        ParentImage: C:\Windows\System32\lxss\wslhost.exe
+    selection_cli:
+        CommandLine|contains: ' /v:'
+    selection_img:
+      - Image|endswith: \mstsc.exe
+      - OriginalFileName: mstsc.exe
+falsepositives: WSL (Windows Sub System For Linux)
+level: medium
+customer: 'demo'
+modified: 2023/02/03
+tags:
+  - attack.lateral_movement
+  - attack.t1021.001
+  - DEMO

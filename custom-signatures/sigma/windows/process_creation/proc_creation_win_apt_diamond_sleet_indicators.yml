@@ -1,0 +1,36 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Diamond Sleet APT Process Activity Indicators
+id: b5495d8d-24ad-4a44-8caf-ceae9a07a5c2
+status: experimental
+description: Detects process creation activity indicators related to Diamond Sleet
+    APT
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/10/24 17:43:01
+references:
+  - https://www.microsoft.com/en-us/security/blog/2023/10/18/multiple-north-korean-threat-actors-exploiting-the-teamcity-cve-2023-42793-vulnerability/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains: ' uTYNkfKxHiZrx3KJ'
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+tags:
+  - attack.execution
+  - detection.emerging_threats
+  - DEMO

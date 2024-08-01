@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Digital Signature Of AppX Package
+id: b5aa7d60-c17e-4538-97de-09029d6cd76b
+status: test
+description: Detects execution of AppX packages with known suspicious or malicious
+    signature
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/16 17:28:11
+references:
+  - Internal Research
+  - https://www.sentinelone.com/labs/inside-malicious-windows-apps-for-malware-deployment/
+logsource:
+    product: windows
+    service: appxpackaging-om
+detection:
+    condition: selection
+    selection:
+        EventID: "157"
+        subjectName: CN=Foresee Consulting Inc., O=Foresee Consulting Inc., L=North
+            York, S=Ontario, C=CA, SERIALNUMBER=1004913-1, OID.1.3.6.1.4.1.311.60.2.1.3=CA,
+            OID.2.5.4.15=Private Organization
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.execution
+  - DEMO

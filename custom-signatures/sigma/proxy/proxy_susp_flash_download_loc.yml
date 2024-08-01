@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Flash Player Update from Suspicious Location
+id: 4922a5dd-6743-4fc2-8e81-144374280997
+status: test
+description: Detects a flashplayer update from an unofficial location
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/10/25 17:44:21
+references:
+  - https://gist.github.com/roycewilliams/a723aaf8a6ac3ba4f817847610935cfb
+logsource:
+    category: proxy
+detection:
+    condition: selection and not filter
+    filter:
+        cs-host|endswith: .adobe.com
+    selection:
+      - c-uri|contains: /flash_install.php
+      - c-uri|endswith: /install_flash_player.exe
+falsepositives: Unknown flash download locations
+level: high
+customer: 'demo'
+modified: 2022/08/08
+tags:
+  - attack.initial_access
+  - attack.t1189
+  - attack.execution
+  - attack.t1204.002
+  - attack.defense_evasion
+  - attack.t1036.005
+  - DEMO

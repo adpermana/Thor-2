@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Service Installed By Unusual Client - System
+id: 71c276aa-49cd-43d2-b920-2dcd3e6962d5
+related:
+  - type: similar
+    id: c4e92a97-a9ff-4392-9d2d-7a4c642768ca
+status: test
+description: Detects a service installed by a client which has PID 0 or whose parent
+    has PID 0
+author: Tim Rauch (Nextron Systems), Elastic (idea)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/15 17:19:01
+references:
+  - https://www.elastic.co/guide/en/security/current/windows-service-installed-via-an-unusual-client.html
+logsource:
+    product: windows
+    service: system
+detection:
+    condition: selection
+    selection:
+        EventID: "7045"
+        ProcessId: "0"
+        Provider_Name: Service Control Manager
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/01/04
+tags:
+  - attack.privilege_escalation
+  - attack.t1543
+  - DEMO

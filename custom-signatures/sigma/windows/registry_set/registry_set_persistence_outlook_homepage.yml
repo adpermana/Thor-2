@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Persistence Via Outlook Home Page
+id: ddd171b5-2cc6-4975-9e78-f0eccd08cc76
+status: experimental
+description: Detects potential persistence activity via outlook home pages.
+author: Tobias Michalski (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/06/09 17:18:41
+references:
+  - https://speakerdeck.com/heirhabarov/hunting-for-persistence-via-microsoft-exchange-server-or-outlook?slide=70
+  - https://support.microsoft.com/en-us/topic/outlook-home-page-feature-is-missing-in-folder-properties-d207edb7-aa02-46c5-b608-5d9dbed9bd04?ui=en-us&rs=en-us&ad=us
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_1:
+        TargetObject|contains:
+          - \Software\Microsoft\Office\
+          - \Outlook\WebView\
+        TargetObject|endswith: \URL
+    selection_2:
+        TargetObject|contains:
+          - \Calendar\
+          - \Inbox\
+fields:
+  - Details
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.persistence
+  - attack.t1112
+  - DEMO

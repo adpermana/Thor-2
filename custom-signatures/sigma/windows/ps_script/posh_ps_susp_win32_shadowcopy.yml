@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Delete Volume Shadow Copies via WMI with PowerShell - PS Script
+id: e17121b4-ef2a-4418-8a59-12fb1631fa9e
+status: test
+description: Deletes Windows Volume Shadow Copies with PowerShell code and Get-WMIObject.
+    This technique is used by numerous ransomware families such as Sodinokibi/REvil
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/12/26 21:39:51
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1490/T1490.md#atomic-test-5---windows---delete-volume-shadow-copies-via-wmi-with-powershell
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: selection
+    selection:
+        ScriptBlockText|contains|all:
+          - Get-WmiObject
+          - Win32_Shadowcopy
+          - .Delete()
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/12/02
+tags:
+  - attack.impact
+  - attack.t1490
+  - DEMO

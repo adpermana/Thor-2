@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: FlowCloud Malware
+id: 5118765f-6657-4ddb-a487-d7bd673abbf1
+status: test
+description: Detects FlowCloud malware from threat group TA410.
+author: NVISO
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/06/09 10:36:01
+references:
+  - https://www.proofpoint.com/us/blog/threat-insight/ta410-group-behind-lookback-attacks-against-us-utilities-sector-returns-new
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - TargetObject:
+          - HKLM\HARDWARE\{804423C2-F490-4ac3-BFA5-13DEDE63A71A}
+          - HKLM\HARDWARE\{A5124AF5-DF23-49bf-B0ED-A18ED3DEA027}
+          - HKLM\HARDWARE\{2DB80286-1784-48b5-A751-B6ED1F490303}
+      - TargetObject|startswith: HKLM\SYSTEM\Setup\PrintResponsor\
+falsepositives: Unknown
+level: critical
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.persistence
+  - attack.t1112
+  - DEMO

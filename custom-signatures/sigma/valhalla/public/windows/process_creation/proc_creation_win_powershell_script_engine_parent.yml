@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious PowerShell Invocation From Script Engines
+id: 95eadcb2-92e4-4ed1-9031-92547773a6db
+status: test
+description: Detects suspicious powershell invocations from interpreters or unusual
+    programs
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/01/16 20:04:01
+references:
+  - https://www.securitynewspaper.com/2017/03/20/attackers-leverage-excel-powershell-dns-latest-non-malware-attack/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_*
+    filter_health_service:
+        CurrentDirectory|contains: \Health Service State\
+    selection:
+        Image|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+        ParentImage|endswith:
+          - \wscript.exe
+          - \cscript.exe
+falsepositives:
+  - Microsoft Operations Manager (MOM)
+  - Other scripts
+level: medium
+customer: 'demo'
+modified: 2023/01/05
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

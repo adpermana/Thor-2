@@ -1,0 +1,37 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: TropicTrooper Campaign November 2018
+id: 8c7090c3-e0a0-4944-bd08-08c3a0cecf79
+status: stable
+description: Detects TropicTrooper activity, an actor who targeted high-profile organizations
+    in the energy and food and beverage sectors in Asia
+author: '@41thexplorer, Microsoft Defender ATP'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/11/12 15:10:11
+references:
+  - https://www.microsoft.com/en-us/security/blog/2018/11/28/windows-defender-atp-device-risk-score-exposes-new-cyberattack-drives-conditional-access-to-protect-networks/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains: abCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCc
+level: high
+customer: 'demo'
+modified: 2020/08/27
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - detection.emerging_threats
+  - DEMO

@@ -1,0 +1,44 @@
+title: EarthWorm Tool Usage
+id: 22cd9132-87da-437b-8b05-8454216aadb0
+status: experimental
+description: Detects usage of EarthWorm tool to create tunnels and transfer data
+references:
+    - https://securelist.com/operation-tunnelsnake-and-moriya-rootkit/101831/
+    - https://securelist.com/luckymouse-ndisproxy-driver/87914/
+    - https://github.com/rootkiter/Binary-files/tree/47e02bad8d5d187aa064cb81295b908fb6ff3050/EarthWorm/release
+    - https://rootkiter.com/EarthWorm/en/index.html
+    - https://www.crowdstrike.com/blog/overwatch-insights-reviewing-a-new-intrusion-targeting-mac-systems/
+author: Nasreddine Bencherchali
+date: 2022/05/06
+modified: 2022/11/04
+tags:
+    - attack.command_and_control
+    - attack.t1095
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith:
+            - '\ew_win32.exe'
+            - '\ew_for_win_32.exe'
+    selection_cli_sock_type:
+        CommandLine|contains:
+            - ' -s rcsocks '
+            - ' -s ssocksd '
+            - ' -s rssocks '
+            - ' -s lcx_listen '
+            - ' -s lcx_tran '
+            - ' -s lcx_slave '
+    selection_cli_options:
+        CommandLine|contains:
+            - ' -l '
+            - ' -d '
+            - ' -e '
+            - '--listenport'
+            - '--refhost'
+            - '--refport'
+    condition: selection_img or all of selection_cli_*
+falsepositives:
+    - Unknown
+level: high

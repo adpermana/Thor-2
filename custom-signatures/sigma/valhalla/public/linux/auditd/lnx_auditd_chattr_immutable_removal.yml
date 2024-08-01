@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Remove Immutable File Attribute - Auditd
+id: a5b977d6-8a81-4475-91b9-49dbfcd941f7
+status: test
+description: Detects removing immutable file attribute.
+author: Jakob Weinzettl, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/09/23 16:15:01
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1222.002/T1222.002.md
+logsource:
+    product: linux
+    service: auditd
+detection:
+    condition: selection
+    selection:
+        a0|contains: chattr
+        a1|contains: -i
+        type: EXECVE
+falsepositives: Administrator interacting with immutable files (e.g. for instance
+    backups).
+level: medium
+customer: 'demo'
+modified: 2022/11/26
+tags:
+  - attack.defense_evasion
+  - attack.t1222.002
+  - DEMO

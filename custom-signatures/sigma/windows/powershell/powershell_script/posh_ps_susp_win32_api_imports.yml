@@ -1,0 +1,39 @@
+title: Potential Suspicious Win32 API Function Import Via PowerShell
+id: 595f4fe8-4deb-42b5-926d-04fcf9dc791c
+status: test
+description: Detects PowerShell scripts importing potentially suspicious Win32 API function combinations
+references:
+    - Internal Research
+author: Nasreddine Bencherchali (Nextron Systems)
+date: 2023/04/04
+tags:
+    - attack.defense_evasion
+logsource:
+    product: windows
+    category: ps_script
+    definition: bade5735-5ab0-4aa7-a642-a11be0e40872
+detection:
+    selection_import:
+        ScriptBlockText|contains: 'DllImport('
+    # TODO: Add more WinAPI selections
+    selection_winapi_1:
+        ScriptBlockText|contains|all:
+            - 'Kernel32'
+            - 'VirtualProtect'
+            - 'GetProcAddress'
+            - 'LoadLibrary'
+    selection_winapi_2:
+        ScriptBlockText|contains|all:
+            - 'Kernel32'
+            - 'CreateProcess'
+            - '::FromBase64String('
+    selection_winapi_3:
+        ScriptBlockText|contains|all:
+            - 'advapi32'
+            - 'ImpersonateNamedPipeClient'
+            - 'LookupPrivilegeValue'
+            - 'AdjustTokenPrivileges'
+    condition: selection_import and 1 of selection_winapi_*
+falsepositives:
+    - Unknown
+level: medium

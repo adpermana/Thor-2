@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Privilege Escalation Attempt Via .Exe.Local Technique
+id: 07a99744-56ac-40d2-97b7-2095967b0e03
+status: test
+description: Detects potential privilege escalation attempt via the creation of the
+    "*.Exe.Local" folder inside the "System32" directory in order to sideload "comctl32.dll"
+author: Nasreddine Bencherchali (Nextron Systems), Subhash P (@pbssubhash)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/12/16 22:28:01
+references:
+  - https://github.com/binderlabs/DirCreate2System
+  - https://github.com/sailay1996/awesome_windows_logical_bugs/blob/60cbb23a801f4c3195deac1cc46df27c225c3d07/dir_create2system.txt
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetFilename|endswith: \comctl32.dll
+        TargetFilename|startswith:
+          - C:\Windows\System32\logonUI.exe.local
+          - C:\Windows\System32\werFault.exe.local
+          - C:\Windows\System32\consent.exe.local
+          - C:\Windows\System32\narrator.exe.local
+          - C:\Windows\System32\wermgr.exe.local
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/12/19
+tags:
+  - attack.defense_evasion
+  - attack.persistence
+  - attack.privilege_escalation
+  - DEMO

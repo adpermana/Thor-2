@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Interesting Service Enumeration Via Sc.EXE
+id: e83e8899-c9b2-483b-b355-5decc942b959
+status: experimental
+description: |
+    Detects the enumeration and query of interesting and in some cases sensitive services on the system via "sc.exe".
+    Attackers often try to enumerate the services currently running on a system in order to find different attack vectors.
+author: Swachchhanda Shrawan Poudel
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/02/12 16:52:21
+references:
+  - https://www.n00py.io/2021/05/dumping-plaintext-rdp-credentials-from-svchost-exe/
+  - https://pentestlab.blog/tag/svchost/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains: query
+    selection_cmd:
+        CommandLine|contains: termservice
+    selection_img:
+      - Image|endswith: \sc.exe
+      - OriginalFileName: sc.exe
+falsepositives: Unknown
+level: low
+customer: 'demo'
+tags:
+  - attack.t1003
+  - DEMO

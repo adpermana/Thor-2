@@ -1,0 +1,45 @@
+title: Potential Suspicious PowerShell Script Executed
+id: b6bb9f90-008d-4381-bb95-fe5a9edce6d2
+status: test
+description: Detects the execution of potential suspicious PowerShell scripts residing in suspicious paths
+references:
+    - Internal Research
+author: Nasreddine Bencherchali (Nextron Systems)
+date: 2023/02/01
+modified: 2023/03/29
+tags:
+    - attack.execution
+    - attack.t1059.001
+logsource:
+    product: windows
+    category: ps_script
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    selection_keywords:
+        ScriptBlockText|contains:
+            # Add more suspicious keywords and commands
+            - 'Invoke-Expressions'
+            - 'http://1'
+            - 'http://2'
+            - 'http://3'
+            - 'http://4'
+            - 'Invoke-Command'
+            - 'IEX '
+    selection_path:
+        # Add more suspicious paths
+        - Path|startswith:
+            - 'C:\Users\Public\'
+            - 'C:\Temp\'
+        - Path|contains: '\AppData\Local\Temp\'
+        - Path|re: '([Pp]rogram[Dd]ata|%[Aa]pp[Dd]ata%|%[Ll]ocal[Aa]pp[Dd]ata%|\\[Aa]pp[Dd]ata\\([Ll]ocal|[Rr]oaming|[Ll]ocal[Ll]ow))\\[^\\]{1,26}\.$'
+    filter_ms:
+        ScriptBlockText|contains: "Author = 'Microsoft Corporation' CompanyName = 'Microsoft Corporation'"
+    filter_signed:
+        ScriptBlockText|contains|all:
+            - '# SIG '
+            - '# Begin signature block'
+            - '# End signature block'
+    condition: all of selection_* and not 1 of filter_*
+falsepositives:
+    - Unknown
+level: medium

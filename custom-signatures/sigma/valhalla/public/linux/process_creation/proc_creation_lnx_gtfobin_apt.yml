@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Apt GTFOBin Abuse - Linux
+id: bb382fd5-b454-47ea-a264-1828e4c766d6
+status: test
+description: Detects usage of "apt" and "apt-get" as a GTFOBin to execute and proxy
+    command and binary execution
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/12/28 11:45:51
+references:
+  - https://gtfobins.github.io/gtfobins/apt/
+  - https://gtfobins.github.io/gtfobins/apt-get/
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains: APT::Update::Pre-Invoke::=
+        Image|endswith:
+          - /apt
+          - /apt-get
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.discovery
+  - attack.t1083
+  - DEMO

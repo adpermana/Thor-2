@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Renamed Remote Utilities RAT (RURAT) Execution
+id: 9ef27c24-4903-4192-881a-3adde7ff92a5
+status: test
+description: Detects execution of renamed Remote Utilities (RURAT) via Product PE
+    header field
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/19 17:22:21
+references:
+  - https://redcanary.com/blog/misbehaving-rats/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        Image|endswith:
+          - \rutserv.exe
+          - \rfusclient.exe
+    selection:
+        Product: Remote Utilities
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/02/03
+tags:
+  - attack.defense_evasion
+  - attack.collection
+  - attack.command_and_control
+  - attack.discovery
+  - attack.s0592
+  - DEMO

@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Remote File Copy
+id: 7a14080d-a048-4de8-ae58-604ce58a795b
+status: stable
+description: Detects the use of tools that copy files from or to remote systems
+author: Ömer Günal
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/06/18 10:06:31
+references:
+  - https://attack.mitre.org/techniques/T1105/
+logsource:
+    product: linux
+detection:
+    condition: tools and filter
+    filter:
+      - '@'
+      - ':'
+    tools:
+      - 'scp '
+      - 'rsync '
+      - 'sftp '
+falsepositives: Legitimate administration activities
+level: low
+customer: 'demo'
+tags:
+  - attack.command_and_control
+  - attack.lateral_movement
+  - attack.t1105
+  - DEMO

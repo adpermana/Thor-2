@@ -1,0 +1,68 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Child Process Of Veeam Dabatase
+id: d55b793d-f847-4eea-b59a-5ab09908ac90
+related:
+  - type: similar
+    id: 869b9ca7-9ea2-4a5a-8325-e80e62f75445
+status: test
+description: Detects suspicious child processes of the Veeam service process. This
+    could indicate potential RCE or SQL Injection.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/04 16:53:41
+references:
+  - https://labs.withsecure.com/publications/fin7-target-veeam-servers
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection_parent and 1 of selection_child_*
+    selection_child_1:
+        CommandLine|contains:
+          - '-ex '
+          - bypass
+          - cscript
+          - DownloadString
+          - http://
+          - https://
+          - mshta
+          - regsvr32
+          - rundll32
+          - wscript
+          - 'copy '
+        Image|endswith:
+          - \cmd.exe
+          - \powershell.exe
+          - \pwsh.exe
+          - \wsl.exe
+          - \wt.exe
+    selection_child_2:
+        Image|endswith:
+          - \net.exe
+          - \net1.exe
+          - \netstat.exe
+          - \nltest.exe
+          - \ping.exe
+          - \tasklist.exe
+          - \whoami.exe
+    selection_parent:
+        ParentCommandLine|contains: VEEAMSQL
+        ParentImage|endswith: \sqlservr.exe
+level: critical
+customer: 'demo'
+tags:
+  - attack.initial_access
+  - attack.persistence
+  - attack.privilege_escalation
+  - DEMO

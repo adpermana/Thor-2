@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential RDP Tunneling Via SSH
+id: f7d7ebd5-a016-46e2-9c54-f9932f2d386d
+related:
+  - type: similar
+    id: f38ce0b9-5e97-4b47-a211-7dc8d8b871da
+status: test
+description: Execution of ssh.exe to perform data exfiltration and tunneling through
+    RDP
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/10/12 13:42:41
+references:
+  - https://www.absolomb.com/2018-01-26-Windows-Privilege-Escalation-Guide/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains: :3389
+        Image|endswith: \ssh.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/01/25
+tags:
+  - attack.command_and_control
+  - attack.t1572
+  - DEMO

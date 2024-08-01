@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Clipboard Collection with Xclip Tool - Auditd
+id: 214e7e6c-f21b-47ff-bb6f-551b2d143fcf
+status: test
+description: |
+    Detects attempts to collect data stored in the clipboard from users with the usage of xclip tool.
+    Xclip has to be installed.
+    Highly recommended using rule on servers, due to high usage of clipboard utilities on user workstations.
+author: Pawel Mazur
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/09/24 17:33:01
+references:
+  - https://linux.die.net/man/1/xclip
+  - https://www.cyberciti.biz/faq/xclip-linux-insert-files-command-output-intoclipboard/
+logsource:
+    product: linux
+    service: auditd
+detection:
+    condition: selection
+    selection:
+        a0: xclip
+        a1:
+          - -selection
+          - -sel
+        a2:
+          - clipboard
+          - clip
+        a3: -o
+        type: EXECVE
+falsepositives: Legitimate usage of xclip tools
+level: low
+customer: 'demo'
+modified: 2022/11/26
+tags:
+  - attack.collection
+  - attack.t1115
+  - DEMO

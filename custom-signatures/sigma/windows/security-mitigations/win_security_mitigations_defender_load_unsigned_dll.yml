@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Microsoft Defender Blocked from Loading Unsigned DLL
+id: 0b0ea3cc-99c8-4730-9c53-45deee2a4c86
+status: test
+description: Detects Code Integrity (CI) engine blocking Microsoft Defender's processes
+    (MpCmdRun and NisSrv) from loading unsigned DLLs which may be an attempt to sideload
+    arbitrary DLL
+author: Bhabesh Raj
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/02 19:23:01
+references:
+  - https://www.sentinelone.com/blog/living-off-windows-defender-lockbit-ransomware-sideloads-cobalt-strike-through-microsoft-security-tool
+logsource:
+    product: windows
+    service: security-mitigations
+detection:
+    condition: selection
+    selection:
+        EventID:
+          - "11"
+          - "12"
+        ProcessPath|endswith:
+          - \MpCmdRun.exe
+          - \NisSrv.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/09/28
+tags:
+  - attack.defense_evasion
+  - attack.t1574.002
+  - DEMO

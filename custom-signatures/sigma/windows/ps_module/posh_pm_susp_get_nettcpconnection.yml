@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Use Get-NetTCPConnection - PowerShell Module
+id: aff815cc-e400-4bf0-a47a-5d8a2407d4e1
+status: test
+description: Adversaries may attempt to get a listing of network connections to or
+    from the compromised system they are currently accessing or from remote systems
+    by querying for information over the network.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/12/10 17:09:21
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1049/T1049.md#atomic-test-2---system-network-connections-discovery-with-powershell
+logsource:
+    category: ps_module
+    product: windows
+    definition: 0ad03ef1-f21b-4a79-8ce8-e6900c54b65b
+detection:
+    condition: selection
+    selection:
+        ContextInfo|contains: Get-NetTCPConnection
+falsepositives: Unknown
+level: low
+customer: 'demo'
+modified: 2022/12/02
+tags:
+  - attack.discovery
+  - attack.t1049
+  - DEMO

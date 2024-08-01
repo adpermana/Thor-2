@@ -1,0 +1,53 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Linux Crypto Mining Indicators
+id: 9069ea3c-b213-4c52-be13-86506a227ab1
+status: test
+description: Detects command line parameters or strings often used by crypto miners
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/10/26 14:05:51
+references:
+  - https://www.poolwatch.io/coin/monero
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - ' --cpu-priority='
+          - --donate-level=0
+          - ' -o pool.'
+          - ' --nicehash'
+          - ' --algo=rx/0 '
+          - stratum+tcp://
+          - stratum+udp://
+          - sh -c /sbin/modprobe msr allow_writes=on
+          - LS1kb25hdGUtbGV2ZWw9
+          - 0tZG9uYXRlLWxldmVsP
+          - tLWRvbmF0ZS1sZXZlbD
+          - c3RyYXR1bSt0Y3A6Ly
+          - N0cmF0dW0rdGNwOi8v
+          - zdHJhdHVtK3RjcDovL
+          - c3RyYXR1bSt1ZHA6Ly
+          - N0cmF0dW0rdWRwOi8v
+          - zdHJhdHVtK3VkcDovL
+falsepositives: Legitimate use of crypto miners
+level: high
+customer: 'demo'
+modified: 2022/12/25
+tags:
+  - attack.impact
+  - attack.t1496
+  - DEMO

@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: New CA Policy by Non-approved Actor
+id: 0922467f-db53-4348-b7bf-dee8d0d348c6
+status: test
+description: Monitor and alert on conditional access changes.
+author: Corissa Koopmans, '@corissalea'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/18 14:44:31
+references:
+  - https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/security-operations-infrastructure
+logsource:
+    product: azure
+    service: auditlogs
+detection:
+    condition: selection
+    selection:
+        properties.message: Add conditional access policy
+falsepositives:
+  - Misconfigured role permissions
+  - Verify whether the user identity, user agent, and/or hostname should be making
+    changes in your environment.
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1548
+  - DEMO

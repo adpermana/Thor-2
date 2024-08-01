@@ -1,0 +1,70 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: LSASS Process Memory Dump Files
+id: a5a2d357-1ab8-4675-a967-ef9990a59391
+related:
+  - type: obsoletes
+    id: db2110f3-479d-42a6-94fb-d35bc1e46492
+  - type: obsoletes
+    id: 5e3d3601-0662-4af0-b1d2-36a05e90c40a
+status: experimental
+description: Detects creation of files with names used by different memory dumping
+    tools to create a memory dump of the LSASS process memory, which contains user
+    credentials.
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/11/15 13:45:11
+references:
+  - https://www.google.com/search?q=procdump+lsass
+  - https://medium.com/@markmotig/some-ways-to-dump-lsass-exe-c4a75fdc49bf
+  - https://github.com/elastic/detection-rules/blob/c76a39796972ecde44cb1da6df47f1b6562c9770/rules/windows/credential_access_lsass_memdump_file_created.toml
+  - https://www.whiteoaksecurity.com/blog/attacks-defenses-dumping-lsass-no-mimikatz/
+  - https://github.com/helpsystems/nanodump
+  - https://github.com/CCob/MirrorDump
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_1:
+        TargetFilename|endswith:
+          - \lsass.dmp
+          - \lsass.zip
+          - \lsass.rar
+          - \Andrew.dmp
+          - \Coredump.dmp
+          - \NotLSASS.zip
+          - \PPLBlade.dmp
+    selection_2:
+        TargetFilename|contains:
+          - \lsass_2
+          - \lsassdump
+          - \lsassdmp
+    selection_3:
+        TargetFilename|contains|all:
+          - \lsass
+          - .dmp
+    selection_4:
+        TargetFilename|contains: SQLDmpr
+        TargetFilename|endswith: .mdmp
+    selection_5:
+        TargetFilename|endswith: .dmp
+        TargetFilename|startswith: nanodump
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/09/05
+tags:
+  - attack.credential_access
+  - attack.t1003.001
+  - DEMO

@@ -1,0 +1,69 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - Bloodhound/Sharphound Execution
+id: f376c8a7-a2d0-4ddc-aa0c-16c17236d962
+status: test
+description: Detects command line parameters used by Bloodhound and Sharphound hack
+    tools
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/12/20 17:09:11
+references:
+  - https://github.com/BloodHoundAD/BloodHound
+  - https://github.com/BloodHoundAD/SharpHound
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_cli_1:
+        CommandLine|contains:
+          - ' -CollectionMethod All '
+          - ' --CollectionMethods Session '
+          - ' --Loop --Loopduration '
+          - ' --PortScanTimeout '
+          - '.exe -c All -d '
+          - Invoke-Bloodhound
+          - Get-BloodHoundData
+    selection_cli_2:
+        CommandLine|contains|all:
+          - ' -JsonFolder '
+          - ' -ZipFileName '
+    selection_cli_3:
+        CommandLine|contains|all:
+          - ' DCOnly '
+          - ' --NoSaveCache '
+    selection_img:
+      - Product|contains: SharpHound
+      - Description|contains: SharpHound
+      - Company|contains:
+          - SpecterOps
+          - evil corp
+      - Image|contains:
+          - \Bloodhound.exe
+          - \SharpHound.exe
+falsepositives: Other programs that use these command line option and accepts an 'All'
+    parameter
+level: high
+customer: 'demo'
+modified: 2023/02/04
+tags:
+  - attack.discovery
+  - attack.t1087.001
+  - attack.t1087.002
+  - attack.t1482
+  - attack.t1069.001
+  - attack.t1069.002
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

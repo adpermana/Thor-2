@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: DNS Query To Devtunnels Domain
+id: 1cb0c6ce-3d00-44fc-ab9c-6d6d577bf20b
+related:
+  - type: similar
+    id: 9501f8e6-8e3d-48fc-a8a6-1089dd5d7ef4
+  - type: similar
+    id: 4b657234-038e-4ad5-997c-4be42340bce4
+  - type: similar
+    id: b3e6418f-7c7a-4fad-993a-93b65027a9f1
+status: experimental
+description: |
+    Detects DNS query requests to Devtunnels domains. Attackers can abuse that feature to establish a reverse shell or persistence on a machine.
+author: citron_ninja
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/10/25 13:38:21
+references:
+  - https://blueteamops.medium.com/detecting-dev-tunnels-16f0994dc3e2
+  - https://learn.microsoft.com/en-us/azure/developer/dev-tunnels/security
+  - https://cydefops.com/devtunnels-unleashed
+logsource:
+    category: dns_query
+    product: windows
+detection:
+    condition: selection
+    selection:
+        QueryName|endswith: .devtunnels.ms
+falsepositives: Legitimate use of Devtunnels will also trigger this.
+level: medium
+customer: 'demo'
+modified: 2023/11/20
+tags:
+  - attack.command_and_control
+  - attack.t1071.001
+  - DEMO

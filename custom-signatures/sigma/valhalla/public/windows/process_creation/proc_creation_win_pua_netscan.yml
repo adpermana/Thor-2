@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-06-21 19:00
+# Generated for User: demo
+# Number of Rules: 3228
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PUA - SoftPerfect Netscan Execution
+id: ca387a8e-1c84-4da3-9993-028b45342d30
+status: experimental
+description: |
+    Detects usage of SoftPerfect's "netscan.exe". An application for scanning networks.
+    It is actively used in-the-wild by threat actors to inspect and understand the network architecture of a victim.
+author: '@d4ns4n_ (Wuerth-Phoenix)'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/04/25 14:52:01
+references:
+  - https://www.protect.airbus.com/blog/uncovering-cyber-intruders-netscan/
+  - https://secjoes-reports.s3.eu-central-1.amazonaws.com/Sockbot%2Bin%2BGoLand.pdf
+  - https://www.sentinelone.com/labs/black-basta-ransomware-attacks-deploy-custom-edr-evasion-tools-tied-to-fin7-threat-actor/
+  - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/yanluowang-ransomware-attacks-continue
+  - https://research.nccgroup.com/2022/07/13/climbing-mount-everest-black-byte-bytes-back/
+  - https://www.bleepingcomputer.com/news/security/microsoft-exchange-servers-hacked-to-deploy-hive-ransomware/
+  - https://www.softperfect.com/products/networkscanner/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - Image|endswith: \netscan.exe
+      - Product: Network Scanner
+      - Description: Application for scanning networks
+falsepositives: Legitimate administrator activity
+level: medium
+customer: 'demo'
+tags:
+  - attack.discovery
+  - attack.t1046
+  - DEMO

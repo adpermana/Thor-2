@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PowerShell ADRecon Execution
+id: bf72941a-cba0-41ea-b18c-9aca3925690d
+status: test
+description: Detects execution of ADRecon.ps1 for AD reconnaissance which has been
+    reported to be actively used by FIN7
+author: Bhabesh Raj
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/07/16 13:26:11
+references:
+  - https://github.com/sense-of-security/ADRecon/blob/11881a24e9c8b207f31b56846809ce1fb189bcc9/ADRecon.ps1
+  - https://bi-zone.medium.com/from-pentest-to-apt-attack-cybercriminal-group-fin7-disguises-its-malware-as-an-ethical-hackers-c23c9a75e319
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: selection
+    selection:
+        ScriptBlockText|contains:
+          - Function Get-ADRExcelComOb
+          - Get-ADRGPO
+          - Get-ADRDomainController
+          - ADRecon-Report.xlsx
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/09/06
+tags:
+  - attack.discovery
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

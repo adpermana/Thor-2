@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Renamed VsCode Code Tunnel Execution - File Indicator
+id: d102b8f5-61dc-4e68-bd83-9a3187c67377
+status: experimental
+description: |
+    Detects the creation of a file with the name "code_tunnel.json" which indicate execution and usage of VsCode tunneling utility by an "Image" or "Process" other than VsCode.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/10/25 19:22:31
+references:
+  - https://ipfyx.fr/post/visual-studio-code-tunnel/
+  - https://badoption.eu/blog/2023/01/31/code_c2.html
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_legit_name:
+        Image|endswith:
+          - \code-tunnel.exe
+          - \code.exe
+    selection:
+        TargetFilename|endswith: \code_tunnel.json
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.command_and_control
+  - DEMO

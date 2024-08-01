@@ -1,0 +1,78 @@
+title: Microsoft Office Product Spawning Windows Shell (Tree)
+id: de8a205e-caeb-410e-b1ad-0e7b48217453
+status: experimental
+description: Detects a Windows command and scripting interpreter executable started from Microsoft Word, Excel, Powerpoint, Publisher and Visio
+author: Florian Roth
+references:
+    - https://www.hybrid-analysis.com/sample/465aabe132ccb949e75b8ab9c5bda36d80cf2fd503d52b8bad54e295f28bbc21?environmentId=100
+    - https://mgreen27.github.io/posts/2018/04/02/DownloadCradle.html
+date: 2022/03/19
+modified: 2023/01/31
+tags:
+    - attack.execution
+    - attack.t1204.002
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_tree:
+        ProcessTree|contains:
+            - '\WINWORD.EXE|'
+            - '\EXCEL.EXE|'
+            - '\POWERPNT.exe|'
+            - '\MSPUB.exe|'
+            - '\VISIO.exe|'
+            - '\MSACCESS.EXE|'
+            - '\EQNEDT32.EXE|'
+            - '\ONENOTE.EXE|'
+    selection_img:
+        - Image|endswith:
+            - '\cmd.exe'
+            - '\powershell.exe'
+            - '\pwsh.exe'
+            - '\wscript.exe'
+            - '\cscript.exe'
+            - '\sh.exe'
+            - '\ssh.exe'
+            - '\bash.exe'
+            - '\scrcons.exe'
+            - '\schtasks.exe'
+            - '\regsvr32.exe'
+            - '\hh.exe'
+            - '\wmic.exe'        # https://app.any.run/tasks/c903e9c8-0350-440c-8688-3881b556b8e0/
+            - '\mshta.exe'
+            - '\rundll32.exe'
+            - '\msiexec.exe'
+            - '\forfiles.exe'
+            - '\scriptrunner.exe'
+            - '\mftrace.exe'
+            - '\AppVLP.exe'
+            - '\svchost.exe'        # https://www.vmray.com/analyses/2d2fa29185ad/report/overview.html
+            - '\msbuild.exe'        # https://github.com/elastic/detection-rules/blob/main/rules/windows/defense_evasion_execution_msbuild_started_by_office_app.toml
+        - OriginalFileName:
+            - 'Cmd.Exe'
+            - 'PowerShell.EXE'
+            - 'pwsh.dll'
+            - 'wscript.exe'
+            - 'cscript.exe'
+            - 'bash.exe'
+            - 'ScrCons'
+            - 'schtasks.exe'
+            - 'REGSVR32.EXE'
+            - 'HH.exe'
+            - 'wmic.exe'        # https://app.any.run/tasks/c903e9c8-0350-440c-8688-3881b556b8e0/
+            - 'MSHTA.EXE'
+            - 'RUNDLL32.EXE'
+            - 'msiexec.exe'
+            - 'forfiles.exe'
+            - 'ScriptRunner.exe'
+            - 'mftrace.exe'
+            - 'svchost.exe'        # https://www.vmray.com/analyses/2d2fa29185ad/report/overview.html
+            - 'MSBuild.exe'        # https://github.com/elastic/detection-rules/blob/main/rules/windows/defense_evasion_execution_msbuild_started_by_office_app.toml
+    condition: all of selection_*
+fields:
+    - CommandLine
+    - ParentCommandLine
+falsepositives:
+    - Unknown
+level: high

@@ -1,0 +1,53 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: APT31 Judgement Panda Activity
+id: 03e2746e-2b31-42f1-ab7a-eb39365b2422
+status: test
+description: Detects APT31 Judgement Panda activity as described in the Crowdstrike
+    2019 Global Threat Report
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/02/21 13:27:31
+references:
+  - https://www.documentcloud.org/documents/5743766-Global-Threat-Report-2019.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_lateral_movement:
+        CommandLine|contains:
+          - \aaaa\procdump64.exe
+          - \aaaa\netsess.exe
+          - \aaaa\7za.exe
+          - \c$\aaaa\
+        CommandLine|contains|all:
+          - copy \\\\
+          - c$
+    selection_ldifde:
+        CommandLine|contains|all:
+          - ldifde
+          - -f -n
+          - eprod.ldf
+falsepositives: Unlikely
+level: critical
+customer: 'demo'
+modified: 2023/03/10
+tags:
+  - attack.lateral_movement
+  - attack.credential_access
+  - attack.g0128
+  - attack.t1003.001
+  - attack.t1560.001
+  - detection.emerging_threats
+  - DEMO

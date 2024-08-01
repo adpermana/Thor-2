@@ -1,0 +1,53 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: GALLIUM Artefacts - Builtin
+id: 3db10f25-2527-4b79-8d4b-471eb900ee29
+related:
+  - type: derived
+    id: 440a56bf-7873-4439-940a-1c8a671073c2
+status: test
+description: Detects artefacts associated with activity group GALLIUM - Microsoft
+    Threat Intelligence Center indicators released in December 2019.
+author: Tim Burrell
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/02/07 12:26:01
+references:
+  - https://www.microsoft.com/security/blog/2019/12/12/gallium-targeting-global-telecom/
+  - https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-2012/dn800669(v=ws.11)
+logsource:
+    product: windows
+    service: dns-server-analytic
+    definition: 'Requirements: Microsoft-Windows-DNS-Server/Analytical ({EB79061A-A566-4698-9119-3ED2807060E7})
+        Event Log must be collected in order to receive the events.'
+detection:
+    condition: selection
+    selection:
+        EventID: "257"
+        QNAME:
+          - asyspy256.ddns.net
+          - hotkillmail9sddcc.ddns.net
+          - rosaf112.ddns.net
+          - cvdfhjh1231.myftp.biz
+          - sz2016rose.ddns.net
+          - dffwescwer4325.myftp.biz
+          - cvdfhjh1231.ddns.net
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/01/02
+tags:
+  - attack.credential_access
+  - attack.command_and_control
+  - attack.t1071
+  - detection.emerging_threats
+  - DEMO

@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: SMB Spoolss Name Piped Usage
+id: bae2865c-5565-470d-b505-9496c87d0c30
+status: test
+description: Detects the use of the spoolss named pipe over SMB. This can be used
+    to trigger the authentication via NTLM of any machine that has the spoolservice
+    enabled.
+author: OTR (Open Threat Research), @neu5ron
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2018/11/28 12:55:31
+references:
+  - https://posts.specterops.io/hunting-in-active-directory-unconstrained-delegation-forests-trusts-71f2b33688e1
+  - https://dirkjanm.io/a-different-way-of-abusing-zerologon/
+  - https://twitter.com/_dirkjan/status/1309214379003588608
+logsource:
+    product: zeek
+    service: smb_files
+detection:
+    condition: selection
+    selection:
+        name: spoolss
+        path|endswith: IPC$
+falsepositives: Domain Controllers that are sometimes, commonly although should not
+    be, acting as printer servers too
+level: medium
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.lateral_movement
+  - attack.t1021.002
+  - DEMO

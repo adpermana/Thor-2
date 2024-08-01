@@ -1,0 +1,26 @@
+title: WMI FilterToConsumerBinding Has Been Deleted
+id: 05e130e0-47de-49f4-b47a-8c163408068f
+status: test
+description: Detects the deletion of a "FilterToConsumerBinding" which could be a sign of an attacker hiding his tracks
+references:
+    - Internal Research
+author: Nasreddine Bencherchali
+date: 2022/11/24
+modified: 2023/03/29
+tags:
+    - attack.execution
+    - attack.t1047
+logsource:
+    product: windows
+    service: wmi
+detection:
+    selection:
+        EventID: 11
+        Operation|contains|all:
+            - 'IWbemServices::DeleteInstance'
+            - 'root\subscription'
+            - '__FilterToConsumerBinding'
+    condition: selection
+falsepositives:
+    - Unknown
+level: medium

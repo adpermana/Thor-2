@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential SPN Enumeration Via Setspn.EXE
+id: 1eeed653-dbc8-4187-ad0c-eeebb20e6599
+status: test
+description: Detects service principal name (SPN) enumeration used for Kerberoasting
+author: Markus Neis, keepwatch
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2018/11/14 16:11:31
+references:
+  - https://web.archive.org/web/20200329173843/https://p16.praetorian.com/blog/how-to-use-kerberoasting-t1208-for-privilege-escalation
+  - https://www.praetorian.com/blog/how-to-use-kerberoasting-t1208-for-privilege-escalation/?edition=2019
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains:
+          - ' -q '
+          - ' /q '
+    selection_pe:
+      - Image|endswith: \setspn.exe
+      - OriginalFileName: setspn.exe
+      - Description|contains|all:
+          - Query or reset the computer
+          - SPN attribute
+falsepositives: Administration activity
+level: medium
+customer: 'demo'
+modified: 2023/10/23
+tags:
+  - attack.credential_access
+  - attack.t1558.003
+  - DEMO

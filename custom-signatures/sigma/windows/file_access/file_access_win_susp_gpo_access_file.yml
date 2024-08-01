@@ -1,0 +1,60 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Access To Potentially Sensitive Sysvol Files By Uncommon Application
+id: d51694fe-484a-46ac-92d6-969e76d60d10
+related:
+  - type: derived
+    id: 8344c19f-a023-45ff-ad63-a01c5396aea0
+status: experimental
+description: Detects file access requests to potentially sensitive files hosted on
+    the Windows Sysvol share.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/12/21 00:03:01
+references:
+  - https://github.com/vletoux/pingcastle
+logsource:
+    category: file_access
+    product: windows
+    definition: 'Requirements: Microsoft-Windows-Kernel-File ETW provider'
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_generic:
+        Image|startswith:
+          - :\Program Files (x86)\
+          - :\Program Files\
+          - :\Windows\explorer.exe
+          - :\Windows\system32\
+          - :\Windows\SysWOW64\
+    selection:
+        FileName|contains|all:
+          - \sysvol\
+          - \Policies\
+        FileName|endswith:
+          - audit.csv
+          - Files.xml
+          - GptTmpl.inf
+          - groups.xml
+          - Registry.pol
+          - Registry.xml
+          - scheduledtasks.xml
+          - scripts.ini
+          - services.xml
+        FileName|startswith: \\
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.credential_access
+  - attack.t1552.006
+  - DEMO

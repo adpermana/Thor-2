@@ -1,0 +1,63 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Uncommon Outbound Kerberos Connection - Security
+id: eca91c7c-9214-47b9-b4c5-cb1d7e4f2350
+related:
+  - type: similar
+    id: e54979bd-c5f9-4d6c-967b-a04b19ac4c74
+status: test
+description: |
+    Detects uncommon outbound network activity via Kerberos default port indicating possible lateral movement or first stage PrivEsc via delegation.
+author: Ilyas Ochkov, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/24 18:50:21
+references:
+  - https://github.com/GhostPack/Rubeus
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+    filter_main_lsass:
+        Application|endswith: \Windows\System32\lsass.exe
+        Application|startswith:
+          - \device\harddiskvolume
+          - 'C:'
+    filter_optional_chrome:
+        Application|endswith:
+          - \Program Files (x86)\Google\Chrome\Application\chrome.exe
+          - \Program Files\Google\Chrome\Application\chrome.exe
+        Application|startswith:
+          - \device\harddiskvolume
+          - 'C:'
+    filter_optional_firefox:
+        Application|endswith:
+          - \Program Files (x86)\Mozilla Firefox\firefox.exe
+          - \Program Files\Mozilla Firefox\firefox.exe
+        Application|startswith:
+          - \device\harddiskvolume
+          - 'C:'
+    filter_optional_tomcat:
+        Application|endswith: \tomcat\bin\tomcat8.exe
+    selection:
+        DestPort: "88"
+        EventID: "5156"
+falsepositives: Web Browsers and third party application might generate similar activity.
+    An initial baseline is required.
+level: medium
+customer: 'demo'
+modified: 2024/03/15
+tags:
+  - attack.lateral_movement
+  - attack.t1558.003
+  - DEMO

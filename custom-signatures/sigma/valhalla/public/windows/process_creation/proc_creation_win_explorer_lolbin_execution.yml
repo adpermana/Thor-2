@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Proxy Execution Via Explorer.exe
+id: 9eb271b9-24ae-4cd4-9465-19cfc1047f3e
+status: test
+description: Attackers can use explorer.exe for evading defense mechanisms
+author: Furkan CALISKAN, @caliskanfurkan_, @oscd_initiative
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/05 14:35:51
+references:
+  - https://twitter.com/CyberRaiju/status/1273597319322058752
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains: explorer.exe
+        Image|endswith: \explorer.exe
+        ParentImage|endswith: \cmd.exe
+falsepositives: Legitimate explorer.exe run from cmd.exe
+level: low
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

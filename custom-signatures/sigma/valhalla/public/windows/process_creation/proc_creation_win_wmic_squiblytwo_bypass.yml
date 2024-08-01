@@ -1,0 +1,57 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential SquiblyTwo Technique Execution
+id: 8d63dadf-b91b-4187-87b6-34a1114577ea
+status: test
+description: Detects potential SquiblyTwo attack technique with possible renamed WMIC
+    via Imphash and OriginalFileName fields
+author: Markus Neis, Florian Roth
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/01/16 17:03:31
+references:
+  - https://web.archive.org/web/20190209154607/https://subt0x11.blogspot.com/2018/04/wmicexe-whitelisting-bypass-hacking.html
+  - https://twitter.com/mattifestation/status/986280382042595328
+  - https://atomicredteam.io/defense-evasion/T1220/
+  - https://lolbas-project.github.io/lolbas/Binaries/Wmic/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains|all:
+          - 'format:'
+          - http
+    selection_pe:
+      - Image|endswith: \wmic.exe
+      - OriginalFileName: wmic.exe
+      - Imphash:
+          - 1B1A3F43BF37B5BFE60751F2EE2F326E
+          - 37777A96245A3C74EB217308F3546F4C
+          - 9D87C9D67CE724033C0B40CC4CA1B206
+      - Hashes|contains:
+          - IMPHASH=1B1A3F43BF37B5BFE60751F2EE2F326E
+          - IMPHASH=37777A96245A3C74EB217308F3546F4C
+          - IMPHASH=9D87C9D67CE724033C0B40CC4CA1B206
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/02/15
+tags:
+  - attack.defense_evasion
+  - attack.t1047
+  - attack.t1220
+  - attack.execution
+  - attack.t1059.005
+  - attack.t1059.007
+  - DEMO

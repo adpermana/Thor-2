@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Standard User In High Privileged Group
+id: 7ac407cc-0f48-4328-aede-de1d2e6fef41
+status: experimental
+description: Detect standard users login that are part of high privileged groups such
+    as the Administrator group
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/13 15:46:31
+references:
+  - https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-identifiers
+  - https://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/configuring-additional-lsa-protection
+  - https://github.com/nasbench/EVTX-ETW-Resources/blob/7a806a148b3d9d381193d4a80356016e6e8b1ee8/ETWProvidersManifests/Windows11/22H2/W11_22H2_Pro_20221220_22621.963/WEPExplorer/LsaSrv.xml
+logsource:
+    product: windows
+    service: lsa-server
+    definition: 'Requirements: Microsoft-Windows-LSA/Operational (199FE037-2B82-40A9-82AC-E1D46C792B99)
+        Event Log must be enabled and collected in order to use this rule.'
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_admin:
+        TargetUserSid|endswith:
+          - "-500"
+          - "-518"
+          - "-519"
+    selection:
+        EventID: "300"
+        SidList|contains:
+          - S-1-5-32-544
+          - -500}
+          - -518}
+          - -519}
+        TargetUserSid|startswith: S-1-5-21-
+falsepositives: Standard domain users who are part of the administrator group. These
+    users shouldn't have these right. But in the case where it's necessary. They should
+    be filtered out using the "TargetUserName" field
+level: medium
+customer: 'demo'
+modified: 2023/05/05
+tags:
+  - attack.credential_access
+  - attack.privilege_escalation
+  - DEMO

@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: ESXi Account Creation Via ESXCLI
+id: b28e4eb3-8bbc-4f0c-819f-edfe8e2f25db
+status: experimental
+description: Detects user account creation on ESXi system via esxcli
+author: Cedric Maurugeon
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/08/22 13:39:11
+references:
+  - https://developer.vmware.com/docs/11743/esxi-7-0-esxcli-command-reference/namespace/esxcli_system.html
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains|all:
+          - 'system '
+          - 'account '
+          - 'add '
+        Image|endswith: /esxcli
+falsepositives: Legitimate administration activities
+level: medium
+customer: 'demo'
+tags:
+  - attack.persistence
+  - attack.t1136
+  - DEMO

@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Clearing Windows Console History
+id: bde47d4b-9987-405c-94c7-b080410e8ea7
+status: test
+description: Identifies when a user attempts to clear console history. An adversary
+    may clear the command history of a compromised account to conceal the actions
+    undertaken during an intrusion.
+author: Austin Songer @austinsonger
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/11/25 14:40:51
+references:
+  - https://stefanos.cloud/blog/kb/how-to-clear-the-powershell-command-history/
+  - https://www.shellhacks.com/clear-history-powershell/
+  - https://community.sophos.com/sophos-labs/b/blog/posts/powershell-command-history-forensics
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: selection1 or selection2a and selection2b
+    selection1:
+        ScriptBlockText|contains: Clear-History
+    selection2a:
+        ScriptBlockText|contains:
+          - Remove-Item
+          - rm
+    selection2b:
+        ScriptBlockText|contains:
+          - ConsoleHost_history.txt
+          - (Get-PSReadlineOption).HistorySavePath
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/12/25
+tags:
+  - attack.defense_evasion
+  - attack.t1070
+  - attack.t1070.003
+  - DEMO

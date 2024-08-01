@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: ESXi Network Configuration Discovery Via ESXCLI
+id: 33e814e0-1f00-4e43-9c34-31fb7ae2b174
+status: experimental
+description: Detects execution of the "esxcli" command with the "network" flag in
+    order to retrieve information about the network configuration.
+author: Cedric Maurugeon
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/09/04 17:59:11
+references:
+  - https://www.crowdstrike.com/blog/hypervisor-jackpotting-ecrime-actors-increase-targeting-of-esxi-servers/
+  - https://developer.vmware.com/docs/11743/esxi-7-0-esxcli-command-reference/namespace/esxcli_network.html
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains:
+          - ' get'
+          - ' list'
+    selection_img:
+        CommandLine|contains: network
+        Image|endswith: /esxcli
+falsepositives: Legitimate administration activities
+level: medium
+customer: 'demo'
+tags:
+  - attack.discovery
+  - attack.t1033
+  - attack.t1007
+  - DEMO

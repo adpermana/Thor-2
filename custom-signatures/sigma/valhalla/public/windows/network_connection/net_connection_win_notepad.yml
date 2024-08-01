@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Network Connection Initiated Via Notepad.EXE
+id: e81528db-fc02-45e8-8e98-4e84aba1f10b
+status: test
+description: |
+    Detects a network connection that is initiated by the "notepad.exe" process.
+    This might be a sign of process injection from a beacon process or something similar.
+    Notepad rarely initiates a network communication except when printing documents for example.
+author: EagleEye Team
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/05/14 17:25:21
+references:
+  - https://web.archive.org/web/20200219102749/https://www.sans.org/cyber-security-summit/archives/file/summit-archive-1492186586.pdf
+  - https://www.cobaltstrike.com/blog/why-is-notepad-exe-connecting-to-the-internet
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    condition: selection and not 1 of filter_optional_*
+    filter_optional_printing:
+        DestinationPort: "9100"
+    selection:
+        Image|endswith: \notepad.exe
+falsepositives: Printing documents via notepad might cause communication with the
+    printer via port 9100 or similar.
+level: high
+customer: 'demo'
+modified: 2024/02/02
+tags:
+  - attack.command_and_control
+  - attack.execution
+  - attack.defense_evasion
+  - attack.t1055
+  - DEMO

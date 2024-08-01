@@ -1,0 +1,25 @@
+title: Sdiagnhost Loading System.Management.Automation.dll
+id: 1a4a0e9c-e47d-492c-800f-545f83fac88a
+status: test
+description: Detects sdiagnhost.exe loading System.Management.Automation.dll (Powershell), an artefact of CVE-2022-30190 / Follina exploitation
+author: Nextron Systems
+references:
+    - https://twitter.com/nao_sec/status/1530196847679401984
+    - https://app.any.run/tasks/713f05d2-fe78-4b9d-a744-f7c133e3fafb/
+date: 2022/06/01
+modified: 2023/03/29
+tags:
+    - attack.defense_evasion
+    - attack.t1036
+    - attack.t1218
+logsource:
+    category: image_load
+    product: windows
+detection:
+    selection:
+        Image|endswith: '\sdiagnhost.exe'
+        ImageLoaded|endswith: '\System.Management.Automation.dll'
+    condition: selection
+falsepositives:
+    - Unknown
+level: high

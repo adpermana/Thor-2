@@ -1,0 +1,48 @@
+title: BlackByte Ransomware Group Patterns
+id: 407498ff-4823-454e-97fe-24c198fa8d1d
+description: Detects command line patterns found in BlackByte ransomware group intrusions
+status: experimental
+author: Florian Roth, Nasreddine Bencherchali
+date: 2022/05/23
+modified: 2022/11/03
+references:
+    - https://www.ic3.gov/Media/News/2022/220211.pdf
+    - https://blog.talosintelligence.com/2022/05/the-blackbyte-ransomware-group-is.html
+    - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/blackbyte-exbyte-ransomware
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_1:
+        CommandLine|contains:
+            - "[System.Convert]::FromBase64String('VwBpA"
+            - ';Stop-Service -Name $x;Set-Service -StartupType Disabled $x'
+            - 'AG8AdwBjAG8AcAB5ACAAfAAg'
+            - 'BvAHcAYwBvAHAAeQAgAHwAI'
+            - 'AbwB3AGMAbwBwAHkAIAB8AC'
+            - '/c ping 1.1.1.1 -n 10 > Nul'
+            - "AOwB9AA=='));Invoke-Expression"
+            - 'user fsadmin P@$$w0rd'
+            - '.exe -c -d -h \\\\'
+    selection_2:
+        CommandLine|contains|all:
+            # Exammple: powershell -command "(New-Object Net.WebClient).DownloadFile('http://msdl.microsoft.com/download/symbols/ntkrnlmp.pdb/11D60DB07BA7433B923F49867DF515721/ntkrnlmp.pdb', 'CSIDL_SYSTEM_DRIVE\systemdata\ntkrnlmp.pdb')"
+            - 'New-Object Net.WebClient'
+            - '.DownloadFile('
+            - 'msdl.microsoft.com/download/symbols/ntkrnlmp.pdb/'
+            - '\systemdata\'
+    selection_3:
+        CommandLine|contains|all:
+            # Example 1: netsh advfirewall firewall set rule "group=\"Network Discovery\" " new enable=Yes"
+            # Example 2: netsh advfirewall firewall set rule "group=\"File and Printer Sharing\" " new enable=Yes"
+            - 'netsh'
+            - ' advfirewall '
+            - ' firewall '
+            - ' enable=Yes'
+        CommandLine|contains:
+            - 'Network Discovery'
+            - 'File and Printer Sharing'
+    condition: 1 of selection_*
+falsepositives:
+    - Unknown
+level: high

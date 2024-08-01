@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Console CodePage Lookup Via CHCP
+id: 7090adee-82e2-4269-bd59-80691e7c6338
+status: experimental
+description: Detects use of chcp to look up the system locale value as part of host
+    discovery
+author: _pete_0, TheDFIRReport
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/02/21 13:49:51
+references:
+  - https://thedfirreport.com/2022/04/04/stolen-images-campaign-ends-in-conti-ransomware/
+  - https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/chcp
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|endswith:
+          - chcp
+          - 'chcp '
+          - 'chcp  '
+        Image|endswith: \chcp.com
+        ParentCommandLine|contains|windash:
+          - ' -c '
+          - ' -r '
+          - ' -k '
+        ParentImage|endswith: \cmd.exe
+falsepositives:
+  - During Anaconda update the 'conda.exe' process will eventually execution the 'chcp'
+    command.
+  - Discord was seen using chcp to look up code pages
+level: medium
+customer: 'demo'
+modified: 2024/03/05
+tags:
+  - attack.discovery
+  - attack.t1614.001
+  - DEMO

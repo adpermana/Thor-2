@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Libvlc.DLL Sideloading
+id: bf9808c4-d24f-44a2-8398-b65227d406b6
+status: test
+description: Detects potential DLL sideloading of "libvlc.dll", a DLL that is legitimately
+    used by "VLC.exe"
+author: X__Junior
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/04/17 14:20:11
+references:
+  - https://www.trendmicro.com/en_us/research/23/c/earth-preta-updated-stealthy-strategies.html
+  - https://hijacklibs.net/entries/3rd_party/vlc/libvlc.html
+logsource:
+    category: image_load
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_vlc:
+        ImageLoaded|startswith:
+          - C:\Program Files (x86)\VideoLAN\VLC\
+          - C:\Program Files\VideoLAN\VLC\
+    selection:
+        ImageLoaded|endswith: \libvlc.dll
+falsepositives: False positives are expected if VLC is installed in non-default locations
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1574.001
+  - attack.t1574.002
+  - DEMO

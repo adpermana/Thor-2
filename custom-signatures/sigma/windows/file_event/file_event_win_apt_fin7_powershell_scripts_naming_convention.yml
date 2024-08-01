@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential APT FIN7 Related PowerShell Script Created
+id: a88d9f45-ec8a-4b0e-85ee-c9f6a65e9128
+status: experimental
+description: Detects PowerShell script file creation with specific name or suffix
+    which was seen being used often by FIN7 PowerShell scripts
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/04 19:03:21
+references:
+  - https://labs.withsecure.com/publications/fin7-target-veeam-servers
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - TargetFilename|endswith: _64refl.ps1
+      - TargetFilename: host_ip.ps1
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.execution
+  - attack.g0046
+  - detection.emerging_threats
+  - DEMO

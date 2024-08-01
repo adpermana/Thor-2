@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Finger.exe Suspicious Invocation
+id: af491bca-e752-4b44-9c86-df5680533dbc
+status: test
+description: Detects suspicious aged finger.exe tool execution often used in malware
+    attacks nowadays
+author: Florian Roth (Nextron Systems), omkar72, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/02/24 14:47:21
+references:
+  - https://twitter.com/bigmacjpg/status/1349727699863011328?s=12
+  - https://app.any.run/tasks/40115012-a919-4208-bfed-41e82cb3dadf/
+  - http://hyp3rlinx.altervista.org/advisories/Windows_TCPIP_Finger_Command_C2_Channel_and_Bypassing_Security_Software.txt
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - OriginalFileName: finger.exe
+      - Image|endswith: \finger.exe
+falsepositives: Admin activity (unclear what they do nowadays with finger.exe)
+level: high
+customer: 'demo'
+modified: 2022/08/16
+tags:
+  - attack.command_and_control
+  - attack.t1105
+  - DEMO

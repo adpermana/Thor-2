@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Run Once Task Execution as Configured in Registry
+id: 198effb6-6c98-4d0c-9ea3-451fa143c45c
+status: test
+description: This rule detects the execution of Run Once task as configured in the
+    registry
+author: Avneet Singh @v3t0_, oscd.community, Christopher Peacock @SecurePeacock (updated)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/18 18:44:31
+references:
+  - https://twitter.com/pabraeken/status/990717080805789697
+  - https://lolbas-project.github.io/lolbas/Binaries/Runonce/
+  - https://twitter.com/0gtweet/status/1602644163824156672?s=20&t=kuxbUnZPltpvFPZdCrqPXA
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+      - CommandLine|contains: /AlternateShellStartup
+      - CommandLine|endswith: /r
+    selection_img:
+      - Image|endswith: \runonce.exe
+      - Description: Run Once Wrapper
+falsepositives: Unknown
+level: low
+customer: 'demo'
+modified: 2022/12/13
+tags:
+  - attack.defense_evasion
+  - attack.t1112
+  - DEMO

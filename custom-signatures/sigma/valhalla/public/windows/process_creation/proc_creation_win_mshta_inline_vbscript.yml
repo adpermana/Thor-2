@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Wscript Shell Run In CommandLine
+id: 2c28c248-7f50-417a-9186-a85b223010ee
+status: experimental
+description: Detects the presence of the keywords "Wscript", "Shell" and "Run" in
+    the command, which could indicate a suspicious activity
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/31 14:14:31
+references:
+  - https://web.archive.org/web/20220830122045/http://blog.talosintelligence.com/2022/08/modernloader-delivers-multiple-stealers.html
+  - https://blog.talosintelligence.com/modernloader-delivers-multiple-stealers-cryptominers-and-rats/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains|all:
+          - Wscript.
+          - .Shell
+          - .Run
+falsepositives: Inline scripting can be used by some rare third party applications
+    or administrators. Investigate and apply additional filters accordingly
+level: medium
+customer: 'demo'
+modified: 2023/05/15
+tags:
+  - attack.execution
+  - attack.t1059
+  - DEMO

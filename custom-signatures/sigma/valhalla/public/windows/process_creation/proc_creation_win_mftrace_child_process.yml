@@ -1,0 +1,37 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Mftrace.EXE Abuse
+id: 3d48c9d3-1aa6-418d-98d3-8fd3c01a564e
+status: experimental
+description: Detects child processes of the "Trace log generation tool for Media Foundation
+    Tools" (Mftrace.exe) which can abused to execute arbitrary binaries.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/09 12:53:41
+references:
+  - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Mftrace/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        ParentImage|endswith: \mftrace.exe
+falsepositives: Legitimate use for tracing purposes
+level: medium
+customer: 'demo'
+modified: 2023/08/03
+tags:
+  - attack.defense_evasion
+  - attack.t1127
+  - DEMO

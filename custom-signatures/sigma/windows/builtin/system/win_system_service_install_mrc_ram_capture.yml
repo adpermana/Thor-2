@@ -1,0 +1,21 @@
+title: MRC - Magnet RAM Capture Service Installation
+id: 2700d096-1f9e-4d9b-979a-83f7a96745cc
+description: Detects a service installation that happens during Magnet Forensics RAM Capture execution
+status: test
+author: Florian Roth (Nextron Systems)
+date: 2022/07/05
+modified: 2023/03/28
+references:
+    - https://support.magnetforensics.com/s/article/Acquire-Memory-with-MAGNET-RAM-Capture
+logsource:
+    product: windows
+    service: system
+detection:
+    selection:
+        Provider_Name: 'Service Control Manager'
+        EventID: 7045
+        ServiceName: 'MagnetRAMCapture Driver'
+    condition: selection
+falsepositives:
+    - Legitimate use of Magnet Forensics RAM Capture
+level: high

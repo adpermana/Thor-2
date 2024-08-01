@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: AWS EC2 Disable EBS Encryption
+id: 16124c2d-e40b-4fcc-8f2c-5ab7870a2223
+status: stable
+description: |
+    Identifies disabling of default Amazon Elastic Block Store (EBS) encryption in the current region.
+    Disabling default encryption does not change the encryption status of your existing volumes.
+author: Sittikorn S
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/06/29 13:01:01
+references:
+  - https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DisableEbsEncryptionByDefault.html
+logsource:
+    product: aws
+    service: cloudtrail
+detection:
+    condition: selection
+    selection:
+        eventName: DisableEbsEncryptionByDefault
+        eventSource: ec2.amazonaws.com
+falsepositives:
+  - System Administrator Activities
+  - DEV, UAT, SAT environment. You should apply this rule with PROD account only.
+level: medium
+customer: 'demo'
+modified: 2021/08/20
+tags:
+  - attack.impact
+  - attack.t1486
+  - attack.t1565
+  - DEMO

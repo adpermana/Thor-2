@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: EVTX Created In Uncommon Location
+id: 65236ec7-ace0-4f0c-82fd-737b04fd4dcb
+status: experimental
+description: Detects the creation of new files with the ".evtx" extension in non-common
+    locations. Which could indicate tampering with default evtx locations in order
+    to evade security controls
+author: D3F7A5105
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/02 14:20:31
+references:
+  - https://learn.microsoft.com/en-us/windows/win32/eventlog/eventlog-key
+logsource:
+    category: file_event
+    product: windows
+    definition: 'Requirements: The ".evtx" extension should be monitored via a Sysmon
+        configuration. Example: <TargetFilename condition="end with">.evtx<TargetFilename>'
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_baseimage:
+        TargetFilename|contains: :\ProgramData\Microsoft\Windows\Containers\BaseImages\
+        TargetFilename|endswith: \Windows\System32\winevt\Logs\
+    filter_main_generic_img:
+        Image|endswith:
+          - :\Windows\explorer.exe
+          - :\Windows\system32\dllhost.exe
+    filter_main_path:
+        TargetFilename|contains: :\Windows\System32\winevt\Logs\
+    selection:
+        TargetFilename|endswith: .evtx
+falsepositives: Administrator or backup activity
+level: high
+customer: 'demo'
+modified: 2023/07/13
+tags:
+  - attack.defense_evasion
+  - attack.t1562.002
+  - DEMO

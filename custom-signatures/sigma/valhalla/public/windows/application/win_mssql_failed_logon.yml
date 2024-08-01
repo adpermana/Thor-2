@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: MSSQL Server Failed Logon
+id: 218d2855-2bba-4f61-9c85-81d0ea63ac71
+related:
+  - type: similar
+    id: ebfe73c2-5bc9-4ed9-aaa8-8b54b2b4777d
+status: experimental
+description: Detects failed logon attempts from clients to MSSQL server.
+author: Nasreddine Bencherchali (Nextron Systems), j4son
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/10/11 12:09:51
+references:
+  - https://cybersecthreat.com/2020/07/08/enable-mssql-authentication-log-to-eventlog/
+  - https://www.experts-exchange.com/questions/27800944/EventID-18456-Failed-to-open-the-explicitly-specified-database.html
+logsource:
+    product: windows
+    service: application
+    definition: 'Requirements: Must enable MSSQL authentication.'
+detection:
+    condition: selection
+    selection:
+        EventID: "18456"
+        Provider_Name: MSSQLSERVER
+falsepositives: This event could stem from users changing an account's password that's
+    used to authenticate via a job or an automated process. Investigate the source
+    of such events and mitigate them
+level: low
+customer: 'demo'
+tags:
+  - attack.credential_access
+  - attack.t1110
+  - DEMO

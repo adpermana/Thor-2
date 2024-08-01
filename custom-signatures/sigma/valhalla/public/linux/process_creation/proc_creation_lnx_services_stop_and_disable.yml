@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Disable Or Stop Services
+id: de25eeb8-3655-4643-ac3a-b662d3f26b6b
+status: test
+description: Detects the usage of utilities such as 'systemctl', 'service'...etc to
+    stop or disable tools and services
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/15 12:13:11
+references:
+  - https://www.trendmicro.com/pl_pl/research/20/i/the-evolution-of-malicious-shell-scripts.html
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - stop
+          - disable
+        Image|endswith:
+          - /service
+          - /systemctl
+          - /chkconfig
+falsepositives: Legitimate administration activities
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - DEMO

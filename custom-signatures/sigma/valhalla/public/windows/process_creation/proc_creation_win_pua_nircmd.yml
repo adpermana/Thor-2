@@ -1,0 +1,58 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PUA - NirCmd Execution
+id: 4e2ed651-1906-4a59-a78a-18220fca1b22
+status: test
+description: Detects the use of NirCmd tool for command execution, which could be
+    the result of legitimate administrative activity
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/24 11:15:21
+references:
+  - https://www.nirsoft.net/utils/nircmd.html
+  - https://www.winhelponline.com/blog/run-program-as-system-localsystem-account-windows/
+  - https://www.nirsoft.net/utils/nircmd2.html#using
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_* or all of combo_*
+    combo_exec:
+        CommandLine|contains:
+          - ' exec '
+          - ' exec2 '
+    combo_exec_params:
+        CommandLine|contains:
+          - ' show '
+          - ' hide '
+    selection_cmd:
+        CommandLine|contains:
+          - ' execmd '
+          - '.exe script '
+          - '.exe shexec '
+          - ' runinteractive '
+    selection_org:
+      - Image|endswith: \NirCmd.exe
+      - OriginalFileName: NirCmd.exe
+fields:
+  - CommandLine
+  - ParentCommandLine
+falsepositives: Legitimate use by administrators
+level: medium
+customer: 'demo'
+modified: 2023/02/13
+tags:
+  - attack.execution
+  - attack.t1569.002
+  - attack.s0029
+  - DEMO

@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Explorer NOUACCHECK Flag
+id: 534f2ef7-e8a2-4433-816d-c91bccde289b
+status: test
+description: Detects suspicious starts of explorer.exe that use the /NOUACCHECK flag
+    that allows to run all sub processes of that newly started explorer.exe without
+    any UAC checks
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/02/23 11:35:51
+references:
+  - https://twitter.com/ORCA6665/status/1496478087244095491
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_*
+    filter_dc_logon:
+      - ParentCommandLine: C:\Windows\system32\svchost.exe -k netsvcs -p -s Schedule
+      - ParentImage: C:\Windows\System32\svchost.exe
+    selection:
+        CommandLine|contains: /NOUACCHECK
+        Image|endswith: \explorer.exe
+falsepositives:
+  - Domain Controller User Logon
+  - Unknown how many legitimate software products use that method
+level: high
+customer: 'demo'
+modified: 2022/04/21
+tags:
+  - attack.defense_evasion
+  - attack.t1548.002
+  - DEMO

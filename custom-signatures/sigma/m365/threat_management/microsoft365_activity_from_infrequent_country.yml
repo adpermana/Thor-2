@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Activity from Infrequent Country
+id: 0f2468a2-5055-4212-a368-7321198ee706
+status: test
+description: Detects when a Microsoft Cloud App Security reported when an activity
+    occurs from a location that wasn't recently or never visited by any user in the
+    organization.
+author: Austin Songer @austinsonger
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/23 14:51:41
+references:
+  - https://docs.microsoft.com/en-us/cloud-app-security/anomaly-detection-policy
+  - https://docs.microsoft.com/en-us/cloud-app-security/policy-template-reference
+logsource:
+    product: m365
+    service: threat_management
+detection:
+    condition: selection
+    selection:
+        eventName: Activity from infrequent country
+        eventSource: SecurityComplianceCenter
+        status: success
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.command_and_control
+  - attack.t1573
+  - DEMO

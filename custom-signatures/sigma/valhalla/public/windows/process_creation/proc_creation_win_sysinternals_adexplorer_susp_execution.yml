@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Active Directory Database Snapshot Via ADExplorer
+id: ef61af62-bc74-4f58-b49b-626448227652
+related:
+  - type: derived
+    id: 9212f354-7775-4e28-9c9f-8f0a4544e664
+status: test
+description: Detects the execution of Sysinternals ADExplorer with the "-snapshot"
+    flag in order to save a local copy of the active directory database to a suspicious
+    directory.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/03/14 21:55:11
+references:
+  - https://www.documentcloud.org/documents/5743766-Global-Threat-Report-2019.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_flag:
+        CommandLine|contains: snapshot
+    selection_img:
+      - Image|endswith: \ADExplorer.exe
+      - OriginalFileName: AdExp
+    selection_paths:
+        CommandLine|contains:
+          - \Downloads\
+          - \Users\Public\
+          - \AppData\
+          - \Windows\Temp\
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.credential_access
+  - attack.t1552.001
+  - attack.t1003.003
+  - DEMO

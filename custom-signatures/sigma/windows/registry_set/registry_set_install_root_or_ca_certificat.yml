@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: New Root or CA or AuthRoot Certificate to Store
+id: d223b46b-5621-4037-88fe-fda32eead684
+status: experimental
+description: Detects the addition of new root, CA or AuthRoot certificates to the
+    Windows registry
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/04/04 17:48:51
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1553.004/T1553.004.md#atomic-test-6---add-root-certificate-to-currentuser-certificate-store
+  - https://posts.specterops.io/code-signing-certificate-cloning-attacks-and-defenses-6f98657fc6ec
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Details: Binary Data
+        TargetObject|contains:
+          - \SOFTWARE\Microsoft\SystemCertificates\Root\Certificates\
+          - \SOFTWARE\Policies\Microsoft\SystemCertificates\Root\Certificates\
+          - \SOFTWARE\Microsoft\EnterpriseCertificates\Root\Certificates\
+          - \SOFTWARE\Microsoft\SystemCertificates\CA\Certificates\
+          - \SOFTWARE\Policies\Microsoft\SystemCertificates\CA\Certificates\
+          - \SOFTWARE\Microsoft\EnterpriseCertificates\CA\Certificates\
+          - \SOFTWARE\Microsoft\SystemCertificates\AuthRoot\Certificates\
+          - \SOFTWARE\Policies\Microsoft\SystemCertificates\AuthRoot\Certificates\
+          - \SOFTWARE\Microsoft\EnterpriseCertificates\AuthRoot\Certificates\
+        TargetObject|endswith: \Blob
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.impact
+  - attack.t1490
+  - DEMO

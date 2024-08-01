@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: UAC Bypass Using EventVwr
+id: 63e4f530-65dc-49cc-8f80-ccfa95c69d43
+status: test
+description: Detects the pattern of a UAC bypass using Windows Event Viewer
+author: Antonio Cocomazzi (idea), Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/04/27 12:21:41
+references:
+  - https://twitter.com/orange_8361/status/1518970259868626944?s=20&t=RFXqZjtA7tWM3HxqEH78Aw
+  - https://twitter.com/splinter_code/status/1519075134296006662?s=12&t=DLUXH86WtcmG_AZ5gY3C6g
+  - https://lolbas-project.github.io/lolbas/Binaries/Eventvwr/#execute
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        Image|startswith:
+          - C:\Windows\System32\
+          - C:\Windows\SysWOW64\
+    selection:
+        TargetFilename|endswith:
+          - \Microsoft\Event Viewer\RecentViews
+          - \Microsoft\EventV~1\RecentViews
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/11/22
+tags:
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - DEMO

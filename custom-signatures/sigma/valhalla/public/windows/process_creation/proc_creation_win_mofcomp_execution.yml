@@ -1,0 +1,64 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Suspicious Mofcomp Execution
+id: 1dd05363-104e-4b4a-b963-196a534b03a1
+status: test
+description: |
+    Detects execution of the "mofcomp" utility as a child of a suspicious shell or script running utility or by having a suspicious path in the commandline.
+    The "mofcomp" utility parses a file containing MOF statements and adds the classes and class instances defined in the file to the WMI repository.
+    Attackers abuse this utility to install malicious MOF scripts
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/12 16:31:21
+references:
+  - https://thedfirreport.com/2022/07/11/select-xmrig-from-sqlserver/
+  - https://github.com/The-DFIR-Report/Sigma-Rules/blob/75260568a7ffe61b2458ca05f6f25914efb44337/win_mofcomp_execution.yml
+  - https://docs.microsoft.com/en-us/windows/win32/wmisdk/mofcomp
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_* and not 1 of filter_main_* and not 1 of filter_optional_*
+    filter_main_wmiprvse:
+        CommandLine|contains: C:\Windows\TEMP\
+        CommandLine|endswith: .mof
+        ParentImage: C:\Windows\System32\wbem\WmiPrvSE.exe
+    filter_optional_null_parent:
+        CommandLine|contains: C:\Windows\TEMP\
+        CommandLine|endswith: .mof
+    selection_case:
+      - ParentImage|endswith:
+          - \cmd.exe
+          - \powershell.exe
+          - \pwsh.exe
+          - \wsl.exe
+          - \wscript.exe
+          - \cscript.exe
+      - CommandLine|contains:
+          - \AppData\Local\Temp
+          - \Users\Public\
+          - \WINDOWS\Temp\
+          - '%temp%'
+          - '%tmp%'
+          - '%appdata%'
+    selection_img:
+      - Image|endswith: \mofcomp.exe
+      - OriginalFileName: mofcomp.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/04/11
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

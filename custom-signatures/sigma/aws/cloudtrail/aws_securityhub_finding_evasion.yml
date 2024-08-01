@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: AWS SecurityHub Findings Evasion
+id: a607e1fe-74bf-4440-a3ec-b059b9103157
+status: stable
+description: Detects the modification of the findings on SecurityHub.
+author: Sittikorn S
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/06/28 14:22:51
+references:
+  - https://docs.aws.amazon.com/cli/latest/reference/securityhub/
+logsource:
+    product: aws
+    service: cloudtrail
+detection:
+    condition: selection
+    selection:
+        eventName:
+          - BatchUpdateFindings
+          - DeleteInsight
+          - UpdateFindings
+          - UpdateInsight
+        eventSource: securityhub.amazonaws.com
+fields:
+  - sourceIPAddress
+  - userIdentity.arn
+falsepositives:
+  - System or Network administrator behaviors
+  - DEV, UAT, SAT environment. You should apply this rule with PROD environment only.
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1562
+  - DEMO

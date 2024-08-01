@@ -1,0 +1,54 @@
+title: Suspicious WMI Queries In PowerShell CommandLine
+id: de3e71f0-e077-4580-8fbc-1de2f432e4ee
+related:
+    - id: dbde9ec6-72c3-46b7-8e72-761187dd34d9
+      type: similar
+status: experimental
+description: Detects known suspicious WMI queries used in malicious powershell commandline
+author: Nasreddine Bencherchali
+references:
+    - https://www.mandiant.com/resources/unc2165-shifts-to-evade-sanctions
+    - https://github.com/S3cur3Th1sSh1t/WinPwn
+    - https://github.com/S3cur3Th1sSh1t/creds
+    - https://research.nccgroup.com/2022/08/19/back-in-black-unlocking-a-lockbit-3-0-ransomware-attack/
+date: 2022/08/22
+modified: 2022/09/08
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        - Image|endswith:
+            - '\powershell.exe'
+            - '\pwsh.exe'
+        - OriginalFileName:
+            - 'PowerShell.EXE'
+            - 'pwsh.dll'
+    selection_command:
+        CommandLine|contains:
+            - 'Get-WmiObject '
+            - 'gwmi '
+            - 'Invoke-WmiMethod '
+            - 'iwmi '
+    selection_filter:
+        CommandLine|contains:
+            - ' -Class CIM_ProcessExecutable'
+            - ' -Query "Select * from Win32_Process"'
+            - ' -Class Win32_Process '
+            - ' -Path Win32_Process '
+            - ' -Class Win32_ComputerSystem '
+            - ' -class Win32_Service '
+            - ' Win32_Service -ComputerName '
+            - 'Win32_ShadowCopy'
+            - 'Get-CimInstance Win32_StartupCommand'
+            - ' -EnableAllPrivileges '
+            - ' -Impersonation 3'
+            - 'StdRegProv'
+            - ' Win32_NTDomain'
+    condition: all of selection*
+falsepositives:
+    - Unknown
+level: medium
+tags:
+    - attack.execution
+    - attack.t1059.001

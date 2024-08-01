@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Msiexec.EXE Initiated Network Connection Over HTTP
+id: 8e5e38e4-5350-4c0b-895a-e872ce0dd54f
+status: test
+description: |
+    Detects an initiated network connection by "Msiexec.exe" over port 80 or 443.
+    Adversaries might abuse "msiexec.exe" to install and execute remotely hosted packages.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/16 18:45:11
+references:
+  - https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/msiexec
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218.007/T1218.007.md
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    condition: selection
+    selection:
+        DestinationPort:
+          - "80"
+          - "443"
+        Image|endswith: \msiexec.exe
+        Initiated: "true"
+falsepositives: Some rare installers were seen communicating with external servers
+    for additional information. While its a very rare occurrence in some environments
+    an initial baseline might be required.
+level: high
+customer: 'demo'
+modified: 2024/02/01
+tags:
+  - attack.defense_evasion
+  - attack.t1218.007
+  - DEMO

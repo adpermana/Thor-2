@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Cloudflared Tunnel Execution
+id: 9a019ffc-3580-4c9d-8d87-079f7e8d3fd4
+status: experimental
+description: Detects execution of the "cloudflared" tool to connect back to a tunnel.
+    This was seen used by threat actors to maintain persistence and remote access
+    to compromised networks.
+author: Janantha Marasinghe, Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/17 13:41:11
+references:
+  - https://blog.reconinfosec.com/emergence-of-akira-ransomware-group
+  - https://github.com/cloudflare/cloudflared
+  - https://developers.cloudflare.com/cloudflare-one/connections/connect-apps
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - '-config '
+          - '-credentials-contents '
+          - '-credentials-file '
+          - '-token '
+        CommandLine|contains|all:
+          - ' tunnel '
+          - ' run '
+falsepositives: Legitimate usage of Cloudflared tunnel.
+level: medium
+customer: 'demo'
+modified: 2023/12/20
+tags:
+  - attack.command_and_control
+  - attack.t1102
+  - attack.t1090
+  - attack.t1572
+  - DEMO

@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Greedy File Deletion Using Del
+id: 204b17ae-4007-471b-917b-b917b315c5db
+status: experimental
+description: Detects execution of the "del" builtin command to remove files using
+    greedy/wildcard expression. This is often used by malware to delete content of
+    folders that perhaps contains the initial malware infection or to delete evidence.
+author: frack113 , X__Junior (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/12/02 13:35:51
+references:
+  - https://www.joesandbox.com/analysis/509330/0/html#1044F3BDBE3BB6F734E357235F4D5898582D
+  - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/erase
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_del:
+        CommandLine|contains:
+          - 'del '
+          - 'erase '
+    selection_extensions:
+        CommandLine|contains:
+          - \\\*.au3
+          - \\\*.dll
+          - \\\*.exe
+          - \\\*.js
+    selection_img:
+      - Image|endswith: \cmd.exe
+      - OriginalFileName: Cmd.Exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/09/11
+tags:
+  - attack.defense_evasion
+  - attack.t1070.004
+  - DEMO

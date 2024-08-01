@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Sysmon Driver Unloaded Via Fltmc.EXE
+id: 4d7cda18-1b12-4e52-b45c-d28653210df8
+related:
+  - type: similar
+    id: 4931188c-178e-4ee7-a348-39e8a7a56821
+status: test
+description: Detects possible Sysmon filter driver unloaded via fltmc.exe
+author: Kirill Kiryanov, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/23 15:05:11
+references:
+  - https://www.darkoperator.com/blog/2018/10/5/operating-offensively-against-sysmon
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains|all:
+          - unload
+          - sysmon
+    selection_img:
+      - Image|endswith: \fltMC.exe
+      - OriginalFileName: fltMC.exe
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/02/13
+tags:
+  - attack.defense_evasion
+  - attack.t1070
+  - attack.t1562
+  - attack.t1562.002
+  - DEMO

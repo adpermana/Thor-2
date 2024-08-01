@@ -1,0 +1,304 @@
+private rule SmokeLoader
+{
+	meta:
+		author = "kevoreilly"
+		description = "SmokeLoader Payload"
+		cape_type = "SmokeLoader Payload"
+		ruleset = "SmokeLoader.yar"
+		repository = "kevoreilly/CAPEv2"
+		source_url = "https://github.com/kevoreilly/CAPEv2/blob/9c8d6da44b595f8140a5cd76edd8101f6812c3b0/data/yara/CAPE/SmokeLoader.yar"
+		license = "Other"
+
+	strings:
+		$rc4_decrypt64 = {41 8D 41 01 44 0F B6 C8 42 0F B6 [2] 41 8D 04 12 44 0F B6 D0 42 8A [2] 42 88 [2] 42 88 [2] 42 0F B6 [2] 03 CA 0F B6 C1 8A [2] 30 0F 48 FF C7 49 FF CB 75}
+		$rc4_decrypt32 = {47 B9 FF 00 00 00 23 F9 8A 54 [2] 0F B6 C2 03 F0 23 F1 8A 44 [2] 88 44 [2] 88 54 [2] 0F B6 4C [2] 0F B6 C2 03 C8 81 E1 FF 00 00 00 8A 44 [2] 30 04 2B 43 3B 9C 24 [4] 72 C0}
+		$fetch_c2_64 = {00 48 8D 05 [3] FF 48 8B CB 48 8B 14 D0 48 8B 5C 24 ?? 48 83 C4 20 5F E9}
+		$fetch_c2_32 = {8B 96 [2] (00|01) 00 8B CE 5E 8B 14 95 [4] E9}
+
+	condition:
+		2 of them
+}
+
+////////////////////////////////////////////////////////
+
+private rule Windows_Trojan_Smokeloader_4e31426e
+{
+	meta:
+		author = "Elastic Security"
+		id = "4e31426e-d62e-4b6d-911b-4223e1f6adef"
+		fingerprint = "cf6d8615643198bc53527cb9581e217f8a39760c2e695980f808269ebe791277"
+		creation_date = "2021-07-21"
+		last_modified = "2021-08-23"
+		threat_name = "Windows.Trojan.Smokeloader"
+		reference_sample = "1ce643981821b185b8ad73b798ab5c71c6c40e1f547b8e5b19afdaa4ca2a5174"
+		severity = 100
+		arch_context = "x86"
+		scan_context = "file, memory"
+		license = "Elastic License v2"
+		os = "windows"
+		ruleset = "Windows_Trojan_Smokeloader.yar"
+		repository = "elastic/protections-artifacts"
+		source_url = "https://github.com/elastic/protections-artifacts/blob/3bbef930abab9814b2fdb4704be075ab1daf2ea0/yara/rules/Windows_Trojan_Smokeloader.yar"
+
+	strings:
+		$a = { 5B 81 EB 34 10 00 00 6A 30 58 64 8B 00 8B 40 0C 8B 40 1C 8B 40 08 89 85 C0 }
+
+	condition:
+		all of them
+}
+
+private rule Windows_Trojan_Smokeloader_4ee15b92
+{
+	meta:
+		author = "Elastic Security"
+		id = "4ee15b92-c62f-42d2-bbba-1dac2fa5644f"
+		fingerprint = "5d2ed385c76dbb4c1c755ae88b68306086a199a25a29317ae132bc874b253580"
+		creation_date = "2022-02-17"
+		last_modified = "2022-04-12"
+		threat_name = "Windows.Trojan.Smokeloader"
+		reference_sample = "09b9283286463b35ea2d5abfa869110eb124eb8c1788eb2630480d058e82abf2"
+		severity = 100
+		arch_context = "x86"
+		scan_context = "file, memory"
+		license = "Elastic License v2"
+		os = "windows"
+		ruleset = "Windows_Trojan_Smokeloader.yar"
+		repository = "elastic/protections-artifacts"
+		source_url = "https://github.com/elastic/protections-artifacts/blob/3bbef930abab9814b2fdb4704be075ab1daf2ea0/yara/rules/Windows_Trojan_Smokeloader.yar"
+
+	strings:
+		$a = { 24 34 30 33 33 8B 45 F4 5F 5E 5B C9 C2 10 00 55 89 E5 83 EC }
+
+	condition:
+		all of them
+}
+
+private rule Windows_Trojan_Smokeloader_ea14b2a5
+{
+	meta:
+		author = "Elastic Security"
+		id = "ea14b2a5-ea0d-4da2-8190-dbfcda7330d9"
+		fingerprint = "950ce9826fdff209b6e03c70a4f78b812d211a2a9de84bec0e5efe336323001b"
+		creation_date = "2023-05-03"
+		last_modified = "2023-06-13"
+		threat_name = "Windows.Trojan.Smokeloader"
+		reference_sample = "15fe237276b9c2c6ceae405c0739479d165b406321891c8a31883023e7b15d54"
+		severity = 100
+		arch_context = "x86"
+		scan_context = "file, memory"
+		license = "Elastic License v2"
+		os = "windows"
+		ruleset = "Windows_Trojan_Smokeloader.yar"
+		repository = "elastic/protections-artifacts"
+		source_url = "https://github.com/elastic/protections-artifacts/blob/3bbef930abab9814b2fdb4704be075ab1daf2ea0/yara/rules/Windows_Trojan_Smokeloader.yar"
+
+	strings:
+		$a1 = { AC 41 80 01 AC 41 80 00 AC 41 80 00 AC 41 C0 00 AC 41 80 01 }
+		$a2 = { AC 41 80 00 AC 41 80 07 AC 41 80 00 AC 41 80 00 AC 41 80 00 }
+
+	condition:
+		all of them
+}
+
+private rule Windows_Trojan_Smokeloader_de52ed44
+{
+	meta:
+		author = "Elastic Security"
+		id = "de52ed44-062c-4b0d-9a41-1bfc31a8daa9"
+		fingerprint = "950db8f87a81ef05cc2ecbfa174432ab31a3060c464836f3b38448bd8e5801be"
+		creation_date = "2023-05-04"
+		last_modified = "2023-06-13"
+		threat_name = "Windows.Trojan.Smokeloader"
+		reference_sample = "c689a384f626616005d37a94e6a5a713b9eead1b819a238e4e586452871f6718"
+		severity = 100
+		arch_context = "x86"
+		scan_context = "file, memory"
+		license = "Elastic License v2"
+		os = "windows"
+		ruleset = "Windows_Trojan_Smokeloader.yar"
+		repository = "elastic/protections-artifacts"
+		source_url = "https://github.com/elastic/protections-artifacts/blob/3bbef930abab9814b2fdb4704be075ab1daf2ea0/yara/rules/Windows_Trojan_Smokeloader.yar"
+
+	strings:
+		$a1 = { 08 31 FF 89 7D CC 66 8C E8 66 85 C0 74 03 FF 45 CC FF 53 48 }
+		$a2 = { B0 8F 45 C8 8D 45 B8 89 38 8D 4D C8 6A 04 57 6A 01 51 57 57 }
+
+	condition:
+		all of them
+}
+
+////////////////////////////////////////////////////////
+
+private rule win_smokeloader_auto
+{
+	meta:
+		author = "Felix Bilstein - yara-signator at cocacoding dot com"
+		date = "2023-12-06"
+		version = "1"
+		description = "Detects win.smokeloader."
+		info = "autogenerated rule brought to you by yara-signator"
+		tool = "yara-signator v0.6.0"
+		signator_config = "callsandjumps;datarefs;binvalue"
+		malpedia_reference = "https://malpedia.caad.fkie.fraunhofer.de/details/win.smokeloader"
+		malpedia_rule_date = "20231130"
+		malpedia_hash = "fc8a0e9f343f6d6ded9e7df1a64dac0cc68d7351"
+		malpedia_version = "20230808"
+		malpedia_license = "CC BY-SA 4.0"
+		malpedia_sharing = "TLP:WHITE"
+		ruleset = "win.smokeloader_auto.yar"
+		repository = "malpedia/signator-rules"
+		source_url = "https://github.com/malpedia/signator-rules/blob/fbacfc09b84d53d410385e66a8e56f25016c588a/rules/win.smokeloader_auto.yar"
+
+	strings:
+		$sequence_0 = { ff15???????? 8d45f0 50 8d45e8 50 8d45e0 50 }
+		$sequence_1 = { 57 ff15???????? 6a00 6800000002 6a03 6a00 6a03 }
+		$sequence_2 = { 50 8d45e0 50 56 ff15???????? 56 ff15???????? }
+		$sequence_3 = { 8bf0 8d45dc 50 6a00 53 ff15???????? }
+		$sequence_4 = { 740a 83c104 83f920 72f0 }
+		$sequence_5 = { e8???????? 8bf0 8d45fc 50 ff75fc 56 6a19 }
+		$sequence_6 = { ff15???????? bf90010000 8bcf e8???????? }
+		$sequence_7 = { 0fb64405dc 50 8d45ec 50 }
+		$sequence_8 = { 50 56 681f000f00 57 }
+		$sequence_9 = { 56 8d45fc 50 57 57 6a19 }
+		$sequence_10 = { 668ce8 6685c0 7406 fe05???????? }
+		$sequence_11 = { 8b07 03c3 50 ff15???????? }
+		$sequence_12 = { 56 ff15???????? 50 56 6a00 ff15???????? }
+		$sequence_13 = { 33c0 e9???????? e8???????? b904010000 }
+		$sequence_14 = { 88443c18 88543418 0fb64c3c18 0fb6c2 03c8 81e1ff000000 }
+		$sequence_15 = { 81e5ff000000 8a442c18 88443c18 47 }
+		$sequence_16 = { e8???????? 8bf8 68???????? ff15???????? }
+		$sequence_17 = { ebf5 55 8bec 83ec24 8d45f4 53 }
+		$sequence_18 = { 50 57 ff15???????? 43 83fb0f }
+		$sequence_19 = { 8b7d10 50 57 56 53 e8???????? }
+		$sequence_20 = { 8d8de8fdffff 50 50 50 }
+		$sequence_21 = { 8d95f0fdffff c70200000000 6800800000 52 51 6aff }
+		$sequence_22 = { 8985ecfdffff ffb5f0fdffff 50 53 e8???????? 8d8decfdffff }
+		$sequence_23 = { e8???????? 2500300038 005800 2500300038 }
+		$sequence_24 = { 8db5f8fdffff c60653 56 6a00 6a00 6a00 }
+		$sequence_25 = { 8b4514 898608020000 56 6aff }
+		$sequence_26 = { 01d4 8d85f0fdffff 8b750c 8b7d10 50 57 }
+		$sequence_27 = { fc 5f 5e 5b }
+		$sequence_28 = { 89e5 81ec5c060000 53 56 }
+		$sequence_29 = { 30d0 aa e2f3 7505 }
+		$sequence_30 = { 89cf fc b280 31db a4 }
+		$sequence_31 = { 60 89c6 89cf fc }
+		$sequence_32 = { ff15???????? 85c0 747c 488b4c2448 4533c9 488d442440 }
+		$sequence_33 = { 488b4547 488907 4885c9 740f 8b450f 48894d17 83c802 }
+		$sequence_34 = { 33c9 e8???????? 488bd8 4584ff 7411 41b101 }
+		$sequence_35 = { 4f 8d1c10 41 8b4b18 45 }
+		$sequence_36 = { 01c4 ffc9 49 8d3c8c }
+		$sequence_37 = { 4c 01c7 8b048f 4c }
+		$sequence_38 = { 49 8d3c8c 8b37 4c 01c6 }
+		$sequence_39 = { 41b104 448bc7 488bcb e8???????? 488b742440 488bc3 488b5c2430 }
+		$sequence_40 = { 55 89e5 81ec54040000 53 }
+		$sequence_41 = { 33c9 4c897c2428 c744242000a00f00 ff15???????? }
+		$sequence_42 = { 8b4b18 45 8b6320 4d }
+		$sequence_43 = { 89d0 c1e205 01c2 31c0 ac 01c2 85c0 }
+		$sequence_44 = { 83c408 85c0 0f84cb000000 8b45f4 2d10bf3400 0fb74dec }
+		$sequence_45 = { 8946fc ad 85c0 75f3 c3 56 }
+		$sequence_46 = { 56 ad 01e8 31c9 c1c108 3208 }
+		$sequence_47 = { 8b4da0 8b55a4 895148 689d1e6b63 8b45e4 50 }
+		$sequence_48 = { 8b45b4 894220 eb10 8b8d78ffffff 8b11 899578ffffff ebae }
+		$sequence_49 = { 03471c 8b0428 01e8 5e c3 }
+		$sequence_50 = { 5b c9 c20800 55 89e5 83ec04 }
+		$sequence_51 = { e8???????? 8945ac 6a00 6a04 8d45b4 50 }
+		$sequence_52 = { aa e2f3 7506 7404 }
+		$sequence_53 = { 55 8bec 83c4d0 1e 53 }
+		$sequence_54 = { 684a0dce09 8b45e4 50 e8???????? 8945a8 8b4da0 8b55a8 }
+		$sequence_55 = { 83ec0c e8???????? 8945f8 8b45f8 8b4860 894df4 ff7518 }
+		$sequence_56 = { 803800 75f5 31d1 75ec }
+		$sequence_57 = { 8b450c 2d10bf3400 8b4d08 c1e103 }
+		$sequence_58 = { 8b55f8 0fb70a c1e103 33d2 f7f1 8945fc }
+		$sequence_59 = { 5e c3 60 89c6 }
+		$sequence_60 = { 9a18a15c5d5d5d d6 0055d0 08a50f375d37 }
+		$sequence_61 = { 48 35f94e5d5d d6 59 79de 99 }
+		$sequence_62 = { 5d 5d b658 1f 79b6 a888 }
+		$sequence_63 = { 0055d0 08a50f375d37 5d 37 }
+		$sequence_64 = { 5d 5d 285829 5e cb }
+
+	condition:
+		7 of them and filesize <245760
+}
+
+////////////////////////////////////////////////////////
+
+private rule malware_SmokeLoader
+{
+	meta:
+		description = "detect SmokeLoader in memory"
+		author = "JPCERT/CC Incident Response Group"
+		rule_usage = "memory scan"
+		reference = "https://www.cert.pl/en/news/single/dissecting-smoke-loader/"
+		ruleset = "smokeloader.yara"
+		repository = "JPCERTCC/jpcert-yara"
+		source_url = "https://github.com/JPCERTCC/jpcert-yara/blob/0722a9365ec6bc969c517c623cd166743d1bc473/other/smokeloader.yara"
+		license = "Other"
+
+	strings:
+		$a1 = { B8 25 30 38 58 }
+		$b1 = { 81 3D ?? ?? ?? ?? 25 00 41 00 }
+		$c1 = { C7 ?? ?? ?? 25 73 25 73 }
+
+	condition:
+		$a1 and $b1 and $c1
+}
+
+////////////////////////////////////////////////////////
+
+private rule Windows_Trojan_Smokeloader_3687686f
+{
+	meta:
+		author = "Elastic Security"
+		id = "3687686f-8fbf-4f09-9afa-612ee65dc86c"
+		fingerprint = "0f483f9f79ae29b944825c1987366d7b450312f475845e2242a07674580918bc"
+		creation_date = "2021-07-21"
+		last_modified = "2021-08-23"
+		threat_name = "Windows.Trojan.Smokeloader"
+		reference_sample = "8b3014ecd962a335b246f6c70fc820247e8bdaef98136e464b1fdb824031eef7"
+		severity = 100
+		arch_context = "x86"
+		scan_context = "file, memory"
+		license = "Elastic License v2"
+		os = "windows"
+		ruleset = "Windows_Trojan_Smokeloader.yar"
+		repository = "RoomaSec/RmTools"
+		source_url = "https://github.com/RoomaSec/RmTools/blob/fc4e0b5491bc699117804268d023467b0d047e87/yara_scanner/yara_rules/es_rules/Windows_Trojan_Smokeloader.yar"
+
+	strings:
+		$a = { 0C 8B 45 F0 89 45 C8 8B 45 C8 8B 40 3C 8B 4D F0 8D 44 01 04 89 }
+
+	condition:
+		all of them
+}
+
+////////////////////////////////////////////////////////
+
+private rule SmokeLoader_1
+{
+	meta:
+		author = "kev"
+		description = "SmokeLoader C2 decryption function"
+		cape_type = "SmokeLoader Payload"
+		original_yara_name = "SmokeLoader"
+		ruleset = "SmokeLoader.yar"
+		repository = "ctxis/CAPE"
+		source_url = "https://github.com/ctxis/CAPE/blob/dae9fa6a254ecdbabeb7eb0d2389fa63722c1e82/data/yara/CAPE/SmokeLoader.yar"
+
+	strings:
+		$decrypt64_1 = {44 0F B6 CF 48 8B D0 49 03 D9 4C 2B D8 8B 4B 01 41 8A 04 13 41 BA 04 00 00 00 0F C9 32 C1 C1 F9 08 49 FF CA 75 F6 F6 D0 88 02 48 FF C2 49 FF C9 75 DB 49 8B C0 48 8B 5C 24 30 48 83 C4 20 5F C3}
+		$decrypt64_2 = {40 84 FF 90 90 E8 00 00 00 00 5E 48 83 C6 1C 49 8B F8 A4 80 3E 00 75 FA 80 07 00 48 8B 5C 24 30 48 83 C4 20 5F C3}
+		$decrypt32_1 = {03 EE 8B D7 2B C7 8B F8 8B 4D 01 8A 04 17 6A 04 0F C9 5B 32 C1 C1 F9 08 4B 75 F8 F6 D0 88 02 42 4E 75 E5 8B 7C 24 14 8B C7 5F 5E 5D 5B 59 59 C3}
+
+	condition:
+		any of ($decrypt*)
+}
+
+////////////////////////////////////////////////////////
+
+rule fsSmokeLoader {
+	meta:
+		description = "FsYARA - Malware Trends"
+		vetted_family = "smokeloader"
+	condition:
+		SmokeLoader or Windows_Trojan_Smokeloader_4e31426e or Windows_Trojan_Smokeloader_4ee15b92 or Windows_Trojan_Smokeloader_ea14b2a5 or Windows_Trojan_Smokeloader_de52ed44 or win_smokeloader_auto or malware_SmokeLoader or Windows_Trojan_Smokeloader_3687686f or SmokeLoader_1
+}

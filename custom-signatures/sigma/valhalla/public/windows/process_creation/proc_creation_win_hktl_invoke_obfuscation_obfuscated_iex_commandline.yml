@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Invoke-Obfuscation Obfuscated IEX Invocation
+id: 4bf943c6-5146-4273-98dd-e958fd1e3abf
+status: test
+description: Detects all variations of obfuscated powershell IEX invocation code generated
+    by Invoke-Obfuscation framework from the following code block
+author: Daniel Bohannon (@Mandiant/@FireEye), oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/11/08 17:42:21
+references:
+  - https://github.com/danielbohannon/Invoke-Obfuscation/blob/f20e7f843edd0a3a7716736e9eddfa423395dd26/Out-ObfuscatedStringCommand.ps1#L873-L888
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - CommandLine|re: \$PSHome\[\s*\d{1,3}\s*\]\s*\+\s*\$PSHome\[
+      - CommandLine|re: \$ShellId\[\s*\d{1,3}\s*\]\s*\+\s*\$ShellId\[
+      - CommandLine|re: \$env:Public\[\s*\d{1,3}\s*\]\s*\+\s*\$env:Public\[
+      - CommandLine|re: \$env:ComSpec\[(\s*\d{1,3}\s*,){2}
+      - CommandLine|re: \*mdr\*\W\s*\)\.Name
+      - CommandLine|re: \$VerbosePreference\.ToString\(
+      - CommandLine|re: \[String\]\s*\$VerbosePreference
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/12/31
+tags:
+  - attack.defense_evasion
+  - attack.t1027
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

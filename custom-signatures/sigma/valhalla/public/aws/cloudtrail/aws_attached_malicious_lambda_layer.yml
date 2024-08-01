@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: AWS Attached Malicious Lambda Layer
+id: 97fbabf8-8e1b-47a2-b7d5-a418d2b95e3d
+status: test
+description: |
+    Detects when an user attached a Lambda layer to an existing function to override a library that is in use by the function, where their malicious code could utilize the function's IAM role for AWS API calls.
+    This would give an adversary access to the privileges associated with the Lambda service role that is attached to that function.
+author: Austin Songer
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/09/23 14:50:11
+references:
+  - https://docs.aws.amazon.com/lambda/latest/dg/API_UpdateFunctionConfiguration.html
+logsource:
+    product: aws
+    service: cloudtrail
+detection:
+    condition: selection
+    selection:
+        eventName|startswith: UpdateFunctionConfiguration
+        eventSource: lambda.amazonaws.com
+falsepositives:
+  - Lambda Layer being attached may be performed by a system administrator. Verify
+    whether the user identity, user agent, and/or hostname should be making changes
+    in your environment.
+  - Lambda Layer being attached from unfamiliar users should be investigated. If known
+    behavior is causing false positives, it can be exempted from the rule.
+level: medium
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.privilege_escalation
+  - DEMO

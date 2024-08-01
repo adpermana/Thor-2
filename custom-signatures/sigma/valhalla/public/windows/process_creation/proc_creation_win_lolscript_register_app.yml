@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Register_App.Vbs LOLScript Abuse
+id: 28c8f68b-098d-45af-8d43-8089f3e35403
+status: test
+description: Detects potential abuse of the "register_app.vbs" script that is part
+    of the Windows SDK. The script offers the capability to register new VSS/VDS Provider
+    as a COM+ application. Attackers can use this to install malicious DLLs for persistence
+    and execution.
+author: Austin Songer @austinsonger
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/11/05 17:00:21
+references:
+  - https://twitter.com/sblmsrsn/status/1456613494783160325?s=20
+  - https://github.com/microsoft/Windows-classic-samples/blob/7cbd99ac1d2b4a0beffbaba29ea63d024ceff700/Samples/Win7Samples/winbase/vss/vsssampleprovider/register_app.vbs
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection*
+    selection_cli:
+        CommandLine|contains: '.vbs -register '
+    selection_img:
+      - Image|endswith:
+          - \cscript.exe
+          - \wscript.exe
+      - OriginalFileName:
+          - cscript.exe
+          - wscript.exe
+falsepositives: Other VB scripts that leverage the same starting command line flags
+level: medium
+customer: 'demo'
+modified: 2022/07/07
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

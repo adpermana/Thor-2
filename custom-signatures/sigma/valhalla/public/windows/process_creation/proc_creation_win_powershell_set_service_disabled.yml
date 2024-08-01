@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Service StartupType Change Via PowerShell Set-Service
+id: 62b20d44-1546-4e61-afce-8e175eb9473c
+status: test
+description: Detects the use of the PowerShell "Set-Service" cmdlet to change the
+    startup type of a service to "disabled" or "manual"
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/03/04 19:56:31
+references:
+  - https://www.virustotal.com/gui/file/38283b775552da8981452941ea74191aa0d203edd3f61fb2dee7b0aea3514955
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains:
+          - Disabled
+          - Manual
+        CommandLine|contains|all:
+          - Set-Service
+          - -StartupType
+    selection_img:
+      - Image|endswith: \powershell.exe
+      - OriginalFileName: PowerShell.EXE
+falsepositives: False positives may occur with troubleshooting scripts
+level: medium
+customer: 'demo'
+tags:
+  - attack.execution
+  - attack.defense_evasion
+  - attack.t1562.001
+  - DEMO

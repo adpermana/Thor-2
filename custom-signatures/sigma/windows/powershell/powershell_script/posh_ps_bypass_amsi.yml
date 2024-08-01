@@ -1,0 +1,42 @@
+title: Bypass AMSI via .NET Reflection
+id: 6242dbfd-1a80-4efe-b6f5-f8727d2e0a02
+status: test
+description: Detects possible activity to bypass "AmsiScanBuffer" via memory patching
+author: Nasreddine Bencherchali
+references:
+    - https://github.com/S3cur3Th1sSh1t/Creds/blob/master/Csharp/Amsibypass.cs
+    - https://github.com/S3cur3Th1sSh1t/WinPwn
+    - https://www.virustotal.com/gui/file/3d7b981dba7e674a526d0e420c82bbf1a778debdfb9a8b12f15121fcdadd54b6/
+    - https://github.com/BC-SECURITY/Empire/blob/master/empire/server/bypasses/LibermanBypass.yaml
+    - https://github.com/BC-SECURITY/Empire/blob/master/empire/server/bypasses/MattifestationBypass.yaml
+date: 2022/05/24
+modified: 2023/03/29
+tags:
+    - attack.defense_evasion
+    - attack.t1562.001
+logsource:
+    product: windows
+    category: ps_script
+    definition: Script Block Logging must be enabled
+detection:
+    selection_load:
+        ScriptBlockText|contains:
+            - 'LoadLibrary('
+            - 'GetProcAddress('
+            - 'VirtualProtect('
+            - 'GetModuleHandle('
+            - 'Assembly.GetType('
+    selection_amsi:
+        ScriptBlockText|contains:
+            - 'AmsiScanBuffer'
+            - 'amsi.dll'
+            - 'canBuffer'
+            - 'AmsiS'
+            - 'AmsiUtils'
+            - 'amsiInitFailed'
+            - '$([CHar](97)+[CHar](109*53/53)+[cHAR]([ByTE]0x73)+[chAr]([bYTE]0x69)'
+            - '$([char]([BytE]0x41)+[CHar]([byTE]0x6d)+[ChAR]([byTe]0x73)+[Char](105+69-69))'
+    condition: all of selection_*
+falsepositives:
+    - Unknown
+level: high

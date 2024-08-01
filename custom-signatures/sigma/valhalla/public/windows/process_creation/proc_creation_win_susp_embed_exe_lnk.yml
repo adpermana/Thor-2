@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Hidden Powershell in Link File Pattern
+id: 30e92f50-bb5a-4884-98b5-d20aa80f3d7a
+status: test
+description: Detects events that appear when a user click on a link file with a powershell
+    command in it
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/02/06 15:50:01
+references:
+  - https://www.x86matthew.com/view_post?id=embed_exe_lnk
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains|all:
+          - powershell
+          - .lnk
+        Image: C:\Windows\System32\cmd.exe
+        ParentImage: C:\Windows\explorer.exe
+falsepositives: Legitimate commands in .lnk files
+level: medium
+customer: 'demo'
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

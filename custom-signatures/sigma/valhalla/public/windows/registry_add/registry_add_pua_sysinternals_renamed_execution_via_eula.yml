@@ -1,0 +1,82 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Execution Of Renamed Sysinternals Tools - Registry
+id: f50f3c09-557d-492d-81db-9064a8d4e211
+related:
+  - type: derived
+    id: 25ffa65d-76d8-4da5-a832-3f2b0136e133
+  - type: similar
+    id: 8023f872-3f1d-4301-a384-801889917ab4
+status: test
+description: Detects the creation of the "accepteula" key related to the Sysinternals
+    tools being created from executables with the wrong name (e.g. a renamed Sysinternals
+    tool)
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/24 22:16:21
+references:
+  - Internal Research
+logsource:
+    category: registry_add
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        Image|endswith:
+          - \ADExplorer.exe
+          - \ADExplorer64.exe
+          - \handle.exe
+          - \handle64.exe
+          - \livekd.exe
+          - \livekd64.exe
+          - \procdump.exe
+          - \procdump64.exe
+          - \procexp.exe
+          - \procexp64.exe
+          - \PsExec.exe
+          - \PsExec64.exe
+          - \PsLoggedon.exe
+          - \PsLoggedon64.exe
+          - \psloglist.exe
+          - \psloglist64.exe
+          - \pspasswd.exe
+          - \pspasswd64.exe
+          - \PsPing.exe
+          - \PsPing64.exe
+          - \PsService.exe
+          - \PsService64.exe
+          - \sdelete.exe
+    selection:
+        EventType: CreateKey
+        TargetObject|contains:
+          - \Active Directory Explorer
+          - \Handle
+          - \LiveKd
+          - \ProcDump
+          - \Process Explorer
+          - \PsExec
+          - \PsLoggedon
+          - \PsLoglist
+          - \PsPasswd
+          - \PsPing
+          - \PsService
+          - \SDelete
+        TargetObject|endswith: \EulaAccepted
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/02/07
+tags:
+  - attack.resource_development
+  - attack.t1588.002
+  - DEMO

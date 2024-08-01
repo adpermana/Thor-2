@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Plink Port Forwarding
+id: 48a61b29-389f-4032-b317-b30de6b95314
+status: test
+description: Detects suspicious Plink tunnel port forwarding to a local port
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/01/19 14:44:51
+references:
+  - https://www.real-sec.com/2019/04/bypassing-network-restrictions-through-rdp-tunneling/
+  - https://medium.com/@informationsecurity/remote-ssh-tunneling-with-plink-exe-7831072b3d7d
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains: ' -R '
+        Description: Command-line SSH, Telnet, and Rlogin client
+falsepositives: Administrative activity using a remote port forwarding to a local
+    port
+level: high
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.command_and_control
+  - attack.t1572
+  - attack.lateral_movement
+  - attack.t1021.001
+  - DEMO

@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: SafeBoot Registry Key Deleted Via Reg.EXE
+id: fc0e89b5-adb0-43c1-b749-c12a10ec37de
+related:
+  - type: similar
+    id: d7662ff6-9e97-4596-a61d-9839e32dee8d
+status: test
+description: Detects execution of "reg.exe" commands with the "delete" flag on safe
+    boot registry keys. Often used by attacker to prevent safeboot execution of security
+    products
+author: Nasreddine Bencherchali (Nextron Systems), Tim Shelton
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/08 16:07:01
+references:
+  - https://www.trendmicro.com/en_us/research/22/e/avoslocker-ransomware-variant-abuses-driver-file-to-disable-anti-Virus-scans-log4shell.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_delete:
+        CommandLine|contains|all:
+          - ' delete '
+          - \SYSTEM\CurrentControlSet\Control\SafeBoot
+    selection_img:
+      - Image|endswith: reg.exe
+      - OriginalFileName: reg.exe
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/02/04
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+  - DEMO

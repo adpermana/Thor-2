@@ -1,0 +1,25 @@
+title: Environment Variable Was Created Using WMI
+id: 37fcbcf9-d7a2-470c-8697-44d2cda3e428
+status: test
+description: Detects the creation of environment variables using the "Win32_Environment" WMI class
+references:
+    - Internal Research
+author: Nasreddine Bencherchali
+date: 2022/11/22
+modified: 2023/03/29
+tags:
+    - attack.execution
+    - attack.t1047
+logsource:
+    product: windows
+    service: wmi
+detection:
+    selection:
+        EventID: 12
+        Operation|contains|all:
+            - 'Provider::PutInstance'
+            - 'Win32_Environment.Name'
+    condition: selection
+falsepositives:
+    - Legitimate creation of environment variables by an administration script or third party software via WMI. Inspect the PID of the processes initiating the command
+level: medium

@@ -1,0 +1,19 @@
+title: Timestamp Modification on Registry Key
+id: 7089f070-c220-42a8-b6be-e46d6f1a70e7
+status: test
+description: Detects modification of a registry key's timestamp
+references:
+    - https://www.inversecos.com/2022/04/malicious-registry-timestamp.html
+author: Max Altgelt
+date: 2022/04/06
+modified: 2023/03/29
+logsource:
+    product: windows
+    service: registry-setinformation
+detection:
+    selection:
+        InfoClass: 0 # KeyWriteTimeInformation, see https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ne-wdm-_key_set_information_class
+    condition: selection
+falsepositives:
+    - Unknown
+level: high

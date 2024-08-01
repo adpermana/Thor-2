@@ -1,0 +1,58 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: File Creation Date Changed to Another Year
+id: 558eebe5-f2ba-4104-b339-36f7902bcc1a
+status: test
+description: |
+    Attackers may change the file creation time of a backdoor to make it look like it was installed with the operating system.
+    Note that many processes legitimately change the creation time of a file; it does not necessarily indicate malicious activity.
+author: frack113, Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/12 16:35:01
+references:
+  - https://www.inversecos.com/2022/04/defence-evasion-technique-timestomping.html
+logsource:
+    category: file_change
+    product: windows
+detection:
+    condition: (( selection1 and not filter1 ) or ( selection2 and not filter2 ))
+        and not 1 of gen_filter*
+    filter1:
+        CreationUtcTime|startswith: "2022"
+    filter2:
+        CreationUtcTime|startswith: "202"
+    gen_filter_tiworker:
+        Image|endswith: \TiWorker.exe
+        Image|startswith: C:\WINDOWS\
+        TargetFilename|endswith: .cab
+    gen_filter_updates:
+      - Image:
+          - C:\Windows\system32\ProvTool.exe
+          - C:\Windows\System32\usocoreworker.exe
+          - C:\Windows\ImmersiveControlPanel\SystemSettings.exe
+      - TargetFilename|startswith: C:\ProgramData\USOPrivate\UpdateStore\
+      - TargetFilename|endswith:
+          - .tmp
+          - .temp
+    selection1:
+        PreviousCreationUtcTime|startswith: "2022"
+    selection2:
+        PreviousCreationUtcTime|startswith: "202"
+falsepositives: Changes made to or by the local NTP service
+level: high
+customer: 'demo'
+modified: 2022/10/25
+tags:
+  - attack.t1070.006
+  - attack.defense_evasion
+  - DEMO

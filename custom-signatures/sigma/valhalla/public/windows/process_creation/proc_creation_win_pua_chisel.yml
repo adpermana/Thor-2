@@ -1,0 +1,53 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PUA - Chisel Tunneling Tool Execution
+id: 8b0e12da-d3c3-49db-bb4f-256703f380e5
+related:
+  - type: similar
+    id: cf93e05e-d798-4d9e-b522-b0248dc61eaf
+status: test
+description: Detects usage of the Chisel tunneling tool via the commandline arguments
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/13 15:17:31
+references:
+  - https://github.com/jpillora/chisel/
+  - https://arcticwolf.com/resources/blog/lorenz-ransomware-chiseling-in/
+  - https://blog.sekoia.io/lucky-mouse-incident-response-to-detection-engineering/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection_img or all of selection_param*
+    selection_img:
+        Image|endswith: \chisel.exe
+    selection_param1:
+        CommandLine|contains:
+          - 'exe client '
+          - 'exe server '
+    selection_param2:
+        CommandLine|contains:
+          - -socks5
+          - -reverse
+          - ' r:'
+          - ':127.0.0.1:'
+          - '-tls-skip-verify '
+          - :socks
+falsepositives: Some false positives may occur with other tools with similar commandlines
+level: high
+customer: 'demo'
+modified: 2023/02/13
+tags:
+  - attack.command_and_control
+  - attack.t1090.001
+  - DEMO

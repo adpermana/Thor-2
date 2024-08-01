@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Disable Windows IIS HTTP Logging
+id: e4ed6030-ffe5-4e6a-8a8a-ab3c1ab9d94e
+status: test
+description: Disables HTTP logging on a Windows IIS web server as seen by Threat Group
+    3390 (Bronze Union)
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/09 13:51:11
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.002/T1562.002.md#atomic-test-1---disable-windows-iis-http-logging
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains|all:
+          - set
+          - config
+          - section:httplogging
+          - dontLog:true
+    selection_img:
+      - Image|endswith: \appcmd.exe
+      - OriginalFileName: appcmd.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/01/22
+tags:
+  - attack.defense_evasion
+  - attack.t1562.002
+  - DEMO

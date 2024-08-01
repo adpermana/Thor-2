@@ -1,0 +1,55 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Exports Critical Registry Keys To a File
+id: 82880171-b475-4201-b811-e9c826cd5eaa
+related:
+  - type: similar
+    id: f0e53e89-8d22-46ea-9db5-9d4796ee2f8a
+status: test
+description: Detects the export of a crital Registry key to a file.
+author: Oddvar Moe, Sander Wiebing, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/12 16:17:31
+references:
+  - https://lolbas-project.github.io/lolbas/Binaries/Regedit/
+  - https://gist.github.com/api0cradle/cdd2d0d0ec9abb686f0e89306e277b8f
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli_1:
+        CommandLine|contains|windash: ' -E '
+    selection_cli_2:
+        CommandLine|contains:
+          - hklm
+          - hkey_local_machine
+    selection_cli_3:
+        CommandLine|endswith:
+          - \system
+          - \sam
+          - \security
+    selection_img:
+      - Image|endswith: \regedit.exe
+      - OriginalFileName: REGEDIT.EXE
+fields:
+  - ParentImage
+  - CommandLine
+falsepositives: Dumping hives for legitimate purpouse i.e. backup or forensic investigation
+level: high
+customer: 'demo'
+modified: 2024/03/13
+tags:
+  - attack.exfiltration
+  - attack.t1012
+  - DEMO

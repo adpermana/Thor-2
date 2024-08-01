@@ -1,0 +1,26 @@
+title: Stop Symantec Antivirus Processes Via CommandLine
+id: 112f8147-20b6-4c92-b98c-0190a140ddd0
+status: experimental
+description: Detects activity of stopping symantec antivirus processes using "smc.exe"
+author: Nasreddine Bencherchali
+references:
+    - https://techdocs.broadcom.com/us/en/symantec-security-software/endpoint-security-and-management/endpoint-protection/all/appendices/windows-commands-for-the-endpoint-protection-clien-v9567615-d19e6200.html
+date: 2022/05/19
+tags:
+    - attack.defense_evasion
+    - attack.t1562.001
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        - OriginalFileName: 'Smc.exe'
+        - Image|endswith: '\Smc.exe'
+    selection_suspflags:
+        CommandLine|contains:
+            - ' -stop'
+            - ' -disable -'
+    condition: all of selection*
+falsepositives:
+    - Administrator troubleshooting
+level: high

@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential LSASS Process Dump Via Procdump
+id: 5afee48e-67dd-4e03-a783-f74259dcf998
+status: stable
+description: |
+    Detects suspicious uses of the SysInternals Procdump utility by using a special command line parameter in combination with the lsass.exe process.
+    This way we are also able to catch cases in which the attacker has renamed the procdump executable.
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2018/10/30 16:27:31
+references:
+  - https://learn.microsoft.com/en-us/sysinternals/downloads/procdump
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection*
+    selection_flags:
+        CommandLine|contains|windash: ' -ma '
+    selection_process:
+        CommandLine|contains: ' ls'
+falsepositives:
+  - Unlikely, because no one should dump an lsass process memory
+  - Another tool that uses command line flags similar to ProcDump
+level: high
+customer: 'demo'
+modified: 2024/03/13
+tags:
+  - attack.defense_evasion
+  - attack.t1036
+  - attack.credential_access
+  - attack.t1003.001
+  - car.2013-05-009
+  - DEMO

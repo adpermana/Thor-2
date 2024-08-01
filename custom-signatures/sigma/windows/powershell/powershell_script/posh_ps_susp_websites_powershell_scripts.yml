@@ -1,0 +1,38 @@
+title: Download From Suspicious Domains Via PowerShell Scripts
+id: ea6f45e1-4eae-4de6-b6e1-9dfd0f4c5ed9
+related:
+    - id: 6f1ae2fa-6697-4be6-a1a4-702cc6b69220
+      type: similar
+    - id: a1637ec2-5dc4-4a0d-ae96-165d55e825c1
+      type: similar
+status: test
+description: Detects possible downloads from suspicious domains via powershell scripts
+references:
+    - https://gist.github.com/jdgregson/bf871d5cbb8d456ec36ccbe4ee1442de
+    - https://twitter.com/Laughing_Mantis/status/1518766501385318406
+    - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/ransomware-hive-conti-avoslocker
+author: Nasreddine Bencherchali
+date: 2022/05/14
+modified: 2023/03/29
+tags:
+    - attack.reconnaissance
+logsource:
+    product: windows
+    category: ps_script
+    definition: Script Block Logging must be enabled
+detection:
+    selection:
+        ScriptBlockText|contains:
+            - 'gist.githubusercontent.com'
+            - 'pastebin.com'
+            - 'cdn.discordapp.com/attachments/'
+            - 'mediafire.com'
+            - 'mega.nz'
+            - 'ddns.net/'
+            - 'anonfiles.com'
+            - 'ufile.io'
+            - 'send.exploit.in'
+    condition: selection
+falsepositives:
+    - Unknown
+level: medium

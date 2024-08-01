@@ -1,0 +1,68 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Rundll32 Execution With Uncommon DLL Extension
+id: c3a99af4-35a9-4668-879e-c09aeb4f2bdf
+status: experimental
+description: Detects the execution of rundll32 with a command line that doesn't contain
+    a common extension
+author: Tim Shelton, Florian Roth (Nextron Systems), Yassine Oukessou
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/13 17:51:11
+references:
+  - https://twitter.com/mrd0x/status/1481630810495139841?s=12
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_empty:
+        CommandLine: ""
+    filter_main_known_extension:
+      - CommandLine|contains:
+          - '.cpl '
+          - .cpl,
+          - .cpl"
+          - .cpl'
+          - '.dll '
+          - .dll,
+          - .dll"
+          - .dll'
+          - '.inf '
+          - .inf,
+          - .inf"
+          - .inf'
+      - CommandLine|endswith:
+          - .cpl
+          - .dll
+          - ".inf"
+    filter_main_localserver:
+        CommandLine|contains: ' -localserver '
+    filter_main_null:
+        CommandLine: []
+    filter_main_zzzzInvokeManagedCustomActionOutOfProc:
+        CommandLine|contains|all:
+          - :\Windows\Installer\
+          - .tmp
+          - zzzzInvokeManagedCustomActionOutOfProc
+        ParentImage|endswith: \msiexec.exe
+    selection:
+      - Image|endswith: \rundll32.exe
+      - OriginalFileName: RUNDLL32.EXE
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2024/02/09
+tags:
+  - attack.defense_evasion
+  - attack.t1218.011
+  - DEMO

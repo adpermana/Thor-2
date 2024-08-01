@@ -1,0 +1,35 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Failed DNS Zone Transfer
+id: 6d444368-6da1-43fe-b2fc-44202430480e
+status: experimental
+description: Detects when a DNS zone transfer failed.
+author: Zach Mathis
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/24 11:59:11
+references:
+  - https://kb.eventtracker.com/evtpass/evtpages/EventId_6004_Microsoft-Windows-DNS-Server-Service_65410.asp
+logsource:
+    product: windows
+    service: dns-server
+detection:
+    condition: selection
+    selection:
+        EventID: "6004"
+falsepositives: Unlikely
+level: medium
+customer: 'demo'
+tags:
+  - attack.reconnaissance
+  - attack.t1590.002
+  - DEMO

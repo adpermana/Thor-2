@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: APT29 2018 Phishing Campaign File Indicators
+id: 3a3f81ca-652c-482b-adeb-b1c804727f74
+related:
+  - type: derived
+    id: 7453575c-a747-40b9-839b-125a0aae324b
+status: stable
+description: Detects indicators of APT 29 (Cozy Bear) phishing-campaign as reported
+    by mandiant
+author: '@41thexplorer'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2018/11/20 16:24:51
+references:
+  - https://twitter.com/DrunkBinary/status/1063075530180886529
+  - https://www.mandiant.com/resources/blog/not-so-cozy-an-uncomfortable-examination-of-a-suspected-apt29-phishing-campaign
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetFilename|contains:
+          - ds7002.lnk
+          - ds7002.pdf
+          - ds7002.zip
+falsepositives: Unlikely
+level: critical
+customer: 'demo'
+modified: 2023/02/20
+tags:
+  - attack.defense_evasion
+  - attack.t1218.011
+  - detection.emerging_threats
+  - DEMO

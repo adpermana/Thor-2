@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Active Directory Enumeration Using AD Module - PsModule
+id: 74176142-4684-4d8a-8b0a-713257e7df8e
+related:
+  - type: similar
+    id: 70bc5215-526f-4477-963c-a47a5c9ebd12
+  - type: similar
+    id: 9e620995-f2d8-4630-8430-4afd89f77604
+status: test
+description: Detects usage of the "Import-Module" cmdlet to load the "Microsoft.ActiveDirectory.Management.dl"
+    DLL. Which is often used by attackers to perform AD enumeration.
+author: Nasreddine Bencherchali (Nextron Systems), frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/22 22:45:11
+references:
+  - https://github.com/samratashok/ADModule
+  - https://twitter.com/cyb3rops/status/1617108657166061568?s=20
+  - https://www.ired.team/offensive-security-experiments/active-directory-kerberos-abuse/active-directory-enumeration-with-ad-module-without-rsat-or-admin-privileges
+logsource:
+    category: ps_module
+    product: windows
+    definition: 0ad03ef1-f21b-4a79-8ce8-e6900c54b65b
+detection:
+    condition: all of selection_*
+    selection_cmdlet:
+        Payload|contains:
+          - 'Import-Module '
+          - 'ipmo '
+    selection_dll:
+        Payload|contains: Microsoft.ActiveDirectory.Management.dll
+falsepositives: Legitimate use of the library for administrative activity
+level: medium
+customer: 'demo'
+tags:
+  - attack.reconnaissance
+  - attack.discovery
+  - attack.impact
+  - DEMO

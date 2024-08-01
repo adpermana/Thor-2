@@ -1,0 +1,71 @@
+title: Accessing Native WinAPI in PowerShell
+id: 876529e1-a157-4e3e-a86d-ff9c68ae8d5e
+status: test
+description: Detects the use of Native WinAPI Functions in PowerShell
+author: Nasreddine Bencherchali
+date: 2022/05/25
+modified: 2023/03/29
+references:
+    - https://www.virustotal.com/gui/file/88579c2982c486d76cccfe36d04ad8e9cec57e1a413837d73266d5c44106a5a3/content
+    - https://www.virustotal.com/gui/file/5236d0f6542b4483636203ecdfd0a101202e3b6f232421b0b429870e119aed23/content
+tags:
+    - attack.execution
+    - attack.t1106
+logsource:
+    product: windows
+    category: ps_script
+    definition: Script block logging must be enabled
+detection:
+    selection:
+        ScriptBlockText|contains:
+            - 'NtCreateProcess'
+            - 'NtTerminateProcess'
+            - 'NtOpenProcess' #Included in OpenProcess from Win32API
+            - 'NtQueryInformationProcess'
+            - 'NtSetInformationProcess'
+            - 'NtSuspendProcess'
+            - 'NtResumeProcess'
+            - 'NtQueryObject'
+            - 'NtQuerySystemInformation'
+            - 'RtlAdjustPrivilege'
+            - 'NtDeviceIoCOntrolFile'
+            - 'NtDuplicateToken'
+            - 'NtFilterToken'
+            - 'NtSetInformationToken'
+            - 'NtUnmapViewOfSection'
+            - 'RtlNtStatusToDosError'
+            - 'NtOpenFile'
+            - 'NtCreateSection'
+            - 'RtlCreateProcessParametersEx'
+            - 'NtCreateThread' # Included in CreateThread from Win32API
+            - 'NtTerminateThread'
+            - 'NtOpenThread'
+            - 'NtQueryInformationThread'
+            - 'NtSetInformationThread'
+            - 'NtSuspendThread'
+            - 'NtResumeThread'
+            - 'NtAlertResumeThread'
+            - 'NtAlertThread'
+            - 'NtGetContextThread'
+            - 'NtSetContextThread'
+            - 'NtAllocateVirtualMemory'
+            - 'NtFreeVirtualMemory'
+            - 'NtProtectVirtualMemory'
+            - 'NtQueryVirtualMemory'
+            - 'NtReadVirtualMemory'
+            - 'NtWriteVirtualMemory'
+            - 'LdrLoadDll'
+            - 'LdrUnloadDll'
+            - 'LdrGetDllHandle'
+            - 'LdrGetProcedureAddress'
+            - 'LdrGetDllFullName'
+            - 'NtLoadDriver'
+            - 'NtUnloadDrive'
+            - 'RtlSetUnhandledExceptionFilter'
+            - 'NtSetSystemInformation'
+            - 'NtClose'
+            - 'NtDuplicateObject'
+    condition: selection
+falsepositives:
+    - Unknown
+level: high

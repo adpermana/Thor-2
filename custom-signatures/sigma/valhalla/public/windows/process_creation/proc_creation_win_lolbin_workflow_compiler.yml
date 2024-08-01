@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Microsoft Workflow Compiler Execution
+id: 419dbf2b-8a9b-4bea-bf99-7544b050ec8d
+status: test
+description: Detects invocation of Microsoft Workflow Compiler, which may permit the
+    execution of arbitrary unsigned code.
+author: Nik Seetharaman, frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/01/16 16:13:21
+references:
+  - https://posts.specterops.io/arbitrary-unsigned-code-execution-vector-in-microsoft-workflow-compiler-exe-3d9294bc5efb
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218/T1218.md
+  - https://lolbas-project.github.io/lolbas/Binaries/Microsoft.Workflow.Compiler/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - Image|endswith: \Microsoft.Workflow.Compiler.exe
+      - OriginalFileName: Microsoft.Workflow.Compiler.exe
+fields:
+  - CommandLine
+  - ParentCommandLine
+falsepositives: Legitimate MWC use (unlikely in modern enterprise environments)
+level: medium
+customer: 'demo'
+modified: 2023/02/03
+tags:
+  - attack.defense_evasion
+  - attack.execution
+  - attack.t1127
+  - attack.t1218
+  - DEMO

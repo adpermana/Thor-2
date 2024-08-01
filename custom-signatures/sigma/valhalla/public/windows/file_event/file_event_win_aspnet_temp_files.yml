@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Assembly DLL Creation Via AspNetCompiler
+id: 4c7f49ee-2638-43bb-b85b-ce676c30b260
+related:
+  - type: similar
+    id: 9ccba514-7cb6-4c5c-b377-700758f2f120
+  - type: similar
+    id: 9f50fe98-fe5c-4a2d-86c7-fad7f63ed622
+  - type: similar
+    id: a01b8329-5953-4f73-ae2d-aa01e1f35f00
+status: experimental
+description: |
+    Detects the creation of new DLL assembly files by "aspnet_compiler.exe", which could be a sign of "aspnet_compiler" abuse to proxy execution through a build provider.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/08/14 16:17:11
+references:
+  - Internal Research
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith: \aspnet_compiler.exe
+        TargetFilename|contains|all:
+          - \Temporary ASP.NET Files\
+          - \assembly\tmp\
+          - .dll
+falsepositives: Legitimate assembly compilation using a build provider
+level: medium
+customer: 'demo'
+tags:
+  - attack.execution
+  - DEMO

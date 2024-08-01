@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Data Copied To Clipboard Via Clip.EXE
+id: ddeff553-5233-4ae9-bbab-d64d2bd634be
+status: test
+description: Detects the execution of clip.exe in order to copy data to the clipboard.
+    Adversaries may collect data stored in the clipboard from users copying information
+    within or between applications.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/07/27 14:52:11
+references:
+  - https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/clip
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1115/T1115.md
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - Image|endswith: \clip.exe
+      - OriginalFileName: clip.exe
+falsepositives: Unknown
+level: low
+customer: 'demo'
+modified: 2023/02/21
+tags:
+  - attack.collection
+  - attack.t1115
+  - DEMO

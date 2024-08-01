@@ -1,0 +1,36 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Windows Defender Malware Detection History Deletion
+id: 2afe6582-e149-11ea-87d0-0242ac130003
+status: test
+description: Windows Defender logs when the history of detected infections is deleted.
+author: Cian Heasley
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/08/13 19:39:41
+references:
+  - https://docs.microsoft.com/en-us/windows/security/threat-protection/microsoft-defender-antivirus/troubleshoot-microsoft-defender-antivirus
+  - https://web.archive.org/web/20160727113019/https://answers.microsoft.com/en-us/protect/forum/mse-protect_scanning/microsoft-antimalware-has-removed-history-of/f15af6c9-01a9-4065-8c6c-3f2bdc7de45e
+logsource:
+    product: windows
+    service: windefend
+detection:
+    condition: selection
+    selection:
+        EventID: "1013"
+falsepositives: Deletion of Defender malware detections history for legitimate reasons
+level: informational
+customer: 'demo'
+modified: 2023/11/24
+tags:
+  - attack.defense_evasion
+  - DEMO

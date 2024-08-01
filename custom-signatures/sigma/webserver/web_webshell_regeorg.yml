@@ -1,0 +1,51 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Webshell ReGeorg Detection Via Web Logs
+id: 2ea44a60-cfda-11ea-87d0-0242ac130003
+status: test
+description: Certain strings in the uri_query field when combined with null referer
+    and null user agent can indicate activity associated with the webshell ReGeorg.
+author: Cian Heasley
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/08/04 15:55:11
+references:
+  - https://community.rsa.com/community/products/netwitness/blog/2019/02/19/web-shells-and-netwitness-part-3
+  - https://github.com/sensepost/reGeorg
+logsource:
+    category: webserver
+detection:
+    condition: selection and filter
+    filter:
+        cs-method: POST
+        cs-referer: []
+        cs-user-agent: []
+    selection:
+        cs-uri-query|contains:
+          - cmd=read
+          - connect&target
+          - cmd=connect
+          - cmd=disconnect
+          - cmd=forward
+fields:
+  - cs-uri-query
+  - cs-referer
+  - cs-method
+  - cs-User-Agent
+falsepositives: Web applications that use the same URL parameters as ReGeorg
+level: high
+customer: 'demo'
+modified: 2023/01/02
+tags:
+  - attack.persistence
+  - attack.t1505.003
+  - DEMO

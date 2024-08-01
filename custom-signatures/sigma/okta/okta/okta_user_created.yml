@@ -1,0 +1,34 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: New Okta User Created
+id: b6c718dd-8f53-4b9f-98d8-93fdca966969
+status: experimental
+description: Detects new user account creation
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/10/25 11:17:21
+references:
+  - https://developer.okta.com/docs/reference/api/event-types/
+logsource:
+    product: okta
+    service: okta
+detection:
+    condition: selection
+    selection:
+        eventtype: user.lifecycle.create
+falsepositives: Legitimate and authorized user creation
+level: informational
+customer: 'demo'
+tags:
+  - attack.credential_access
+  - DEMO

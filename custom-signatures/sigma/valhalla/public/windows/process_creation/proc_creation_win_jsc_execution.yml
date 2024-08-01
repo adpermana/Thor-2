@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-06-21 19:00
+# Generated for User: demo
+# Number of Rules: 3228
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: JScript Compiler Execution
+id: 52788a70-f1da-40dd-8fbd-73b5865d6568
+status: test
+description: |
+    Detects the execution of the "jsc.exe" (JScript Compiler).
+    Attacker might abuse this in order to compile JScript files on the fly and bypassing application whitelisting.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/05/02 13:03:41
+references:
+  - https://lolbas-project.github.io/lolbas/Binaries/Jsc/
+  - https://www.phpied.com/make-your-javascript-a-windows-exe/
+  - https://twitter.com/DissectMalware/status/998797808907046913
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - Image|endswith: \jsc.exe
+      - OriginalFileName: jsc.exe
+falsepositives: Legitimate use to compile JScript by developers.
+level: low
+customer: 'demo'
+modified: 2024/04/24
+tags:
+  - attack.defense_evasion
+  - attack.t1127
+  - DEMO

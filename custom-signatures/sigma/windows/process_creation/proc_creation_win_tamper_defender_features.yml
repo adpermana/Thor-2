@@ -1,0 +1,128 @@
+title: Windows Defender Tampering
+id: 84728a08-ee1e-453d-b538-56764638027b
+related:
+    - id: cf6c0f22-56e4-42e4-85f2-08fad20de64a
+      type: similar
+status: experimental
+description: Detects possible tampering with windows defender feature using powershell
+author: Nasreddine Bencherchali
+references:
+    - https://docs.microsoft.com/en-us/powershell/module/defender/set-mppreference?view=windowsserver2022-ps
+    - https://docs.microsoft.com/en-us/powershell/module/defender/set-mppreference?view=windowsserver2019-ps
+    - https://www.virustotal.com/gui/file/0e269887f7118b74c15fdb13ad1c3470d6c4f994fb135fb8937de0fedb5fc6e0
+    - https://www.virustotal.com/gui/file/1412bc552ff1632b1986262f2ca5f8771f95589de536ea3b42b5882698283fcb/
+    - https://www.virustotal.com/gui/file/c795f0e90da524e2656e4a3b97fdd63cb0eb6d87a4b5c2d0a3af48233e933a26/
+date: 2022/05/12
+modified: 2022/11/18
+tags:
+    - attack.defense_evasion
+    - attack.t1562.001
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_set_mp:
+        CommandLine|contains:
+            - 'Set-MpPreference'
+            - 'Add-MpPreference'
+    selection_bool_value_1:
+        CommandLine|contains:
+            - '$true'
+            - ' 1 -'
+            - 'ion 1'
+            - 'ions 1'
+            - 'ing 1'
+            - '([bool]'
+            - 'Enable'
+    selection_disable_actions_1:
+        CommandLine|contains:
+            - '-DisableRealtimeMonitoring'
+            - '-drtm'
+            - '-DisableBehaviorMonitoring'
+            - '-dbm'
+            - '-DisableScriptScanning'
+            - '-dscrptsc'
+            - '-DisableArchiveScanning'
+            - '-darchsc'
+            - '-DisableBlockAtFirstSeen'
+            - '-dbaf'
+            - '-DisableIOAVProtection'
+            - '-dioavp'
+            - '-DisableIntrusionPreventionSystem'
+            - '-dips'
+            - '-DisableRemovableDriveScanning'
+            - '-drdsc'
+            - '-DisableScanningMappedNetworkDrivesForFullScan'
+            - '-dsmndfsc'
+            - '-DisableScanningNetworkFiles'
+            - '-dsnf'
+            - '-DisableDatagramProcessing'
+            - '-ddtgp'
+            - '-DisableEmailScanning'
+            - '-demsc'
+            - '-DisableRestorePoint'
+            - '-drp'
+            - '-DisableTlsParsing'
+            - '-dtlsp'
+            - '-DisableHttpParsing'
+            - '-dhttpp'
+            - '-DisableDnsParsing'
+            - '-ddnsp'
+            - '-DisableDnsOverTcpParsing'
+            - '-ddnstcpp'
+            - '-DisableSshParsing'
+            - '-dsshp'
+            - '-DisableInboundConnectionFiltering'
+            - '-dicf'
+            - '-DisableRdpParsing'
+            - '-drdpp'
+            - '-SignatureDisableUpdateOnStartupWithoutEngine'
+            - '-sigduoswo'
+    selection_default_actions_values:
+        CommandLine|contains:
+            - 'Allow'
+            - ' 6 -'
+            - 'DefaultAction 6'
+            - 'Action_Actions 6'
+            - 'defac 6'
+            - 'defaca 6'
+            - 'Ignore'
+            - 'NoAction'
+            - ' 9 -'
+            - 'DefaultAction 9'
+            - 'Action_Actions 9'
+            - 'defac 9'
+            - 'defaca 9'
+    selection_default_actions:
+        CommandLine|contains:
+            - '-LowThreatDefaultAction'
+            - '-ModerateThreatDefaultAction'
+            - '-HighThreatDefaultAction'
+            - '-SevereThreatDefaultAction'
+            - '-ThreatIDDefaultAction_Actions'
+            - '-tiddefaca'
+            - '-ltdefac'
+            - '-mtdefac'
+            - '-htdefac'
+            - '-stdefac'
+    selection_scan_schedule_value:
+        CommandLine|contains:
+            - '-ScanScheduleDay 8'
+            - '-scsd 8'
+    selection_bool_value_2:
+        CommandLine|contains:
+            - '$false'
+            - ' 0 -'
+            - 'ion 0'
+            - 'ions 0'
+            - 'ing 0'
+            - 'Disable' # Also covers Disabled
+    selection_disable_actions_2:
+        CommandLine|contains:
+            - '-EnableControlledFolderAccess'
+            - '-PUAProtection'
+            - '-AttackSurfaceReductionRules_Actions'
+    condition: selection_set_mp and ((selection_bool_value_1 and selection_disable_actions_1) or (selection_bool_value_2 and selection_disable_actions_2) or (selection_default_actions and selection_default_actions_values) or selection_scan_schedule_value)
+falsepositives:
+    - Legitimate administrator activity
+level: high

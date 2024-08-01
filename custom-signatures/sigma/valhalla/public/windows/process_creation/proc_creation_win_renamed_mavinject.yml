@@ -1,0 +1,52 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Renamed Mavinject.EXE Execution
+id: e6474a1b-5390-49cd-ab41-8d88655f7394
+status: test
+description: Detects the execution of a renamed version of the "Mavinject" process.
+    Which can be abused to perform process injection using the "/INJECTRUNNING" flag
+author: frack113, Florian Roth
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/12/05 14:05:31
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218/T1218.md
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1056.004/T1056.004.md
+  - https://posts.specterops.io/mavinject-exe-functionality-deconstructed-c29ab2cf5c0e
+  - https://twitter.com/gN3mes1s/status/941315826107510784
+  - https://reaqta.com/2017/12/mavinject-microsoft-injector/
+  - https://twitter.com/Hexacorn/status/776122138063409152
+  - https://github.com/SigmaHQ/sigma/issues/3742
+  - https://github.com/keyboardcrunch/SentinelOne-ATTACK-Queries/blob/6a228d23eefe963ca81f2d52f94b815f61ef5ee0/Tactics/DefenseEvasion.md#t1055-process-injection
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        Image|endswith:
+          - \mavinject32.exe
+          - \mavinject64.exe
+    selection:
+        OriginalFileName:
+          - mavinject32.exe
+          - mavinject64.exe
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/02/03
+tags:
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - attack.t1055.001
+  - attack.t1218.013
+  - DEMO

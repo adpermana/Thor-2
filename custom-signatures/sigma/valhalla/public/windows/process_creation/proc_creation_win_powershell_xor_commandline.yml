@@ -1,0 +1,66 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious XOR Encoded PowerShell Command
+id: bb780e0c-16cf-4383-8383-1e5471db6cf9
+related:
+  - type: obsoletes
+    id: 5b572dcf-254b-425c-a8c5-d9af6bea35a6
+status: test
+description: Detects presence of a potentially xor encoded powershell command
+author: Sami Ruohonen, Harish Segar, Tim Shelton, Teymur Kheirkhabarov, Vasiliy Burov,
+    oscd.community, Nasreddine Bencherchali
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2018/09/05 16:46:21
+references:
+  - https://speakerdeck.com/heirhabarov/hunting-for-powershell-abuse?slide=65
+  - https://redcanary.com/blog/yellow-cockatoo/
+  - https://zero2auto.com/2020/05/19/netwalker-re/
+  - https://mez0.cc/posts/cobaltstrike-powershell-exec/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli_other:
+        CommandLine|contains:
+          - ForEach
+          - for(
+          - 'for '
+          - '-join '
+          - -join'
+          - -join"
+          - -join`
+          - ::Join
+          - '[char]'
+    selection_cli_xor:
+        CommandLine|contains: bxor
+    selection_img:
+      - Image|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+      - OriginalFileName:
+          - PowerShell.EXE
+          - pwsh.dll
+      - Description: Windows PowerShell
+      - Product: PowerShell Core 6
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/01/30
+tags:
+  - attack.defense_evasion
+  - attack.execution
+  - attack.t1059.001
+  - attack.t1140
+  - attack.t1027
+  - DEMO

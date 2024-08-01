@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Malicious Service Installations
+id: cb062102-587e-4414-8efa-dbe3c7bf19c6
+related:
+  - type: derived
+    id: 2cfe636e-317a-4bee-9f2c-1066d9f54d1a
+status: test
+description: Detects known malicious service installs that only appear in cases of
+    lateral movement, credential dumping, and other suspicious activities.
+author: Florian Roth (Nextron Systems), Daniil Yugoslavskiy, oscd.community (update)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/03/27 14:36:41
+references:
+  - https://awakesecurity.com/blog/threat-hunting-for-paexec/
+  - https://www.fireeye.com/blog/threat-research/2017/05/wannacry-malware-profile.html
+  - https://blog.f-secure.com/wp-content/uploads/2019/10/CosmicDuke.pdf
+logsource:
+    product: windows
+    service: security
+    definition: The 'System Security Extension' audit subcategory need to be enabled
+        to log the EID 4697
+detection:
+    condition: selection and 1 of malsvc_*
+    malsvc_apt29:
+        ServiceName: javamtsup
+    selection:
+        EventID: "4697"
+falsepositives: Unknown
+level: critical
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1003
+  - car.2013-09-005
+  - attack.t1543.003
+  - attack.t1569.002
+  - DEMO

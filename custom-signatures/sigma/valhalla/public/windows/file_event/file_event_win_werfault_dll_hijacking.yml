@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Creation of an WerFault.exe in Unusual Folder
+id: 28a452f3-786c-4fd8-b8f2-bddbe9d616d1
+status: test
+description: Detects WerFault copoed to a suspicious folder, which could be a sign
+    of WerFault DLL hijacking
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/05/09 17:36:31
+references:
+  - https://www.bleepingcomputer.com/news/security/hackers-are-now-hiding-malware-in-windows-event-logs/
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection and not filter_whitelist
+    filter_whitelist:
+        TargetFilename|contains:
+          - \System32\
+          - \SysWOW64\
+          - \WinSxS\
+    selection:
+        TargetFilename|endswith:
+          - \WerFault.exe
+          - \wer.dll
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.persistence
+  - attack.defense_evasion
+  - attack.t1574.001
+  - DEMO

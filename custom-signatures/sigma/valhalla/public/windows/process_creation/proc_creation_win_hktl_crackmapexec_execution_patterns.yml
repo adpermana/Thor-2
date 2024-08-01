@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - CrackMapExec Execution Patterns
+id: 058f4380-962d-40a5-afce-50207d36d7e2
+status: stable
+description: Detects various execution patterns of the CrackMapExec pentesting framework
+author: Thomas Patzke
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/05/22 16:53:01
+references:
+  - https://github.com/byt3bl33d3r/CrackMapExec
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - cmd.exe /Q /c * 1> \\\\*\\*\\* 2>&1
+          - cmd.exe /C * > \\\\*\\*\\* 2>&1
+          - cmd.exe /C * > *\\Temp\\* 2>&1
+          - powershell.exe -exec bypass -noni -nop -w 1 -C "
+          - 'powershell.exe -noni -nop -w 1 -enc '
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/11/06
+tags:
+  - attack.execution
+  - attack.t1047
+  - attack.t1053
+  - attack.t1059.003
+  - attack.t1059.001
+  - attack.s0106
+  - DEMO

@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PowerShell Script Dropped Via PowerShell.EXE
+id: 576426ad-0131-4001-ae01-be175da0c108
+status: experimental
+description: Detects PowerShell creating a PowerShell file (.ps1). While often times
+    this behavior is benign, sometimes it can be a sign of a dropper script trying
+    to achieve persistence.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/09 17:22:11
+references:
+  - https://www.zscaler.com/blogs/security-research/onenote-growing-threat-malware-distribution
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_appdata:
+        TargetFilename|contains: \AppData\Local\Temp\
+        TargetFilename|startswith: C:\Users\
+    filter_main_psscriptpolicytest:
+        TargetFilename|contains: __PSScriptPolicyTest_
+    filter_main_windows_temp:
+        TargetFilename|startswith: C:\Windows\Temp\
+    selection:
+        Image|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+        TargetFilename|endswith: .ps1
+falsepositives: False positives will differ depending on the environment and scripts
+    used. Apply additional filters accordingly.
+level: low
+customer: 'demo'
+tags:
+  - attack.persistence
+  - DEMO

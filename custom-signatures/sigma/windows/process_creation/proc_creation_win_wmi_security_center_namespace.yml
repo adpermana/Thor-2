@@ -1,0 +1,26 @@
+title: WMI Security Center Namespace Query
+id: da9d1c7e-2818-41fa-888b-f9cd07291a0a
+status: experimental
+description: Detects query to WMI Security Center namespace
+references:
+    - https://www.cybereason.com/blog/threat-analysis-report-all-paths-lead-to-cobalt-strike-icedid-emotet-and-qbot
+    - https://securelist.com/wirtes-campaign-in-the-middle-east-living-off-the-land-since-at-least-2019/105044/
+    - https://thedfirreport.com/2020/04/30/tricky-pyxie/
+    - https://thedfirreport.com/2020/10/08/ryuks-return/
+    - https://thedfirreport.com/2021/06/20/from-word-to-lateral-movement-in-1-hour/
+    - https://thedfirreport.com/2022/04/25/quantum-ransomware/
+author: Nasreddine Bencherchali
+date: 2022/05/11
+tags:
+    - attack.execution
+    - attack.t1047
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains: 'root\SecurityCenter2'
+    condition: selection
+falsepositives:
+    - Legitimate administrators or tools querying the same namespace
+level: medium

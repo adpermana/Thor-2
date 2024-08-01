@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Changing Existing Service ImagePath Value Via Reg.EXE
+id: 9b0b7ac3-6223-47aa-a3fd-e8f211e637db
+status: test
+description: |
+    Adversaries may execute their own malicious payloads by hijacking the Registry entries used by services.
+    Adversaries may use flaws in the permissions for registry to redirect from the originally specified executable to one that they control, in order to launch their own code at Service start.
+    Windows stores local service configuration information in the Registry under HKLM\SYSTEM\CurrentControlSet\Services
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/12/30 19:18:21
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1574.011/T1574.011.md#atomic-test-2---service-imagepath-change-with-regexe
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection*
+    selection:
+        CommandLine|contains|all:
+          - 'add '
+          - SYSTEM\CurrentControlSet\Services\
+          - ' ImagePath '
+        Image|endswith: \reg.exe
+    selection_value:
+        CommandLine|contains|windash: ' -d '
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2024/03/13
+tags:
+  - attack.persistence
+  - attack.t1574.011
+  - DEMO

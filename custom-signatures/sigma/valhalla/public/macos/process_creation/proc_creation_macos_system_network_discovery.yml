@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: System Network Discovery - macOS
+id: 58800443-f9fc-4d55-ae0c-98a3966dfb97
+status: test
+description: Detects enumeration of local network configuration
+author: remotephone, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/06 14:17:11
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1016/T1016.md
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    condition: 1 of selection*
+    selection1:
+        Image|endswith:
+          - /netstat
+          - /ifconfig
+          - /socketfilterfw
+          - /networksetup
+          - /arp
+    selection2:
+        CommandLine|contains|all:
+          - read
+          - /Library/Preferences/com.apple.alf
+        Image: /usr/bin/defaults
+falsepositives: Legitimate administration activities
+level: informational
+customer: 'demo'
+modified: 2022/12/28
+tags:
+  - attack.discovery
+  - attack.t1016
+  - DEMO

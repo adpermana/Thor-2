@@ -1,0 +1,55 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious PowerShell Invocations - Generic - PowerShell Module
+id: bbb80e91-5746-4fbe-8898-122e2cafdbf4
+related:
+  - type: derived
+    id: 3d304fda-78aa-43ed-975c-d740798a49c1
+  - type: similar
+    id: ed965133-513f-41d9-a441-e38076a0798f
+status: test
+description: Detects suspicious PowerShell invocation command parameters
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/03/12 22:28:31
+references:
+  - Internal Research
+logsource:
+    category: ps_module
+    product: windows
+    definition: 0ad03ef1-f21b-4a79-8ce8-e6900c54b65b
+detection:
+    condition: all of selection*
+    selection_encoded:
+        ContextInfo|contains:
+          - ' -enc '
+          - ' -EncodedCommand '
+          - ' -ec '
+    selection_hidden:
+        ContextInfo|contains:
+          - ' -w hidden '
+          - ' -window hidden '
+          - ' -windowstyle hidden '
+          - ' -w 1 '
+    selection_noninteractive:
+        ContextInfo|contains:
+          - ' -noni '
+          - ' -noninteractive '
+falsepositives: Very special / sneaky PowerShell scripts
+level: high
+customer: 'demo'
+modified: 2023/01/03
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

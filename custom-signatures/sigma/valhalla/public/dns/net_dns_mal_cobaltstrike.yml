@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Cobalt Strike DNS Beaconing
+id: 2975af79-28c4-4d2f-a951-9095f229df29
+status: test
+description: Detects suspicious DNS queries known from Cobalt Strike beacons
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2018/05/10 12:48:21
+references:
+  - https://www.icebrg.io/blog/footprints-of-fin7-tracking-actor-patterns
+  - https://www.sekoia.io/en/hunting-and-detecting-cobalt-strike/
+logsource:
+    category: dns
+detection:
+    condition: 1 of selection*
+    selection1:
+        query|startswith:
+          - aaa.stage.
+          - post.1
+    selection2:
+        query|contains: .stage.123456.
+falsepositives: Unknown
+level: critical
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.command_and_control
+  - attack.t1071.004
+  - DEMO

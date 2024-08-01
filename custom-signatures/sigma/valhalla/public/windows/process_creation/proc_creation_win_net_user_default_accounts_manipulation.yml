@@ -1,0 +1,81 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Manipulation Of Default Accounts Via Net.EXE
+id: 5b768e71-86f2-4879-b448-81061cbae951
+status: test
+description: Detects suspicious manipulations of default accounts such as 'administrator'
+    and 'guest'. For example 'enable' or 'disable' accounts or change the password...etc
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/01 20:12:11
+references:
+  - https://www.trellix.com/en-sg/about/newsroom/stories/threat-labs/lockergoga-ransomware-family-used-in-targeted-attacks.html
+  - https://redacted.com/blog/bianlian-ransomware-gang-gives-it-a-go/
+  - https://www.microsoft.com/security/blog/2022/09/07/profiling-dev-0270-phosphorus-ransomware-operations/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_* and not filter
+    filter:
+        CommandLine|contains|all:
+          - guest
+          - /active no
+    selection_img:
+      - Image|endswith:
+          - \net.exe
+          - \net1.exe
+      - OriginalFileName:
+          - net.exe
+          - net1.exe
+    selection_user_option:
+        CommandLine|contains: ' user '
+    selection_username:
+        CommandLine|contains:
+          - ' Järjestelmänvalvoja '
+          - ' Rendszergazda '
+          - ' Администратор '
+          - ' Administrateur '
+          - ' Administrador '
+          - ' Administratör '
+          - ' Administrator '
+          - ' guest '
+          - ' DefaultAccount '
+          - ' "Järjestelmänvalvoja" '
+          - ' "Rendszergazda" '
+          - ' "Администратор" '
+          - ' "Administrateur" '
+          - ' "Administrador" '
+          - ' "Administratör" '
+          - ' "Administrator" '
+          - ' "guest" '
+          - ' "DefaultAccount" '
+          - ' ''Järjestelmänvalvoja'' '
+          - ' ''Rendszergazda'' '
+          - ' ''Администратор'' '
+          - ' ''Administrateur'' '
+          - ' ''Administrador'' '
+          - ' ''Administratör'' '
+          - ' ''Administrator'' '
+          - ' ''guest'' '
+          - ' ''DefaultAccount'' '
+falsepositives: Some false positives could occur with the admin or guest account.
+    It depends on the scripts being used by the admins in your env. If you experience
+    a lot of FP you could reduce the level to medium
+level: high
+customer: 'demo'
+modified: 2023/02/21
+tags:
+  - attack.collection
+  - attack.t1560.001
+  - DEMO

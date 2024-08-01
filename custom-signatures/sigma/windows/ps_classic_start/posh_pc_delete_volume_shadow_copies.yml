@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Delete Volume Shadow Copies Via WMI With PowerShell
+id: 87df9ee1-5416-453a-8a08-e8d4a51e9ce1
+status: stable
+description: Shadow Copies deletion using operating systems utilities via PowerShell
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/06/03 18:53:41
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1490/T1490.md
+  - https://www.fortinet.com/blog/threat-research/stomping-shadow-copies-a-second-look-into-deletion-methods
+logsource:
+    category: ps_classic_start
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Data|contains:
+          - Delete()
+          - Remove-WmiObject
+        Data|contains|all:
+          - Get-WmiObject
+          - Win32_Shadowcopy
+falsepositives: Legitimate Administrator deletes Shadow Copies using operating systems
+    utilities for legitimate reason
+level: high
+customer: 'demo'
+modified: 2023/10/27
+tags:
+  - attack.impact
+  - attack.t1490
+  - DEMO

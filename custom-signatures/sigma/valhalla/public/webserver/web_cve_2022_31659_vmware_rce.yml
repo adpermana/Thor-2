@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: CVE-2022-31659 VMware Workspace ONE Access RCE
+id: efdb2003-a922-48aa-8f37-8b80021a9706
+status: test
+description: Detects possible exploitation of VMware Workspace ONE Access Admin Remote
+    Code Execution vulnerability as described in CVE-2022-31659
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/12 15:44:51
+references:
+  - https://petrusviet.medium.com/dancing-on-the-architecture-of-vmware-workspace-one-access-eng-ad592ae1b6dd
+logsource:
+    category: webserver
+detection:
+    condition: selection
+    selection:
+        cs-method: POST
+        cs-uri-query|contains: /SAAS/jersey/manager/api/migrate/tenant
+falsepositives:
+  - Vulnerability scanners
+  - Legitimate access to the URI
+level: medium
+customer: 'demo'
+modified: 2023/01/02
+tags:
+  - attack.initial_access
+  - attack.t1190
+  - cve.2022.31659
+  - detection.emerging_threats
+  - DEMO

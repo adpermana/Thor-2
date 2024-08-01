@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Apache Spark Shell Command Injection - Weblogs
+id: 1a9a04fd-02d1-465c-abad-d733fd409f9c
+status: test
+description: Detects attempts to exploit an apache spark server via CVE-2014-6287
+    from a weblogs perspective
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/19 17:38:11
+references:
+  - https://github.com/W01fh4cker/cve-2022-33891/blob/fd973b56e78bca8822caa3a2e3cf1b5aff5d0950/cve_2022_33891_poc.py
+  - https://sumsec.me/2022/CVE-2022-33891%20Apache%20Spark%20shell%20command%20injection.html
+  - https://github.com/apache/spark/pull/36315/files
+logsource:
+    category: webserver
+detection:
+    condition: selection
+    selection:
+        cs-uri-query|contains: ?doAs=`
+falsepositives: Web vulnerability scanners
+level: high
+customer: 'demo'
+modified: 2023/01/02
+tags:
+  - attack.initial_access
+  - attack.t1190
+  - cve.2022.33891
+  - detection.emerging_threats
+  - DEMO

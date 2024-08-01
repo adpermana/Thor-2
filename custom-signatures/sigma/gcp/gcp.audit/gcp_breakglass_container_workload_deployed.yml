@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: GCP Break-glass Container Workload Deployed
+id: 76737c19-66ee-4c07-b65a-a03301d1573d
+status: experimental
+description: |
+    Detects the deployment of workloads that are deployed by using the break-glass flag to override Binary Authorization controls.
+author: Bryan Lim
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/01/12 17:07:01
+references:
+  - https://cloud.google.com/binary-authorization
+logsource:
+    product: gcp
+    service: gcp.audit
+detection:
+    condition: selection and keywords
+    keywords: image-policy.k8s.io/break-glass
+    selection:
+        data.protoPayload.logName:
+          - cloudaudit.googleapis.com/activity
+          - cloudaudit.googleapis.com%2Factivity
+        data.protoPayload.methodName: io.k8s.core.v1.pods.create
+        data.protoPayload.resource.type: k8s_cluster
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1548
+  - DEMO

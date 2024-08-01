@@ -1,0 +1,27 @@
+title: Seatbelt Applocker Service Recon
+id: 1300c6cb-36d4-4cac-9ec3-f6c9f8df9e84
+status: test
+description: Detects WMI query to obtain the state of the Applocker service. This query has been seen used by Seatbelt
+references:
+    - https://github.com/GhostPack/Seatbelt/blob/f0b5cd5b4edf4325b613835b51a63705d2139c30/Seatbelt/Commands/Windows/AppLockerCommand.cs#L27
+author: Nasreddine Bencherchali
+date: 2022/11/22
+modified: 2023/03/29
+tags:
+    - attack.execution
+    - attack.t1047
+logsource:
+    product: windows
+    service: wmi
+detection:
+    selection:
+        # For an example see reference
+        EventID: 11
+        Operation|contains|all:
+            - 'IWbemServices::ExecQuery'
+            - 'SELECT Name, State FROM win32_service'
+            - 'where Name = "AppIDSvc"'
+    condition: selection
+falsepositives:
+    - Legitimate WMI query to obtain the state of the AppIDSvc service
+level: medium

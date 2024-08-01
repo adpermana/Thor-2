@@ -1,0 +1,63 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious File Download From IP Via Wget.EXE - Paths
+id: 40aa399c-7b02-4715-8e5f-73572b493f33
+status: experimental
+description: Detects potentially suspicious file downloads directly from IP addresses
+    and stored in suspicious locations using Wget.exe
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/02/23 18:50:41
+references:
+  - https://www.gnu.org/software/wget/manual/wget.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_flag:
+      - CommandLine|re: \s-O\s
+      - CommandLine|contains: --output-document
+    selection_http:
+        CommandLine|contains: http
+    selection_img:
+      - Image|endswith: \wget.exe
+      - OriginalFileName: wget.exe
+    selection_ip:
+        CommandLine|re: ://[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}
+    selection_paths:
+      - CommandLine|contains:
+          - :\PerfLogs\
+          - :\Temp\
+          - :\Users\Public\
+          - :\Windows\Help\
+          - :\Windows\Temp\
+          - \Temporary Internet
+      - CommandLine|contains|all:
+          - :\Users\
+          - \Favorites\
+      - CommandLine|contains|all:
+          - :\Users\
+          - \Favourites\
+      - CommandLine|contains|all:
+          - :\Users\
+          - \Contacts\
+      - CommandLine|contains|all:
+          - :\Users\
+          - \Pictures\
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.execution
+  - DEMO

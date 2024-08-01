@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: UAC Bypass Via Wsreset
+id: 6ea3bf32-9680-422d-9f50-e90716b12a66
+status: test
+description: Unfixed method for UAC bypass from Windows 10. WSReset.exe file associated
+    with the Windows Store. It will run a binary file contained in a low-privilege
+    registry.
+author: oscd.community, Dmitry Uchakin
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/07 11:29:21
+references:
+  - https://www.bleepingcomputer.com/news/security/trickbot-uses-a-new-windows-10-uac-bypass-to-launch-quietly
+  - https://lolbas-project.github.io/lolbas/Binaries/Wsreset
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetObject|endswith: \AppX82a6gwre4fdg3bt635tn5ctqjf8msdd2\Shell\open\command
+fields:
+  - ComputerName
+  - Image
+  - EventType
+  - TargetObject
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - attack.t1548.002
+  - DEMO

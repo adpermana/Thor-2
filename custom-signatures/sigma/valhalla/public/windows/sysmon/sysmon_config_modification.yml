@@ -1,0 +1,35 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Sysmon Configuration Change
+id: 8ac03a65-6c84-4116-acad-dc1558ff7a77
+status: test
+description: Detects a Sysmon configuration change, which could be the result of a
+    legitimate reconfiguration or someone trying manipulate the configuration
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/12 13:23:51
+references:
+  - https://docs.microsoft.com/en-us/sysinternals/downloads/sysmon
+logsource:
+    product: windows
+    service: sysmon
+detection:
+    condition: selection
+    selection:
+        EventID: "16"
+falsepositives: Legitimate administrative action
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - DEMO

@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: XSL Script Execution Via WMIC.EXE
+id: 05c36dd6-79d6-4a9a-97da-3db20298ab2d
+status: test
+description: |
+    Detects the execution of WMIC with the "format" flag to potentially load XSL files.
+    Adversaries abuse this functionality to execute arbitrary files while potentially bypassing application whitelisting defenses.
+    Extensible Stylesheet Language (XSL) files are commonly used to describe the processing and rendering of data within XML files.
+author: Timur Zinniatullin, oscd.community, Swachchhanda Shrawan Poudel
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/21 13:49:21
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1220/T1220.md
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_known_format:
+        CommandLine|contains:
+          - Format:List
+          - Format:htable
+          - Format:hform
+          - Format:table
+          - Format:mof
+          - Format:value
+          - Format:rawxml
+          - Format:xml
+          - Format:csv
+    selection:
+        CommandLine|contains|windash: -format
+        Image|endswith: \wmic.exe
+falsepositives:
+  - WMIC.exe FP depend on scripts and administrative methods used in the monitored
+    environment.
+  - Static format arguments - https://petri.com/command-line-wmi-part-3
+level: medium
+customer: 'demo'
+modified: 2024/03/05
+tags:
+  - attack.defense_evasion
+  - attack.t1220
+  - DEMO

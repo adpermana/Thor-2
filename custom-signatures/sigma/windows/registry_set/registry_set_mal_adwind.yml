@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Adwind RAT / JRAT - Registry
+id: 42f0e038-767e-4b85-9d96-2c6335bad0b5
+related:
+  - type: derived
+    id: 1fac1481-2dbc-48b2-9096-753c49b4ec71
+status: experimental
+description: Detects javaw.exe in AppData folder as used by Adwind / JRAT
+author: Florian Roth (Nextron Systems), Tom Ueltschi, Jonhnathan Ribeiro, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/11/10 12:14:01
+references:
+  - https://www.hybrid-analysis.com/sample/ba86fa0d4b6af2db0656a88b1dd29f36fe362473ae8ad04255c4e52f214a541c?environmentId=100
+  - https://www.first.org/resources/papers/conf2017/Advanced-Incident-Detection-and-Threat-Hunting-using-Sysmon-and-Splunk.pdf
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Details|startswith: '%AppData%\Roaming\Oracle\bin\'
+        TargetObject|startswith: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
+level: high
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.execution
+  - attack.t1059.005
+  - attack.t1059.007
+  - DEMO

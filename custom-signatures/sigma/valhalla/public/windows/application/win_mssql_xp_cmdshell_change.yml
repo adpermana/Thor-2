@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: MSSQL XPCmdshell Option Change
+id: d08dd86f-681e-4a00-a92c-1db218754417
+status: test
+description: Detects when the MSSQL "xp_cmdshell" stored procedure setting is changed
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/12 13:28:31
+references:
+  - https://www.netspi.com/blog/technical/network-penetration-testing/sql-server-persistence-part-1-startup-stored-procedures/
+  - https://thedfirreport.com/2022/07/11/select-xmrig-from-sqlserver/
+logsource:
+    product: windows
+    service: application
+detection:
+    condition: selection
+    selection:
+        Data|contains: xp_cmdshell
+        EventID: "15457"
+        Provider_Name: MSSQLSERVER
+falsepositives:
+  - Legitimate enable/disable of the setting
+  - Note that since the event contain the change for both values. This means that
+    this will trigger on both enable and disable
+level: high
+customer: 'demo'
+tags:
+  - attack.execution
+  - DEMO

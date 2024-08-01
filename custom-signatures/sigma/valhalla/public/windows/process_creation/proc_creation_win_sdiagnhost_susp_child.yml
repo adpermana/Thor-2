@@ -1,0 +1,52 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Sdiagnhost Calling Suspicious Child Process
+id: f3d39c45-de1a-4486-a687-ab126124f744
+status: test
+description: Detects sdiagnhost.exe calling a suspicious child process (e.g. used
+    in exploits for Follina / CVE-2022-30190)
+author: Nextron Systems
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/01 17:34:41
+references:
+  - https://twitter.com/nao_sec/status/1530196847679401984
+  - https://app.any.run/tasks/713f05d2-fe78-4b9d-a744-f7c133e3fafb/
+  - https://app.any.run/tasks/f420d295-0457-4e9b-9b9e-6732be227583/
+  - https://app.any.run/tasks/c4117d9a-f463-461a-b90f-4cd258746798/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+          - \cmd.exe
+          - \mshta.exe
+          - \cscript.exe
+          - \wscript.exe
+          - \taskkill.exe
+          - \regsvr32.exe
+          - \rundll32.exe
+          - \calc.exe
+        ParentImage|endswith: \sdiagnhost.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/10/31
+tags:
+  - attack.defense_evasion
+  - attack.t1036
+  - attack.t1218
+  - DEMO

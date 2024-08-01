@@ -1,0 +1,37 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Inbox Forwarding Identity Protection
+id: 27e4f1d6-ae72-4ea0-8a67-77a73a289c3d
+status: experimental
+description: Indicates suspicious rules such as an inbox rule that forwards a copy
+    of all emails to an external address
+author: Mark Morowczynski '@markmorow', Gloria Lee, '@gleeiamglo'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/09/03 18:57:51
+references:
+  - https://learn.microsoft.com/en-us/azure/active-directory/identity-protection/concept-identity-protection-risks#suspicious-inbox-forwarding
+  - https://learn.microsoft.com/en-us/azure/active-directory/architecture/security-operations-user-accounts#unusual-sign-ins
+logsource:
+    product: azure
+    service: riskdetection
+detection:
+    condition: selection
+    selection:
+        riskEventType: suspiciousInboxForwarding
+falsepositives: A legitimate forwarding rule.
+level: high
+customer: 'demo'
+tags:
+  - attack.t1140
+  - attack.defense_evasion
+  - DEMO

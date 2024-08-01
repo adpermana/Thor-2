@@ -1,0 +1,60 @@
+title: SharpWMI Usage
+id: 63db15d2-28be-4bf8-acf8-d1bcf75941e0
+status: experimental
+description: Detects usage of the SharpWMI tool based on commandline flags
+author: Nasreddine Bencherchali
+references:
+    - https://github.com/GhostPack/SharpWMI
+date: 2022/05/19
+tags:
+    - attack.execution
+    - attack.persistence
+    - attack.t1546.003
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    img_orig:
+        - OriginalFileName: 'SharpWMI.exe'
+        - Image|endswith: '\SharpWMI.exe'
+    selection_actions_1:
+        CommandLine|contains:
+            - ' action=query '
+            - ' action=create '
+            - ' action=execute '
+            - ' action=exec '
+            - ' action=upload '
+            - ' action=install '
+            - ' action=loggedon '
+            - ' action=ps '
+            - ' action=getenv '
+            - ' action=setenv '
+            - ' action=delenv '
+            - ' action=terminate '
+            - ' action=firewall '
+            - ' action=executevbs '
+    selection_actions_2: # This selection is here to cover for the FP case discovered in aurora
+        CommandLine|contains:
+            - '.exe" action='
+            - '.exe action='
+            - '.exe  action='
+    selection_flags:
+        CommandLine|contains:
+            - ' command='
+            - ' computername='
+            - ' username='
+            - ' query='
+            - ' source='
+            - ' dest='
+            - ' http://'
+            - ' https://'
+            - ' scriptb64='
+            - ' script='
+            - ' namespace='
+            - ' process='
+            - ' eventname='
+            - ' amsi='
+    condition: img_orig or all of selection_*
+falsepositives:
+    - Unlikely
+level: high

@@ -1,0 +1,56 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: MITRE BZAR Indicators for Persistence
+id: 53389db6-ba46-48e3-a94c-e0f2cefe1583
+status: test
+description: Windows DCE-RPC functions which indicate a persistence techniques on
+    the remote system. All credit for the Zeek mapping of the suspicious endpoint/operation
+    field goes to MITRE.
+author: '@neu5ron, SOC Prime'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/03/19 15:16:41
+references:
+  - https://github.com/mitre-attack/bzar#indicators-for-attck-persistence
+logsource:
+    product: zeek
+    service: dce_rpc
+detection:
+    condition: 1 of op*
+    op1:
+        endpoint: spoolss
+        operation: RpcAddMonitor
+    op2:
+        endpoint: spoolss
+        operation: RpcAddPrintProcessor
+    op3:
+        endpoint: IRemoteWinspool
+        operation: RpcAsyncAddMonitor
+    op4:
+        endpoint: IRemoteWinspool
+        operation: RpcAsyncAddPrintProcessor
+    op5:
+        endpoint: ISecLogon
+        operation: SeclCreateProcessWithLogonW
+    op6:
+        endpoint: ISecLogon
+        operation: SeclCreateProcessWithLogonExW
+falsepositives:
+  - Windows administrator tasks or troubleshooting
+  - Windows management scripts or software
+level: medium
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.persistence
+  - attack.t1547.004
+  - DEMO

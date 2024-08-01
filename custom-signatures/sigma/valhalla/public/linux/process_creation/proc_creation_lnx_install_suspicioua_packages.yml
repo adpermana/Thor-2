@@ -1,0 +1,61 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Package Installed - Linux
+id: 700fb7e8-2981-401c-8430-be58e189e741
+status: test
+description: Detects installation of suspicious packages using system installation
+    utilities
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/03 15:25:21
+references:
+  - https://gist.githubusercontent.com/MichaelKoczwara/12faba9c061c12b5814b711166de8c2f/raw/e2068486692897b620c25fde1ea258c8218fe3d3/history.txt
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    condition: 1 of selection_tool_* and selection_keyword
+    selection_keyword:
+        CommandLine|contains:
+          - nmap
+          - ' nc'
+          - netcat
+          - wireshark
+          - tshark
+          - openconnect
+          - proxychains
+    selection_tool_apt:
+        CommandLine|contains: install
+        Image|endswith:
+          - /apt
+          - /apt-get
+    selection_tool_dpkg:
+        CommandLine|contains:
+          - --install
+          - -i
+        Image|endswith: /dpkg
+    selection_tool_rpm:
+        CommandLine|contains: -i
+        Image|endswith: /rpm
+    selection_tool_yum:
+        CommandLine|contains:
+          - localinstall
+          - install
+        Image|endswith: /yum
+falsepositives: Legitimate administration activities
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1553.004
+  - DEMO

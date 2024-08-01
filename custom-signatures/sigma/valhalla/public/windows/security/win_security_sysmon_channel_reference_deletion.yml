@@ -1,0 +1,51 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Sysmon Channel Reference Deletion
+id: 18beca67-ab3e-4ee3-ba7a-a46ca8d7d0cc
+status: test
+description: Potential threat actor tampering with Sysmon manifest and eventually
+    disabling it
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/07/14 14:48:51
+references:
+  - https://twitter.com/Flangvik/status/1283054508084473861
+  - https://twitter.com/SecurityJosh/status/1283027365770276866
+  - https://securityjosh.github.io/2020/04/23/Mute-Sysmon.html
+  - https://gist.github.com/Cyb3rWard0g/cf08c38c61f7e46e8404b38201ca01c8
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: 1 of selection*
+    selection1:
+        EventID: "4657"
+        NewValue: "0"
+        ObjectName|contains:
+          - WINEVT\Publishers\{5770385f-c22a-43e0-bf4c-06f5698ffbd9}
+          - WINEVT\Channels\Microsoft-Windows-Sysmon/Operational
+        ObjectValueName: Enabled
+    selection2:
+        AccessMask: "65536"
+        EventID: "4663"
+        ObjectName|contains:
+          - WINEVT\Publishers\{5770385f-c22a-43e0-bf4c-06f5698ffbd9}
+          - WINEVT\Channels\Microsoft-Windows-Sysmon/Operational
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/10/05
+tags:
+  - attack.defense_evasion
+  - attack.t1112
+  - DEMO

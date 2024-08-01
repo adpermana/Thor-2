@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Successful IIS Shortname Fuzzing Scan
+id: 7cb02516-6d95-4ffc-8eee-162075e111ac
+status: test
+description: When IIS uses an old .Net Framework it's possible to enumerate folders
+    with the symbol "~"
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/10/06 15:42:41
+references:
+  - https://github.com/projectdiscovery/nuclei-templates/blob/9d2889356eebba661c8407038e430759dfd4ec31/fuzzing/iis-shortname.yaml
+  - https://www.exploit-db.com/exploits/19525
+  - https://github.com/lijiejie/IIS_shortname_Scanner
+logsource:
+    category: webserver
+detection:
+    condition: selection
+    selection:
+        cs-method:
+          - GET
+          - OPTIONS
+        cs-uri-query|contains: ~1
+        cs-uri-query|endswith: a.aspx
+        sc-status:
+          - "200"
+          - "301"
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/01/02
+tags:
+  - attack.initial_access
+  - attack.t1190
+  - DEMO

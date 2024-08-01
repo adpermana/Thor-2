@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Addition of SID History to Active Directory Object
+id: 2632954e-db1c-49cb-9936-67d1ef1d17d2
+status: stable
+description: An attacker can use the SID history attribute to gain additional privileges.
+author: Thomas Patzke, @atc_project (improvements)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/02/19 18:47:41
+references:
+  - https://adsecurity.org/?p=1772
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: selection1 or (selection2 and not selection3 and not filter_null)
+    filter_null:
+        SidHistory: []
+    selection1:
+        EventID:
+          - "4765"
+          - "4766"
+    selection2:
+        EventID: "4738"
+    selection3:
+        SidHistory:
+          - '-'
+          - '%%1793'
+falsepositives: Migration of an account into a new domain
+level: medium
+customer: 'demo'
+tags:
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1134.005
+  - DEMO

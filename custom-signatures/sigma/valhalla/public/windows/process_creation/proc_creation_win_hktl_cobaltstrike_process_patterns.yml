@@ -1,0 +1,53 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential CobaltStrike Process Patterns
+id: f35c5d71-b489-4e22-a115-f003df287317
+status: test
+description: Detects potential process patterns related to Cobalt Strike beacon activity
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/07/27 16:41:11
+references:
+  - https://hausec.com/2021/07/26/cobalt-strike-and-tradecraft/
+  - https://thedfirreport.com/2021/08/29/cobalt-strike-a-defenders-guide/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_conhost_1:
+        CommandLine|endswith: conhost.exe 0xffffffff -ForceV1
+        ParentCommandLine|contains|all:
+          - cmd.exe /C echo
+          - ' > \\\\.\\pipe'
+    selection_conhost_2:
+        CommandLine|endswith: conhost.exe 0xffffffff -ForceV1
+        ParentCommandLine|endswith: /C whoami
+    selection_generic_1:
+        CommandLine|endswith: cmd.exe /C whoami
+        ParentImage|startswith: C:\Temp\
+    selection_generic_2:
+        CommandLine|contains|all:
+          - cmd.exe /c echo
+          - '> \\\\.\\pipe'
+        ParentImage|endswith:
+          - \runonce.exe
+          - \dllhost.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/03/29
+tags:
+  - attack.execution
+  - attack.t1059
+  - DEMO

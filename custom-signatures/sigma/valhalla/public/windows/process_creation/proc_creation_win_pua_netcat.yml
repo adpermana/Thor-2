@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PUA - Netcat Suspicious Execution
+id: e31033fc-33f0-4020-9a16-faf9b31cbf08
+status: test
+description: Detects execution of Netcat. Adversaries may use a non-application layer
+    protocol for communication between host and C2 server or among infected hosts
+    within a network
+author: frack113, Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/07/21 14:26:11
+references:
+  - https://nmap.org/ncat/
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1095/T1095.md
+  - https://www.revshells.com/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_cmdline:
+        CommandLine|contains:
+          - ' -lvp '
+          - ' -lvnp'
+          - ' -l -v -p '
+          - ' -lv -p '
+          - ' -l --proxy-type http '
+          - ' -vnl --exec '
+          - ' -vnl -e '
+          - ' --lua-exec '
+          - ' --sh-exec '
+    selection_img:
+        Image|endswith:
+          - \nc.exe
+          - \ncat.exe
+          - \netcat.exe
+falsepositives: Legitimate ncat use
+level: high
+customer: 'demo'
+modified: 2023/02/08
+tags:
+  - attack.command_and_control
+  - attack.t1095
+  - DEMO

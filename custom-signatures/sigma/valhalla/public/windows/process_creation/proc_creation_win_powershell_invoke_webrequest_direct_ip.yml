@@ -1,0 +1,58 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Invoke-WebRequest Execution With DirectIP
+id: 1edff897-9146-48d2-9066-52e8d8f80a2f
+status: test
+description: Detects calls to PowerShell with Invoke-WebRequest cmdlet using direct
+    IP access
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/04/21 19:56:31
+references:
+  - https://www.huntress.com/blog/critical-vulnerabilities-in-papercut-print-management-software
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_commands:
+        CommandLine|contains:
+          - 'curl '
+          - Invoke-WebRequest
+          - 'iwr '
+          - 'wget '
+    selection_img:
+      - Image|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+      - OriginalFileName:
+          - PowerShell.EXE
+          - pwsh.dll
+    selection_ip:
+        CommandLine|contains:
+          - ://1
+          - ://2
+          - ://3
+          - ://4
+          - ://5
+          - ://6
+          - ://7
+          - ://8
+          - ://9
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.command_and_control
+  - attack.t1105
+  - DEMO

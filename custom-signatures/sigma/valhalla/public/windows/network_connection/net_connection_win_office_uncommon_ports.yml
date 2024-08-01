@@ -1,0 +1,58 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Office Application Initiated Network Connection Over Uncommon Ports
+id: 3b5ba899-9842-4bc2-acc2-12308498bf42
+status: experimental
+description: Detects an office suit application (Word, Excel, PowerPoint, Outlook)
+    communicating to target systems over uncommon ports.
+author: X__Junior (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/07/12 23:55:31
+references:
+  - https://blogs.blackberry.com/en/2023/07/romcom-targets-ukraine-nato-membership-talks-at-nato-summit
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_common_ports:
+        DestinationPort:
+          - "53"
+          - "80"
+          - "139"
+          - "443"
+          - "445"
+    filter_main_outlook_ports:
+        DestinationPort:
+          - "465"
+          - "587"
+          - "993"
+          - "995"
+        Image|contains: :\Program Files\Microsoft Office\
+        Image|endswith: \OUTLOOK.EXE
+    selection:
+        Image|endswith:
+          - \excel.exe
+          - \outlook.exe
+          - \powerpnt.exe
+          - \winword.exe
+          - \wordview.exe
+        Initiated: "true"
+falsepositives: Other ports can be used, apply additional filters accordingly
+level: medium
+customer: 'demo'
+modified: 2024/01/31
+tags:
+  - attack.defense_evasion
+  - attack.command_and_control
+  - DEMO

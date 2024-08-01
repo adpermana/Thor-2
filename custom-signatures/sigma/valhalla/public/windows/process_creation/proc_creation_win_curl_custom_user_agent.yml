@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Curl Web Request With Potential Custom User-Agent
+id: 85de1f22-d189-44e4-8239-dc276b45379b
+status: experimental
+description: Detects execution of "curl.exe" with a potential custom "User-Agent".
+    Attackers can leverage this to download or exfiltrate data via "curl" to a domain
+    that only accept specific "User-Agent" strings
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/07/27 18:42:31
+references:
+  - https://labs.withsecure.com/publications/fin7-target-veeam-servers
+  - https://github.com/WithSecureLabs/iocs/blob/344203de742bb7e68bd56618f66d34be95a9f9fc/FIN7VEEAM/iocs.csv
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_header:
+        CommandLine|contains: 'User-Agent:'
+        CommandLine|re: \s-H\s
+    selection_img:
+      - Image|endswith: \curl.exe
+      - OriginalFileName: curl.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.execution
+  - DEMO

@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Execution via stordiag.exe
+id: 961e0abb-1b1e-4c84-a453-aafe56ad0d34
+status: test
+description: Detects the use of stordiag.exe to execute schtasks.exe systeminfo.exe
+    and fltmc.exe
+author: Austin Songer (@austinsonger)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/10/21 13:06:51
+references:
+  - https://strontic.github.io/xcyclopedia/library/stordiag.exe-1F08FC87C373673944F6A7E8B18CD845.html
+  - https://twitter.com/eral4m/status/1451112385041911809
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        ParentImage|startswith:
+          - c:\windows\system32\
+          - c:\windows\syswow64\
+    selection:
+        Image|endswith:
+          - \schtasks.exe
+          - \systeminfo.exe
+          - \fltmc.exe
+        ParentImage|endswith: \stordiag.exe
+falsepositives: Legitimate usage of stordiag.exe.
+level: high
+customer: 'demo'
+modified: 2022/12/25
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

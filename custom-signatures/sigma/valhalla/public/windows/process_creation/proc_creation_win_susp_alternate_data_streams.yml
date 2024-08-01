@@ -1,0 +1,59 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Execute From Alternate Data Streams
+id: 7f43c430-5001-4f8b-aaa9-c3b88f18fa5c
+status: test
+description: Detects execution from an Alternate Data Stream (ADS). Adversaries may
+    use NTFS file attributes to hide their malicious data in order to evade detection
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/09/01 15:09:21
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1564.004/T1564.004.md
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection_stream and (1 of selection_tools_*)
+    selection_stream:
+        CommandLine|contains: 'txt:'
+    selection_tools_esentutl:
+        CommandLine|contains|all:
+          - 'esentutl '
+          - ' /y '
+          - ' /d '
+          - ' /o '
+    selection_tools_makecab:
+        CommandLine|contains|all:
+          - 'makecab '
+          - .cab
+    selection_tools_reg:
+        CommandLine|contains|all:
+          - 'reg '
+          - ' export '
+    selection_tools_regedit:
+        CommandLine|contains|all:
+          - 'regedit '
+          - ' /E '
+    selection_tools_type:
+        CommandLine|contains|all:
+          - 'type '
+          - ' > '
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.defense_evasion
+  - attack.t1564.004
+  - DEMO

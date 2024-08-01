@@ -1,0 +1,65 @@
+title: PowerShell IEX Pattern
+id: 4547a0b9-3d2c-457d-a6d6-424f515ab28b
+status: experimental
+description: Detects a set of suspicious PowerShell IEX patterns
+author: Florian Roth
+references:
+    - https://gist.github.com/HarmJ0y/bb48307ffa663256e239
+date: 2022/02/08
+modified: 2022/02/21
+logsource:
+    category: process_creation
+    product: windows
+tags:
+    - attack.t1059.001
+detection:
+    selection:
+        CommandLine|contains|all:
+            - '; iex $'
+            - ');iex('
+            - 'k7aUVYK'
+            - 'k7aWV4K'
+            - 'k7aWVYK'
+            - 'k7SUV4K'
+            - 'k7SUVYK'
+            - 'k7SWV4K'
+            - 'k7SWVYK'
+            - 'kAOwBJAEUAeAAoA'
+            - 'kAOwBJAEUAWAAoA'
+            - 'kAOwBJAGUAeAAoA'
+            - 'kAOwBJAGUAWAAoA'
+            - 'kAOwBpAEUAWAAoA'
+            - 'kAOwBpAGUAeAAoA'
+            - 'kAOwBpAGUAWAAoA'
+            - 'KQA7AEkARQB4ACgA'
+            - 'KQA7AEkARQBYACgA'
+            - 'KQA7AEkAZQB4ACgA'
+            - 'KQA7AEkAZQBYACgA'
+            - 'KQA7AGkARQBYACgA'
+            - 'KQA7AGkAZQB4ACgA'
+            - 'KQA7AGkAZQBYACgA'
+            - 'KTtJRVgo'
+            - 'KTtJRXgo'
+            - 'KTtJZVgo'
+            - 'KTtJZXgo'
+            - 'KTtpRVgo'
+            - 'KTtpZVgo'
+            - 'KTtpZXgo'
+            - 'pADsAaQBFAFgAKA'
+            - 'pADsAaQBlAFgAKA'
+            - 'pADsAaQBlAHgAKA'
+            - 'pADsASQBFAFgAKA'
+            - 'pADsASQBFAHgAKA'
+            - 'pADsASQBlAFgAKA'
+            - 'pADsASQBlAHgAKA'
+            - 'pO0lFeC'
+            - 'pO0lFWC'
+            - 'pO0lleC'
+            - 'pO0llWC'
+            - 'pO2lFWC'
+            - 'pO2lleC'
+            - 'pO2llWC'
+    condition: selection
+falsepositives:
+    - False positives depend on scripts and administrative tools used in the monitored environment
+level: high

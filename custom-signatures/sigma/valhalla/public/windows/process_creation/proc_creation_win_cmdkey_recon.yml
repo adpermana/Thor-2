@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Reconnaissance For Cached Credentials Via Cmdkey.EXE
+id: 07f8bdc2-c9b3-472a-9817-5a670b872f53
+status: test
+description: Detects usage of cmdkey to look for cached credentials on the system
+author: jmallette, Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron
+    Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/01/16 21:58:21
+references:
+  - https://www.peew.pw/blog/2017/11/26/exploring-cmdkey-an-edge-case-for-privilege-escalation
+  - https://technet.microsoft.com/en-us/library/cc754243(v=ws.11).aspx
+  - https://github.com/redcanaryco/atomic-red-team/blob/b27a3cb25025161d49ac861cb216db68c46a3537/atomics/T1003.005/T1003.005.md#atomic-test-1---cached-credential-dump-via-cmdkey
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection*
+    selection_cli:
+        CommandLine|contains|windash: ' -l'
+    selection_img:
+      - Image|endswith: \cmdkey.exe
+      - OriginalFileName: cmdkey.exe
+fields:
+  - CommandLine
+  - ParentCommandLine
+  - User
+falsepositives: Legitimate administrative tasks
+level: high
+customer: 'demo'
+modified: 2024/03/05
+tags:
+  - attack.credential_access
+  - attack.t1003.005
+  - DEMO

@@ -1,0 +1,62 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Proxy Execution Via Wuauclt.EXE
+id: af77cf95-c469-471c-b6a0-946c685c4798
+related:
+  - type: obsoletes
+    id: ba1bb0cb-73da-42de-ad3a-de10c643a5d0
+  - type: obsoletes
+    id: d7825193-b70a-48a4-b992-8b5b3015cc11
+status: test
+description: Detects the use of the Windows Update Client binary (wuauclt.exe) for
+    proxy execution.
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research), Florian Roth
+    (Nextron Systems), Sreeman, FPT.EagleEye Team
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/12 14:01:51
+references:
+  - https://dtm.uk/wuauclt/
+  - https://blog.malwarebytes.com/threat-intelligence/2022/01/north-koreas-lazarus-apt-leverages-windows-update-client-github-in-latest-campaign/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_* and not 1 of filter_main_*
+    filter_main_generic:
+        CommandLine|contains: ' /UpdateDeploymentProvider UpdateDeploymentProvider.dll '
+    filter_main_uus:
+        CommandLine|contains:
+          - :\Windows\UUS\Packages\Preview\amd64\updatedeploy.dll /ClassId
+          - :\Windows\UUS\amd64\UpdateDeploy.dll /ClassId
+    filter_main_winsxs:
+        CommandLine|contains|all:
+          - :\Windows\WinSxS\
+          - '\UpdateDeploy.dll /ClassId '
+    filter_main_wuaueng:
+        CommandLine|contains: ' wuaueng.dll '
+    selection_cli:
+        CommandLine|contains|all:
+          - UpdateDeploymentProvider
+          - RunHandlerComServer
+    selection_img:
+      - Image|endswith: \wuauclt.exe
+      - OriginalFileName: wuauclt.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/11/11
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - attack.execution
+  - DEMO

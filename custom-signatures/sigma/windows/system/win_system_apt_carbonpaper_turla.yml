@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Turla Service Install
+id: 1df8b3da-b0ac-4d8a-b7c7-6cb7c24160e4
+status: test
+description: This method detects a service install of malicious services mentioned
+    in Carbon Paper - Turla report by ESET
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/03/31 11:38:41
+references:
+  - https://www.welivesecurity.com/2017/03/30/carbon-paper-peering-turlas-second-stage-backdoor/
+logsource:
+    product: windows
+    service: system
+detection:
+    condition: selection
+    selection:
+        EventID: "7045"
+        Provider_Name: Service Control Manager
+        ServiceName:
+          - srservice
+          - ipvpn
+          - hkmsvc
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2021/11/30
+tags:
+  - attack.persistence
+  - attack.g0010
+  - attack.t1543.003
+  - detection.emerging_threats
+  - DEMO

@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Access To Windows DPAPI Master Keys By Uncommon Application
+id: 46612ae6-86be-4802-bc07-39b59feb1309
+status: experimental
+description: |
+    Detects file access requests to the the Windows Data Protection API Master keys by an uncommon application.
+    This can be a sign of credential stealing. Example case would be usage of mimikatz "dpapi::masterkey" function
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/10/17 20:53:31
+references:
+  - http://blog.harmj0y.net/redteaming/operational-guidance-for-offensive-user-dpapi-abuse/
+  - https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation/dpapi-extracting-passwords
+logsource:
+    category: file_access
+    product: windows
+    definition: 'Requirements: Microsoft-Windows-Kernel-File ETW provider'
+detection:
+    condition: selection and not 1 of filter_*
+    filter_system_folders:
+        Image|contains:
+          - :\Program Files\
+          - :\Program Files (x86)\
+          - :\Windows\system32\
+          - :\Windows\SysWOW64\
+    selection:
+        FileName|contains:
+          - \Microsoft\Protect\S-1-5-18\
+          - \Microsoft\Protect\S-1-5-21-
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/12/18
+tags:
+  - attack.credential_access
+  - attack.t1555.004
+  - DEMO

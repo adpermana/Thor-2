@@ -1,0 +1,31 @@
+title: Unusual Process Execution Tree
+id: 6316bcbe-7041-4d81-9087-abf0471db401
+related:
+    - id: ef2bc16d-97d3-45cb-9ae2-273c404e3003
+      type: similar
+status: experimental
+description: Detects unusual process trees but not necessarily malicious
+author: Nasreddine Bencherchali
+references:
+    - Internal Research
+date: 2022/09/06
+modified: 2023/05/31
+tags:
+    - attack.execution
+    - attack.t1204.002
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        ProcessTree|contains:
+            # Add more suspicious trees
+            - '\cmd.exe|C:\Windows\System32\cmd.exe|C:\Windows\System32\cmd.exe'
+            - '\cmd.exe|C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe|C:\Windows\System32\cmd.exe'
+            - '\powershell.exe|C:\Windows\System32\cmd.exe|C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe'
+            - '\powershell.exe|C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe|C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe'
+            - '\WScript.exe|C:\Windows\System32\WScript.exe'
+    condition: selection
+falsepositives:
+    - Unknown
+level: medium

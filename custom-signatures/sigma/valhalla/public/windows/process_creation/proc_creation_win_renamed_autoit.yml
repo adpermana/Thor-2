@@ -1,0 +1,62 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Renamed AutoIt Execution
+id: f4264e47-f522-4c38-a420-04525d5b880f
+status: experimental
+description: |
+    Detects the execution of a renamed AutoIt2.exe or AutoIt3.exe.
+    AutoIt is a scripting language and automation tool for Windows systems. While primarily used for legitimate automation tasks, it can be misused in cyber attacks.
+    Attackers can leverage AutoIt to create and distribute malware, including keyloggers, spyware, and botnets. A renamed AutoIt executable is particularly suspicious.
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/06/04 12:25:01
+references:
+  - https://twitter.com/malmoeb/status/1665463817130725378?s=12&t=C0_T_re0wRP_NfKa27Xw9w
+  - https://www.autoitscript.com/site/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_* and not 1 of filter_main_*
+    filter_main_legit_name:
+        Image|endswith:
+          - \AutoIt.exe
+          - \AutoIt2.exe
+          - \AutoIt3_x64.exe
+          - \AutoIt3.exe
+    selection_1:
+        CommandLine|contains:
+          - ' /AutoIt3ExecuteScript'
+          - ' /ErrorStdOut'
+    selection_2:
+      - Imphash:
+          - fdc554b3a8683918d731685855683ddf
+          - cd30a61b60b3d60cecdb034c8c83c290
+          - f8a00c72f2d667d2edbb234d0c0ae000
+      - Hashes|contains:
+          - IMPHASH=FDC554B3A8683918D731685855683DDF
+          - IMPHASH=CD30A61B60B3D60CECDB034C8C83C290
+          - IMPHASH=F8A00C72F2D667D2EDBB234D0C0AE000
+    selection_3:
+        OriginalFileName:
+          - AutoIt3.exe
+          - AutoIt2.exe
+          - AutoIt.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/09/19
+tags:
+  - attack.defense_evasion
+  - attack.t1027
+  - DEMO

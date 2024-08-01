@@ -1,0 +1,25 @@
+title: DcMacro Dropped Files
+id: 383bd08d-2a24-4aa8-aaff-a72016cf97bb
+status: test
+description: Detects the creation of known malicious file names based on the default config of the DcMacro tool
+author: Nasreddine Bencherchali
+references:
+    - https://github.com/qwqdanchun/DcMacro/blob/main/Macro/Form1.cs
+    - https://github.com/qwqdanchun/DcMacro/blob/main/Macro/Properties/Resources.resx
+date: 2022/05/15
+modified: 2023/03/29
+tags:
+    - attack.execution
+    - attack.persistence
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        TargetFilename|endswith:
+            - 'qwqdanchun.xls'
+            - 'qwqdanchun.sct'
+    condition: selection
+falsepositives:
+    - Unknown
+level: critical

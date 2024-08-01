@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious File Creation Activity From Fake Recycle.Bin Folder
+id: cd8b36ac-8e4a-4c2f-a402-a29b8fbd5bca
+related:
+  - type: derived
+    id: 5ce0f04e-3efc-42af-839d-5b3a543b76c0
+status: experimental
+description: Detects file write event from/to a fake recycle bin folder that is often
+    used as a staging directory for malware
+author: X__Junior (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/07/12 22:02:21
+references:
+  - https://www.mandiant.com/resources/blog/infected-usb-steal-secrets
+  - https://unit42.paloaltonetworks.com/cloaked-ursa-phishing/
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - Image|contains:
+          - RECYCLERS.BIN\
+          - RECYCLER.BIN\
+      - TargetFilename|contains:
+          - RECYCLERS.BIN\
+          - RECYCLER.BIN\
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/12/11
+tags:
+  - attack.persistence
+  - attack.defense_evasion
+  - DEMO

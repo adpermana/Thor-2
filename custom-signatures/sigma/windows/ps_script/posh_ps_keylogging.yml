@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Powershell Keylogging
+id: 34f90d3c-c297-49e9-b26d-911b05a4866c
+status: test
+description: Adversaries may log user keystrokes to intercept credentials as the user
+    types them.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/07/30 11:55:31
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218/T1218.md
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1056.001/src/Get-Keystrokes.ps1
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: 1 of selection_*
+    selection_basic:
+        ScriptBlockText|contains: Get-Keystrokes
+    selection_high:
+        ScriptBlockText|contains|all:
+          - Get-ProcAddress user32.dll GetAsyncKeyState
+          - Get-ProcAddress user32.dll GetForegroundWindow
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/07/11
+tags:
+  - attack.collection
+  - attack.t1056.001
+  - DEMO

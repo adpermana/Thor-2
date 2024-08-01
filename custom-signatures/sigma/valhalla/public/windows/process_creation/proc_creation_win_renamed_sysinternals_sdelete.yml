@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Renamed Sysinternals Sdelete Execution
+id: c1d867fe-8d95-4487-aab4-e53f2d339f90
+status: test
+description: Detects the use of a renamed SysInternals Sdelete, which is something
+    an administrator shouldn't do (the renaming)
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/06 16:24:51
+references:
+  - https://docs.microsoft.com/en-us/sysinternals/downloads/sdelete
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1485/T1485.md
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        Image|endswith:
+          - \sdelete.exe
+          - \sdelete64.exe
+    selection:
+        OriginalFileName: sdelete.exe
+fields:
+  - ComputerName
+  - User
+  - CommandLine
+  - ParentCommandLine
+falsepositives: System administrator usage
+level: high
+customer: 'demo'
+modified: 2023/02/03
+tags:
+  - attack.impact
+  - attack.t1485
+  - DEMO

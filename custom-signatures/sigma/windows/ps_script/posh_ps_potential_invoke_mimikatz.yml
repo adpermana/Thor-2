@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Invoke-Mimikatz PowerShell Script
+id: 189e3b02-82b2-4b90-9662-411eb64486d4
+status: test
+description: Detects Invoke-Mimikatz PowerShell script and alike. Mimikatz is a credential
+    dumper capable of obtaining plaintext Windows account logins and passwords.
+author: Tim Rauch, Elastic (idea)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/28 17:40:11
+references:
+  - https://www.elastic.co/guide/en/security/current/potential-invoke-mimikatz-powershell-script.html#potential-invoke-mimikatz-powershell-script
+logsource:
+    category: ps_script
+    product: windows
+detection:
+    condition: 1 of selection*
+    selection_1:
+        ScriptBlockText|contains|all:
+          - DumpCreds
+          - DumpCerts
+    selection_2:
+        ScriptBlockText|contains: sekurlsa::logonpasswords
+    selection_3:
+        ScriptBlockText|contains|all:
+          - crypto::certificates
+          - CERT_SYSTEM_STORE_LOCAL_MACHINE
+falsepositives: Mimikatz can be useful for testing the security of networks
+level: high
+customer: 'demo'
+tags:
+  - attack.credential_access
+  - attack.t1003
+  - DEMO

@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Execution of Sysinternals Tools
+id: 7cccd811-7ae9-4ebe-9afd-cb5c406b824b
+related:
+  - type: derived
+    id: 25ffa65d-76d8-4da5-a832-3f2b0136e133
+status: test
+description: Detects command lines that contain the 'accepteula' flag which could
+    be a sign of execution of one of the Sysinternals tools
+author: Markus Neis
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/08/28 17:16:11
+references:
+  - https://twitter.com/Moti_B/status/1008587936735035392
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains|windash: ' -accepteula'
+falsepositives:
+  - Legitimate use of SysInternals tools
+  - Programs that use the same command line flag
+level: low
+customer: 'demo'
+modified: 2024/03/13
+tags:
+  - attack.resource_development
+  - attack.t1588.002
+  - DEMO

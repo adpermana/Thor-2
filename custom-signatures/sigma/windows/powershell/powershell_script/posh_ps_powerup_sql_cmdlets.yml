@@ -1,0 +1,127 @@
+title: Malicious PowerUpSQL PowerShell Cmdlets
+id: 532f4908-f82d-493f-bfe1-b83bc819209d
+status: test
+description: Detects known PowerUpSQL cmdlets names using powershell script logging
+author: Nasreddine Bencherchali
+references:
+    - https://github.com/NetSPI/PowerUpSQL/blob/master/PowerUpSQL.ps1
+date: 2022/05/14
+modified: 2023/03/29
+tags:
+    - attack.execution
+    - attack.t1059.001
+logsource:
+    product: windows
+    category: ps_script
+    definition: Script Block Logging must be enabled
+detection:
+    selection:
+        ScriptBlockText|contains:
+            - Get-SQLConnectionObject
+            - Get-SQLConnectionTest
+            - Get-SQLConnectionTestThreaded
+            # - Get-SQLQuery
+            - Get-SQLQueryThreaded
+            - Invoke-SQLUncPathInjection
+            - Invoke-SQLOSCmd
+            - Invoke-SQLOSCmdR
+            - Invoke-SQLOSCmdPython
+            - Invoke-SQLOSCmdOle
+            - Invoke-SQLOSCmdCLR
+            - Invoke-SQLOSCmdAgentJob
+            - Get-SQLServerInfo
+            - Get-SQLServerInfoThreaded
+            - Get-SQLDatabase
+            - Get-SQLDatabaseThreaded
+            # - Get-SQLTable
+            # - Get-SQLColumn
+            - Get-SQLColumnSampleData
+            - Get-SQLColumnSampleDataThreaded
+            - Get-SQLDatabaseSchema
+            - Get-SQLView
+            - Get-SQLServerLink
+            - Get-SQLServerConfiguration
+            - Get-SQLServerCredential
+            - Get-SQLServerLogin
+            # - Get-SQLSession
+            - Get-SQLOleDbProvder
+            - Get-SQLDomainObject
+            - Get-SQLDomainUser
+            - Get-SQLDomainSubnet
+            - Get-SQLDomainSite
+            - Get-SQLDomainComputer
+            - Get-SQLDomainOu
+            - Get-SQLDomainAccountPolicy
+            - Get-SQLDomainGroup
+            - Get-SQLDomainTrust
+            - Get-SQLDomainPasswordsLAPS
+            - Get-SQLDomainController
+            - Get-SQLDomainExploitableSystem
+            - Get-SQLDomainGroupMember
+            - Get-SQLSysadminCheck
+            - Get-SQLLocalAdminCheck
+            - Get-SQLServiceAccount
+            - Get-SQLAgentJob
+            - Get-SQLAuditDatabaseSpec
+            - Get-SQLAuditServerSpec
+            - Get-SQLServerPriv
+            - Get-SQLDatabasePriv
+            - Get-SQLDatabaseUser
+            - Get-SQLServerRole
+            - Get-SQLServerRoleMember
+            - Get-SQLDatabaseRole
+            - Get-SQLDatabaseRoleMember
+            - Get-SQLTriggerDdl
+            - Get-SQLTriggerDml
+            - Get-SQLStoredProcedureCLR
+            - Get-SQLStoredProcedure
+            - Get-SQLStoredProcedureXP
+            - Get-SQLStoredProcedureSQLi
+            - Get-SQLStoredProcedureAutoExec
+            - Get-SQLAssemblyFile
+            - Get-SQLFuzzObjectName
+            - Get-SQLFuzzDatabaseName
+            - Get-SQLFuzzServerLogin
+            - Get-SQLFuzzDomainAccount
+            - Get-ComputerNameFromInstance
+            - Get-SQLServiceLocal
+            - Get-SQLServerLoginDefaultPw
+            - Get-SQLServerLinkCrawl
+            - Get-SQLServerLinkData
+            - Get-SQLServerLinkQuery
+            - Get-SQLInstanceDomain
+            - Get-SQLInstanceLocal
+            - Get-SQLInstanceFile
+            - Get-SQLRecoverPwAutoLogon
+            - Get-SQLServerPolicy
+            - Get-SQLServerPasswordHash
+            - Invoke-SQLUploadFileOle
+            - Invoke-SQLDownloadFile
+            - Get-SQLPersistRegRun
+            - Get-SQLPersistRegDebugger
+            - Get-SQLPersistTriggerDDL
+            - Invoke-SQLAuditTemplate
+            - Invoke-SQLImpersonateService
+            - Invoke-SQLAuditSQLiSpExecuteAs
+            - Invoke-SQLAuditSQLiSpSigned
+            - Invoke-SQLAuditPrivServerLink
+            - Invoke-SQLAuditDefaultLoginPw
+            - Invoke-SQLAuditPrivTrustworthy
+            - Invoke-SQLAuditPrivAutoExecSp
+            - Invoke-SQLAuditPrivXpDirtree
+            - Invoke-SQLAuditPrivXpFileexist
+            - Invoke-SQLAuditPrivDbChaining
+            - Invoke-SQLAuditPrivCreateProcedure
+            - Invoke-SQLAuditWeakLoginPw
+            - Invoke-SQLAuditRoleDbOwner
+            - Invoke-SQLAuditRoleDbDdlAdmin
+            - Invoke-SQLAuditPrivImpersonateLogin
+            - Invoke-SQLAuditSampleDataByColumn
+            - Invoke-SQLImpersonateServiceCmd
+            - Invoke-SQLAudit
+            - Invoke-SQLEscalatePriv
+            - Invoke-SQLDumpInfo
+    condition: selection
+falsepositives:
+    - Powershell scripts with similar cmdlets names
+level: high

@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: System and Hardware Information Discovery
+id: 1f358e2e-cb63-43c3-b575-dfb072a6814f
+related:
+  - type: derived
+    id: 42df45e7-e6e9-43b5-8f26-bec5b39cc239
+status: stable
+description: Detects system information discovery commands
+author: Ömer Günal, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/08 17:07:21
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1082/T1082.md#atomic-test-4---linux-vm-check-via-hardware
+logsource:
+    product: linux
+    service: auditd
+detection:
+    condition: selection
+    selection:
+        name:
+          - /sys/class/dmi/id/bios_version
+          - /sys/class/dmi/id/product_name
+          - /sys/class/dmi/id/chassis_vendor
+          - /proc/scsi/scsi
+          - /proc/ide/hd0/model
+          - /proc/version
+          - /etc/*version
+          - /etc/*release
+          - /etc/issue
+        type: PATH
+falsepositives: Legitimate administration activities
+level: informational
+customer: 'demo'
+modified: 2022/11/26
+tags:
+  - attack.discovery
+  - attack.t1082
+  - DEMO

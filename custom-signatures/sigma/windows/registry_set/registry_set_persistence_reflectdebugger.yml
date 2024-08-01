@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential WerFault ReflectDebugger Registry Value Abuse
+id: 0cf2e1c6-8d10-4273-8059-738778f981ad
+related:
+  - type: derived
+    id: fabfb3a7-3ce1-4445-9c7c-3c27f1051cdd
+status: experimental
+description: Detects potential WerFault "ReflectDebugger" registry value abuse for
+    persistence.
+author: X__Junior
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/18 20:41:41
+references:
+  - https://cocomelonc.github.io/malware/2022/11/02/malware-pers-18.html
+  - https://www.hexacorn.com/blog/2018/08/31/beyond-good-ol-run-key-part-85/
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection
+    selection:
+        EventType: SetValue
+        TargetObject|endswith: \Microsoft\Windows\Windows Error Reporting\Hangs\ReflectDebugger
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1036.003
+  - DEMO

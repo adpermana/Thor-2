@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Source Code Enumeration Detection by Keyword
+id: 953d460b-f810-420a-97a2-cfca4c98e602
+status: test
+description: Detects source code enumeration that use GET requests by keyword searches
+    in URL strings
+author: James Ahearn
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/06/08 17:41:41
+references:
+  - https://pentester.land/tutorials/2018/10/25/source-code-disclosure-via-exposed-git-folder.html
+  - https://medium.com/@logicbomb_1/bugbounty-how-i-was-able-to-download-the-source-code-of-indias-largest-telecom-service-52cf5c5640a1
+logsource:
+    category: webserver
+detection:
+    condition: keywords
+    keywords: .git/
+fields:
+  - client_ip
+  - vhost
+  - url
+  - response
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/10/05
+tags:
+  - attack.discovery
+  - attack.t1083
+  - DEMO

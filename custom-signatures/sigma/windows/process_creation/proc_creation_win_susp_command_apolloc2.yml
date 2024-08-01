@@ -1,0 +1,30 @@
+title: Suspicious Windows CMD Execution Related to Apollo Agent
+id: 087b25d1-1ca6-4803-b1b3-071211376dc9
+status: experimental
+description: Detects suspicious cmd command execution from unusual locations, seen in Apollo Agent behavior
+author: Paul Hager
+date: 2022/10/06
+references:
+    - https://github.com/MythicAgents/apollo
+logsource:
+    category: process_creation
+    product: windows
+tags:
+    - attack.execution
+    - attack.t1059.001
+detection:
+    selection1:
+        CommandLine|re: 'cmd\.exe /S /c ' # match exact casing
+    selection_parent:
+        ParentImage|contains: # add more on the go
+            - '\Users\Public\'
+            - '\PerfLogs\'
+            - '\Desktop\'
+            - '\Downloads\'
+            - '\ProgrammData'
+            - '\AppData\Local\Temp\'
+            - 'C:\Windows\TEMP\'
+    condition: all of selection*
+falsepositives:
+    - False positives depend on scripts and administrative tools used in the monitored environment
+level: medium

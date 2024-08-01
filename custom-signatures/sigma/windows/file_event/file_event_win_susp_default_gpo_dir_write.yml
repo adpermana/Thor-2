@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Files in Default GPO Folder
+id: 5f87308a-0a5b-4623-ae15-d8fa1809bc60
+status: test
+description: Detects the creation of copy of suspicious files (EXE/DLL) to the default
+    GPO storage folder
+author: elhoim
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/04/28 15:42:41
+references:
+  - https://redcanary.com/blog/intelligence-insights-november-2021/
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetFilename|contains: \Policies\{31B2F340-016D-11D2-945F-00C04FB984F9}\
+        TargetFilename|endswith:
+          - .dll
+          - .exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.t1036.005
+  - attack.defense_evasion
+  - DEMO

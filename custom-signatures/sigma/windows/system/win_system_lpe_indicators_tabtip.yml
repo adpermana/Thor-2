@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Local Privilege Escalation Indicator TabTip
+id: bc2e25ed-b92b-4daa-b074-b502bdd1982b
+status: experimental
+description: Detects the invocation of TabTip via CLSID as seen when JuicyPotatoNG
+    is used on a system in brute force mode
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/10/07 17:21:01
+references:
+  - https://github.com/antonioCoco/JuicyPotatoNG
+logsource:
+    product: windows
+    service: system
+detection:
+    condition: selection
+    selection:
+        EventID: "10001"
+        Provider_Name: Microsoft-Windows-DistributedCOM
+        param1: C:\Program Files\Common Files\microsoft shared\ink\TabTip.exe
+        param2: "2147943140"
+        param3: '{054AAE20-4BEA-4347-8A35-64A533254A9D}'
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/04/14
+tags:
+  - attack.execution
+  - attack.t1557.001
+  - DEMO

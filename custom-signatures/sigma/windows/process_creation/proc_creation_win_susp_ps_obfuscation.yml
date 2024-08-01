@@ -1,0 +1,51 @@
+title: Suspicious PowerShell Script Obfuscation Patterns - ProcessCreation
+id: 193c460a-bc85-4386-ad75-7a1d004b57b4
+related:
+    - id: c41216df-49cd-4bb3-b277-9b69e13d3cf0
+      type: similar
+status: experimental
+description: Detects possible obfuscated powershell scripts
+author: Nasreddine Bencherchali
+references:
+    - https://github.com/S3cur3Th1sSh1t/Creds/blob/master/obfuscatedps/
+    - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/shuckworm-russia-ukraine-military
+    - https://amsi.fail/
+date: 2022/12/27
+modified: 2023/06/19
+tags:
+    - attack.defense_evasion
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains:
+            - '::join('''
+            - '([byte]0x'
+            - '[Byte[]] '
+            - '[char]65' # A
+            - '[char]97' # a
+            - ']-Join'''
+            - ']-Join""'
+            - ']65+['
+            - '{0}{3}{2}'
+            - '{1}{2}{3}'
+            - '{1}{3}{2}'
+            - '{1}{4}'
+            - '{2}{1}{3}'
+            - '{2}{3}{0}'
+            - '{2}{3}{1}'
+            - '{3}{1}{2}'
+            - '{3}{2}{1}'
+            - '{4}{1}'
+            - '{4}{2}{1}'
+            - '+[char]('
+            - '$_-bXoR'
+            - 'Ãmsí'
+            - "$(('â"
+            - "$(('ä"
+            - "$(('ã"
+    condition: selection
+falsepositives:
+    - Unknown
+level: high

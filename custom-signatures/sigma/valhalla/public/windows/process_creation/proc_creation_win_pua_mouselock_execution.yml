@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PUA - Mouse Lock Execution
+id: c9192ad9-75e5-43eb-8647-82a0a5b493e3
+status: test
+description: In Kaspersky's 2020 Incident Response Analyst Report they listed legitimate
+    tool "Mouse Lock" as being used for both credential access and collection in security
+    incidents.
+author: Cian Heasley
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/08/13 12:17:31
+references:
+  - https://github.com/klsecservices/Publications/blob/657deb6a6eb6e00669afd40173f425fb49682eaa/Incident-Response-Analyst-Report-2020.pdf
+  - https://sourceforge.net/projects/mouselock/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - Product|contains: Mouse Lock
+      - Company|contains: Misc314
+      - CommandLine|contains: Mouse Lock_
+fields:
+  - Product
+  - Company
+  - CommandLine
+falsepositives: Legitimate uses of Mouse Lock software
+level: medium
+customer: 'demo'
+modified: 2023/02/21
+tags:
+  - attack.credential_access
+  - attack.collection
+  - attack.t1056.002
+  - DEMO

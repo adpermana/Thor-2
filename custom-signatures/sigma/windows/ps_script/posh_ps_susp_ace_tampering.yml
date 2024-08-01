@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Persistence Via Security Descriptors - ScriptBlock
+id: 2f77047c-e6e9-4c11-b088-a3de399524cd
+status: test
+description: Detects usage of certain functions and keywords that are used to manipulate
+    security descriptors in order to potentially set a backdoor. As seen used in the
+    DAMP project.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/05 22:02:01
+references:
+  - https://github.com/HarmJ0y/DAMP
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: selection
+    selection:
+        ScriptBlockText|contains:
+          - \Lsa\JD
+          - \Lsa\Skew1
+          - \Lsa\Data
+          - \Lsa\GBG
+        ScriptBlockText|contains|all:
+          - win32_Trustee
+          - win32_Ace
+          - .AccessMask
+          - .AceType
+          - .SetSecurityDescriptor
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.persistence
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - DEMO

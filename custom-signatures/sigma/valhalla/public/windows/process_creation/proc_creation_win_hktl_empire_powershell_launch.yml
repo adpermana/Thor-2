@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - Empire PowerShell Launch Parameters
+id: 79f4ede3-402e-41c8-bc3e-ebbf5f162581
+status: test
+description: Detects suspicious powershell command line parameters used in Empire
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/04/20 17:53:21
+references:
+  - https://github.com/EmpireProject/Empire/blob/c2ba61ca8d2031dad0cfc1d5770ba723e8b710db/lib/common/helpers.py#L165
+  - https://github.com/EmpireProject/Empire/blob/e37fb2eef8ff8f5a0a689f1589f424906fe13055/lib/modules/powershell/persistence/powerbreach/deaduser.py#L191
+  - https://github.com/EmpireProject/Empire/blob/e37fb2eef8ff8f5a0a689f1589f424906fe13055/lib/modules/powershell/persistence/powerbreach/resolver.py#L178
+  - https://github.com/EmpireProject/Empire/blob/e37fb2eef8ff8f5a0a689f1589f424906fe13055/data/module_source/privesc/Invoke-EventVwrBypass.ps1#L64
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - ' -NoP -sta -NonI -W Hidden -Enc '
+          - ' -noP -sta -w 1 -enc '
+          - ' -NoP -NonI -W Hidden -enc '
+          - ' -noP -sta -w 1 -enc'
+          - ' -enc  SQB'
+          - ' -nop -exec bypass -EncodedCommand '
+falsepositives: Other tools that incidentally use the same command line parameters
+level: high
+customer: 'demo'
+modified: 2023/02/21
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

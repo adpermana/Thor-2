@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Nslookup PowerShell Download Cradle - ProcessCreation
+id: 1b3b01c7-84e9-4072-86e5-fc285a41ff23
+related:
+  - type: obsoletes
+    id: 72671447-4352-4413-bb91-b85569687135
+  - type: similar
+    id: 999bff6d-dc15-44c9-9f5c-e1051bfc86e1
+status: test
+description: Detects suspicious powershell download cradle using nslookup. This cradle
+    uses nslookup to extract payloads from DNS records
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/05 20:03:21
+references:
+  - https://twitter.com/Alh4zr3d/status/1566489367232651264
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cmd:
+        CommandLine|contains:
+          - ' -q=txt '
+          - ' -querytype=txt '
+        ParentImage|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+    selection_img:
+      - Image|contains: \nslookup.exe
+      - OriginalFileName: \nslookup.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/12/19
+tags:
+  - attack.defense_evasion
+  - DEMO

@@ -1,0 +1,39 @@
+title: Suspicious Firewall Rules
+id: dae30be6-c262-4601-94c8-a028f50b2529
+status: test
+description: Detects the creation of a new suspicious firewall rule using the New-NetFirewallRule cmdlet
+date: 2022/05/14
+modified: 2023/03/29
+references:
+    - https://docs.microsoft.com/en-us/powershell/module/netsecurity/new-netfirewallrule?view=windowsserver2019-ps
+author: Nasreddine Bencherchali
+tags:
+    - attack.execution
+    - attack.t1059.001
+logsource:
+    product: windows
+    category: ps_script
+    definition: Script Block Logging must be enabled
+detection:
+    selection_any:
+        ScriptBlockText|contains|all:
+            - 'New-NetFirewallRule'
+            - '-LocalPort Any'
+            - '-RemotePort Any'
+            - '-LocalAddress Any'
+            - '-RemoteAddress Any'
+    selection_ports:
+        ScriptBlockText|contains|all:
+            - 'New-NetFirewallRule'
+            - '-Protocol TCP'
+            - '-Action Allow'
+        ScriptBlockText|contains:
+            # Add more ports as you see fit
+            - '-LocalPort 3389'
+            - '-LocalPort 22'
+            - '-LocalPort 445'
+            - '-LocalPort 5986'
+    condition: 1 of selection*
+falsepositives:
+    - Legitimate use and need for these rules/ports
+level: high

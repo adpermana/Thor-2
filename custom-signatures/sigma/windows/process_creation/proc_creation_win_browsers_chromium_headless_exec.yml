@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Browser Execution In Headless Mode
+id: ef9dcfed-690c-4c5d-a9d1-482cd422225c
+related:
+  - type: derived
+    id: 0e8cfe08-02c9-4815-a2f8-0d157b7ed33e
+status: test
+description: Detects execution of Chromium based browser in headless mode
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/09/12 14:52:51
+references:
+  - https://twitter.com/mrd0x/status/1478234484881436672?s=12
+  - https://www.trendmicro.com/en_us/research/23/e/managed-xdr-investigation-of-ducktail-in-trend-micro-vision-one.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains: --headless
+        Image|endswith:
+          - \brave.exe
+          - \chrome.exe
+          - \msedge.exe
+          - \opera.exe
+          - \vivaldi.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.command_and_control
+  - attack.t1105
+  - DEMO

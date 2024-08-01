@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious TCP Tunnel Via PowerShell Script
+id: bd33d2aa-497e-4651-9893-5c5364646595
+status: test
+description: Detects powershell scripts that creates sockets/listeners which could
+    be indicative of tunneling activity
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/08 17:14:21
+references:
+  - https://github.com/Arno0x/PowerShellScripts/blob/a6b7d5490fbf0b20f91195838f3a11156724b4f7/proxyTunnel.ps1
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: selection
+    selection:
+        ScriptBlockText|contains|all:
+          - '[System.Net.HttpWebRequest]'
+          - System.Net.Sockets.TcpListener
+          - AcceptTcpClient
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.command_and_control
+  - attack.t1090
+  - DEMO

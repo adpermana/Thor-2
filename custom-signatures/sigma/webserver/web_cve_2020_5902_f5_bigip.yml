@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: CVE-2020-5902 F5 BIG-IP Exploitation Attempt
+id: 44b53b1c-e60f-4a7b-948e-3435a7918478
+status: test
+description: Detects the exploitation attempt of the vulnerability found in F5 BIG-IP
+    and described in CVE-2020-5902
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/07/05 15:25:01
+references:
+  - https://support.f5.com/csp/article/K52145254
+  - https://www.ptsecurity.com/ww-en/about/news/f5-fixes-critical-vulnerability-discovered-by-positive-technologies-in-big-ip-application-delivery-controller/
+  - https://twitter.com/yorickkoster/status/1279709009151434754
+  - https://www.criticalstart.com/f5-big-ip-remote-code-execution-exploit/
+logsource:
+    category: webserver
+detection:
+    condition: selection_base and selection_traversal
+    selection_base:
+        cs-uri-query|contains:
+          - /tmui/
+          - /hsqldb
+    selection_traversal:
+        cs-uri-query|contains:
+          - ..;/
+          - .jsp/..
+fields:
+  - c-ip
+  - c-dns
+falsepositives: Unknown
+level: critical
+customer: 'demo'
+modified: 2023/01/02
+tags:
+  - attack.initial_access
+  - attack.t1190
+  - cve.2020.5902
+  - detection.emerging_threats
+  - DEMO

@@ -1,0 +1,89 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Schtasks From Env Var Folder
+id: 81325ce1-be01-4250-944f-b4789644556f
+related:
+  - type: derived
+    id: 43f487f0-755f-4c2a-bce7-d6d2eec2fcf8
+status: experimental
+description: Detects Schtask creations that point to a suspicious folder or an environment
+    variable often used by malware
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/02/21 16:12:51
+references:
+  - https://www.welivesecurity.com/2022/01/18/donot-go-do-not-respawn/
+  - https://www.joesandbox.com/analysis/514608/0/html#324415FF7D8324231381BAD48A052F85DF04
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: ( all of selection1* or all of selection2* ) and not 1 of filter*
+    filter_avira_install:
+        CommandLine|contains|all:
+          - /Create /Xml "C:\Users\
+          - \AppData\Local\Temp\.CR.
+          - Avira_Security_Installation.xml
+    filter_avira_other:
+        CommandLine|contains:
+          - .tmp\UpdateFallbackTask.xml
+          - .tmp\WatchdogServiceControlManagerTimeout.xml
+          - .tmp\SystrayAutostart.xml
+          - .tmp\MaintenanceTask.xml
+        CommandLine|contains|all:
+          - /Create /F /TN
+          - '/Xml '
+          - \AppData\Local\Temp\is-
+          - Avira_
+    filter_klite_codec:
+        CommandLine|contains|all:
+          - \AppData\Local\Temp\
+          - '/Create /TN "klcp_update" /XML '
+          - \klcp_update_task.xml
+    filter_mixed:
+      - CommandLine|contains:
+          - update_task.xml
+          - /Create /TN TVInstallRestore /TR
+      - ParentCommandLine|contains: unattended.ini
+    selection1_all_folders:
+        CommandLine|contains:
+          - :\Perflogs
+          - :\Windows\Temp
+          - \AppData\Local\
+          - \AppData\Roaming\
+          - \Users\Public
+          - '%AppData%'
+          - '%Public%'
+    selection1_create:
+        CommandLine|contains: ' /create '
+        Image|endswith: \schtasks.exe
+    selection2_parent:
+        ParentCommandLine|endswith: \svchost.exe -k netsvcs -p -s Schedule
+    selection2_some_folders:
+        CommandLine|contains:
+          - :\Perflogs
+          - :\Windows\Temp
+          - \Users\Public
+          - '%Public%'
+falsepositives:
+  - Benign scheduled tasks creations or executions that happen often during software
+    installations
+  - Software that uses the AppData folder and scheduled tasks to update the software
+    in the AppData folders
+level: medium
+customer: 'demo'
+modified: 2023/11/30
+tags:
+  - attack.execution
+  - attack.t1053.005
+  - DEMO

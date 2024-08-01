@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: User Couldn't Call a Privileged Service 'LsaRegisterLogonProcess'
+id: 6daac7fc-77d1-449a-a71a-e6b4d59a0e54
+status: test
+description: The 'LsaRegisterLogonProcess' function verifies that the application
+    making the function call is a logon process by checking that it has the SeTcbPrivilege
+    privilege set. Possible Rubeus tries to get a handle to LSA.
+author: Roberto Rodriguez (source), Ilyas Ochkov (rule), oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/24 22:49:31
+references:
+  - https://posts.specterops.io/hunting-in-active-directory-unconstrained-delegation-forests-trusts-71f2b33688e1
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: selection
+    selection:
+        EventID: "4673"
+        Keywords: "0x8010000000000000"
+        Service: LsaRegisterLogonProcess()
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/12/25
+tags:
+  - attack.lateral_movement
+  - attack.privilege_escalation
+  - attack.t1558.003
+  - DEMO

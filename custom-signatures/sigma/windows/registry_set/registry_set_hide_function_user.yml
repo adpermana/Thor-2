@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Registry Hide Function from User
+id: 5a93eb65-dffa-4543-b761-94aa60098fb6
+status: test
+description: Detects registry modifications that hide internal tools or functions
+    from the user (malware like Agent Tesla, Hermetic Wiper uses this technique)
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/03/18 14:28:41
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1564.001/T1564.001.md
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: 1 of selection_set_*
+    selection_set_0:
+        Details: DWORD (0x00000000)
+        TargetObject|endswith:
+          - SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\ShowInfoTip
+          - SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\ShowCompColor
+    selection_set_1:
+        Details: DWORD (0x00000001)
+        TargetObject|endswith:
+          - SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer\HideClock
+          - SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer\HideSCAHealth
+          - SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer\HideSCANetwork
+          - SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer\HideSCAPower
+          - SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer\HideSCAVolume
+falsepositives: Legitimate admin script
+level: medium
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.defense_evasion
+  - attack.t1112
+  - DEMO

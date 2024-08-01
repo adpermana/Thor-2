@@ -1,0 +1,26 @@
+title: Impacket File Pattern Service Install
+id: 4ea62bc1-3fe7-44c4-ae93-beced4dc8259
+status: experimental
+description: Detects file name patterns used by Impacket tools like secretsdump.py in temporary service installations
+references:
+    - https://github.com/fortra/impacket/blob/master/examples/secretsdump.py
+    - https://github.com/login-securite/DonPAPI/blob/main/lib/secretsdump.py
+author: Florian Roth (Nextron Systems)
+date: 2023/01/16
+logsource:
+    product: windows
+    service: system
+detection:
+    service:
+        Provider_Name: 'Service Control Manager'
+        EventID:
+            - 7045
+            - 7036
+    selection:
+        ImagePath|contains: # https://github.com/login-securite/DonPAPI/blob/main/lib/secretsdump.py#L923
+            - '\Temp\__output'
+            - '\Temp\execute.bat'
+    condition: service and selection
+falsepositives:
+    - Unknown
+level: high

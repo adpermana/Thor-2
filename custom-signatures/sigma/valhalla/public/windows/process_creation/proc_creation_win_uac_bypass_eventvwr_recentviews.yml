@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: UAC Bypass Using Event Viewer RecentViews
+id: 30fc8de7-d833-40c4-96b6-28319fbc4f6c
+related:
+  - type: similar
+    id: 63e4f530-65dc-49cc-8f80-ccfa95c69d43
+status: test
+description: Detects the pattern of UAC Bypass using Event Viewer RecentViews
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/11/22 16:32:41
+references:
+  - https://twitter.com/orange_8361/status/1518970259868626944
+  - https://lolbas-project.github.io/lolbas/Binaries/Eventvwr/#execute
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_path:
+        CommandLine|contains:
+          - \Event Viewer\RecentViews
+          - \EventV~1\RecentViews
+    selection_redirect:
+        CommandLine|contains: '>'
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - DEMO

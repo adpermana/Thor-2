@@ -1,0 +1,26 @@
+title: Conti RDP Firewall Rule
+id: 63e92a78-d46e-4c24-98e1-0582a2c4b8e5
+status: test
+description: Detects the creation of a new firewall rule using the New-NetFirewallRule cmdlet as described in the conti leaks
+date: 2022/05/14
+modified: 2023/03/29
+references:
+    - https://github.com/Res260/conti_202202_leak_procedures/blob/main/10_add_firewall_rules.txt
+author: Nasreddine Bencherchali
+tags:
+    - attack.execution
+    - attack.t1059.001
+logsource:
+    product: windows
+    category: ps_script
+    definition: Script Block Logging must be enabled
+detection:
+    selection:
+        ScriptBlockText|contains|all:
+            - 'New-NetFirewallRule'
+            - 'New RDP Port 1350'
+            - '1350'
+    condition: selection
+falsepositives:
+    - Unknown
+level: critical

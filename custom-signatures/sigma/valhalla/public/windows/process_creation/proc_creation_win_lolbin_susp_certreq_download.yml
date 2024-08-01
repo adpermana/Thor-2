@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Certreq Command to Download
+id: 4480827a-9799-4232-b2c4-ccc6c4e9e12b
+status: test
+description: Detects a suspicious certreq execution taken from the LOLBAS examples,
+    which can be abused to download (small) files
+author: Christian Burkard (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/11/24 16:14:31
+references:
+  - https://lolbas-project.github.io/lolbas/Binaries/Certreq/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection*
+    selection_cli:
+        CommandLine|contains|all:
+          - ' -Post '
+          - ' -config '
+          - ' http'
+          - ' C:\windows\win.ini '
+    selection_img:
+      - Image|endswith: \certreq.exe
+      - OriginalFileName: CertReq.exe
+fields:
+  - CommandLine
+  - ParentCommandLine
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2022/06/13
+tags:
+  - attack.command_and_control
+  - attack.t1105
+  - DEMO

@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Persistence Via GlobalFlags
+id: 36803969-5421-41ec-b92f-8500f79c23b0
+related:
+  - type: obsoletes
+    id: c81fe886-cac0-4913-a511-2822d72ff505
+status: test
+description: Detects registry persistence technique using the GlobalFlags and SilentProcessExit
+    keys
+author: Karneades, Jonhnathan Ribeiro, Florian Roth
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2018/04/11 15:55:11
+references:
+  - https://oddvar.moe/2018/04/10/persistence-using-globalflags-in-image-file-execution-options-hidden-from-autoruns-exe/
+  - https://www.deepinstinct.com/2021/02/16/lsass-memory-dumps-are-stealthier-than-ever-before-part-2/
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_global_flag:
+        TargetObject|contains|all:
+          - \Microsoft\Windows NT\CurrentVersion\
+          - \Image File Execution Options\
+          - \GlobalFlag
+    selection_silent_process:
+        TargetObject|contains:
+          - \ReportingMode
+          - \MonitorProcess
+        TargetObject|contains|all:
+          - \Microsoft\Windows NT\CurrentVersion\
+          - \SilentProcessExit\
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/06/05
+tags:
+  - attack.privilege_escalation
+  - attack.persistence
+  - attack.defense_evasion
+  - attack.t1546.012
+  - car.2013-01-002
+  - DEMO

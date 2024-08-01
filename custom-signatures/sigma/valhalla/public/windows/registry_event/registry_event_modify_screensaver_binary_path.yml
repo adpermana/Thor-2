@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Path To Screensaver Binary Modified
+id: 67a6c006-3fbe-46a7-9074-2ba3b82c3000
+status: test
+description: Detects value modification of registry key containing path to binary
+    used as screensaver.
+author: Bartlomiej Czyz @bczyz1, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/11 15:07:51
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1546.002/T1546.002.md
+  - https://www.welivesecurity.com/wp-content/uploads/2017/08/eset-gazer.pdf
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        Image|endswith:
+          - \rundll32.exe
+          - \explorer.exe
+    selection:
+        TargetObject|endswith: \Control Panel\Desktop\SCRNSAVE.EXE
+falsepositives: Legitimate modification of screensaver
+level: medium
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1546.002
+  - DEMO

@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PUA - Fast Reverse Proxy (FRP) Execution
+id: 32410e29-5f94-4568-b6a3-d91a8adad863
+status: test
+description: Detects the use of Fast Reverse Proxy. frp is a fast reverse proxy to
+    help you expose a local server behind a NAT or firewall to the Internet.
+author: frack113, Florian Roth
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/02 15:27:21
+references:
+  - https://asec.ahnlab.com/en/38156/
+  - https://github.com/fatedier/frp
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_cli:
+        CommandLine|contains: \frpc.ini
+    selection_hashes:
+      - Hashes|contains:
+          - MD5=7D9C233B8C9E3F0EA290D2B84593C842
+          - SHA1=06DDC9280E1F1810677935A2477012960905942F
+          - SHA256=57B0936B8D336D8E981C169466A15A5FD21A7D5A2C7DAF62D5E142EE860E387C
+      - md5: 7d9c233b8c9e3f0ea290d2b84593c842
+      - sha1: 06ddc9280e1f1810677935a2477012960905942f
+      - sha256: 57b0936b8d336d8e981c169466a15a5fd21a7d5a2c7daf62d5e142ee860e387c
+    selection_img:
+        Image|endswith:
+          - \frpc.exe
+          - \frps.exe
+falsepositives: Legitimate use
+level: high
+customer: 'demo'
+modified: 2023/02/04
+tags:
+  - attack.command_and_control
+  - attack.t1090
+  - DEMO

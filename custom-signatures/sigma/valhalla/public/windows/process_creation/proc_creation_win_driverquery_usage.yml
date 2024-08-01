@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: DriverQuery.EXE Execution
+id: a20def93-0709-4eae-9bd2-31206e21e6b2
+related:
+  - type: similar
+    id: 9fc3072c-dc8f-4bf7-b231-18950000fadd
+status: experimental
+description: Detect usage of the "driverquery" utility. Which can be used to perform
+    reconnaissance on installed drivers
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/19 12:41:01
+references:
+  - https://thedfirreport.com/2023/01/09/unwrapping-ursnifs-gifts/
+  - https://www.vmray.com/cyber-security-blog/analyzing-ursnif-behavior-malware-sandbox/
+  - https://www.fireeye.com/blog/threat-research/2020/01/saigon-mysterious-ursnif-fork.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_other:
+      - ParentImage|endswith:
+          - \cscript.exe
+          - \mshta.exe
+          - \regsvr32.exe
+          - \rundll32.exe
+          - \wscript.exe
+      - ParentImage|contains:
+          - \AppData\Local\
+          - \Users\Public\
+          - \Windows\Temp\
+    selection:
+      - Image|endswith: driverquery.exe
+      - OriginalFileName: drvqry.exe
+falsepositives: Legitimate use by third party tools in order to investigate installed
+    drivers
+level: medium
+customer: 'demo'
+modified: 2023/09/29
+tags:
+  - attack.discovery
+  - DEMO

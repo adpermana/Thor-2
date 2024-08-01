@@ -1,0 +1,39 @@
+title: Villain PowerShell Reverse Shell Usage
+id: 8872a358-e637-49aa-9f14-5ebb339756cd
+status: experimental
+description: Detects the execution of PowerShell code similar to the one used in Villain payloads
+author: Florian Roth
+references:
+    - https://github.com/t3l3machus/Villain/
+date: 2022/11/30
+modified: 2022/12/29
+tags:
+    - attack.command_and_control
+    - attack.t1090
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_basic_none_constraint_mode:
+        #  ' ')} elseif ($
+        # None constraint mode
+        CommandLine|contains:
+            - 'IAAnACAAJwApAH0AIABlAGwAcwBlAGkAZgAgACgAJA'
+            - 'AAJwAgACcAKQB9ACAAZQBsAHMAZQBpAGYAIAAoACQA'
+            - 'gACcAIAAnACkAfQAgAGUAbABzAGUAaQBmACAAKAAkA'
+    selection_basic_if_brackets:
+        # });if (!(@('
+        CommandLine|contains:
+            - 'fQApADsAaQBmACAAKAAhACgAQAAoACcA'
+            - '0AKQA7AGkAZgAgACgAIQAoAEAAKAAnA'
+            - '9ACkAOwBpAGYAIAAoACEAKABAACgAJw'
+    selection_basic_user_env:
+        # t')) {del C:\Users\\\$env:
+        CommandLine|contains:
+            - 'dAAnACkAKQAgAHsAZABlAGwAIABDADoAXABVAHMAZQByAHMAXABcAFwAJABlAG4AdgA6A'
+            - 'QAJwApACkAIAB7AGQAZQBsACAAQwA6AFwAVQBzAGUAcgBzAFwAXABcACQAZQBuAHYAOg'
+            - '0ACcAKQApACAAewBkAGUAbAAgAEMAOgBcAFUAcwBlAHIAcwBcAFwAXAAkAGUAbgB2ADoA'
+    condition: 1 of selection_basic_*
+falsepositives:
+    - Unknown
+level: high

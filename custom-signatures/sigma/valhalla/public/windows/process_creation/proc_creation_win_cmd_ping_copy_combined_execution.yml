@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potentially Suspicious Ping/Copy Command Combination
+id: ded2b07a-d12f-4284-9b76-653e37b6c8b0
+status: experimental
+description: |
+    Detects uncommon and potentially suspicious one-liner command containing both "ping" and "copy" at the same time, which is usually used by malware.
+author: X__Junior (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/07/18 20:06:21
+references:
+  - Internal Research
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_action:
+        CommandLine|contains|all:
+          - ping
+          - 'copy '
+    selection_cli_1:
+        CommandLine|contains|windash: ' -n '
+    selection_cli_2:
+        CommandLine|contains|windash: ' -y '
+    selection_cmd:
+      - Image|endswith: \cmd.exe
+      - OriginalFileName: Cmd.Exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2024/03/06
+tags:
+  - attack.defense_evasion
+  - attack.t1070.004
+  - DEMO

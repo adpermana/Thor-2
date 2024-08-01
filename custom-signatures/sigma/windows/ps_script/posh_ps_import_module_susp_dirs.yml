@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Import PowerShell Modules From Suspicious Directories
+id: 21f9162c-5f5d-4b01-89a8-b705bd7d10ab
+related:
+  - type: similar
+    id: c31364f7-8be6-4b77-8483-dd2b5a7b69a3
+status: test
+description: Detects powershell scripts that import modules from suspicious directories
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/07 20:24:11
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1003.002/T1003.002.md
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: selection
+    selection:
+        ScriptBlockText|contains:
+          - Import-Module "$Env:Temp\
+          - Import-Module '$Env:Temp\
+          - Import-Module $Env:Temp\
+          - Import-Module "$Env:Appdata\
+          - Import-Module '$Env:Appdata\
+          - Import-Module $Env:Appdata\
+          - Import-Module C:\Users\Public\
+          - ipmo "$Env:Temp\
+          - ipmo '$Env:Temp\
+          - ipmo $Env:Temp\
+          - ipmo "$Env:Appdata\
+          - ipmo '$Env:Appdata\
+          - ipmo $Env:Appdata\
+          - ipmo C:\Users\Public\
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/01/10
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

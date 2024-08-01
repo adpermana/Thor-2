@@ -1,0 +1,28 @@
+title: C2 - ReverseTCPShell Payload - Classic Logging
+id: 2e3b4ee3-6559-43d8-81d1-a183227d9593
+related:
+    - id: 52103a97-9f3c-426c-b78b-2851d4862f55
+      type: similar
+status: test
+description: Detects PowerShell payload used by ReverseTCPShell C2 via PowerShell Classic script logging
+references:
+    - https://github.com/ZHacker13/ReverseTCPShell
+author: Nasreddine Bencherchali (Nextron Systems)
+date: 2023/04/03
+tags:
+    - attack.defense_evasion
+logsource:
+    product: windows
+    category: ps_classic_script
+detection:
+    selection:
+        Data|contains|all:
+            - '::CreateInstance'
+            - 'FromBase64String'
+            - 'SecureStringToBSTR'
+            - '))));While('
+            - '::PtrToStringAuto('
+    condition: selection
+falsepositives:
+    - Unknown
+level: high

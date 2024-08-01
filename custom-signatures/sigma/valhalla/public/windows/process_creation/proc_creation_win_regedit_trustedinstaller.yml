@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Regedit as Trusted Installer
+id: 883835a7-df45-43e4-bf1d-4268768afda4
+status: test
+description: Detects a regedit started with TrustedInstaller privileges or by ProcessHacker.exe
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/05/27 13:30:51
+references:
+  - https://twitter.com/1kwpeter/status/1397816101455765504
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith: \regedit.exe
+        ParentImage|endswith:
+          - \TrustedInstaller.exe
+          - \ProcessHacker.exe
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.privilege_escalation
+  - attack.t1548
+  - DEMO

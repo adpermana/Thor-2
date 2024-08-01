@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious SYSVOL Domain Group Policy Access
+id: 05f3c945-dcc8-4393-9f3d-af65077a8f86
+status: test
+description: Detects Access to Domain Group Policies stored in SYSVOL
+author: Markus Neis, Jonhnathan Ribeiro, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2018/04/09 17:19:41
+references:
+  - https://adsecurity.org/?p=2288
+  - https://www.hybrid-analysis.com/sample/f2943f5e45befa52fb12748ca7171d30096e1d4fc3c365561497c618341299d5?environmentId=100
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains|all:
+          - \SYSVOL\
+          - \policies\
+falsepositives: Administrative activity
+level: medium
+customer: 'demo'
+modified: 2022/01/07
+tags:
+  - attack.credential_access
+  - attack.t1552.006
+  - DEMO

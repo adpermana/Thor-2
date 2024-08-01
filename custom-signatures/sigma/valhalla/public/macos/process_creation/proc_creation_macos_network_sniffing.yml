@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Network Sniffing - MacOs
+id: adc9bcc4-c39c-4f6b-a711-1884017bf043
+status: test
+description: |
+    Detects the usage of tooling to sniff network traffic.
+    An adversary may place a network interface into promiscuous mode to passively access data in transit over the network, or use span ports to capture a larger amount of data.
+author: Alejandro Ortuno, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/14 12:02:21
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1040/T1040.md
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    condition: selection
+    selection:
+        Image|endswith:
+          - /tcpdump
+          - /tshark
+falsepositives: Legitimate administration activities
+level: informational
+customer: 'demo'
+modified: 2022/11/26
+tags:
+  - attack.discovery
+  - attack.credential_access
+  - attack.t1040
+  - DEMO

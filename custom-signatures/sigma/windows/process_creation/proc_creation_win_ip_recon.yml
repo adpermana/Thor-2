@@ -1,0 +1,41 @@
+title: IP Information Recon
+id: bd8a664d-54f6-42e6-8424-054eb7455b25
+reated:
+    - id: f38735f5-2b9e-4a0c-a9d5-2815cc9e0236
+      type: similar
+status: experimental
+description: Detects calls to known websites that retrieve information about IP. Often used during recon phase.
+references:
+    - https://twitter.com/qusaialhaddad/status/1577278610410307584/photo/1
+author: Nasreddine Bencherchali
+date: 2022/10/06
+modified: 2022/11/14
+tags:
+    - attack.reconnaissance
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains:
+            - 'ifconfig.me'
+            - 'ipwho.is'
+            - 'ipinfo.io'
+            - 'api.ipify.org'
+            - 'ipecho.net'
+            - 'wtfismyip.com'
+            - canireachthe.net
+            - ipv4.icanhazip.com
+            - ip.anysrc.net
+            - edns.ip-api.com
+            - checkip.dyndns.org
+            - api.2ip.ua
+            - icanhazip.com
+            - ip-api.com
+            - checkip.amazonaws.com
+            - ipv4bot.whatismyipaddress.com
+            - freegeoip.app
+    condition: selection
+falsepositives:
+    - Legitimate call to the websites metnioned above by third party applications or administrators
+level: medium

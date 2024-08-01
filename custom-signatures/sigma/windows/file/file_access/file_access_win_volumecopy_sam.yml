@@ -1,0 +1,31 @@
+title: SAM Dump File Access
+id: e510875e-5bf0-41d4-8598-400d26243117
+description: Detects access to the volume shadow copy version of the local SAM (Security Account Manager) by a tool that isn't builtin (like vssdadmin)
+status: test
+author: Florian Roth
+references:
+    - https://github.com/cube0x0/CVE-2021-36934
+    - https://github.com/HuskyHacks/ShadowSteal
+    - https://github.com/FireFart/hivenightmare
+date: 2022/02/11
+modified: 2023/03/29
+tags:
+    - attack.credential_access
+    - attack.t1003.002
+logsource:
+    product: windows
+    category: file_access
+    definition: file_access rules are using the Microsoft-Windows-Kernel-File ETW provider
+detection:
+    selection:
+        FileName|contains: '\Device\HarddiskVolumeShadowCopy'
+        FileName|endswith: '\Windows\System32\config\SAM'
+    filter:
+        Image|startswith:
+            - 'C:\Windows\System32\'
+            - 'C:\Program Files\'
+            - 'C:\Program Files (x86)\'
+    condition: selection and not filter
+falsepositives:
+    - Unknown cases in which backup software that doesn't reside in the exclude folders access the Windows Volume Shadow Copy
+level: high

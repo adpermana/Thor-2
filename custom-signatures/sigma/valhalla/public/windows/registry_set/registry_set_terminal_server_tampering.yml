@@ -1,0 +1,81 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: RDP Sensitive Settings Changed
+id: 3f6b7b62-61aa-45db-96bd-9c31b36b653c
+related:
+  - type: obsoletes
+    id: 171b67e1-74b4-460e-8d55-b331f3e32d67
+  - type: obsoletes
+    id: 41904ebe-d56c-4904-b9ad-7a77bdf154b3
+  - type: similar
+    id: a2863fbc-d5cb-48d5-83fb-d976d4b1743b
+status: test
+description: |
+    Detects tampering of RDP Terminal Service/Server sensitive settings.
+    Such as allowing unauthorized users access to a system via the 'fAllowUnsolicited' or enabling RDP via 'fDenyTSConnections'...etc
+author: Samir Bousseaden, David ANDRE, Roberto Rodriguez @Cyb3rWard0g, Nasreddine
+    Bencherchali
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/06 13:48:31
+references:
+  - https://web.archive.org/web/20200929062532/https://blog.menasec.net/2019/02/threat-hunting-rdp-hijacking-via.html
+  - http://woshub.com/rds-shadow-how-to-connect-to-a-user-session-in-windows-server-2012-r2/
+  - https://twitter.com/SagieSec/status/1469001618863624194?t=HRf0eA0W1YYzkTSHb-Ky1A&s=03
+  - https://threathunterplaybook.com/hunts/windows/190407-RegModEnableRDPConnections/notebook.html
+  - https://bazaar.abuse.ch/sample/6f3aa9362d72e806490a8abce245331030d1ab5ac77e400dd475748236a6cc81/
+  - http://etutorials.org/Microsoft+Products/microsoft+windows+server+2003+terminal+services/Chapter+6+Registry/Registry+Keys+for+Terminal+Services/
+  - https://admx.help/HKLM/SOFTWARE/Policies/Microsoft/Windows%20NT/Terminal%20Services
+  - https://blog.sekoia.io/darkgate-internals/
+  - https://github.com/redcanaryco/atomic-red-team/blob/02c7d02fe1f1feb0fc7944550408ea8224273994/atomics/T1112/T1112.md#atomic-test-63---disable-remote-desktop-anti-alias-setting-through-registry
+  - https://github.com/redcanaryco/atomic-red-team/blob/02c7d02fe1f1feb0fc7944550408ea8224273994/atomics/T1112/T1112.md#atomic-test-64---disable-remote-desktop-security-settings-through-registry
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection_shadow or selection_terminal_services_key or selection_tamper_only
+    selection_shadow:
+        Details:
+          - DWORD (0x00000001)
+          - DWORD (0x00000002)
+          - DWORD (0x00000003)
+          - DWORD (0x00000004)
+        TargetObject|contains:
+          - \Control\Terminal Server\
+          - \Windows NT\Terminal Services\
+        TargetObject|endswith: \Shadow
+    selection_tamper_only:
+        TargetObject|contains:
+          - \Control\Terminal Server\InitialProgram
+          - \Control\Terminal Server\WinStations\RDP-Tcp\InitialProgram
+          - \services\TermService\Parameters\ServiceDll
+          - \Windows NT\Terminal Services\InitialProgram
+    selection_terminal_services_key:
+        Details: DWORD (0x00000001)
+        TargetObject|contains:
+          - \Control\Terminal Server\
+          - \Windows NT\Terminal Services\
+        TargetObject|endswith:
+          - \DisableRemoteDesktopAntiAlias
+          - \DisableSecuritySettings
+          - \fAllowUnsolicited
+          - \fAllowUnsolicitedFullControl
+falsepositives: Some of the keys mentioned here could be modified by an administrator
+    while setting group policy (it should be investigated either way)
+level: high
+customer: 'demo'
+modified: 2024/02/08
+tags:
+  - attack.defense_evasion
+  - attack.persistence
+  - attack.t1112
+  - DEMO

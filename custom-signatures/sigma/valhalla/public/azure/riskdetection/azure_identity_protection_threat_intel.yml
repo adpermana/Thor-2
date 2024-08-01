@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Azure AD Threat Intelligence
+id: a2cb56ff-4f46-437a-a0fa-ffa4d1303cba
+status: experimental
+description: Indicates user activity that is unusual for the user or consistent with
+    known attack patterns.
+author: Mark Morowczynski '@markmorow', Gloria Lee, '@gleeiamglo'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/09/07 13:13:11
+references:
+  - https://learn.microsoft.com/en-us/azure/active-directory/identity-protection/concept-identity-protection-risks#azure-ad-threat-intelligence-sign-in
+  - https://learn.microsoft.com/en-us/azure/active-directory/identity-protection/concept-identity-protection-risks#azure-ad-threat-intelligence-user
+  - https://learn.microsoft.com/en-us/azure/active-directory/architecture/security-operations-user-accounts#unusual-sign-ins
+logsource:
+    product: azure
+    service: riskdetection
+detection:
+    condition: selection
+    selection:
+        riskEventType: investigationsThreatIntelligence
+falsepositives: We recommend investigating the sessions flagged by this detection
+    in the context of other sign-ins from the user.
+level: high
+customer: 'demo'
+tags:
+  - attack.t1078
+  - attack.persistence
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - attack.initial_access
+  - DEMO

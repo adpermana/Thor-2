@@ -1,0 +1,60 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Alternate PowerShell Hosts - PowerShell Module
+id: 64e8e417-c19a-475a-8d19-98ea705394cc
+status: test
+description: Detects alternate PowerShell hosts potentially bypassing detections looking
+    for powershell.exe
+author: Roberto Rodriguez @Cyb3rWard0g
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/08/11 18:02:21
+references:
+  - https://threathunterplaybook.com/hunts/windows/190610-PwshAlternateHosts/notebook.html
+logsource:
+    category: ps_module
+    product: windows
+    definition: 0ad03ef1-f21b-4a79-8ce8-e6900c54b65b
+detection:
+    condition: selection and not 1 of filter_*
+    filter_adace:
+        ContextInfo|contains: C:\Windows\system32\dsac.exe
+    filter_citrix:
+        ContextInfo|contains: ConfigSyncRun.exe
+    filter_help_update:
+        Payload|contains:
+          - Update-Help
+          - Failed to update Help for the module
+    filter_powershell:
+        ContextInfo|contains:
+          - = powershell
+          - = C:\Windows\System32\WindowsPowerShell\v1.0\powershell
+          - = C:\Windows\SysWOW64\WindowsPowerShell\v1.0\powershell
+          - = C:/Windows/System32/WindowsPowerShell/v1.0/powershell
+          - = C:/Windows/SysWOW64/WindowsPowerShell/v1.0/powershell
+    filter_sdiagnhost:
+        ContextInfo|contains: = C:\WINDOWS\System32\sdiagnhost.exe -Embedding
+    filter_winrm:
+        ContextInfo|contains: C:\Windows\system32\wsmprovhost.exe -Embedding
+    selection:
+        ContextInfo|contains: '*'
+falsepositives:
+  - Programs using PowerShell directly without invocation of a dedicated interpreter
+  - MSP Detection Searcher
+  - Citrix ConfigSync.ps1
+level: medium
+customer: 'demo'
+modified: 2022/12/13
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

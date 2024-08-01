@@ -1,0 +1,89 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Hack Tool User Agent
+id: c42a3073-30fb-48ae-8c99-c23ada84b103
+status: test
+description: Detects suspicious user agent strings user by hack tools in proxy logs
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/07/08 10:59:11
+references:
+  - https://github.com/fastly/waf_testbed/blob/8bfc406551f3045e418cbaad7596cff8da331dfc/templates/default/scanners-user-agents.data.erb
+  - http://rules.emergingthreats.net/open/snort-2.9.0/rules/emerging-user_agents.rules
+logsource:
+    category: proxy
+detection:
+    condition: selection
+    selection:
+        c-useragent|contains:
+          - (hydra)
+          - ' arachni/'
+          - ' BFAC '
+          - ' brutus '
+          - ' cgichk '
+          - core-project/1.0
+          - ' crimscanner/'
+          - datacha0s
+          - dirbuster
+          - domino hunter
+          - dotdotpwn
+          - FHScan Core
+          - floodgate
+          - get-minimal
+          - gootkit auto-rooter scanner
+          - grendel-scan
+          - ' inspath '
+          - internet ninja
+          - jaascois
+          - ' zmeu '
+          - masscan
+          - ' metis '
+          - morfeus fucking scanner
+          - n-stealth
+          - nsauditor
+          - pmafind
+          - security scan
+          - springenwerk
+          - teh forest lobster
+          - toata dragostea
+          - ' vega/'
+          - voideye
+          - webshag
+          - webvulnscan
+          - ' whcc/'
+          - ' Havij'
+          - absinthe
+          - bsqlbf
+          - mysqloit
+          - pangolin
+          - sql power injector
+          - sqlmap
+          - sqlninja
+          - uil2pn
+          - ruler
+          - Mozilla/5.0 (Windows; U; Windows NT 5.1; pt-PT; rv:1.9.1.2) Gecko/20090729
+            Firefox/3.5.2 (.NET CLR 3.5.30729)
+fields:
+  - ClientIP
+  - c-uri
+  - c-useragent
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/07/07
+tags:
+  - attack.initial_access
+  - attack.t1190
+  - attack.credential_access
+  - attack.t1110
+  - DEMO

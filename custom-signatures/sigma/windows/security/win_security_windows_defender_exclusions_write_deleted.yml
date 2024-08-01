@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Windows Defender Exclusion Deleted
+id: a33f8808-2812-4373-ae95-8cfb82134978
+related:
+  - type: derived
+    id: e9c8808f-4cfb-4ba9-97d4-e5f3beaa244d
+  - type: derived
+    id: 46a68649-f218-4f86-aea1-16a759d81820
+status: test
+description: |
+    Detects when a Windows Defender exclusion has been deleted. This could indicate an attacker trying to delete their tracks by removing the added exclusions
+author: '@BarryShooshooga'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/26 15:08:11
+references:
+  - https://www.bleepingcomputer.com/news/security/gootkit-malware-bypasses-windows-defender-by-setting-path-exclusions/
+logsource:
+    product: windows
+    service: security
+    definition: 'Requirements: Audit Policy : Security Settings/Local Policies/Audit
+        Policy, Registry System Access Control (SACL): Auditing/User'
+detection:
+    condition: selection
+    selection:
+        EventID: "4660"
+        ObjectName|contains: \Microsoft\Windows Defender\Exclusions\
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/11/11
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+  - DEMO

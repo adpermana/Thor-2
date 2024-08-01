@@ -1,0 +1,51 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: MMC Spawning Windows Shell
+id: 05a2ab7e-ce11-4b63-86db-ab32e763e11d
+status: test
+description: Detects a Windows command line executable started from MMC
+author: Karneades, Swisscom CSIRT
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/08/05 12:41:11
+references:
+  - https://enigma0x3.net/2017/01/05/lateral-movement-using-the-mmc20-application-com-object/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection*
+    selection1:
+        ParentImage|endswith: \mmc.exe
+    selection2:
+      - Image|endswith:
+          - \cmd.exe
+          - \powershell.exe
+          - \pwsh.exe
+          - \wscript.exe
+          - \cscript.exe
+          - \sh.exe
+          - \bash.exe
+          - \reg.exe
+          - \regsvr32.exe
+      - Image|contains: \BITSADMIN
+fields:
+  - CommandLine
+  - Image
+  - ParentCommandLine
+level: high
+customer: 'demo'
+modified: 2022/07/14
+tags:
+  - attack.lateral_movement
+  - attack.t1021.003
+  - DEMO

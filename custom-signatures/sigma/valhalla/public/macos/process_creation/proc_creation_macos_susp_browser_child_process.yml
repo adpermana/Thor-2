@@ -1,0 +1,92 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Browser Child Process - MacOS
+id: 0250638a-2b28-4541-86fc-ea4c558fa0c6
+status: test
+description: Detects suspicious child processes spawned from browsers. This could
+    be a result of a potential web browser exploitation.
+author: Sohan G (D4rkCiph3r)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/04/05 16:13:01
+references:
+  - https://fr.slideshare.net/codeblue_jp/cb19-recent-apt-attack-on-crypto-exchange-employees-by-heungsoo-kang
+  - https://github.com/elastic/detection-rules/blob/4312d8c9583be524578a14fe6295c3370b9a9307/rules/macos/execution_initial_access_suspicious_browser_childproc.toml
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+    filter_main_chrome:
+        CommandLine|contains:
+          - /Volumes/Google Chrome/Google Chrome.app/Contents/Frameworks/*/Resources/install.sh
+          - /Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/*/Resources/keystone_promote_preflight.sh
+          - /Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/*/Resources/keystone_promote_postflight.sh
+        ParentImage|contains:
+          - Google Chrome Helper
+          - Google Chrome
+    filter_main_chromerecovery:
+        CommandLine|contains|all:
+          - /Users/
+          - /Library/Application Support/Google/Chrome/recovery/
+          - /ChromeRecovery
+        ParentImage|contains:
+          - Google Chrome Helper
+          - Google Chrome
+    filter_main_generic:
+        CommandLine|contains: --defaults-torrc
+    filter_main_ms_autoupdate:
+        CommandLine|contains: /Library/Application Support/Microsoft/MAU*/Microsoft
+            AutoUpdate.app/Contents/MacOS/msupdate
+    filter_main_ms_edge:
+        CommandLine|contains:
+          - IOPlatformExpertDevice
+          - hw.model
+        ParentImage|contains: Microsoft Edge
+    filter_optional_empty:
+        CommandLine: ""
+    filter_optional_null:
+        CommandLine: []
+    selection:
+        Image|endswith:
+          - /bash
+          - /curl
+          - /dash
+          - /ksh
+          - /osascript
+          - /perl
+          - /php
+          - /pwsh
+          - /python
+          - /sh
+          - /tcsh
+          - /wget
+          - /zsh
+        ParentImage|contains:
+          - com.apple.WebKit.WebContent
+          - firefox
+          - Google Chrome Helper
+          - Google Chrome
+          - Microsoft Edge
+          - Opera
+          - Safari
+          - Tor Browser
+falsepositives: Legitimate browser install, update and recovery scripts
+level: medium
+customer: 'demo'
+tags:
+  - attack.initial_access
+  - attack.execution
+  - attack.t1189
+  - attack.t1203
+  - attack.t1059
+  - DEMO

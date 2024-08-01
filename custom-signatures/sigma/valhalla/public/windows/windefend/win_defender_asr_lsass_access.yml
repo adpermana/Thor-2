@@ -1,0 +1,63 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: LSASS Access Detected via Attack Surface Reduction
+id: a0a278fe-2c0e-4de2-ac3c-c68b08a9ba98
+status: test
+description: Detects Access to LSASS Process
+author: Markus Neis
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2018/08/26 18:38:41
+references:
+  - https://docs.microsoft.com/en-us/windows/security/threat-protection/windows-defender-exploit-guard/attack-surface-reduction-exploit-guard?WT.mc_id=twitter
+logsource:
+    product: windows
+    service: windefend
+    definition: 'Requirements:Enabled Block credential stealing from the Windows local
+        security authority subsystem (lsass.exe) from Attack Surface Reduction (GUID:
+        9e6c4e1f-7d60-472f-ba1a-a39ef669e4b2)'
+detection:
+    condition: selection and not 1 of filter_*
+    filter_begins:
+        ProcessName|startswith:
+          - C:\Windows\System32\DriverStore\
+          - C:\WINDOWS\Installer\
+          - C:\Program Files\
+          - C:\Program Files (x86)\
+    filter_exact:
+        ProcessName:
+          - C:\Windows\System32\atiesrxx.exe
+          - C:\Windows\System32\CompatTelRunner.exe
+          - C:\Windows\System32\msiexec.exe
+          - C:\Windows\System32\nvwmi64.exe
+          - C:\Windows\System32\svchost.exe
+          - C:\Windows\System32\Taskmgr.exe
+          - C:\Windows\System32\wbem\WmiPrvSE.exe
+          - C:\Windows\SysWOW64\msiexec.exe
+    filter_thor:
+        ProcessName|endswith:
+          - \thor64.exe
+          - \thor.exe
+        ProcessName|startswith: C:\Windows\Temp\asgard2-agent\
+    selection:
+        EventID: "1121"
+        Path|endswith: \lsass.exe
+falsepositives:
+  - Google Chrome GoogleUpdate.exe
+  - Some Taskmgr.exe related activity
+level: high
+customer: 'demo'
+modified: 2022/08/13
+tags:
+  - attack.credential_access
+  - attack.t1003.001
+  - DEMO

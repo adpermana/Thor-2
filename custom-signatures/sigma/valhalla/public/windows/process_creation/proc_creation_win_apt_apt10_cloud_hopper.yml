@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential APT10 Cloud Hopper Activity
+id: 966e4016-627f-44f7-8341-f394905c361f
+status: test
+description: Detects potential process and execution activity related to APT10 Cloud
+    Hopper operation
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/04/07 15:21:21
+references:
+  - https://web.archive.org/web/20180725233601/https://www.pwc.co.uk/cyber-security/pdf/cloud-hopper-annex-b-final.pdf
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_cscript:
+        CommandLine|contains: '.vbs /shell '
+        Image|endswith: \cscript.exe
+    selection_csvde:
+        CommandLine|contains|all:
+          - csvde -f C:\windows\web\
+          - .log
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/03/08
+tags:
+  - attack.execution
+  - attack.g0045
+  - attack.t1059.005
+  - detection.emerging_threats
+  - DEMO

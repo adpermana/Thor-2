@@ -1,0 +1,52 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - SharpMove Tool Execution
+id: 055fb54c-a8f4-4aee-bd44-f74cf30a0d9d
+status: experimental
+description: |
+    Detects the execution of SharpMove, a .NET utility performing multiple tasks such as "Task Creation", "SCM" query, VBScript execution using WMI via its PE metadata and command line options.
+author: Luca Di Bartolomeo (CrimpSec)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/01/29 15:00:11
+references:
+  - https://github.com/0xthirteen/SharpMove/
+  - https://pentestlab.blog/tag/sharpmove/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection_img or all of selection_cli_*
+    selection_cli_actions:
+        CommandLine|contains:
+          - action=create
+          - action=dcom
+          - action=executevbs
+          - action=hijackdcom
+          - action=modschtask
+          - action=modsvc
+          - action=query
+          - action=scm
+          - action=startservice
+          - action=taskscheduler
+    selection_cli_computer:
+        CommandLine|contains: computername=
+    selection_img:
+      - Image|endswith: \SharpMove.exe
+      - OriginalFileName: SharpMove.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.lateral_movement
+  - attack.t1021.002
+  - DEMO

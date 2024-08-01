@@ -1,0 +1,59 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Disable Internal Tools or Feature in Registry
+id: e2482f8d-3443-4237-b906-cc145d87a076
+status: experimental
+description: Detects registry modifications that change features of internal Windows
+    tools (malware like Agent Tesla uses this technique)
+author: frack113, Nasreddine Bencherchali (Nextron Systems), CrimpSec
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/03/18 17:49:11
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1112/T1112.md
+  - https://www.mandiant.com/resources/unc2165-shifts-to-evade-sanctions
+  - https://blogs.vmware.com/security/2022/11/batloader-the-evasive-downloader-malware.html
+  - https://www.malwarebytes.com/blog/detections/pum-optional-nodispbackgroundpage
+  - https://www.malwarebytes.com/blog/detections/pum-optional-nodispcpl
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: 1 of selection_set_*
+    selection_set_0:
+        Details: DWORD (0x00000000)
+        TargetObject|endswith:
+          - SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorAdmin
+          - SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\shutdownwithoutlogon
+          - SOFTWARE\Microsoft\Windows\CurrentVersion\PushNotifications\ToastEnabled
+          - SYSTEM\CurrentControlSet\Control\Storage\Write Protection
+          - SYSTEM\CurrentControlSet\Control\StorageDevicePolicies\WriteProtect
+    selection_set_1:
+        Details: DWORD (0x00000001)
+        TargetObject|endswith:
+          - SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer\StartMenuLogOff
+          - SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\DisableChangePassword
+          - SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\DisableLockWorkstation
+          - SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\DisableRegistryTools
+          - SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\DisableTaskmgr
+          - SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\NoDispBackgroundPage
+          - SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\NoDispCPL
+          - SOFTWARE\Policies\Microsoft\Windows\Explorer\DisableNotificationCenter
+          - SOFTWARE\Policies\Microsoft\Windows\System\DisableCMD
+falsepositives: Legitimate admin script
+level: medium
+customer: 'demo'
+modified: 2023/11/20
+tags:
+  - attack.defense_evasion
+  - attack.t1112
+  - DEMO

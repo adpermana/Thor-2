@@ -1,0 +1,65 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious File Created Via OneNote Application
+id: fcc6d700-68d9-4241-9a1a-06874d621b06
+status: test
+description: Detects suspicious files created via the OneNote application. This could
+    indicate a potential malicious ".one"/".onepkg" file was executed as seen being
+    used in malware activity in the wild
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/02/09 18:20:31
+references:
+  - https://www.bleepingcomputer.com/news/security/hackers-now-use-microsoft-onenote-attachments-to-spread-malware/
+  - https://blog.osarmor.com/319/onenote-attachment-delivers-asyncrat-malware/
+  - https://twitter.com/MaD_c4t/status/1623414582382567424
+  - https://labs.withsecure.com/publications/detecting-onenote-abuse
+  - https://www.trustedsec.com/blog/new-attacks-old-tricks-how-onenote-malware-is-evolving/
+  - https://app.any.run/tasks/17f2d378-6d11-4d6f-8340-954b04f35e83/
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith:
+          - \onenote.exe
+          - \onenotem.exe
+          - \onenoteim.exe
+        TargetFilename|contains: \AppData\Local\Temp\OneNote\
+        TargetFilename|endswith:
+          - .bat
+          - .chm
+          - .cmd
+          - .dll
+          - .exe
+          - .hta
+          - .htm
+          - .html
+          - .js
+          - .lnk
+          - .ps1
+          - .vbe
+          - .vbs
+          - .wsf
+falsepositives:
+  - False positives should be very low with the extensions list cited. Especially
+    if you don't heavily utilize OneNote.
+  - Occasional FPs might occur if OneNote is used internally to share different embedded
+    documents
+level: high
+customer: 'demo'
+modified: 2023/02/27
+tags:
+  - attack.defense_evasion
+  - DEMO

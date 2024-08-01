@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Remote Access Tool - NetSupport Execution From Unusual Location
+id: 37e8d358-6408-4853-82f4-98333fca7014
+status: test
+description: Detects execution of client32.exe (NetSupport RAT) from an unusual location
+    (outside of 'C:\Program Files')
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/19 22:25:51
+references:
+  - https://redcanary.com/blog/misbehaving-rats/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        Image|startswith:
+          - C:\Program Files\
+          - C:\Program Files (x86)\
+    selection:
+      - Image|endswith: \client32.exe
+      - Product|contains: NetSupport Remote Control
+      - OriginalFileName|contains: client32.exe
+      - Imphash: a9d50692e95b79723f3e76fcf70d023e
+      - Hashes|contains: IMPHASH=a9d50692e95b79723f3e76fcf70d023e
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/03/05
+tags:
+  - attack.defense_evasion
+  - DEMO

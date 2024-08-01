@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Remote Credential Dumping Activity
+id: 6e2a900a-ced9-4e4a-a9c2-13e706f9518a
+status: test
+description: Detects default filenames output from the execution of CrackMapExec and
+    Impacket-secretsdump against an endpoint.
+author: SecurityAura
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/11/16 17:53:21
+references:
+  - https://github.com/Porchetta-Industries/CrackMapExec
+  - https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith: \svchost.exe
+        TargetFilename|re: \\Windows\\System32\\[a-zA-Z0-9]{8}\.tmp$
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/01/05
+tags:
+  - attack.credential_access
+  - attack.t1003
+  - DEMO

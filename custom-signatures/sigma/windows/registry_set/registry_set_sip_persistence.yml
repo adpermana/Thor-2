@@ -1,0 +1,56 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Persistence Via New SIP Provider
+id: 5a2b21ee-6aaa-4234-ac9d-59a59edf90a1
+status: experimental
+description: Detects when an attacker register a new SIP provider for persistence
+    and defense evasion
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/21 14:11:41
+references:
+  - https://persistence-info.github.io/Data/codesigning.html
+  - https://github.com/gtworek/PSBits/tree/master/SIP
+  - https://specterops.io/assets/resources/SpecterOps_Subverting_Trust_in_Windows.pdf
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: all of selection_* and not 1 of filter*
+    filter:
+        Details:
+          - WINTRUST.DLL
+          - mso.dll
+    filter_poqexec:
+        Details: C:\Windows\System32\PsfSip.dll
+        Image: C:\Windows\System32\poqexec.exe
+        TargetObject|contains: \CryptSIPDll
+    selection_dll:
+        TargetObject|contains:
+          - \Dll
+          - \$DLL
+    selection_root:
+        TargetObject|contains:
+          - \SOFTWARE\Microsoft\Cryptography\Providers\
+          - \SOFTWARE\Microsoft\Cryptography\OID\EncodingType
+          - \SOFTWARE\WOW6432Node\Microsoft\Cryptography\Providers\
+          - \SOFTWARE\WOW6432Node\Microsoft\Cryptography\OID\EncodingType
+falsepositives: Legitimate SIP being registered by the OS or different software.
+level: medium
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.persistence
+  - attack.defense_evasion
+  - attack.t1553.003
+  - DEMO

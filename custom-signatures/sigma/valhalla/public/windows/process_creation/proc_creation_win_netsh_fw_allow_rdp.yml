@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: RDP Connection Allowed Via Netsh.EXE
+id: 01aeb693-138d-49d2-9403-c4f52d7d3d62
+status: test
+description: Detects usage of the netsh command to open and allow connections to port
+    3389 (RDP). As seen used by Sarwent Malware
+author: Sander Wiebing
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/05/23 14:50:41
+references:
+  - https://labs.sentinelone.com/sarwent-malware-updates-command-detonation/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains:
+          - portopening
+          - allow
+        CommandLine|contains|all:
+          - 'firewall '
+          - 'add '
+          - 'tcp '
+          - "3389"
+    selection_img:
+      - Image|endswith: \netsh.exe
+      - OriginalFileName: netsh.exe
+falsepositives: Legitimate administration activity
+level: high
+customer: 'demo'
+modified: 2023/12/11
+tags:
+  - attack.defense_evasion
+  - attack.t1562.004
+  - DEMO

@@ -1,0 +1,52 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Execution of Powershell with Base64
+id: fb843269-508c-4b76-8b8d-88679db22ce7
+status: test
+description: Commandline to launch powershell with a base64 payload
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/02 18:11:41
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1059.001/T1059.001.md#atomic-test-20---powershell-invoke-known-malicious-cmdlets
+  - https://unit42.paloaltonetworks.com/unit42-pulling-back-the-curtains-on-encodedcommand-powershell-attacks/
+  - https://mikefrobbins.com/2017/06/15/simple-obfuscation-with-powershell-using-base64-encoding/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_*
+    filter_azure:
+        ParentImage|contains:
+          - C:\Packages\Plugins\Microsoft.GuestConfiguration.ConfigurationforWindows\
+          - \gc_worker.exe
+    filter_encoding:
+        CommandLine|contains: ' -Encoding '
+    selection:
+        CommandLine|contains:
+          - ' -e '
+          - ' -en '
+          - ' -enc '
+          - ' -enco'
+          - ' -ec '
+        Image|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/01/05
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

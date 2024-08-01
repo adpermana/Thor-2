@@ -1,0 +1,117 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Webshell Detection With Command Line Keywords
+id: bed2a484-9348-4143-8a8a-b801c979301c
+status: test
+description: Detects certain command line parameters often used during reconnaissance
+    activity via web shells
+author: Florian Roth (Nextron Systems), Jonhnathan Ribeiro, Anton Kutepov, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/01/01 17:52:01
+references:
+  - https://www.fireeye.com/blog/threat-research/2013/08/breaking-down-the-china-chopper-web-shell-part-ii.html
+  - https://unit42.paloaltonetworks.com/bumblebee-webshell-xhunt-campaign/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_webserver_* and 1 of selection_susp_*
+    selection_susp_change_dir:
+        CommandLine|contains:
+          - '&cd&echo'
+          - 'cd /d '
+    selection_susp_misc_discovery_binaries:
+      - Image|endswith:
+          - \dsquery.exe
+          - \find.exe
+          - \findstr.exe
+          - \ipconfig.exe
+          - \netstat.exe
+          - \nslookup.exe
+          - \pathping.exe
+          - \quser.exe
+          - \schtasks.exe
+          - \systeminfo.exe
+          - \tasklist.exe
+          - \tracert.exe
+          - \ver.exe
+          - \wevtutil.exe
+          - \whoami.exe
+      - OriginalFileName:
+          - dsquery.exe
+          - find.exe
+          - findstr.exe
+          - ipconfig.exe
+          - netstat.exe
+          - nslookup.exe
+          - pathping.exe
+          - quser.exe
+          - schtasks.exe
+          - sysinfo.exe
+          - tasklist.exe
+          - tracert.exe
+          - ver.exe
+          - VSSADMIN.EXE
+          - wevtutil.exe
+          - whoami.exe
+    selection_susp_misc_discovery_commands:
+        CommandLine|contains:
+          - ' Test-NetConnection '
+          - dir \
+    selection_susp_net_utility:
+        CommandLine|contains:
+          - ' user '
+          - ' use '
+          - ' group '
+        OriginalFileName:
+          - net.exe
+          - net1.exe
+    selection_susp_ping_utility:
+        CommandLine|contains: ' -n '
+        OriginalFileName: ping.exe
+    selection_susp_wmic_utility:
+        CommandLine|contains: ' /node:'
+        OriginalFileName: wmic.exe
+    selection_webserver_characteristics_tomcat1:
+        ParentImage|contains:
+          - -tomcat-
+          - \tomcat
+        ParentImage|endswith:
+          - \java.exe
+          - \javaw.exe
+    selection_webserver_characteristics_tomcat2:
+        CommandLine|contains:
+          - catalina.jar
+          - CATALINA_HOME
+        ParentImage|endswith:
+          - \java.exe
+          - \javaw.exe
+    selection_webserver_image:
+        ParentImage|endswith:
+          - \w3wp.exe
+          - \php-cgi.exe
+          - \nginx.exe
+          - \httpd.exe
+          - \caddy.exe
+          - \ws_tomcatservice.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/05/13
+tags:
+  - attack.persistence
+  - attack.t1505.003
+  - attack.t1018
+  - attack.t1033
+  - attack.t1087
+  - DEMO

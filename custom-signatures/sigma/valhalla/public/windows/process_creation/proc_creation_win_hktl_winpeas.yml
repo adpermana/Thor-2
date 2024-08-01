@@ -1,0 +1,62 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - winPEAS Execution
+id: 98b53e78-ebaf-46f8-be06-421aafd176d9
+status: test
+description: WinPEAS is a script that search for possible paths to escalate privileges
+    on Windows hosts. The checks are explained on book.hacktricks.xyz
+author: Georg Lauenstein (sure[secure])
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/19 12:58:11
+references:
+  - https://github.com/carlospolop/PEASS-ng
+  - https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_cli_dl:
+        CommandLine|contains: https://github.com/carlospolop/PEASS-ng/releases/latest/download/
+    selection_cli_option:
+        CommandLine|contains:
+          - ' applicationsinfo'
+          - ' browserinfo'
+          - ' eventsinfo'
+          - ' fileanalysis'
+          - ' filesinfo'
+          - ' processinfo'
+          - ' servicesinfo'
+          - ' windowscreds'
+    selection_cli_specific:
+      - ParentCommandLine|endswith: ' -linpeas'
+      - CommandLine|endswith: ' -linpeas'
+    selection_img:
+      - OriginalFileName: winPEAS.exe
+      - Image|endswith:
+          - \winPEASany_ofs.exe
+          - \winPEASany.exe
+          - \winPEASx64_ofs.exe
+          - \winPEASx64.exe
+          - \winPEASx86_ofs.exe
+          - \winPEASx86.exe
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/03/23
+tags:
+  - attack.privilege_escalation
+  - attack.t1082
+  - attack.t1087
+  - attack.t1046
+  - DEMO

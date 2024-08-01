@@ -1,0 +1,69 @@
+title: Lazagne Credential Dumper Usage
+id: 695cfd85-6ddf-42c5-8e29-8017a54368b2
+status: experimental
+description: Detects possible execution of credential dumping tool lazagne
+references:
+    - https://github.com/AlessandroZ/LaZagne
+    - https://thedfirreport.com/2022/05/09/seo-poisoning-a-gootloader-story/
+author: Nasreddine Bencherchali
+date: 2022/04/30
+tags:
+    - attack.credential_access
+    - attack.t1555.001
+    - attack.t1555.003
+    - attack.t1555.004
+    - attack.t1003.001
+    - attack.t1003.004
+    - attack.t1003.005
+    - attack.t1003.007
+    - attack.t1003.008
+    - attack.t1552.001
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    lazagne_img:
+        Image|endswith: '\lazagne.exe'
+    lazagne_cmdline_param_browsers_combo:
+        CommandLine|contains: '.exe browsers'
+        CommandLine|endswith:
+            - ' browsers'
+            - ' -firefox'
+            - ' -yandexBrowser'
+            - ' -google'
+            - ' -chromium'
+            - ' -brave'
+            - ' "-chromium edge"'
+    lazagne_cmdline_specific:
+        CommandLine|contains:
+            - '.exe all -quiet'
+            - '.exe all -password'
+            - '.exe all -oN -output'
+            - '.exe all -quiet -oA'
+            - '.exe sysadmin'
+    lazagne_reg_save:
+        ParentCommandLine|contains:
+            - ' all'
+            - ' windows'
+            - ' sysadmin'
+            - ' browsers'
+            - ' databases'
+            - ' memory'
+            - ' chats'
+            - ' game'
+            - ' git'
+            - ' mails'
+            - ' maven'
+            - ' multimedia'
+            - ' php'
+            - ' svn'
+            - ' wifi'
+        CommandLine|contains:
+            - 'reg.exe save hklm\security '
+            - 'reg.exe save hklm\system '
+            - 'reg.exe save hklm\sam '
+    condition: 1 of lazagne*
+falsepositives:
+    - Legitimate administrator using Lazagne for password recovery
+    - Other programs that export the registry and have one of the keywords in the parent command line
+level: high

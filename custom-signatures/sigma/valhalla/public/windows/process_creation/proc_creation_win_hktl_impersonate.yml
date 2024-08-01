@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - Impersonate Execution
+id: cf0c254b-22f1-4b2b-8221-e137b3c0af94
+status: test
+description: Detects execution of the Impersonate tool. Which can be used to manipulate
+    tokens on a Windows computers remotely (PsExec/WmiExec) or interactively
+author: Sai Prashanth Pulisetti @pulisettis
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/12/21 14:26:11
+references:
+  - https://sensepost.com/blog/2022/abusing-windows-tokens-to-compromise-active-directory-without-touching-lsass/
+  - https://github.com/sensepost/impersonate
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_commandline_* or 1 of selection_hash_*
+    selection_commandline_exe:
+        CommandLine|contains: impersonate.exe
+    selection_commandline_opt:
+        CommandLine|contains:
+          - ' list '
+          - ' exec '
+          - ' adduser '
+    selection_hash_ext:
+      - md5: 9520714AB576B0ED01D1513691377D01
+      - sha256: E81CC96E2118DC4FBFE5BAD1604E0AC7681960143E2101E1A024D52264BB0A8A
+      - Imphash: 0A358FFC1697B7A07D0E817AC740DF62
+    selection_hash_plain:
+        Hashes|contains:
+          - MD5=9520714AB576B0ED01D1513691377D01
+          - SHA256=E81CC96E2118DC4FBFE5BAD1604E0AC7681960143E2101E1A024D52264BB0A8A
+          - IMPHASH=0A358FFC1697B7A07D0E817AC740DF62
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/02/08
+tags:
+  - attack.privilege_escalation
+  - attack.defense_evasion
+  - attack.t1134.001
+  - attack.t1134.003
+  - DEMO

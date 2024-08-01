@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Unusual File Modification by dns.exe
+id: 9f383dc0-fdeb-4d56-acbc-9f9f4f8f20f3
+related:
+  - type: similar
+    id: 8f0b1fb1-9bd4-4e74-8cdf-a8de4d2adfd0
+status: test
+description: Detects an unexpected file being modified by dns.exe which my indicate
+    activity related to remote code execution or other forms of exploitation as seen
+    in CVE-2020-1350 (SigRed)
+author: Tim Rauch (Nextron Systems), Elastic (idea)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/27 15:28:31
+references:
+  - https://www.elastic.co/guide/en/security/current/unusual-file-modification-by-dns.exe.html
+logsource:
+    category: file_change
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        TargetFilename|endswith: \dns.log
+    selection:
+        Image|endswith: \dns.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.initial_access
+  - attack.t1133
+  - DEMO

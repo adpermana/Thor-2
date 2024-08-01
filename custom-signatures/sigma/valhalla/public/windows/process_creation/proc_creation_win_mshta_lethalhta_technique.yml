@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential LethalHTA Technique Execution
+id: ed5d72a6-f8f4-479d-ba79-02f6a80d7471
+status: test
+description: Detects potential LethalHTA technique where the "mshta.exe" is spawned
+    by an "svchost.exe" process
+author: Markus Neis
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2018/06/07 16:24:11
+references:
+  - https://codewhitesec.blogspot.com/2018/07/lethalhta.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith: \mshta.exe
+        ParentImage|endswith: \svchost.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/02/07
+tags:
+  - attack.defense_evasion
+  - attack.t1218.005
+  - DEMO

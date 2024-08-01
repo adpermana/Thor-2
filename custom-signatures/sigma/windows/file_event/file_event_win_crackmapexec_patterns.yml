@@ -1,0 +1,72 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: CrackMapExec File Creation Patterns
+id: 9433ff9c-5d3f-4269-99f8-95fc826ea489
+status: test
+description: Detects suspicious file creation patterns found in logs when CrackMapExec
+    is used
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/03/12 15:11:31
+references:
+  - https://mpgn.gitbook.io/crackmapexec/smb-protocol/obtaining-credentials/dump-lsass
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: 1 of selection*
+    selection_lsass_dump1:
+        Image: C:\WINDOWS\system32\rundll32.exe
+        TargetFilename|endswith:
+          - .rtf
+          - .otf
+          - .odt
+          - .txt
+          - .doc
+          - .pdf
+          - .dll
+          - .docx
+          - .wpd
+          - .icns
+          - .db
+          - .ini
+          - .tex
+          - .sys
+          - .csv
+          - .fon
+          - .tar
+          - .ttf
+          - .xml
+          - .cfg
+          - .cpl
+          - .jpg
+          - .drv
+          - .cur
+          - .tmp
+        TargetFilename|startswith: C:\Windows\Temp\
+        User|contains:
+          - AUTHORI
+          - AUTORI
+    selection_procdump:
+        TargetFilename: C:\Windows\Temp\procdump.exe
+        User|contains:
+          - AUTHORI
+          - AUTORI
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/05/27
+tags:
+  - attack.credential_access
+  - attack.t1003.001
+  - DEMO

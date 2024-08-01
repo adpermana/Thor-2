@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: VMMap Unsigned Dbghelp.DLL Potential Sideloading
+id: 273a8dd8-3742-4302-bcc7-7df5a80fe425
+related:
+  - type: similar
+    id: 98ffaed4-aec2-4e04-9b07-31492fe68b3d
+status: experimental
+description: Detects potential DLL sideloading of an unsigned dbghelp.dll by the Sysinternals
+    VMMap.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/07/28 18:18:51
+references:
+  - https://techcommunity.microsoft.com/t5/sysinternals-blog/zoomit-v7-1-procdump-2-0-for-linux-process-explorer-v17-05/ba-p/3884766
+logsource:
+    category: image_load
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_signed:
+        Signed: "true"
+    selection:
+        Image|endswith:
+          - \vmmap.exe
+          - \vmmap64.exe
+        ImageLoaded|contains: C:\Debuggers\dbghelp.dll
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/09/05
+tags:
+  - attack.defense_evasion
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1574.001
+  - attack.t1574.002
+  - DEMO

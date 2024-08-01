@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Tap Installer Execution
+id: 99793437-3e16-439b-be0f-078782cf953d
+status: test
+description: Well-known TAP software installation. Possible preparation for data exfiltration
+    using tunneling techniques
+author: Daniil Yugoslavskiy, Ian Davis, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/24 12:14:31
+references:
+  - https://community.openvpn.net/openvpn/wiki/ManagingWindowsTAPDrivers
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_optional_*
+    filter_optional_avast:
+        Image|contains:
+          - :\Program Files\Avast Software\SecureLine VPN\
+          - :\Program Files (x86)\Avast Software\SecureLine VPN\
+    filter_optional_openvpn:
+        Image|contains: :\Program Files\OpenVPN Connect\drivers\tap\
+    filter_optional_protonvpn:
+        Image|contains: :\Program Files (x86)\Proton Technologies\ProtonVPNTap\installer\
+    selection:
+        Image|endswith: \tapinstall.exe
+falsepositives: Legitimate OpenVPN TAP installation
+level: medium
+customer: 'demo'
+modified: 2023/12/11
+tags:
+  - attack.exfiltration
+  - attack.t1048
+  - DEMO

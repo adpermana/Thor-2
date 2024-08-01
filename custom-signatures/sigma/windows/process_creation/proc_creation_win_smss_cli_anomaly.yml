@@ -1,0 +1,48 @@
+title: SMSS.EXE Process CLI Anomaly
+id: e422938f-6c45-4dcc-bdbb-be339b712c6c
+status: experimental
+description: Detects execution of smss.exe system processes with unexpected CLI arguments
+references:
+    - Internal Research
+author: Nasreddine Bencherchali
+date: 2022/11/04
+tags:
+    - attack.defense_evasion
+    - attack.execution
+    - attack.t1055
+    - attack.t1036
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    # smss.exe // SMSS will be a child of itself only during boot and the processes shouldn't exsit anymore. This case is only here to handle people who log stuff from boot and up via drivers.
+    selection_smss_parent:
+        ParentImage|endswith: '\smss.exe'
+        Image|endswith: '\smss.exe'
+    filter_smss_parent_1:
+        - CommandLine|contains: 'smss.exe 0000' # Example command at start: \smss.exe 000000e4 0000008c
+        - CommandLine: ''
+    filter_smss_parent_cli_null:
+        CommandLine: null
+    # smss.exe // After boot, only one instance of smss.exe will be alive and shouldn't have any commandline (The parent is "System")
+    selection_smss_child:
+        Image: 'C:\Windows\System32\smss.exe'
+    filter_smss_child_1:
+        ParentProcessId: 4
+        CommandLine|endswith: 'smss.exe' # The living smss.exe shouldn't have any CLI
+    filter_smss_child_2:
+        - ParentImage|endswith: '\smss.exe'
+        - ParentImage:
+            - ''
+            - '-' # FP found in Azure EVTX dataset
+        - CommandLine:
+            - ''
+            - '-' # FP found in Azure EVTX dataset
+    filter_smss_child_parent_null:
+        ParentImage: null
+    filter_smss_child_cli_null:
+        CommandLine: null
+    condition: (selection_smss_parent and not 1 of filter_smss_parent_*) or (selection_smss_child and not 1 of filter_smss_child_*)
+falsepositives:
+    - Unknown
+level: high

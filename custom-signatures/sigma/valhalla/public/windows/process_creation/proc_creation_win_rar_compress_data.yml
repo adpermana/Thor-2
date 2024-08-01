@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Files Added To An Archive Using Rar.EXE
+id: 6f3e2987-db24-4c78-a860-b4f4095a7095
+status: test
+description: Detects usage of "rar" to add files to an archive for potential compression.
+    An adversary may compress data (e.g. sensitive documents) that is collected prior
+    to exfiltration in order to make it portable and minimize the amount of data sent
+    over the network.
+author: Timur Zinniatullin, E.M. Anhaus, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/21 15:12:41
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1560.001/T1560.001.md
+  - https://eqllib.readthedocs.io/en/latest/analytics/1ec33c93-3d0b-4a28-8014-dbdaae5c60ae.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains: ' a '
+        Image|endswith: \rar.exe
+falsepositives: Highly likely if rar is a default archiver in the monitored environment.
+level: low
+customer: 'demo'
+modified: 2023/02/05
+tags:
+  - attack.collection
+  - attack.t1560.001
+  - DEMO

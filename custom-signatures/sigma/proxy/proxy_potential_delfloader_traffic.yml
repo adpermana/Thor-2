@@ -1,0 +1,22 @@
+title: Potential Delf Loader Network Activity
+id: 8c61ddfe-0e46-49dc-b251-0e961e19a13e
+status: experimental
+description: Detects potential suspicious network activity related to Delf Loader
+references:
+    - https://github.com/silence-is-best/c2db
+author: X__Junior
+date: 2023/01/05
+tags:
+    - attack.command_and_control
+logsource:
+    category: proxy
+detection:
+    selection:
+        cs-method: 'GET'
+        c-uri|contains:
+            - '/gate.php?serial='
+            - '/check.php?serial='
+    condition: selection
+falsepositives:
+    - Unknown
+level: medium

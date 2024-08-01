@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-06-21 19:00
+# Generated for User: demo
+# Number of Rules: 3228
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Cisco Disabling Logging
+id: 9e8f6035-88bf-4a63-96b6-b17c0508257e
+status: test
+description: Turn off logging locally or remote
+author: Austin Clark
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/08/11 12:03:31
+references:
+  - https://www.cisco.com/en/US/docs/ios/security/command/reference/sec_a2.pdf
+logsource:
+    product: cisco
+    service: aaa
+detection:
+    condition: keywords
+    keywords:
+      - no logging
+      - no aaa new-model
+fields:
+  - src
+  - CmdSet
+  - User
+  - Privilege_Level
+  - Remote_Address
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/01/04
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+  - DEMO

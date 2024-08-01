@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-06-21 19:00
+# Generated for User: demo
+# Number of Rules: 3228
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: App Granted Privileged Delegated Or App Permissions
+id: 5aecf3d5-f8a0-48e7-99be-3a759df7358f
+related:
+  - type: obsoletes
+    id: ba2a7c80-027b-460f-92e2-57d113897dbc
+status: test
+description: Detects when administrator grants either application permissions (app
+    roles) or highly privileged delegated permissions
+author: Bailey Bercik '@baileybercik', Mark Morowczynski '@markmorow'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/28 19:17:01
+references:
+  - https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/security-operations-applications#application-granted-highly-privileged-permissions
+logsource:
+    product: azure
+    service: auditlogs
+detection:
+    condition: selection
+    selection:
+        properties.message: Add app role assignment to service principal
+falsepositives: When the permission is legitimately needed for the app
+level: high
+customer: 'demo'
+modified: 2023/03/29
+tags:
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1098.003
+  - DEMO

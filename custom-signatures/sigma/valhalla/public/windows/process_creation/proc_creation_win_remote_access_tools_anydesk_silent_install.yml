@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Remote Access Tool - AnyDesk Silent Installation
+id: 114e7f1c-f137-48c8-8f54-3088c24ce4b9
+status: test
+description: Detects AnyDesk Remote Desktop silent installation. Which can be used
+    by attackers to gain remote access.
+author: Ján Trenčanský
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/06 18:20:11
+references:
+  - https://twitter.com/TheDFIRReport/status/1423361119926816776?s=20
+  - https://support.anydesk.com/Automatic_Deployment
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains|all:
+          - --install
+          - --start-with-win
+          - --silent
+fields:
+  - CommandLine
+  - ParentCommandLine
+  - CurrentDirectory
+falsepositives: Legitimate deployment of AnyDesk
+level: high
+customer: 'demo'
+modified: 2023/03/05
+tags:
+  - attack.command_and_control
+  - attack.t1219
+  - DEMO

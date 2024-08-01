@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HybridConnectionManager Service Installation
+id: 0ee4d8a5-4e67-4faf-acfa-62a78457d1f2
+status: test
+description: Rule to detect the Hybrid Connection Manager service installation.
+author: Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/04/12 18:13:21
+references:
+  - https://twitter.com/Cyb3rWard0g/status/1381642789369286662
+logsource:
+    product: windows
+    service: security
+    definition: The 'System Security Extension' audit subcategory need to be enabled
+        to log the EID 4697
+detection:
+    condition: selection
+    selection:
+        EventID: "4697"
+        ServiceFileName|contains: HybridConnectionManager
+        ServiceName: HybridConnectionManager
+falsepositives: Legitimate use of Hybrid Connection Manager via Azure function apps.
+level: high
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.persistence
+  - attack.t1554
+  - DEMO

@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Whoami Utility Execution
+id: e28a5a99-da44-436d-b7a0-2afc20a5f413
+status: test
+description: Detects the execution of whoami, which is often used by attackers after
+    exploitation / privilege escalation
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2018/08/13 12:36:51
+references:
+  - https://brica.de/alerts/alert/public/1247926/agent-tesla-keylogger-delivered-inside-a-power-iso-daa-archive/
+  - https://app.any.run/tasks/7eaba74e-c1ea-400f-9c17-5e30eee89906/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - Image|endswith: \whoami.exe
+      - OriginalFileName: whoami.exe
+falsepositives:
+  - Admin activity
+  - Scripts and administrative tools used in the monitored environment
+  - Monitoring activity
+level: low
+customer: 'demo'
+modified: 2023/11/30
+tags:
+  - attack.discovery
+  - attack.t1033
+  - car.2016-03-001
+  - DEMO

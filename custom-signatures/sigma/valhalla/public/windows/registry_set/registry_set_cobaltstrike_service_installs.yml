@@ -1,0 +1,52 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: CobaltStrike Service Installations in Registry
+id: 61a7697c-cb79-42a8-a2ff-5f0cdfae0130
+status: test
+description: |
+    Detects known malicious service installs that appear in cases in which a Cobalt Strike beacon elevates privileges or lateral movement.
+    We can also catch this by system log 7045 (https://github.com/SigmaHQ/sigma/blob/master/rules/windows/builtin/win_cobaltstrike_service_installs.yml)
+    In some SIEM you can catch those events also in HKLM\System\ControlSet001\Services or HKLM\System\ControlSet002\Services, however, this rule is based on a regular sysmon's events.
+author: Wojciech Lesicki
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/06/29 18:34:11
+references:
+  - https://www.sans.org/webcasts/tech-tuesday-workshop-cobalt-strike-detection-log-analysis-119395
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: main and 1 of selection_*
+    main:
+        TargetObject|contains: HKLM\System\CurrentControlSet\Services
+    selection_1:
+        Details|contains|all:
+          - ADMIN$
+          - .exe
+    selection_2:
+        Details|contains|all:
+          - '%COMSPEC%'
+          - start
+          - powershell
+falsepositives: Unknown
+level: critical
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.execution
+  - attack.privilege_escalation
+  - attack.lateral_movement
+  - attack.t1021.002
+  - attack.t1543.003
+  - attack.t1569.002
+  - DEMO

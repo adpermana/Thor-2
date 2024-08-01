@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - Potential CobaltStrike Process Injection
+id: 6309645e-122d-4c5b-bb2b-22e4f9c2fa42
+status: test
+description: Detects a potential remote threat creation with certain characteristics
+    which are typical for Cobalt Strike beacons
+author: Olaf Hartong, Florian Roth (Nextron Systems), Aleksey Potapov, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2018/11/30 19:24:31
+references:
+  - https://medium.com/@olafhartong/cobalt-strike-remote-threads-detection-206372d11d0f
+  - https://blog.cobaltstrike.com/2018/04/09/cobalt-strike-3-11-the-snake-that-eats-its-tail/
+logsource:
+    category: create_remote_thread
+    product: windows
+detection:
+    condition: selection
+    selection:
+        StartAddress|endswith:
+          - 0B80
+          - 0C7C
+          - 0C88
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/05/05
+tags:
+  - attack.defense_evasion
+  - attack.t1055.001
+  - DEMO

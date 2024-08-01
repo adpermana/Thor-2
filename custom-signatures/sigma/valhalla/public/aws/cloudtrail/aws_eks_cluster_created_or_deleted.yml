@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: AWS EKS Cluster Created or Deleted
+id: 33d50d03-20ec-4b74-a74e-1e65a38af1c0
+status: test
+description: Identifies when an EKS cluster is created or deleted.
+author: Austin Songer
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/16 14:16:01
+references:
+  - https://any-api.com/amazonaws_com/eks/docs/API_Description
+logsource:
+    product: aws
+    service: cloudtrail
+detection:
+    condition: selection
+    selection:
+        eventName:
+          - CreateCluster
+          - DeleteCluster
+        eventSource: eks.amazonaws.com
+falsepositives:
+  - EKS Cluster being created or deleted may be performed by a system administrator.
+  - Verify whether the user identity, user agent, and/or hostname should be making
+    changes in your environment.
+  - EKS Cluster created or deleted from unfamiliar users should be investigated. If
+    known behavior is causing false positives, it can be exempted from the rule.
+level: low
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.impact
+  - attack.t1485
+  - DEMO

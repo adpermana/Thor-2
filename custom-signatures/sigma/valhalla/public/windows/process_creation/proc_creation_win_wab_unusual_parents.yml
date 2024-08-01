@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Wab/Wabmig Unusual Parent Or Child Processes
+id: 63d1ccc0-2a43-4f4b-9289-361b308991ff
+status: test
+description: Detects unusual parent or children of the wab.exe (Windows Contacts)
+    and Wabmig.exe (Microsoft Address Book Import Tool) processes as seen being used
+    with bumblebee activity
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/12 17:20:31
+references:
+  - https://thedfirreport.com/2022/08/08/bumblebee-roasts-its-way-to-domain-admin/
+  - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/bumblebee-loader-cybercrime
+  - https://thedfirreport.com/2022/09/26/bumblebee-round-two/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_child:
+        ParentImage|endswith:
+          - \wab.exe
+          - \wabmig.exe
+    selection_parent:
+        Image|endswith:
+          - \wab.exe
+          - \wabmig.exe
+        ParentImage|endswith:
+          - \WmiPrvSE.exe
+          - \svchost.exe
+          - \dllhost.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/09/27
+tags:
+  - attack.defense_evasion
+  - attack.execution
+  - DEMO

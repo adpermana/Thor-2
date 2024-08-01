@@ -1,0 +1,32 @@
+title: SharpSphere Patterns
+id: 623984a8-1b91-49d9-bc94-c76a120dfc5e
+status: experimental
+description: Detects process patterns found in relation to SharpSphere, a tool to attack VMWare vCenter systems
+references:
+    - https://github.com/JamesCooteUK/SharpSphere
+    - https://jamescoote.co.uk/Dumping-LSASS-with-SharpShere/
+author: Florian Roth (Nextron Systems)
+date: 2023/05/18
+logsource:
+    product: windows
+    category: process_creation
+detection:
+    selection_command:
+        CommandLine|contains: 
+            - '.exe execute '
+            - '.exe c2 '
+            - '.exe upload '
+    selection_flags:
+        CommandLine|contains|all: 
+            - ' --url '
+            - ' --username '
+            - ' --guestusername '
+    selection_sub_command:
+        CommandLine|contains: 
+            - ' --command '
+            - ' --source '
+            - ' --targetvm '
+    condition: selection_command and selection_flags and selection_sub_command
+falsepositives:
+    - Unknown
+level: high

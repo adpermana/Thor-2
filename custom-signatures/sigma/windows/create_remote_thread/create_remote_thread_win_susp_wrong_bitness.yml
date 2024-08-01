@@ -1,0 +1,36 @@
+title: Remote Thread Creation From Different Bitness Processes
+id: 381b74e3-e270-4b37-82d6-68b73d568ec5
+status: test
+description: Detects a remote thread creation from processes with certain bitness in processes with different bitness
+references:
+    - https://thedfirreport.com/2022/11/28/emotet-strikes-again-lnk-file-leads-to-domain-wide-ransomware/
+author: Nasreddine Bencherchali
+date: 2022/11/29
+modified: 2023/03/29
+tags:
+    - attack.defense_evasion
+    - attack.privilege_escalation
+    - attack.t1055.003
+logsource:
+    product: windows
+    category: create_remote_thread
+detection:
+    selection_x64_x86:
+        SourceImage|startswith: 'C:\Windows\System32\'
+        TargetImage|startswith: 'C:\Windows\SysWOW64\'
+    selection_x86_x64:
+        SourceImage|startswith: 'C:\Windows\SysWOW64\'
+        TargetImage|startswith: 'C:\Windows\System32\'
+    selection_pgfiles_x64_x86:
+        SourceImage|startswith: 'C:\Program Files\'
+        TargetImage|startswith: 'C:\Program Files (x86)\'
+    selection_pgfiles_x86_x64:
+        SourceImage|startswith: 'C:\Program Files (x86)\'
+        TargetImage|startswith: 'C:\Program Files\'
+    filter_csrss:
+        SourceImage: 'C:\Windows\System32\csrss.exe'
+        TargetImage: 'C:\Windows\SysWOW64\cmd.exe'
+    condition: 1 of selection* and not 1 of filter_*
+falsepositives:
+    - Unknown
+level: high

@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Extrac32 Execution
+id: aa8e035d-7be4-48d3-a944-102aec04400d
+status: test
+description: Download or Copy file with Extrac32
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/11/26 13:47:51
+references:
+  - https://lolbas-project.github.io/lolbas/Binaries/Extrac32/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_archive:
+        CommandLine|contains: .cab
+    selection_lolbas:
+      - CommandLine|contains: extrac32.exe
+      - Image|endswith: \extrac32.exe
+      - OriginalFileName: extrac32.exe
+    selection_options:
+        CommandLine|contains:
+          - /C
+          - /Y
+          - ' \\\\'
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/08/13
+tags:
+  - attack.command_and_control
+  - attack.t1105
+  - DEMO

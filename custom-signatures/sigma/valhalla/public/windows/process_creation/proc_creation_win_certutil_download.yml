@@ -1,0 +1,51 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Download Via Certutil.EXE
+id: 19b08b1c-861d-4e75-a1ef-ea0c1baf202b
+related:
+  - type: similar
+    id: 13e6fe51-d478-4c7e-b0f2-6da9b400a829
+status: test
+description: Detects the execution of certutil with certain flags that allow the utility
+    to download files.
+author: Florian Roth (Nextron Systems), Jonhnathan Ribeiro, oscd.community, Nasreddine
+    Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/02/15 15:27:11
+references:
+  - https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/certutil
+  - https://forensicitguy.github.io/agenttesla-vba-certutil-download/
+  - https://news.sophos.com/en-us/2021/04/13/compromised-exchange-server-hosting-cryptojacker-targeting-other-exchange-servers/
+  - https://twitter.com/egre55/status/1087685529016193025
+  - https://lolbas-project.github.io/lolbas/Binaries/Certutil/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_flags:
+        CommandLine|contains:
+          - 'urlcache '
+          - 'verifyctl '
+    selection_http:
+        CommandLine|contains: http
+    selection_img:
+      - Image|endswith: \certutil.exe
+      - OriginalFileName: CertUtil.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1027
+  - DEMO

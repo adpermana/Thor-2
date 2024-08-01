@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: EvilNum APT Golden Chickens Deployment Via OCX Files
+id: 8acf3cfa-1e8c-4099-83de-a0c4038e18f0
+status: test
+description: Detects Golden Chickens deployment method as used by Evilnum and described
+    in ESET July 2020 report
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/07/10 18:54:01
+references:
+  - https://www.welivesecurity.com/2020/07/09/more-evil-deep-look-evilnum-toolset/
+  - https://app.any.run/tasks/33d37fdf-158d-4930-aa68-813e1d5eb8ba/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains|all:
+          - regsvr32
+          - /s
+          - /i
+          - \AppData\Roaming\
+          - .ocx
+falsepositives: Unknown
+level: critical
+customer: 'demo'
+modified: 2023/03/09
+tags:
+  - attack.defense_evasion
+  - attack.t1218.011
+  - detection.emerging_threats
+  - DEMO

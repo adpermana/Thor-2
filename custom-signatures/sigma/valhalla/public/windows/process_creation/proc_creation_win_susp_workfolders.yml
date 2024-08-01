@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Execution via WorkFolders.exe
+id: 0bbc6369-43e3-453d-9944-cae58821c173
+status: test
+description: Detects using WorkFolders.exe to execute an arbitrary control.exe
+author: Maxime Thiebaut (@0xThiebaut)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/10/21 13:53:01
+references:
+  - https://twitter.com/elliotkillick/status/1449812843772227588
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not filter
+    filter:
+        Image: C:\Windows\System32\control.exe
+    selection:
+        Image|endswith: \control.exe
+        ParentImage|endswith: \WorkFolders.exe
+falsepositives: Legitimate usage of the uncommon Windows Work Folders feature.
+level: high
+customer: 'demo'
+modified: 2022/12/25
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

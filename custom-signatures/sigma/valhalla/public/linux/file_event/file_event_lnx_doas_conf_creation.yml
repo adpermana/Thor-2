@@ -1,0 +1,37 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Linux Doas Conf File Creation
+id: 00eee2a5-fdb0-4746-a21d-e43fbdea5681
+status: stable
+description: Detects the creation of doas.conf file in linux host platform.
+author: Sittikorn S, Teoderick Contreras
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/20 13:20:21
+references:
+  - https://research.splunk.com/endpoint/linux_doas_conf_file_creation/
+  - https://www.makeuseof.com/how-to-install-and-use-doas/
+logsource:
+    category: file_event
+    product: linux
+detection:
+    condition: selection
+    selection:
+        TargetFilename|endswith: /etc/doas.conf
+falsepositives: Unlikely
+level: medium
+customer: 'demo'
+modified: 2022/12/31
+tags:
+  - attack.privilege_escalation
+  - attack.t1548
+  - DEMO

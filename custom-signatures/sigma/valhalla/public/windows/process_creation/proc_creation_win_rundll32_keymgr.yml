@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Key Manager Access
+id: a4694263-59a8-4608-a3a0-6f8d3a51664c
+status: test
+description: Detects the invocation of the Stored User Names and Passwords dialogue
+    (Key Manager)
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/04/21 13:40:51
+references:
+  - https://twitter.com/NinjaParanoid/status/1516442028963659777
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains|all:
+          - keymgr
+          - KRShowKeyMgr
+    selection_img:
+      - Image|endswith: \rundll32.exe
+      - OriginalFileName: RUNDLL32.EXE
+falsepositives: Administrative activity
+level: high
+customer: 'demo'
+modified: 2023/02/09
+tags:
+  - attack.credential_access
+  - attack.t1555.004
+  - DEMO

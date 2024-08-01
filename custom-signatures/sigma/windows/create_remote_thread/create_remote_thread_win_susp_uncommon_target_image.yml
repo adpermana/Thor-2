@@ -1,0 +1,61 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Remote Thread Creation In Uncommon Target Image
+id: a1a144b7-5c9b-4853-a559-2172be8d4a03
+related:
+  - type: obsoletes
+    id: f016c716-754a-467f-a39e-63c06f773987
+status: experimental
+description: Detects uncommon target processes for remote thread creation
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/03/16 18:06:21
+references:
+  - https://blog.redbluepurple.io/offensive-research/bypassing-injection-detection
+logsource:
+    category: create_remote_thread
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+    filter_main_csrss:
+        SourceImage|endswith: :\Windows\System32\csrss.exe
+    filter_optional_aurora_1:
+        StartFunction: EtwpNotificationThread
+    filter_optional_aurora_2:
+        SourceImage|contains: unknown process
+    filter_optional_vmtoolsd:
+        SourceImage|endswith: :\Program Files\VMware\VMware Tools\vmtoolsd.exe
+        StartFunction: GetCommandLineW
+        TargetImage|endswith:
+          - :\Windows\System32\notepad.exe
+          - :\Windows\System32\spoolsv.exe
+    selection:
+        TargetImage|endswith:
+          - \calc.exe
+          - \calculator.exe
+          - \mspaint.exe
+          - \notepad.exe
+          - \ping.exe
+          - \sethc.exe
+          - \spoolsv.exe
+          - \wordpad.exe
+          - \write.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2024/01/22
+tags:
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - attack.t1055.003
+  - DEMO

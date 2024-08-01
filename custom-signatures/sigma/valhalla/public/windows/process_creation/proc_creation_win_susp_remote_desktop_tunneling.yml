@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Remote Desktop Tunneling
+id: 8a3038e8-9c9d-46f8-b184-66234a160f6f
+status: test
+description: Detects potential use of an SSH utility to establish RDP over a reverse
+    SSH Tunnel. This can be used by attackers to enable routing of network packets
+    that would otherwise not reach their intended destination.
+author: Tim Rauch, Elastic (idea)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/27 15:16:21
+references:
+  - https://www.elastic.co/guide/en/security/current/potential-remote-desktop-tunneling-detected.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection*
+    selection:
+        CommandLine|contains: :3389
+    selection_opt:
+        CommandLine|contains:
+          - ' -L '
+          - ' -P '
+          - ' -R '
+          - ' -pw '
+          - ' -ssh '
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.lateral_movement
+  - attack.t1021
+  - DEMO

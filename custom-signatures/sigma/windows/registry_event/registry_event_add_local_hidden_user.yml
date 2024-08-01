@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Creation of a Local Hidden User Account by Registry
+id: 460479f3-80b7-42da-9c43-2cc1d54dbccd
+status: test
+description: Sysmon registry detection of a local hidden user account.
+author: Christian Burkard (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/05/03 18:59:01
+references:
+  - https://twitter.com/SBousseaden/status/1387530414185664538
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith: \lsass.exe
+        TargetObject|contains: \SAM\SAM\Domains\Account\Users\Names\
+        TargetObject|endswith: $
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/08/05
+tags:
+  - attack.persistence
+  - attack.t1136.001
+  - DEMO

@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Critical Hive In Suspicious Location Access Bits Cleared
+id: 39f919f3-980b-4e6f-a975-8af7e507ef2b
+related:
+  - type: obsoletes
+    id: 839dd1e8-eda8-4834-8145-01beeee33acd
+status: test
+description: |
+    Detects events from the Kernel-General ETW indicating that the access bits of a hive with a system like hive name located in the temp directory have been reset.
+    This occurs when an application tries to access a hive and the hive has not be recognized since the last 7 days (by default).
+    Registry hive dumping utilities such as QuarksPwDump were seen emitting this behavior.
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/05/15 20:27:01
+references:
+  - https://github.com/nasbench/Misc-Research/blob/b20da2336de0f342d31ef4794959d28c8d3ba5ba/ETW/Microsoft-Windows-Kernel-General.md
+logsource:
+    product: windows
+    service: system
+detection:
+    condition: selection
+    selection:
+        EventID: "16"
+        HiveName|contains:
+          - \Temp\SAM
+          - \Temp\SECURITY
+        Provider_Name: Microsoft-Windows-Kernel-General
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2024/01/18
+tags:
+  - attack.credential_access
+  - attack.t1003.002
+  - DEMO

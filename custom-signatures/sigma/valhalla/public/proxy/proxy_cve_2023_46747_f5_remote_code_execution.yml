@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: CVE-2023-46747 Exploitation Activity - Proxy
+id: f195b2ff-e542-41bf-8d91-864fb81e5c20
+related:
+  - type: similar
+    id: e9928831-ba14-42ea-a4bc-33d352b9929a
+status: experimental
+description: Detects exploitation activity of CVE-2023-46747 an unauthenticated remote
+    code execution vulnerability in F5 BIG-IP.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/11/08 16:03:51
+references:
+  - https://github.com/AliBrTab/CVE-2023-46747-POC/tree/main
+  - https://github.com/0xorOne/nuclei-templates/blob/2fef4270ec6e5573d0a1732cb18bcfc4b1580a88/http/cves/2023/CVE-2023-46747.yaml
+  - https://mp.weixin.qq.com/s/wUoBy7ZiqJL2CUOMC-8Wdg
+  - https://www.praetorian.com/blog/refresh-compromising-f5-big-ip-with-request-smuggling-cve-2023-46747/
+logsource:
+    category: proxy
+    definition: 'Requirements: The POST request body data must be collected in order
+        to make use of this detection'
+detection:
+    condition: selection and (keywords_hex or keywords_plain)
+    keywords_hex:
+        '|all':
+          - 2f746d75692f436f6e74726f6c2f666f726d
+          - 666f726d5f706167653d253266746d756925326673797374656d253266757365722532666372656174652e6a7370
+    keywords_plain:
+        '|all':
+          - /tmui/Control/form
+          - form_page=%2ftmui%2fsystem%2fuser%2fcreate.jsp
+    selection:
+        c-uri|contains: /mgmt/tm/util/bash
+        cs-method: POST
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+tags:
+  - attack.initial_access
+  - attack.t1190
+  - detection.emerging_threats
+  - cve.2023.46747
+  - DEMO

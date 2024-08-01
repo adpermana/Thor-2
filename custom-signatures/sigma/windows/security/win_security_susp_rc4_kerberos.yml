@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Kerberos RC4 Ticket Encryption
+id: 496a0e47-0a33-4dca-b009-9e6ca3591f39
+status: test
+description: Detects service ticket requests using RC4 encryption type
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/02/06 16:52:41
+references:
+  - https://adsecurity.org/?p=3458
+  - https://www.trimarcsecurity.com/single-post/TrimarcResearch/Detecting-Kerberoasting-Activity
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: selection and not reduction
+    reduction:
+        ServiceName|endswith: $
+    selection:
+        EventID: "4769"
+        TicketEncryptionType: "0x17"
+        TicketOptions: "0x40810000"
+falsepositives:
+  - Service accounts used on legacy systems (e.g. NetApp)
+  - Windows Domains with DFL 2003 and legacy systems
+level: medium
+customer: 'demo'
+modified: 2022/06/19
+tags:
+  - attack.credential_access
+  - attack.t1558.003
+  - DEMO

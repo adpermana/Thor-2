@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Execution of InstallUtil Without Log
+id: d042284c-a296-4988-9be5-f424fadcc28c
+status: test
+description: Uses the .NET InstallUtil.exe application in order to execute image without
+    log
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/23 18:44:31
+references:
+  - https://securelist.com/moonbounce-the-dark-side-of-uefi-firmware/105468/
+  - https://docs.microsoft.com/en-us/dotnet/framework/tools/installutil-exe-installer-tool
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains|all:
+          - '/logfile= '
+          - /LogToConsole=false
+        Image|contains: Microsoft.NET\Framework
+        Image|endswith: \InstallUtil.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/02/04
+tags:
+  - attack.defense_evasion
+  - DEMO

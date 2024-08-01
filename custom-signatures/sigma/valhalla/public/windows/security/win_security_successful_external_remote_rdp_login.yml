@@ -1,0 +1,58 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: External Remote RDP Logon from Public IP
+id: 259a9cdf-c4dd-4fa2-b243-2269e5ab18a2
+related:
+  - type: derived
+    id: 78d5cab4-557e-454f-9fb9-a222bd0d5edc
+status: test
+description: Detects successful logon from public IP address via RDP. This can indicate
+    a publicly-exposed RDP port.
+author: Micah Babinski (@micahbabinski), Zach Mathis (@yamatosecurity)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/19 15:57:21
+references:
+  - https://www.inversecos.com/2020/04/successful-4624-anonymous-logons-to.html
+  - https://twitter.com/Purp1eW0lf/status/1616144561965002752
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_empty:
+        IpAddress: '-'
+    filter_main_local_ranges:
+        IpAddress|cidr:
+          - ::1/128
+          - 10.0.0.0/8
+          - 127.0.0.0/8
+          - 172.16.0.0/12
+          - 192.168.0.0/16
+          - 169.254.0.0/16
+          - fc00::/7
+          - fe80::/10
+    selection:
+        EventID: "4624"
+        LogonType: "10"
+falsepositives: Legitimate or intentional inbound connections from public IP addresses
+    on the RDP port.
+level: medium
+customer: 'demo'
+modified: 2024/03/11
+tags:
+  - attack.initial_access
+  - attack.credential_access
+  - attack.t1133
+  - attack.t1078
+  - attack.t1110
+  - DEMO

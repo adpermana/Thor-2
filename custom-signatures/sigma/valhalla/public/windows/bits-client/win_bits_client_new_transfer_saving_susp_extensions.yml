@@ -1,0 +1,53 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: BITS Transfer Job Downloading File Potential Suspicious Extension
+id: b85e5894-9b19-4d86-8c87-a2f3b81f0521
+status: test
+description: Detects new BITS transfer job saving local files with potential suspicious
+    extensions
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/03/01 23:06:01
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1197/T1197.md
+logsource:
+    product: windows
+    service: bits-client
+detection:
+    condition: selection and not 1 of filter_optional_*
+    filter_optional_generic:
+        LocalName|contains: \AppData\
+        RemoteName|contains: .com
+    selection:
+        EventID: "16403"
+        LocalName|endswith:
+          - .bat
+          - .dll
+          - .exe
+          - .hta
+          - .ps1
+          - .psd1
+          - .sh
+          - .vbe
+          - .vbs
+falsepositives: While the file extensions in question can be suspicious at times.
+    It's best to add filters according to your environment to avoid large amount false
+    positives
+level: medium
+customer: 'demo'
+modified: 2023/03/27
+tags:
+  - attack.defense_evasion
+  - attack.persistence
+  - attack.t1197
+  - DEMO

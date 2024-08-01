@@ -1,0 +1,58 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Obfuscated IP Via CLI
+id: 56d19cb4-6414-4769-9644-1ed35ffbb148
+status: experimental
+description: Detects usage of an encoded/obfuscated version of an IP address (hex,
+    octal, etc.) via command line
+author: Nasreddine Bencherchali (Nextron Systems), X__Junior (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/03 10:56:11
+references:
+  - https://h.43z.one/ipconverter/
+  - https://twitter.com/Yasser_Elsnbary/status/1553804135354564608
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection_img and 1 of selection_ip_* and not 1 of filter_main_*
+    filter_main_valid_ip:
+        CommandLine|re: https?://((25[0-5]|(2[0-4]|1\d|[1-9])?\d)(\.|\b)){4}
+    selection_img:
+        Image|endswith:
+          - \ping.exe
+          - \arp.exe
+    selection_ip_1:
+        CommandLine|contains:
+          - ' 0x'
+          - //0x
+          - .0x
+          - .00x
+    selection_ip_2:
+        CommandLine|contains|all:
+          - http://%
+          - '%2e'
+    selection_ip_3:
+      - CommandLine|re: https?://[0-9]{1,3}\.[0-9]{1,3}\.0[0-9]{3,4}
+      - CommandLine|re: https?://[0-9]{1,3}\.0[0-9]{3,7}
+      - CommandLine|re: https?://0[0-9]{3,11}
+      - CommandLine|re: https?://(0[0-9]{1,11}\.){3}0[0-9]{1,11}
+      - CommandLine|re: https?://0[0-9]{1,11}
+      - CommandLine|re: ' [0-7]{7,13}'
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/11/06
+tags:
+  - attack.discovery
+  - DEMO

@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-06-21 19:00
+# Generated for User: demo
+# Number of Rules: 3228
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: New Root Certificate Authority Added
+id: 4bb80281-3756-4ec8-a88e-523c5a6fda9e
+status: test
+description: Detects newly added root certificate authority to an AzureAD tenant to
+    support certificate based authentication.
+author: Harjot Shah Singh, '@cyb3rjy0t'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/03/26 15:27:21
+references:
+  - https://posts.specterops.io/passwordless-persistence-and-privilege-escalation-in-azure-98a01310be3f
+  - https://goodworkaround.com/2022/02/15/digging-into-azure-ad-certificate-based-authentication/
+logsource:
+    product: azure
+    service: auditlogs
+detection:
+    condition: selection
+    selection:
+        OperationName: Set Company Information
+        TargetResources.modifiedProperties.newValue|contains: TrustedCAsForPasswordlessAuth
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1556
+  - DEMO

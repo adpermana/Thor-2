@@ -1,0 +1,30 @@
+title: Disable Process Mitigation
+id: 3ffea09f-df18-43b7-936f-491381079791
+status: experimental
+description: Detects usage of the Set-ProcessMitigation cmdlet to disable process mitigation via commandline.
+author: Nasreddine Bencherchali
+references:
+    - https://docs.microsoft.com/th-th/powershell/module/processmitigations/set-processmitigation?view=windowsserver2019-ps
+    - https://docs.microsoft.com/en-us/powershell/module/processmitigations/set-processmitigation?view=windowsserver2022-ps
+date: 2022/05/20
+tags:
+    - attack.execution
+    - attack.t1059.001
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_cmdlet:
+        CommandLine|contains: 'Set-ProcessMitigation '
+    selection_params_disable:
+        CommandLine|contains:
+            - ' -Disable '
+            - ' -d '
+    selection_params_system:
+        CommandLine|contains:
+            - ' -System '
+            - ' -s '
+    condition: all of selection*
+falsepositives:
+    - Unknown
+level: high

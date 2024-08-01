@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Advpack Call Via Rundll32.EXE
+id: a1473adb-5338-4a20-b4c3-126763e2d3d3
+status: experimental
+description: Detects execution of "rundll32" calling "advpack.dll" with potential
+    obfuscated ordinal calls in order to leverage the "RegisterOCX" function
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/17 15:55:11
+references:
+  - https://twitter.com/Hexacorn/status/1224848930795552769
+  - http://www.hexacorn.com/blog/2020/02/05/stay-positive-lolbins-not/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli_dll:
+        CommandLine|contains: advpack
+    selection_cli_ordinal:
+      - CommandLine|contains|all:
+          - '#+'
+          - "12"
+      - CommandLine|contains: '#-'
+    selection_img:
+      - Image|endswith: \rundll32.exe
+      - OriginalFileName: RUNDLL32.EXE
+      - CommandLine|contains: rundll32
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - DEMO

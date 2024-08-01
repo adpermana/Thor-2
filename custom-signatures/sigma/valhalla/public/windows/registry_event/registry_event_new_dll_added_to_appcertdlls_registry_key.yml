@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: New DLL Added to AppCertDlls Registry Key
+id: 6aa1d992-5925-4e9f-a49b-845e51d1de01
+status: test
+description: |
+    Dynamic-link libraries (DLLs) that are specified in the AppCertDLLs value in the Registry key can be abused to obtain persistence and privilege escalation
+    by causing a malicious DLL to be loaded and run in the context of separate processes on the computer.
+author: Ilyas Ochkov, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/25 16:07:11
+references:
+  - http://www.hexacorn.com/blog/2013/01/19/beyond-good-ol-run-key-part-3/
+  - https://eqllib.readthedocs.io/en/latest/analytics/14f90406-10a0-4d36-a672-31cabe149f2f.html
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - TargetObject: HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\AppCertDlls
+      - NewName: HKLM\SYSTEM\CurentControlSet\Control\Session Manager\AppCertDlls
+fields:
+  - EventID
+  - Image
+  - TargetObject
+  - NewName
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.persistence
+  - attack.t1546.009
+  - DEMO

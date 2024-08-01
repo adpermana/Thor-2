@@ -1,0 +1,26 @@
+title: Suspicious LockBit 3.0 Ransomware via Detected of Associated Command Line
+Parameters (via process_creation)
+id: 6f6a3a76-45fb-4ce3-b81a-8de3b349655b
+status: stable
+description: This rule detects execution activity of LockBit 3.0 Ransomware.
+author: vinzel
+references:
+- https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-325a
+tags:
+- attack.execution
+- attack.persistence
+- attack.t1053
+logsource:
+ category: process_creation
+ product: windows
+detection:
+ selection:
+ Image|endswith: \rundll32.exe
+ CommandLine|contains|all:
+ - '\Users\Public'
+ - 'adobelib.dll'
+ - 'main'
+ condition: selection
+falsepositives:
+- Unknown
+level: high

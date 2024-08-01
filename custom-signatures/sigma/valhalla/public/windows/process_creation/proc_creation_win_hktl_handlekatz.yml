@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - HandleKatz LSASS Dumper Execution
+id: ca621ba5-54ab-4035-9942-d378e6fcde3c
+status: test
+description: Detects the use of HandleKatz, a tool that demonstrates the usage of
+    cloned handles to Lsass in order to create an obfuscated memory dump of the same
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/18 16:58:31
+references:
+  - https://github.com/codewhitesec/HandleKatz
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_flags:
+        CommandLine|contains:
+          - .dmp
+          - lsass
+          - .obf
+          - dump
+        CommandLine|contains|all:
+          - '--pid:'
+          - '--outfile:'
+    selection_loader_img:
+        CommandLine|contains: '--pid:'
+        Image|endswith: \loader.exe
+    selection_loader_imphash:
+      - Imphash:
+          - 38d9e015591bbfd4929e0d0f47fa0055
+          - 0e2216679ca6e1094d63322e3412d650
+      - Hashes:
+          - IMPHASH=38D9E015591BBFD4929E0D0F47FA0055
+          - IMPHASH=0E2216679CA6E1094D63322E3412D650
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/02/04
+tags:
+  - attack.credential_access
+  - attack.t1003.001
+  - DEMO

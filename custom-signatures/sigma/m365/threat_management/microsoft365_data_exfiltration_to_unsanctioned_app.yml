@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Data Exfiltration to Unsanctioned Apps
+id: 2b669496-d215-47d8-bd9a-f4a45bf07cda
+status: test
+description: Detects when a Microsoft Cloud App Security reported when a user or IP
+    address uses an app that is not sanctioned to perform an activity that resembles
+    an attempt to exfiltrate information from your organization.
+author: Austin Songer @austinsonger
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/23 16:11:31
+references:
+  - https://docs.microsoft.com/en-us/cloud-app-security/anomaly-detection-policy
+  - https://docs.microsoft.com/en-us/cloud-app-security/policy-template-reference
+logsource:
+    product: m365
+    service: threat_management
+detection:
+    condition: selection
+    selection:
+        eventName: Data exfiltration to unsanctioned apps
+        eventSource: SecurityComplianceCenter
+        status: success
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.exfiltration
+  - attack.t1537
+  - DEMO

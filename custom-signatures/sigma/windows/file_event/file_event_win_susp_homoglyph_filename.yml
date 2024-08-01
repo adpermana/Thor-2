@@ -1,0 +1,91 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Homoglyph Attack Using Lookalike Characters in Filename
+id: 4f1707b1-b50b-45b4-b5a2-3978b5a5d0d6
+status: experimental
+description: |
+    Detects the presence of unicode characters which are homoglyphs, or identical in appearance, to ASCII letter characters.
+    This is used as an obfuscation and masquerading techniques. Only "perfect" homoglyphs are included; these are characters that
+    are indistinguishable from ASCII characters and thus may make excellent candidates for homoglyph attack characters.
+author: Micah Babinski, @micahbabinski
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/05/08 23:13:21
+references:
+  - https://redcanary.com/threat-detection-report/threats/socgholish/#threat-socgholish
+  - http://www.irongeek.com/homoglyph-attack-generator.php
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_lower:
+        TargetFilename|contains:
+          - а
+          - е
+          - о
+          - р
+          - с
+          - х
+          - ѕ
+          - і
+          - ӏ
+          - ј
+          - һ
+          - ԁ
+          - ԛ
+          - ԝ
+          - ο
+    selection_upper:
+        TargetFilename|contains:
+          - А
+          - В
+          - Е
+          - К
+          - М
+          - Н
+          - О
+          - Р
+          - С
+          - Т
+          - Х
+          - Ѕ
+          - І
+          - Ј
+          - Ү
+          - Ӏ
+          - Ԍ
+          - Ԛ
+          - Ԝ
+          - Α
+          - Β
+          - Ε
+          - Ζ
+          - Η
+          - Ι
+          - Κ
+          - Μ
+          - Ν
+          - Ο
+          - Ρ
+          - Τ
+          - Υ
+          - Χ
+falsepositives: File names with legitimate Cyrillic text. Will likely require tuning
+    (or not be usable) in countries where these alphabets are in use.
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1036
+  - attack.t1036.003
+  - DEMO

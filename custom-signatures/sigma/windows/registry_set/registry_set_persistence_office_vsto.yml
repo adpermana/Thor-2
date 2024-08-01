@@ -1,0 +1,59 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Persistence Via Visual Studio Tools for Office
+id: 9d15044a-7cfe-4d23-8085-6ebc11df7685
+status: experimental
+description: Detects persistence via Visual Studio Tools for Office (VSTO) add-ins
+    in Office applications.
+author: Bhabesh Raj
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/01/10 20:46:11
+references:
+  - https://twitter.com/_vivami/status/1347925307643355138
+  - https://vanmieghem.io/stealth-outlook-persistence/
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection and not 1 of filter_*
+    filter_avg:
+        Image: C:\Program Files\AVG\Antivirus\RegSvr.exe
+        TargetObject|contains: \Microsoft\Office\Outlook\Addins\Antivirus.AsOutExt\
+    filter_image:
+        Image|endswith:
+          - \msiexec.exe
+          - \regsvr32.exe
+    filter_office:
+        Image|endswith:
+          - \excel.exe
+          - \integrator.exe
+          - \OfficeClickToRun.exe
+          - \winword.exe
+          - \visio.exe
+    filter_teams:
+        Image|endswith: \Teams.exe
+    selection:
+        TargetObject|contains:
+          - \Software\Microsoft\Office\Outlook\Addins\
+          - \Software\Microsoft\Office\Word\Addins\
+          - \Software\Microsoft\Office\Excel\Addins\
+          - \Software\Microsoft\Office\Powerpoint\Addins\
+          - \Software\Microsoft\VSTO\Security\Inclusion\
+falsepositives: Legitimate Addin Installation
+level: medium
+customer: 'demo'
+modified: 2023/08/28
+tags:
+  - attack.t1137.006
+  - attack.persistence
+  - DEMO

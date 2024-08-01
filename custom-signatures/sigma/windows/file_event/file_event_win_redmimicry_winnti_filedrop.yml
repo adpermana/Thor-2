@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Winnti Dropper Activity
+id: 130c9e58-28ac-4f83-8574-0a4cc913b97e
+status: test
+description: Detects files dropped by Winnti as described in RedMimicry Winnti playbook
+author: Alexander Rausch
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/06/24 15:01:41
+references:
+  - https://redmimicry.com/posts/redmimicry-winnti/#dropper
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetFilename|endswith:
+          - \gthread-3.6.dll
+          - \sigcmm-2.4.dll
+          - \Windows\Temp\tmp.bat
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/01/05
+tags:
+  - attack.defense_evasion
+  - attack.t1027
+  - DEMO

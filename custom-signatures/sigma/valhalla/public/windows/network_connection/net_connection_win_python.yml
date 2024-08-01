@@ -1,0 +1,56 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Python Initiated Connection
+id: bef0bc5a-b9ae-425d-85c6-7b2d705980c6
+status: experimental
+description: Detects a Python process initiating a network connection. While this
+    often relates to package installation, it can also indicate a potential malicious
+    script communicating with a C&C server.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/12/10 13:24:51
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1046/T1046.md#atomic-test-4---port-scan-using-python
+  - https://pypi.org/project/scapy/
+logsource:
+    category: network_connection
+    product: windows
+    definition: 'Requirements: Field enrichment is required for the filters to work.
+        As field such as CommandLine and ParentImage are not available by default
+        on this event type'
+detection:
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+    filter_main_local_communication:
+        DestinationIp: 127.0.0.1
+        SourceIp: 127.0.0.1
+    filter_optional_conda:
+        CommandLine|contains|all:
+          - :\ProgramData\Anaconda3\Scripts\conda-script.py
+          - update
+        ParentImage: C:\ProgramData\Anaconda3\Scripts\conda.exe
+    filter_optional_conda_jupyter_notebook:
+        CommandLine|contains: C:\ProgramData\Anaconda3\Scripts\jupyter-notebook-script.py
+        ParentImage: C:\ProgramData\Anaconda3\python.exe
+    selection:
+        Image|contains: python
+        Initiated: "true"
+falsepositives: Legitimate python scripts using the socket library or similar will
+    trigger this. Apply additional filters and perform an initial baseline before
+    deploying.
+level: medium
+customer: 'demo'
+modified: 2023/09/07
+tags:
+  - attack.discovery
+  - attack.t1046
+  - DEMO

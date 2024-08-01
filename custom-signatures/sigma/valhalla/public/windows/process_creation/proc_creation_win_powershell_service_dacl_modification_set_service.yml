@@ -1,0 +1,56 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Service DACL Modification Via Set-Service Cmdlet
+id: a95b9b42-1308-4735-a1af-abb1c5e6f5ac
+related:
+  - type: derived
+    id: 99cf1e02-00fb-4c0d-8375-563f978dfd37
+status: test
+description: Detects suspicious DACL modifications via the "Set-Service" cmdlet using
+    the "SecurityDescriptorSddl" flag (Only available with PowerShell 7) that can
+    be used to hide services or make them unstopable
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/10/18 21:10:11
+references:
+  - https://www.sans.org/blog/red-team-tactics-hiding-windows-services/
+  - https://docs.microsoft.com/pt-br/windows/win32/secauthz/sid-strings
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_img:
+      - Image|endswith: \pwsh.exe
+      - OriginalFileName: pwsh.dll
+    selection_sddl_flag:
+        CommandLine|contains:
+          - '-SecurityDescriptorSddl '
+          - '-sd '
+    selection_set_service:
+        CommandLine|contains:
+          - ;;;IU
+          - ;;;SU
+          - ;;;BA
+          - ;;;SY
+          - ;;;WD
+        CommandLine|contains|all:
+          - 'Set-Service '
+          - D;;
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.persistence
+  - attack.t1543.003
+  - DEMO

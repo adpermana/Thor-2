@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: GAC DLL Loaded Via Office Applications
+id: 90217a70-13fc-48e4-b3db-0d836c5824ac
+status: test
+description: Detects any GAC DLL being loaded by an Office Product
+author: Antonlovesdnb
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/02/19 15:09:51
+references:
+  - https://medium.com/threatpunter/detecting-adversary-tradecraft-with-image-load-event-logging-and-eql-8de93338c16
+logsource:
+    category: image_load
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith:
+          - \excel.exe
+          - \mspub.exe
+          - \onenote.exe
+          - \onenoteim.exe
+          - \outlook.exe
+          - \powerpnt.exe
+          - \winword.exe
+        ImageLoaded|startswith: C:\Windows\Microsoft.NET\assembly\GAC_MSIL
+falsepositives: Legitimate macro usage. Add the appropriate filter according to your
+    environment
+level: high
+customer: 'demo'
+modified: 2023/02/10
+tags:
+  - attack.execution
+  - attack.t1204.002
+  - DEMO

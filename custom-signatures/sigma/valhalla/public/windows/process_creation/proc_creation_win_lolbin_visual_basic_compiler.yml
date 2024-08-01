@@ -1,0 +1,38 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Visual Basic Command Line Compiler Usage
+id: 7b10f171-7f04-47c7-9fa2-5be43c76e535
+status: test
+description: Detects successful code compilation via Visual Basic Command Line Compiler
+    that utilizes Windows Resource to Object Converter.
+author: Ensar Şamil, @sblmsrsn, @oscd_initiative
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/07 16:15:31
+references:
+  - https://lolbas-project.github.io/lolbas/Binaries/Vbc/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith: \cvtres.exe
+        ParentImage|endswith: \vbc.exe
+falsepositives: Utilization of this tool should not be seen in enterprise environment
+level: high
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.defense_evasion
+  - attack.t1027.004
+  - DEMO

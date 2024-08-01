@@ -1,0 +1,84 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Double Extension File Execution
+id: 1cdd9a09-06c9-4769-99ff-626e2b3991b8
+related:
+  - type: similar
+    id: 5e6a80c8-2d45-4633-9ef4-fa2671a39c5c
+status: stable
+description: Detects suspicious use of an .exe extension after a non-executable file
+    extension like .pdf.exe, a set of spaces or underlines to cloak the executable
+    file in spear phishing campaigns
+author: Florian Roth (Nextron Systems), @blu3_team (idea), Nasreddine Bencherchali
+    (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/06/26 17:23:11
+references:
+  - https://blu3-team.blogspot.com/2019/06/misleading-extensions-xlsexe-docexe.html
+  - https://twitter.com/blackorbird/status/1140519090961825792
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - .doc.exe
+          - .docx.exe
+          - .xls.exe
+          - .xlsx.exe
+          - .ppt.exe
+          - .pptx.exe
+          - .rtf.exe
+          - .pdf.exe
+          - .txt.exe
+          - '      .exe'
+          - ______.exe
+          - .doc.js
+          - .docx.js
+          - .xls.js
+          - .xlsx.js
+          - .ppt.js
+          - .pptx.js
+          - .rtf.js
+          - .pdf.js
+          - .txt.js
+        Image|endswith:
+          - .doc.exe
+          - .docx.exe
+          - .xls.exe
+          - .xlsx.exe
+          - .ppt.exe
+          - .pptx.exe
+          - .rtf.exe
+          - .pdf.exe
+          - .txt.exe
+          - '      .exe'
+          - ______.exe
+          - .doc.js
+          - .docx.js
+          - .xls.js
+          - .xlsx.js
+          - .ppt.js
+          - .pptx.js
+          - .rtf.js
+          - .pdf.js
+          - .txt.js
+falsepositives: Unknown
+level: critical
+customer: 'demo'
+modified: 2023/02/28
+tags:
+  - attack.initial_access
+  - attack.t1566.001
+  - DEMO

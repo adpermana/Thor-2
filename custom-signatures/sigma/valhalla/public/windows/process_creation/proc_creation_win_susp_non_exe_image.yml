@@ -1,0 +1,94 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Execution of Suspicious File Type Extension
+id: c09dad97-1c78-4f71-b127-7edb2b8e491a
+status: experimental
+description: |
+    Detects whether the image specified in a process creation event doesn't refer to an ".exe" (or other known executable extension) file. This can be caused by process ghosting or other unorthodox methods to start a process.
+    This rule might require some initial baselining to align with some third party tooling in the user environment.
+author: Max Altgelt (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/12/09 17:33:11
+references:
+  - https://pentestlaboratories.com/2021/12/08/process-ghosting/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: not known_image_extension and not 1 of filter_main_* and not 1 of filter_optional_*
+    filter_main_deleted:
+        Image|contains: :\$Extend\$Deleted\
+    filter_main_driver_store:
+        Image|contains: :\Windows\System32\DriverStore\FileRepository\
+    filter_main_empty:
+        Image:
+          - '-'
+          - ""
+    filter_main_image:
+        Image:
+          - System
+          - Registry
+          - MemCompression
+          - vmmem
+    filter_main_msi_installers:
+        Image|contains: :\Windows\Installer\MSI
+    filter_main_msi_rollbackfiles:
+        Image|contains: :\Config.Msi\
+        Image|endswith:
+          - .rbf
+          - .rbs
+    filter_main_null:
+        Image: []
+    filter_main_windows_temp:
+      - ParentImage|contains: :\Windows\Temp\
+      - Image|contains: :\Windows\Temp\
+    filter_optional_avira:
+        ParentImage|contains: :\ProgramData\Avira\
+    filter_optional_docker:
+        Image|endswith: com.docker.service
+        ParentImage: C:\Windows\System32\services.exe
+    filter_optional_firefox:
+        Image|contains: :\Program Files\Mozilla Firefox\
+    filter_optional_lzma_exe:
+        Image|endswith: \LZMA_EXE
+    filter_optional_myq_server:
+        Image|endswith:
+          - :\Program Files (x86)\MyQ\Server\pcltool.dll
+          - :\Program Files\MyQ\Server\pcltool.dll
+    filter_optional_nvidia:
+        Image|contains: NVIDIA\NvBackend\
+        Image|endswith: .dat
+    filter_optional_winpakpro:
+        Image|contains:
+          - :\Program Files (x86)\WINPAKPRO\
+          - :\Program Files\WINPAKPRO\
+        Image|endswith: .ngn
+    filter_optional_wsl:
+        Image|contains|all:
+          - \AppData\Local\Packages\
+          - \LocalState\rootfs\
+    known_image_extension:
+        Image|endswith:
+          - .bin
+          - .cgi
+          - .com
+          - .exe
+          - .scr
+          - .tmp
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2023/11/23
+tags:
+  - attack.defense_evasion
+  - DEMO

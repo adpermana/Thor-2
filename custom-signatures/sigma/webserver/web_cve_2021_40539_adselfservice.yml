@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: ADSelfService Exploitation
+id: 6702b13c-e421-44cc-ab33-42cc25570f11
+status: test
+description: Detects suspicious access to URLs that was noticed in cases in which
+    attackers exploitated the ADSelfService vulnerability CVE-2021-40539
+author: Tobias Michalski (Nextron Systems), Max Altgelt (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/09/20 13:06:41
+references:
+  - https://us-cert.cisa.gov/ncas/alerts/aa21-259a
+logsource:
+    category: webserver
+detection:
+    condition: selection
+    selection:
+        cs-uri-query|contains:
+          - /help/admin-guide/Reports/ReportGenerate.jsp
+          - /ServletApi/../RestApi/LogonCustomization
+          - /ServletApi/../RestAPI/Connection
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/01/02
+tags:
+  - cve.2021.40539
+  - detection.emerging_threats
+  - attack.initial_access
+  - attack.t1190
+  - DEMO

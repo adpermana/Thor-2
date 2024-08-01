@@ -1,0 +1,27 @@
+title: Impacket WmiPersist Event Filter Creation
+id: 53e20c0e-f547-4a60-9861-46dcbf302a0d
+status: test
+description: Detects suspicious EventFilter name prefix used by Impacket WMIPersist
+references:
+    - https://github.com/SecureAuthCorp/impacket/blob/3c6713e309cae871d685fa443d3e21b7026a2155/examples/wmipersist.py#L155
+author: Nasreddine Bencherchali
+date: 2022/11/24
+modified: 2023/03/29
+tags:
+    - attack.execution
+    - attack.t1047
+logsource:
+    product: windows
+    service: wmi
+detection:
+    selection:
+        # For an example see reference
+        EventID: 11
+        Operation|contains|all:
+            - 'IWbemServices::PutInstance'
+            - 'ActiveScriptEventConsumer'
+            - '__EventFilter.Name=\"EF_'
+    condition: selection
+falsepositives:
+    - Unknown
+level: high

@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PowerShell Profile Modification
+id: b5b78988-486d-4a80-b991-930eff3ff8bf
+status: test
+description: Detects the creation or modification of a powershell profile which could
+    indicate suspicious activity as the profile can be used as a mean of persistence
+author: HieuTT35, Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/24 14:28:41
+references:
+  - https://www.welivesecurity.com/2019/05/29/turla-powershell-usage/
+  - https://persistence-info.github.io/Data/powershellprofile.html
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetFilename|endswith:
+          - \Microsoft.PowerShell_profile.ps1
+          - \PowerShell\profile.ps1
+          - \Program Files\PowerShell\7-preview\profile.ps1
+          - \Program Files\PowerShell\7\profile.ps1
+          - \Windows\System32\WindowsPowerShell\v1.0\profile.ps1
+          - \WindowsPowerShell\profile.ps1
+falsepositives: System administrator creating Powershell profile manually
+level: medium
+customer: 'demo'
+modified: 2023/10/23
+tags:
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1546.013
+  - DEMO

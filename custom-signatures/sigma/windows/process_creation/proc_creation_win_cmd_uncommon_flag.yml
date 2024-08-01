@@ -1,0 +1,25 @@
+title: Cmd.Exe Execution With Uncommon Flag
+id: 491adfaf-173b-4e26-b6d8-0b0aa25cb4b6
+status: experimental
+description: Detect use of "/R" flag which is the same as "/C". This flag is often used for obfsucation and should be investigated
+references:
+    - https://github.com/r00t-3xp10it/hacking-material-books/blob/43cb1e1932c16ff1f58b755bc9ab6b096046853f/obfuscation/simple_obfuscation.md
+author: Nasreddine Bencherchali
+date: 2022/11/18
+modified: 2022/12/09
+tags:
+    - attack.execution
+    - attack.t1059.003
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        - OriginalFileName: 'Cmd.exe'
+        - Image|endswith: '\cmd.exe'
+    selection_cli:
+        CommandLine|contains: '.exe /r '  # had to include the .exe because of FPs : cmd.exe /C gpresult /r /SCOPE COMPUTER
+    condition: all of selection_*
+falsepositives:
+    - Legitimate use
+level: high

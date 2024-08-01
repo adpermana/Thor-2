@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Account Created And Deleted Within A Close Time Frame
+id: 6f583da0-3a90-4566-a4ed-83c09fe18bbf
+status: test
+description: Detects when an account was created and deleted in a short period of
+    time.
+author: Mark Morowczynski '@markmorow', MikeDuddington, '@dudders1', Tim Shelton
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/11 19:07:11
+references:
+  - https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/security-operations-user-accounts#short-lived-accounts
+logsource:
+    product: azure
+    service: auditlogs
+detection:
+    condition: selection
+    selection:
+        Status: Success
+        properties.message:
+          - Add user
+          - Delete user
+falsepositives: Legit administrative action
+level: high
+customer: 'demo'
+modified: 2022/08/18
+tags:
+  - attack.defense_evasion
+  - attack.t1078
+  - DEMO

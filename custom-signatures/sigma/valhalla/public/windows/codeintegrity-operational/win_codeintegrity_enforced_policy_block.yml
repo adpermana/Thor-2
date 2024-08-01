@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: CodeIntegrity - Blocked Image/Driver Load For Policy Violation
+id: e4be5675-4a53-426a-8c81-a8bb2387e947
+status: experimental
+description: Detects blocked load events that did not meet the authenticode signing
+    level requirements or violated the code integrity policy.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/11/10 21:50:11
+references:
+  - https://twitter.com/wdormann/status/1590434950335320065
+  - https://github.com/MicrosoftDocs/windows-itpro-docs/blob/40fe118976734578f83e5e839b9c63ae7a4af82d/windows/security/threat-protection/windows-defender-application-control/event-id-explanations.md#windows-codeintegrity-operational-log
+  - https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/event-id-explanations
+logsource:
+    product: windows
+    service: codeintegrity-operational
+detection:
+    condition: selection
+    selection:
+        EventID: "3077"
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/06/07
+tags:
+  - attack.privilege_escalation
+  - attack.t1543
+  - DEMO

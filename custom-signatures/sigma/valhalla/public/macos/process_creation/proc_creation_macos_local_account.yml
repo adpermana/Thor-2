@@ -1,0 +1,56 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Local System Accounts Discovery - MacOs
+id: ddf36b67-e872-4507-ab2e-46bda21b842c
+status: test
+description: Detects enumeration of local systeam accounts on MacOS
+author: Alejandro Ortuno, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/08 15:58:41
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1087.001/T1087.001.md
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    condition: 1 of selection*
+    selection_1:
+        CommandLine|contains|all:
+          - list
+          - /users
+        Image|endswith: /dscl
+    selection_2:
+        CommandLine|contains|all:
+          - -q
+          - user
+        Image|endswith: /dscacheutil
+    selection_3:
+        CommandLine|contains: '''x:0:'''
+    selection_4:
+        CommandLine|contains:
+          - /etc/passwd
+          - /etc/sudoers
+        Image|endswith: /cat
+    selection_5:
+        Image|endswith: /id
+    selection_6:
+        CommandLine|contains: -u
+        Image|endswith: /lsof
+falsepositives: Legitimate administration activities
+level: low
+customer: 'demo'
+modified: 2022/11/27
+tags:
+  - attack.discovery
+  - attack.t1087.001
+  - DEMO

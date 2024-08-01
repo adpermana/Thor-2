@@ -1,0 +1,38 @@
+title: Potential Suspicious UEFI Bootloader Changes
+id: b9bb0bc0-3fbe-4104-9a1c-7982f3052939
+status: experimental
+description: Detects suspicious UEFI bootloader changes via bootloader registry key modification
+references:
+    - https://www.welivesecurity.com/2023/03/01/blacklotus-uefi-bootkit-myth-confirmed/
+author: Nasreddine Bencherchali (Nextron Systems)
+date: 2023/03/17
+tags:
+    - attack.defense_evasion
+    - attack.privilege_escalation
+logsource:
+    product: windows
+    category: registry_set
+detection:
+    selection:
+        EventType: SetValue
+        TargetObject|contains|all:
+            - '\BCD00000000\Objects\'
+            - '\Elements\12000002\Element'
+    filter_main_generic:
+        Details|startswith:
+            - '\WINDOWS\System32\'
+            - '\EFI\Microsoft\Boot\'
+            - '\EFI\Boot\'
+        Details:
+            - '\EFI\Boot\BootX64.efi'
+            - '\EFI\Microsoft\Boot\memtest.efi'
+            - '\EFI\Microsoft\Boot\BOOTMGFW.EFI'
+            - '\WINDOWS\system32\winresume.efi'
+            - '\WINDOWS\system32\winload.efi'
+            - '\Windows\system32\winresume.exe'
+    filter_optional_ubuntu:
+        Details: '\EFI\ubuntu\shimx64.efi' # If you have Ubuntu installed
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+falsepositives:
+    - Some false positives may occur with addtional distrubution installed
+level: medium # TODO: Increase after more testing

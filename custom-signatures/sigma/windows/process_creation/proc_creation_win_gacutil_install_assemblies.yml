@@ -1,0 +1,35 @@
+title: New Assemblies Installed Via Gacutil.EXE
+id: 7e73ac9d-0178-4e77-a68c-ce83aba8461d
+related:
+    - id: 1b943dd1-5daf-43b2-8daf-81245a953bd5
+      type: derived
+status: experimental
+description: Detects the addition of new assemblies to the global assembly cache (GAC) via the the "Gacutil" utility
+references:
+    - https://www.microsoft.com/en-us/security/blog/2022/07/26/malicious-iis-extensions-quietly-open-persistent-backdoors-into-servers/
+    - https://www.microsoft.com/en-us/security/blog/2021/11/08/threat-actor-dev-0322-exploiting-zoho-manageengine-adselfservice-plus/
+    - https://www.microsoft.com/en-us/security/blog/2022/12/12/iis-modules-the-evolution-of-web-shells-and-how-to-detect-them/
+    - https://learn.microsoft.com/en-us/dotnet/framework/tools/gacutil-exe-gac-tool
+    - https://learn.microsoft.com/en-us/dotnet/framework/app-domains/gac
+author: Nasreddine Bencherchali (Nextron Systems)
+date: 2023/02/01
+tags:
+    - attack.execution
+    - attack.t1059
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        - Image|endswith: '\gacutil.exe'
+        - OriginalFileName: 'gacutil.exe'
+    selection_cli:
+        CommandLine|contains:
+            - ' /i '
+            - ' -i '
+            - ' /il '
+            - ' -il '
+    condition: all of selection_*
+falsepositives:
+    - Legitimate usage
+level: medium

@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Ufw Force Stop Using Ufw-Init
+id: 84c9e83c-599a-458a-a0cb-0ecce44e807a
+status: test
+description: Detects attempts to force stop the ufw using ufw-init
+author: Joseliyo Sanchez, @Joseliyo_Jstnk
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/18 13:17:21
+references:
+  - https://blogs.blackberry.com/
+  - https://twitter.com/Joseliyo_Jstnk/status/1620131033474822144
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    condition: 1 of selection_*
+    selection_init:
+        CommandLine|contains|all:
+          - -ufw-init
+          - force-stop
+    selection_ufw:
+        CommandLine|contains|all:
+          - ufw
+          - disable
+falsepositives: Network administrators
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1562.004
+  - DEMO

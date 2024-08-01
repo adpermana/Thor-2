@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential PsExec Remote Execution
+id: ea011323-7045-460b-b2d7-0f7442ea6b38
+status: test
+description: Detects potential psexec command that initiate execution on a remote
+    systems via common commandline flags used by the utility
+author: Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/02/28 14:52:01
+references:
+  - https://docs.microsoft.com/en-us/sysinternals/downloads/psexec
+  - https://www.poweradmin.com/paexec/
+  - https://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains|all:
+          - accepteula
+          - ' -u '
+          - ' -p '
+          - ' \\\\'
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.resource_development
+  - attack.t1587.001
+  - DEMO

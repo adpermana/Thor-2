@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Curl Change User Agents - Linux
+id: b86d356d-6093-443d-971c-9b07db583c68
+related:
+  - type: derived
+    id: 3286d37a-00fd-41c2-a624-a672dcd34e60
+status: test
+description: Detects a suspicious curl process start on linux with set useragent options
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/15 16:42:51
+references:
+  - https://curl.se/docs/manpage.html
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - ' -A '
+          - ' --user-agent '
+        Image|endswith: /curl
+falsepositives:
+  - Scripts created by developers and admins
+  - Administrative activity
+level: medium
+customer: 'demo'
+tags:
+  - attack.command_and_control
+  - attack.t1071.001
+  - DEMO

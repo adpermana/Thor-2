@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Microsoft Defender Tamper Protection Trigger
+id: 49e5bc24-8b86-49f1-b743-535f332c2856
+status: stable
+description: Detects blocked attempts to change any of Defender's settings such as
+    "Real Time Monitoring" and "Behavior Monitoring"
+author: Bhabesh Raj, Nasreddine Bencherchali
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/07/05 17:53:11
+references:
+  - https://bhabeshraj.com/post/tampering-with-microsoft-defenders-tamper-protection
+  - https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/troubleshoot-microsoft-defender-antivirus?view=o365-worldwide
+logsource:
+    product: windows
+    service: windefend
+detection:
+    condition: selection
+    selection:
+        EventID: "5013"
+        Value|endswith:
+          - \Windows Defender\DisableAntiSpyware
+          - \Windows Defender\DisableAntiVirus
+          - \Windows Defender\Scan\DisableArchiveScanning
+          - \Windows Defender\Scan\DisableScanningNetworkFiles
+          - \Real-Time Protection\DisableRealtimeMonitoring
+          - \Real-Time Protection\DisableBehaviorMonitoring
+          - \Real-Time Protection\DisableIOAVProtection
+          - \Real-Time Protection\DisableScriptScanning
+falsepositives: Administrator might try to disable defender features during testing
+    (must be investigated)
+level: high
+customer: 'demo'
+modified: 2022/12/06
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+  - DEMO

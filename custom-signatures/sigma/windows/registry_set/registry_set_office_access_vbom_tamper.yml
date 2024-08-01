@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Trust Access Disable For VBApplications
+id: 1a5c46e9-f32f-42f7-b2bc-6e9084db7fbf
+related:
+  - type: obsoletes
+    id: a166f74e-bf44-409d-b9ba-ea4b2dd8b3cd
+status: test
+description: Detects registry changes to Microsoft Office "AccessVBOM" to a value
+    of "1" which disables trust access for VBA on the victim machine and lets attackers
+    execute malicious macros without any Microsoft Office warnings.
+author: Trent Liffick (@tliffick), Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/05/22 16:10:21
+references:
+  - https://twitter.com/inversecos/status/1494174785621819397
+  - https://www.mcafee.com/blogs/other-blogs/mcafee-labs/zloader-with-a-new-infection-technique/
+  - https://securelist.com/scarcruft-surveilling-north-korean-defectors-and-human-rights-activists/105074/
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Details: DWORD (0x00000001)
+        TargetObject|endswith: \Security\AccessVBOM
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.defense_evasion
+  - attack.t1112
+  - DEMO

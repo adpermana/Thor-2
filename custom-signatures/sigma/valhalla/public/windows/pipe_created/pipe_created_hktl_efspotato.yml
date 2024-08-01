@@ -1,0 +1,50 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - EfsPotato Named Pipe Creation
+id: 637f689e-b4a5-4a86-be0e-0100a0a33ba2
+status: experimental
+description: Detects the pattern of a pipe name as used by the hack tool EfsPotato
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/23 16:02:31
+references:
+  - https://twitter.com/SBousseaden/status/1429530155291193354?s=20
+  - https://github.com/zcgonvh/EfsPotato
+logsource:
+    category: pipe_created
+    product: windows
+    definition: Note that you have to configure logging for Named Pipe Events in Sysmon
+        config (Event ID 17 and Event ID 18). The basic configuration is in popular
+        sysmon configuration (https://github.com/SwiftOnSecurity/sysmon-config), but
+        it is worth verifying. You can also use other repo, e.g. https://github.com/Neo23x0/sysmon-config,
+        https://github.com/olafhartong/sysmon-modular. How to test detection? You
+        can check powershell script from this site https://svch0st.medium.com/guide-to-named-pipes-and-hunting-for-cobalt-strike-pipes-dc46b2c5f575
+detection:
+    condition: selection and not 1 of filter_optional_*
+    filter_optional_ctx:
+        PipeName|contains: \CtxShare
+    filter_optional_default:
+        PipeName|startswith: \pipe\
+    selection:
+        PipeName|contains:
+          - \pipe\
+          - \pipe\srvsvc
+falsepositives: \pipe\LOCAL\Monitorian
+level: high
+customer: 'demo'
+modified: 2023/12/21
+tags:
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - attack.t1055
+  - DEMO

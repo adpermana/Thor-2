@@ -1,0 +1,69 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Execution Of PDQDeployRunner
+id: 12b8e9f5-96b2-41e1-9a42-8c6779a5c184
+related:
+  - type: similar
+    id: d679950c-abb7-43a6-80fb-2a480c4fc450
+status: test
+description: Detects suspicious execution of "PDQDeployRunner" which is part of the
+    PDQDeploy service stack that is responsible for executing commands and packages
+    on a remote machines
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/07/22 16:31:21
+references:
+  - https://twitter.com/malmoeb/status/1550483085472432128
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_parent:
+        ParentImage|contains: PDQDeployRunner-
+    selection_susp:
+      - Image|endswith:
+          - \wscript.exe
+          - \cscript.exe
+          - \rundll32.exe
+          - \regsvr32.exe
+          - \wmic.exe
+          - \msiexec.exe
+          - \mshta.exe
+          - \csc.exe
+          - \dllhost.exe
+          - \certutil.exe
+          - \scriptrunner.exe
+          - \bash.exe
+          - \wsl.exe
+      - Image|contains:
+          - C:\Users\Public\
+          - C:\ProgramData\
+          - C:\Windows\TEMP\
+          - \AppData\Local\Temp
+      - CommandLine|contains:
+          - 'iex '
+          - Invoke-
+          - DownloadString
+          - http
+          - ' -enc '
+          - ' -encodedcommand '
+          - FromBase64String
+          - ' -decode '
+          - ' -w hidden'
+falsepositives: Legitimate use of the PDQDeploy tool to execute these commands
+level: medium
+customer: 'demo'
+tags:
+  - attack.execution
+  - DEMO

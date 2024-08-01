@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Service Registry Key Deleted Via Reg.EXE
+id: 05b2aa93-1210-42c8-8d9a-2fcc13b284f5
+status: test
+description: Detects execution of "reg.exe" commands with the "delete" flag on services
+    registry key. Often used by attacker to remove AV software services
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/01 15:56:01
+references:
+  - https://www.virustotal.com/gui/file/2bcd5702a7565952c44075ac6fb946c7780526640d1264f692c7664c02c68465
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_delete:
+        CommandLine|contains: ' delete '
+    selection_img:
+      - Image|endswith: reg.exe
+      - OriginalFileName: reg.exe
+    selection_key:
+        CommandLine|contains: \SYSTEM\CurrentControlSet\services\
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2023/02/04
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+  - DEMO

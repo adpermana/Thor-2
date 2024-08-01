@@ -1,0 +1,52 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Suspicious Windows Feature Enabled - ProcCreation
+id: c740d4cf-a1e9-41de-bb16-8a46a4f57918
+related:
+  - type: similar
+    id: 55c925c1-7195-426b-a136-a9396800e29b
+status: test
+description: |
+    Detects usage of the built-in PowerShell cmdlet "Enable-WindowsOptionalFeature" used as a Deployment Image Servicing and Management tool.
+    Similar to DISM.exe, this cmdlet is used to enumerate, install, uninstall, configure, and update features and packages in Windows images
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/12/29 21:38:31
+references:
+  - https://docs.microsoft.com/en-us/powershell/module/dism/enable-windowsoptionalfeature?view=windowsserver2022-ps
+  - https://learn.microsoft.com/en-us/windows/win32/projfs/enabling-windows-projected-file-system
+  - https://learn.microsoft.com/en-us/windows/wsl/install-on-server
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cmd:
+        CommandLine|contains|all:
+          - Enable-WindowsOptionalFeature
+          - -Online
+          - -FeatureName
+    selection_feature:
+        CommandLine|contains:
+          - TelnetServer
+          - Internet-Explorer-Optional-amd64
+          - TFTP
+          - SMB1Protocol
+          - Client-ProjFS
+          - Microsoft-Windows-Subsystem-Linux
+falsepositives: Legitimate usage of the features listed in the rule.
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - DEMO

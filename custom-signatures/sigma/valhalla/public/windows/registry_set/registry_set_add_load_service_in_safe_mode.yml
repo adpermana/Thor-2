@@ -1,0 +1,47 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Registry Persistence via Service in Safe Mode
+id: 1547e27c-3974-43e2-a7d7-7f484fb928ec
+status: experimental
+description: Detects the modification of the registry to allow a driver or service
+    to persist in Safe Mode.
+author: frack113
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/04/04 17:45:41
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1112/T1112.md#atomic-test-33---windows-add-registry-value-to-load-service-in-safe-mode-without-network
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1112/T1112.md#atomic-test-34---windows-add-registry-value-to-load-service-in-safe-mode-with-network
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection and not 1 of filter_*
+    filter_sophos:
+        Image: C:\WINDOWS\system32\msiexec.exe
+        TargetObject:
+          - HKLM\System\CurrentControlSet\Control\SafeBoot\Minimal\SAVService\(Default)
+          - HKLM\System\CurrentControlSet\Control\SafeBoot\Network\SAVService\(Default)
+    selection:
+        Details: Service
+        TargetObject|endswith: \(Default)
+        TargetObject|startswith:
+          - HKLM\SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal\
+          - HKLM\SYSTEM\CurrentControlSet\Control\SafeBoot\Network\
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/10/27
+tags:
+  - attack.defense_evasion
+  - attack.t1564.001
+  - DEMO

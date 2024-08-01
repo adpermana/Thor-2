@@ -1,0 +1,92 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HAFNIUM Exchange Exploitation Activity
+id: bbb2dedd-a0e3-46ab-ba6c-6c82ae7a9aa7
+status: test
+description: Detects activity observed by different researchers to be HAFNIUM group
+    activity (or related) on Exchange servers
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/03/09 15:50:41
+references:
+  - https://blog.truesec.com/2021/03/07/exchange-zero-day-proxylogon-and-hafnium/
+  - https://www.microsoft.com/security/blog/2021/03/02/hafnium-targeting-exchange-servers/
+  - https://discuss.elastic.co/t/detection-and-response-for-hafnium-activity/266289/3
+  - https://twitter.com/GadixCRK/status/1369313704869834753?s=20
+  - https://twitter.com/BleepinComputer/status/1372218235949617161
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection*
+    selection_7zip:
+        CommandLine|contains|all:
+          - ' -t7z '
+          - C:\Programdata\pst
+          - \it.zip
+    selection_attrib:
+        CommandLine|contains|all:
+          - attrib
+          - ' +h '
+          - ' +s '
+          - ' +r '
+          - .aspx
+    selection_makecab_1:
+        CommandLine|contains|all:
+          - inetpub\wwwroot\
+          - .dmp.zip
+        Image|endswith: \makecab.exe
+    selection_makecab_2:
+        CommandLine|contains:
+          - Microsoft\Exchange Server\
+          - compressionmemory
+          - .gif
+        Image|endswith: \makecab.exe
+    selection_opera_1:
+        Image|endswith: Opera_browser.exe
+        ParentImage|endswith:
+          - \services.exe
+          - \svchost.exe
+    selection_opera_2:
+        Image|endswith: Users\Public\opera\Opera_browser.exe
+    selection_other:
+        CommandLine|contains:
+          - Windows\Temp\xx.bat
+          - Windows\WwanSvcdcs
+          - Windows\Temp\cw.exe
+    selection_rundll32:
+        CommandLine|contains|all:
+          - \comsvcs.dll
+          - Minidump
+          - 'full '
+          - \inetpub\wwwroot
+    selection_vsperfmon:
+      - Image|contains: \ProgramData\VSPerfMon\
+      - CommandLine|contains|all:
+          - schtasks
+          - VSPerfMon
+    selection_vssadmin:
+        CommandLine|contains|all:
+          - vssadmin list shadows
+          - Temp\__output
+falsepositives: Unlikely
+level: critical
+customer: 'demo'
+modified: 2023/03/09
+tags:
+  - attack.persistence
+  - attack.t1546
+  - attack.t1053
+  - attack.g0125
+  - detection.emerging_threats
+  - DEMO

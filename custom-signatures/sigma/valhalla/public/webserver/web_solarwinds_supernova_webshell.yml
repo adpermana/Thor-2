@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Solarwinds SUPERNOVA Webshell Access
+id: a2cee20b-eacc-459f-861d-c02e5d12f1db
+status: test
+description: Detects access to SUPERNOVA webshell as described in Guidepoint report
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/12/17 15:06:51
+references:
+  - https://www.guidepointsecurity.com/supernova-solarwinds-net-webshell-analysis/
+  - https://www.anquanke.com/post/id/226029
+logsource:
+    category: webserver
+detection:
+    condition: selection1 or selection2
+    selection1:
+        cs-uri-query|contains|all:
+          - logoimagehandler.ashx
+          - clazz
+    selection2:
+        cs-uri-query|contains: logoimagehandler.ashx
+        sc-status: "500"
+fields:
+  - client_ip
+  - response
+falsepositives: Unknown
+level: critical
+customer: 'demo'
+modified: 2023/01/02
+tags:
+  - attack.persistence
+  - attack.t1505.003
+  - detection.emerging_threats
+  - DEMO

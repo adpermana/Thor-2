@@ -1,0 +1,52 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Windows Trace ETW Session Tamper Via Logman.EXE
+id: cd1f961e-0b96-436b-b7c6-38da4583ec00
+status: test
+description: Detects the execution of "logman" utility in order to disable or delete
+    Windows trace sessions
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/02/11 20:44:41
+references:
+  - https://twitter.com/0gtweet/status/1359039665232306183?s=21
+  - https://ss64.com/nt/logman.html
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection*
+    selection_action:
+        CommandLine|contains:
+          - 'stop '
+          - 'delete '
+    selection_img:
+      - Image|endswith: \logman.exe
+      - OriginalFileName: Logman.exe
+    selection_service:
+        CommandLine|contains:
+          - Circular Kernel Context Logger
+          - EventLog-
+          - SYSMON TRACE
+          - SysmonDnsEtwSession
+falsepositives:
+  - Legitimate deactivation by administrative staff
+  - Installer tools that disable services, e.g. before log collection agent installation
+level: high
+customer: 'demo'
+modified: 2023/02/21
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+  - attack.t1070.001
+  - DEMO

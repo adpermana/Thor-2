@@ -1,0 +1,24 @@
+title: New Process Has Been Created Via WMI Call
+id: 9cbcfed8-01ed-42d0-82fe-01680c5234ab
+status: test
+description: Detects the usage of the WMI "Win32_Process" class to create processes
+references:
+    - Internal Research
+author: Nasreddine Bencherchali
+date: 2022/11/22
+modified: 2023/03/29
+tags:
+    - attack.execution
+    - attack.t1047
+logsource:
+    product: windows
+    service: wmi
+detection:
+    selection:
+        EventID: 22
+        ClassName: 'Win32_Process'
+        MethodName: 'create'
+    condition: selection
+falsepositives:
+    - Legitimate use of the WMI class to create processes. Inspect the PID of the processes initiating the command
+level: medium

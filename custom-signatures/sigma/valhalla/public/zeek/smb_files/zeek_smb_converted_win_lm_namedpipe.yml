@@ -1,0 +1,59 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: First Time Seen Remote Named Pipe - Zeek
+id: 021310d9-30a6-480a-84b7-eaa69aeb92bb
+related:
+  - type: derived
+    id: 52d8b0c6-53d6-439a-9e41-52ad442ad9ad
+status: test
+description: This detection excludes known namped pipes accessible remotely and notify
+    on newly observed ones, may help to detect lateral movement and remote exec using
+    named pipes
+author: Samir Bousseaden, @neu5ron, Tim Shelton
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/04/02 15:40:51
+references:
+  - https://twitter.com/menasec1/status/1104489274387451904
+logsource:
+    product: zeek
+    service: smb_files
+detection:
+    condition: selection and not 1 of filter_*
+    filter_keywords:
+      - samr
+      - lsarpc
+      - winreg
+      - netlogon
+      - srvsvc
+      - protected_storage
+      - wkssvc
+      - browser
+      - netdfs
+      - svcctl
+      - spoolss
+      - ntsvcs
+      - LSM_API_service
+      - HydraLsPipe
+      - TermSrv_API_service
+      - MsFteWds
+    selection:
+        path: \\\\\*\\IPC$
+falsepositives: Update the excluded named pipe to filter out any newly observed legit
+    named pipe
+level: high
+customer: 'demo'
+modified: 2022/12/27
+tags:
+  - attack.lateral_movement
+  - attack.t1021.002
+  - DEMO

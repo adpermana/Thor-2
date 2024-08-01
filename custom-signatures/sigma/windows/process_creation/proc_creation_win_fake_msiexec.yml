@@ -1,0 +1,28 @@
+title: Fake Msiexec Execution
+id: 177a949b-ef0b-4f01-94de-a9107b691e00
+status: experimental
+description: Detects execution of a fake msiexec.exe where the image is named 'msiexec' but no OriginalFileName is set. This technique has been seen used in CVE-2021-44077 exploitation
+author: pH-T
+date: 2022/06/08
+modified: 2022/11/04
+references:
+    - https://thedfirreport.com/2022/06/06/will-the-real-msiexec-please-stand-up-exploit-leads-to-data-exfiltration/
+    - https://github.com/horizon3ai/CVE-2021-44077
+    - https://nvd.nist.gov/vuln/detail/CVE-2021-44077
+tags:
+    - attack.defense_evasion
+    - attack.t1036.005
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: '\msiexec.exe'
+    filter:
+        OriginalFileName: 'msiexec.exe'
+    filter_null:
+        OriginalFileName: null
+    condition: selection and not 1 of filter*
+falsepositives:
+    - Third-Party software bringing their own msiexec
+level: high

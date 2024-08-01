@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Linux Base64 Encoded Shebang In CLI
+id: fe2f9663-41cb-47e2-b954-8a228f3b9dff
+status: test
+description: Detects the presence of a base64 version of the shebang in the commandline,
+    which could indicate a malicious payload about to be decoded
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/15 14:13:01
+references:
+  - https://www.trendmicro.com/pl_pl/research/20/i/the-evolution-of-malicious-shell-scripts.html
+  - https://github.com/carlospolop/PEASS-ng/tree/master/linPEAS
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains:
+          - IyEvYmluL2Jhc2
+          - IyEvYmluL2Rhc2
+          - IyEvYmluL3pza
+          - IyEvYmluL2Zpc2
+          - IyEvYmluL3No
+falsepositives: Legitimate administration activities
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1140
+  - DEMO

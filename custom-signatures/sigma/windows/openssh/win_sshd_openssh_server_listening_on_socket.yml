@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: OpenSSH Server Listening On Socket
+id: 3ce8e9a4-bc61-4c9b-8e69-d7e2492a8781
+status: test
+description: Detects scenarios where an attacker enables the OpenSSH server and server
+    starts to listening on SSH socket.
+author: mdecrevoisier
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/10/25 14:44:21
+references:
+  - https://github.com/mdecrevoisier/EVTX-to-MITRE-Attack/tree/master/TA0008-Lateral%20Movement/T1021.004-Remote%20Service%20SSH
+  - https://winaero.com/enable-openssh-server-windows-10/
+  - https://docs.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse
+  - https://virtualizationreview.com/articles/2020/05/21/ssh-server-on-windows-10.aspx
+  - https://medium.com/threatpunter/detecting-adversary-tradecraft-with-image-load-event-logging-and-eql-8de93338c16
+logsource:
+    product: windows
+    service: openssh
+detection:
+    condition: selection
+    selection:
+        EventID: "4"
+        payload|startswith: 'Server listening on '
+        process: sshd
+falsepositives: Legitimate administrator activity
+level: medium
+customer: 'demo'
+tags:
+  - attack.lateral_movement
+  - attack.t1021.004
+  - DEMO

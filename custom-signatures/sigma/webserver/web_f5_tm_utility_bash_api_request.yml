@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: F5 BIG-IP iControl Rest API Command Execution - Webserver
+id: 85254a62-22be-4239-b79c-2ec17e566c37
+related:
+  - type: similar
+    id: b59c98c6-95e8-4d65-93ee-f594dfb96b17
+status: experimental
+description: Detects POST requests to the F5 BIG-IP iControl Rest API "bash" endpoint,
+    which allows the execution of commands on the BIG-IP
+author: Nasreddine Bencherchali (Nextron Systems), Thurein Oo
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/11/08 19:37:41
+references:
+  - https://f5-sdk.readthedocs.io/en/latest/apidoc/f5.bigip.tm.util.html#module-f5.bigip.tm.util.bash
+  - https://community.f5.com/t5/technical-forum/icontrolrest-11-5-execute-bash-command/td-p/203029
+  - https://community.f5.com/t5/technical-forum/running-bash-commands-via-rest-api/td-p/272516
+logsource:
+    category: webserver
+detection:
+    condition: selection
+    selection:
+        cs-method: POST
+        cs-uri-query|endswith: /mgmt/tm/util/bash
+falsepositives: Legitimate usage of the BIG IP REST API to execute command for administration
+    purposes
+level: medium
+customer: 'demo'
+tags:
+  - attack.execution
+  - attack.t1190
+  - DEMO

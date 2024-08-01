@@ -1,0 +1,56 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: WMImplant Hack Tool
+id: 8028c2c3-e25a-46e3-827f-bbb5abf181d7
+status: test
+description: Detects parameters used by WMImplant
+author: NVISO
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/03/26 10:50:21
+references:
+  - https://github.com/FortyNorthSecurity/WMImplant
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: selection
+    selection:
+        ScriptBlockText|contains:
+          - WMImplant
+          - ' change_user '
+          - ' gen_cli '
+          - ' command_exec '
+          - ' disable_wdigest '
+          - ' disable_winrm '
+          - ' enable_wdigest '
+          - ' enable_winrm '
+          - ' registry_mod '
+          - ' remote_posh '
+          - ' sched_job '
+          - ' service_mod '
+          - ' process_kill '
+          - ' active_users '
+          - ' basic_info '
+          - ' power_off '
+          - ' vacant_system '
+          - ' logon_events '
+falsepositives: Administrative scripts that use the same keywords.
+level: high
+customer: 'demo'
+modified: 2022/12/25
+tags:
+  - attack.execution
+  - attack.t1047
+  - attack.t1059.001
+  - DEMO

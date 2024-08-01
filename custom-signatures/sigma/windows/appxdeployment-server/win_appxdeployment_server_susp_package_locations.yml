@@ -1,0 +1,51 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious AppX Package Locations
+id: 5cdeaf3d-1489-477c-95ab-c318559fc051
+status: test
+description: Detects an appx package added the pipeline of the "to be processed" packages
+    which is located in suspicious locations
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/11 14:49:21
+references:
+  - Internal Research
+  - https://www.sentinelone.com/labs/inside-malicious-windows-apps-for-malware-deployment/
+  - https://learn.microsoft.com/en-us/windows/win32/appxpkg/troubleshooting
+  - https://news.sophos.com/en-us/2021/11/11/bazarloader-call-me-back-attack-abuses-windows-10-apps-mechanism/
+logsource:
+    product: windows
+    service: appxdeployment-server
+detection:
+    condition: selection
+    selection:
+        EventID: "854"
+        Path|contains:
+          - C:\Users\Public\
+          - /users/public/
+          - C:\PerfLogs\
+          - C:/perflogs/
+          - \Desktop\
+          - /desktop/
+          - \Downloads\
+          - /Downloads/
+          - C:\Windows\Temp\
+          - C:/Windows/Temp/
+          - \AppdData\Local\Temp\
+          - /AppdData/Local/Temp/
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - DEMO

@@ -1,0 +1,41 @@
+title: BatLoader Traffic
+id: 454e4944-533d-4ce7-b6fc-691c9ad679f0
+status: test
+description: Detects BatLoader GET requests used to retrive data from the C2
+references:
+    - https://medium.com/walmartglobaltech/revisiting-batloader-c2-structure-52f46ff9893a
+author: X__Junior
+date: 2022/11/16
+modified: 2023/03/28
+tags:
+    - attack.command_and_control
+logsource:
+    category: proxy
+detection:
+    selection_main:
+        cs-method: 'GET'
+        c-uri|contains:
+            # BatLoader new requests
+            - '/e6a5614c379561c94004c531781ee1c5/'
+            - '/f69af5bc8498d0ebeb37b801d450c046/'
+            - '/a3874ddb552a5b45cade5a2700d15587/'
+            - '/fa777fbbb8f055cb8bfcba6cb41c62e7/'
+            - '/b1eeec75ef1488e2484b14c8fd46ddce/'
+            - '/c003996958c731652178c7113ad768b7/'
+            - '/d2ef590c0310838490561a205469713d/'
+            - '/fa0a24aafe050500595b1df4153a17fb/'
+            - '/i850c923db452d4556a2c46125e7b6f2/'
+            - '/b5e6ec2584da24e2401f9bc14a08dedf/'
+            - '/e747834ae24a1a43e044ea7b070048f0/'
+            - '/bi187e8151f0c90e7e6080e9f0b0341c/'
+            - '/bz7cfe6b5c3a2fkc6c2ea27a3cfe2b21/'
+            - '/bec46bb07594d5g8bfe6ef1fda5f4f5d/'
+            - '/btc334a145dt7d9ae2f17ed932d44983/'
+            - '/bdd4d4c661333e2c20a5e4dacd5d91f5/'
+            - '/b95361d895f5df1710d7a724c9f61f66/'
+    selection_servername:
+        c-uri|contains: '/?servername='
+    condition: all of selection_*
+falsepositives:
+    - Unknown
+level: high

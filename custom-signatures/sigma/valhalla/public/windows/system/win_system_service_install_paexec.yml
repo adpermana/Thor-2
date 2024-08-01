@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: PAExec Service Installation
+id: de7ce410-b3fb-4e8a-b38c-3b999e2c3420
+status: test
+description: Detects PAExec service installation
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/10/26 13:10:51
+references:
+  - https://www.poweradmin.com/paexec/
+logsource:
+    product: windows
+    service: system
+detection:
+    condition: all of selection_*
+    selection_eid:
+        EventID: "7045"
+        Provider_Name: Service Control Manager
+    selection_image:
+      - ServiceName|startswith: PAExec-
+      - ImagePath|startswith: C:\WINDOWS\PAExec-
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.execution
+  - attack.t1569.002
+  - DEMO

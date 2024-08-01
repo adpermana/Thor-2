@@ -1,0 +1,44 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: ESXi VSAN Information Discovery Via ESXCLI
+id: d54c2f06-aca9-4e2b-81c9-5317858f4b79
+status: experimental
+description: Detects execution of the "esxcli" command with the "vsan" flag in order
+    to retrieve information about virtual storage. Seen used by malware such as DarkSide.
+author: Nasreddine Bencherchali (Nextron Systems), Cedric Maurugeon
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/09/04 16:11:51
+references:
+  - https://www.trendmicro.com/en_us/research/21/e/darkside-linux-vms-targeted.html
+  - https://www.trendmicro.com/en_us/research/22/a/analysis-and-Impact-of-lockbit-ransomwares-first-linux-and-vmware-esxi-variant.html
+  - https://developer.vmware.com/docs/11743/esxi-7-0-esxcli-command-reference/namespace/esxcli_vsan.html
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains:
+          - ' get'
+          - ' list'
+    selection_img:
+        CommandLine|contains: vsan
+        Image|endswith: /esxcli
+falsepositives: Legitimate administration activities
+level: medium
+customer: 'demo'
+tags:
+  - attack.discovery
+  - attack.t1033
+  - attack.t1007
+  - DEMO

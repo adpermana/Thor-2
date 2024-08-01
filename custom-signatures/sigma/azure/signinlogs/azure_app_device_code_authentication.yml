@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Application Using Device Code Authentication Flow
+id: 248649b7-d64f-46f0-9fb2-a52774166fb5
+status: test
+description: |
+    Device code flow is an OAuth 2.0 protocol flow specifically for input constrained devices and is not used in all environments.
+    If this type of flow is seen in the environment and not being used in an input constrained device scenario, further investigation is warranted.
+    This can be a misconfigured application or potentially something malicious.
+author: Mark Morowczynski '@markmorow', Bailey Bercik '@baileybercik'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/01 18:58:11
+references:
+  - https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/security-operations-applications#application-authentication-flows
+logsource:
+    product: azure
+    service: signinlogs
+detection:
+    condition: selection
+    selection:
+        properties.message: Device Code
+falsepositives: Applications that are input constrained will need to use device code
+    flow and are valid authentications.
+level: medium
+customer: 'demo'
+tags:
+  - attack.t1078
+  - attack.defense_evasion
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.initial_access
+  - DEMO

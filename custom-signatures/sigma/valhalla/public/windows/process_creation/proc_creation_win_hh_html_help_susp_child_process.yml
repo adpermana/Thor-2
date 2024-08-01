@@ -1,0 +1,67 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HTML Help HH.EXE Suspicious Child Process
+id: 52cad028-0ff0-4854-8f67-d25dfcbc78b4
+status: test
+description: Detects a suspicious child process of a Microsoft HTML Help (HH.exe)
+author: Maxim Pavlunin, Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/04/01 15:56:01
+references:
+  - https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/chm-badness-delivers-a-banking-trojan/
+  - https://github.com/elastic/protections-artifacts/commit/746086721fd385d9f5c6647cada1788db4aea95f#diff-27939090904026cc396b0b629c8e4314acd6f5dac40a676edbc87f4567b47eb7
+  - https://www.ptsecurity.com/ww-en/analytics/pt-esc-threat-intelligence/higaisa-or-winnti-apt-41-backdoors-old-and-new/
+  - https://www.zscaler.com/blogs/security-research/unintentional-leak-glimpse-attack-vectors-apt37
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith:
+          - \CertReq.exe
+          - \CertUtil.exe
+          - \cmd.exe
+          - \cscript.exe
+          - \installutil.exe
+          - \MSbuild.exe
+          - \MSHTA.EXE
+          - \msiexec.exe
+          - \powershell.exe
+          - \pwsh.exe
+          - \regsvr32.exe
+          - \rundll32.exe
+          - \schtasks.exe
+          - \wmic.exe
+          - \wscript.exe
+        ParentImage|endswith: \hh.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/04/12
+tags:
+  - attack.defense_evasion
+  - attack.execution
+  - attack.initial_access
+  - attack.t1047
+  - attack.t1059.001
+  - attack.t1059.003
+  - attack.t1059.005
+  - attack.t1059.007
+  - attack.t1218
+  - attack.t1218.001
+  - attack.t1218.010
+  - attack.t1218.011
+  - attack.t1566
+  - attack.t1566.001
+  - DEMO

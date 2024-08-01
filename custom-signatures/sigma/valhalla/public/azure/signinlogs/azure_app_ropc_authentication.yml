@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Applications That Are Using ROPC Authentication Flow
+id: 55695bc0-c8cf-461f-a379-2535f563c854
+status: test
+description: |
+    Resource owner password credentials (ROPC) should be avoided if at all possible as this requires the user to expose their current password credentials to the application directly.
+    The application then uses those credentials to authenticate the user against the identity provider.
+author: Mark Morowczynski '@markmorow', Bailey Bercik '@baileybercik'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/01 19:25:41
+references:
+  - https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/security-operations-applications#application-authentication-flows
+logsource:
+    product: azure
+    service: signinlogs
+detection:
+    condition: selection
+    selection:
+        properties.message: ROPC
+falsepositives: Applications that are being used as part of automated testing or a
+    legacy application that cannot use any other modern authentication flow
+level: medium
+customer: 'demo'
+tags:
+  - attack.t1078
+  - attack.defense_evasion
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.initial_access
+  - DEMO

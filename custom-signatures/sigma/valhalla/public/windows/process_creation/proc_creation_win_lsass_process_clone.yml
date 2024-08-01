@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Credential Dumping Via LSASS Process Clone
+id: c8da0dfd-4ed0-4b68-962d-13c9c884384e
+status: test
+description: Detects a suspicious LSASS process process clone that could be a sign
+    of credential dumping activity
+author: Florian Roth (Nextron Systems), Samir Bousseaden
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/11/27 19:18:11
+references:
+  - https://www.matteomalvica.com/blog/2019/12/02/win-defender-atp-cred-bypass/
+  - https://twitter.com/Hexacorn/status/1420053502554951689
+  - https://twitter.com/SBousseaden/status/1464566846594691073?s=20
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        Image|endswith: \Windows\System32\lsass.exe
+        ParentImage|endswith: \Windows\System32\lsass.exe
+falsepositives: Unknown
+level: critical
+customer: 'demo'
+modified: 2023/03/02
+tags:
+  - attack.credential_access
+  - attack.t1003
+  - attack.t1003.001
+  - DEMO

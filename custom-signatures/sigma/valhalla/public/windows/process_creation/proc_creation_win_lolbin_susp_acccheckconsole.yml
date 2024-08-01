@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious LOLBIN AccCheckConsole
+id: 0f6da907-5854-4be6-859a-e9958747b0aa
+status: test
+description: Detects suspicious LOLBIN AccCheckConsole execution with parameters as
+    used to load an arbitrary DLL
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/01/06 14:29:11
+references:
+  - https://gist.github.com/bohops/2444129419c8acf837aedda5f0e7f340
+  - https://twitter.com/bohops/status/1477717351017680899?s=12
+  - https://lolbas-project.github.io/lolbas/OtherMSBinaries/AccCheckConsole/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection*
+    selection_cli:
+        CommandLine|contains|all:
+          - ' -window '
+          - .dll
+    selection_img:
+      - Image|endswith: \AccCheckConsole.exe
+      - OriginalFileName: AccCheckConsole.exe
+falsepositives: Legitimate use of the UI Accessibility Checker
+level: high
+customer: 'demo'
+tags:
+  - attack.execution
+  - DEMO

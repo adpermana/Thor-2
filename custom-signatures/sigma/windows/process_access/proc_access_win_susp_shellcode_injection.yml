@@ -1,0 +1,71 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Shellcode Injection
+id: 250ae82f-736e-4844-a68b-0b5e8cc887da
+status: test
+description: Detects potential shellcode injection used by tools such as Metasploit's
+    migrate and Empire's psinject
+author: Bhabesh Raj
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/03/11 13:55:41
+references:
+  - https://github.com/EmpireProject/PSInject
+logsource:
+    category: process_access
+    product: windows
+detection:
+    condition: selection and not 1 of filter_optional_*
+    filter_optional_ddvdatacollector:
+        SourceImage|contains: :\Program Files\Microsoft Visual Studio\
+        SourceImage|endswith: \MSBuild\Current\Bin\MSBuild.exe
+        TargetImage|endswith: :\Program Files\Dell\DellDataVault\DDVDataCollector.exe
+    filter_optional_dell_folders:
+        CallTrace|startswith: ?:\Windows\System32\ntdll.dll
+        GrantedAccess: "0x1F3FFF"
+        SourceImage|contains:
+          - :\Program Files\Dell\
+          - :\Program Files (x86)\Dell\
+        TargetImage|contains:
+          - :\Program Files\Dell\
+          - :\Program Files (x86)\Dell\
+    filter_optional_dell_specifc:
+        CallTrace|startswith: ?:\Windows\System32\ntdll.dll
+        GrantedAccess: "0x1F3FFF"
+        SourceImage|endswith: :\Program Files (x86)\Dell\UpdateService\ServiceShell.exe
+        TargetImage|endswith: :\Windows\Explorer.EXE
+    filter_optional_visual_studio:
+        CallTrace|startswith: ?:\Windows\System32\ntdll.dll
+        SourceImage|endswith:
+          - :\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\PerfWatson2.exe
+          - :\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\PerfWatson2.exe
+        TargetImage|endswith:
+          - :\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\devenv.exe
+          - :\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\devenv.exe
+    filter_optional_wmiprvese:
+        CallTrace|startswith: ?:\Windows\SYSTEM32\ntdll.dll
+        SourceImage|endswith: :\Windows\System32\Wbem\Wmiprvse.exe
+        TargetImage|endswith: :\Windows\system32\lsass.exe
+    selection:
+        CallTrace|contains: UNKNOWN
+        GrantedAccess:
+          - "0x147a"
+          - "0x1f3fff"
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/11/29
+tags:
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - attack.t1055
+  - DEMO

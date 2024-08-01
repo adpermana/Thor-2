@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Detection of PowerShell Execution via Sqlps.exe
+id: 0152550d-3a26-4efd-9f0e-54a0b28ae2f3
+status: test
+description: |
+    This rule detects execution of a PowerShell code through the sqlps.exe utility, which is included in the standard set of utilities supplied with the MSSQL Server.
+    Script blocks are not logged in this case, so this utility helps to bypass protection mechanisms based on the analysis of these logs.
+author: Agro (@agro_sev) oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/10 18:29:21
+references:
+  - https://docs.microsoft.com/en-us/sql/tools/sqlps-utility?view=sql-server-ver15
+  - https://lolbas-project.github.io/lolbas/OtherMSBinaries/Sqlps/
+  - https://twitter.com/bryon_/status/975835709587075072
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection_parent or (selection_image and not filter_image)
+    filter_image:
+        ParentImage|endswith: \sqlagent.exe
+    selection_image:
+      - Image|endswith: \sqlps.exe
+      - OriginalFileName: sqlps.exe
+    selection_parent:
+        ParentImage|endswith: \sqlps.exe
+falsepositives: Direct PS command execution through SQLPS.exe is uncommon, childprocess
+    sqlps.exe spawned by sqlagent.exe is a legitimate action.
+level: medium
+customer: 'demo'
+modified: 2022/12/09
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - attack.defense_evasion
+  - attack.t1127
+  - DEMO

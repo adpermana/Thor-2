@@ -1,0 +1,67 @@
+title: Suspicious Creation Of Rnasom Note Files
+id: 554cde5d-30e3-4bfb-a8b4-9600481b3350
+status: test
+description: Detects the creation of files with a known ransom note name
+author: Nasreddine Bencherchali
+references:
+    - https://www.reddit.com/r/sysadmin/comments/46361k/list_of_ransomware_extensions_and_known_ransom/
+    - https://thedfirreport.com/2022/11/28/emotet-strikes-again-lnk-file-leads-to-domain-wide-ransomware/
+    - https://www.cisa.gov/uscert/ncas/alerts/aa22-321a
+date: 2022/11/16
+modified: 2023/03/29
+logsource:
+    product: windows
+    category: file_event
+detection:
+    selection_exact:
+        TargetFilename:
+            - '_Locky_recover_instructions.txt'
+            - 'Coin.Locker.txt'
+            - 'DECRYPT_INSTRUCTION.TXT'
+            - 'DECRYPT_INSTRUCTIONS.TXT'
+            - 'DECRYPT_ReadMe.TXT'
+            - 'DecryptAllFiles.txt'
+            - 'encryptor_raas_readme_liesmich.txt'
+            - 'FILESAREGONE.TXT'
+            - 'help_decrypt_your_files.html'
+            - 'Help_Decrypt.txt'
+            - 'HELP_DECYPRT_YOUR_FILES.HTML'
+            - 'HELP_RECOVER_FILES.txt'
+            - 'HELP_RESTORE_FILES.txt'
+            - 'HELP_TO_DECRYPT_YOUR_FILES.txt'
+            - 'HELP_TO_SAVE_FILES.txt'
+            - 'HELP_YOUR_FILES.TXT'
+            - 'how_recover.txt'
+            - 'HOW_TO_DECRYPT_FILES.TXT'
+            - 'How_To_Recover_Files.txt'
+            - 'howto_recover_file_.txt'
+            - 'Howto_RESTORE_FILES_.txt'
+            - 'Howto_Restore_FILES.txt'
+            - 'IAMREADYTOPAY.TXT'
+            - 'IHAVEYOURSECRET.KEY'
+            - 'INSTRUCCIONES_DESCIFRADO.TXT'
+            - 'ReadDecryptFilesHere.txt'
+            - 'READTHISNOW!!!.TXT'
+            - 'RECOVERY_FILE.TXT'
+            - 'RECOVERY_FILES.txt'
+            - 'RECOVERY_KEY.txt'
+            - 'restore_files_.txt'
+            - 'Restore-My-Files.txt'
+            - 'secret_code.txt'
+            - 'SECRETIDHERE.KEY'
+            - 'YOUR_FILES.HTML'
+            - 'YOUR_FILES.url'
+            - 'README_TO_DECRYPT.html'
+            - '!WHY_FILES_ARE_ENCRYPTED!.txt'
+            - 'HOW_TO_DECRYPT.txt'
+    selection_contains:
+        TargetFilename|contains:
+            - 'help_recover_instructions+'
+            - 'how_recover+'
+            - 'recover_file_'
+            - 'recovery_file_'
+        TargetFilename|endswith: '.txt'
+    condition: 1 of selection_*
+falsepositives:
+    - Unknown
+level: high

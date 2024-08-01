@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: DLL Load via LSASS
+id: b3503044-60ce-4bf4-bbcb-e3db98788823
+status: test
+description: Detects a method to load DLL via LSASS process using an undocumented
+    Registry key
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/16 09:55:01
+references:
+  - https://blog.xpnsec.com/exploring-mimikatz-part-1/
+  - https://twitter.com/SBousseaden/status/1183745981189427200
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    condition: selection and not 1 of filter_*
+    filter_domain_controller:
+        Details:
+          - '%%systemroot%%\system32\ntdsa.dll'
+          - '%%systemroot%%\system32\lsadb.dll'
+        Image: C:\Windows\system32\lsass.exe
+    selection:
+        TargetObject|contains:
+          - \CurrentControlSet\Services\NTDS\DirectoryServiceExtPt
+          - \CurrentControlSet\Services\NTDS\LsaDbExtPt
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/04/21
+tags:
+  - attack.execution
+  - attack.persistence
+  - attack.t1547.008
+  - DEMO

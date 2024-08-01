@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Use of VisualUiaVerifyNative.exe
+id: b30a8bc5-e21b-4ca2-9420-0a94019ac56a
+status: test
+description: VisualUiaVerifyNative.exe is a Windows SDK that can be used for AWL bypass
+    and is listed in Microsoft's recommended block rules.
+author: Christopher Peacock @SecurePeacock, SCYTHE @scythe_io
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/01 14:37:31
+references:
+  - https://lolbas-project.github.io/lolbas/OtherMSBinaries/VisualUiaVerifyNative/
+  - https://docs.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-block-rules
+  - https://bohops.com/2020/10/15/exploring-the-wdac-microsoft-recommended-block-rules-visualuiaverifynative/
+  - https://github.com/MicrosoftDocs/windows-itpro-docs/commit/937db704b9148e9cee7c7010cad4d00ce9c4fdad
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - Image|endswith: \VisualUiaVerifyNative.exe
+      - OriginalFileName: VisualUiaVerifyNative.exe
+falsepositives: Legitimate testing of Microsoft UI parts.
+level: medium
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - DEMO

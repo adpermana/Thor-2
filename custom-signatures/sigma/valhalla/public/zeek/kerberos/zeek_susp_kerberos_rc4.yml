@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Kerberos Network Traffic RC4 Ticket Encryption
+id: 503fe26e-b5f2-4944-a126-eab405cc06e5
+status: test
+description: Detects kerberos TGS request using RC4 encryption which may be indicative
+    of kerberoasting
+author: sigma
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/02/12 17:59:41
+references:
+  - https://adsecurity.org/?p=3458
+logsource:
+    product: zeek
+    service: kerberos
+detection:
+    condition: selection and not computer_acct
+    computer_acct:
+        service|startswith: $
+    selection:
+        cipher: rc4-hmac
+        request_type: TGS
+falsepositives: Normal enterprise SPN requests activity
+level: medium
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.credential_access
+  - attack.t1558.003
+  - DEMO

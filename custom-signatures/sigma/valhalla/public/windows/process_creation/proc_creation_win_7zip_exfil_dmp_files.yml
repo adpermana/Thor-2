@@ -1,0 +1,54 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: 7Zip Compressing Dump Files
+id: ec570e53-4c76-45a9-804d-dc3f355ff7a7
+related:
+  - type: derived
+    id: 1ac14d38-3dfc-4635-92c7-e3fd1c5f5bfc
+status: experimental
+description: Detects execution of 7z in order to compress a file with a ".dmp"/".dump"
+    extension, which could be a step in a process of dump file exfiltration.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/27 13:00:51
+references:
+  - https://thedfirreport.com/2022/09/26/bumblebee-round-two/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_extension:
+        CommandLine|contains:
+          - .dmp
+          - .dump
+          - .hdmp
+    selection_img:
+      - Description|contains: 7-Zip
+      - Image|endswith:
+          - \7z.exe
+          - \7zr.exe
+          - \7za.exe
+      - OriginalFileName:
+          - 7z.exe
+          - 7za.exe
+falsepositives:
+  - Legitimate use of 7z with a command line in which ".dmp" or ".dump" appears accidentally
+  - Legitimate use of 7z to compress WER ".dmp" files for troubleshooting
+level: medium
+customer: 'demo'
+modified: 2023/09/12
+tags:
+  - attack.collection
+  - attack.t1560.001
+  - DEMO

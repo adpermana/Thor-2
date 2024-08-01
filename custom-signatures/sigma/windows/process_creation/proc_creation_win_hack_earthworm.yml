@@ -1,0 +1,37 @@
+title: Earthworm Tunneling Tool Usage
+id: 638c07be-0d4b-4339-ac35-fe328600f655
+status: experimental
+description: Detects the use of Earthworm, a simple network tunneling tool with SOCKS v5 sever and port transfer
+author: Florian Roth
+references:
+    - https://rootkiter.com/EarthWorm/en/index.html
+date: 2022/09/07
+modified: 2022/12/29
+tags:
+    - attack.command_and_control
+    - attack.t1090
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_imphash:
+        - Hashes|contains:
+            - 'IMPHASH=82D1A2E595DC81CF0906C1552B51039B'
+            - 'IMPHASH=14BF2A0B2C46C28DE7035254C941B6EA'
+        - Imphash:
+            - '82d1a2e595dc81cf0906c1552b51039b'
+            - '14bf2a0b2c46c28de7035254c941b6ea'
+    selection_flags1:
+        CommandLine|contains:
+            - ' -s lcx_listen '
+            - ' -s lcx_slave '
+            - ' -s lcx_tran '
+    selection_flags2:
+        CommandLine|contains|all:
+            - ' -s rssocks '
+            - ' -l '
+            - ' -e '
+    condition: 1 of selection*
+falsepositives:
+    - Programs that use the same command line flags
+level: high

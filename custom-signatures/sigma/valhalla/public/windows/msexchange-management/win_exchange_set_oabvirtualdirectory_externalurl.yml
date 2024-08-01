@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Exchange Set OabVirtualDirectory ExternalUrl Property
+id: 9db37458-4df2-46a5-95ab-307e7f29e675
+status: test
+description: Rule to detect an adversary setting OabVirtualDirectory External URL
+    property to a script in Exchange Management log
+author: Jose Rodriguez @Cyb3rPandaH
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/03/15 20:28:01
+references:
+  - https://twitter.com/OTR_Community/status/1371053369071132675
+logsource:
+    product: windows
+    service: msexchange-management
+detection:
+    condition: keywords
+    keywords:
+        '|all':
+          - Set-OabVirtualDirectory
+          - ExternalUrl
+          - Page_Load
+          - script
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/01/23
+tags:
+  - attack.persistence
+  - attack.t1505.003
+  - DEMO

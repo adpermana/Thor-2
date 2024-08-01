@@ -1,0 +1,95 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Remote Thread Creation By Uncommon Source Image
+id: 66d31e5f-52d6-40a4-9615-002d3789a119
+related:
+  - type: derived
+    id: 02d1d718-dd13-41af-989d-ea85c7fab93f
+status: experimental
+description: Detects uncommon processes creating remote threads.
+author: Perez Diego (@darkquassar), oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/27 18:08:41
+references:
+  - Personal research, statistical analysis
+  - https://lolbas-project.github.io
+logsource:
+    category: create_remote_thread
+    product: windows
+detection:
+    condition: selection and not 1 of filter_main_* and not 1 of filter_optional_*
+    filter_main_explorer:
+        SourceImage|endswith: :\Windows\explorer.exe
+        TargetImage|endswith:
+          - :\Program Files (x86)\
+          - :\Program Files\
+          - :\Windows\System32\
+          - :\Windows\SysWOW64\
+    filter_main_msiexec:
+        SourceImage|endswith: \msiexec.exe
+        TargetImage|contains:
+          - \AppData\Local\
+          - :\Program Files (x86)\
+          - :\Program Files\
+    filter_main_schtasks_conhost:
+        SourceImage|endswith:
+          - :\Windows\System32\schtasks.exe
+          - :\Windows\SysWOW64\schtasks.exe
+        TargetImage|endswith: :\Windows\System32\conhost.exe
+    filter_main_system:
+        TargetImage: System
+    filter_main_winlogon_1:
+        SourceImage|endswith: :\Windows\System32\winlogon.exe
+        TargetImage|endswith:
+          - :\Windows\System32\services.exe
+          - :\Windows\System32\wininit.exe
+          - :\Windows\System32\csrss.exe
+          - :\Windows\System32\LogonUI.exe
+    filter_main_winlogon_2:
+        SourceImage|contains: :\Windows\System32\winlogon.exe
+        TargetParentProcessId: "4"
+    filter_optional_aurora_smartconsole1:
+        SourceCommandLine|contains|all:
+          - https://
+          - .checkpoint.com/documents/
+          - SmartConsole_OLH/
+          - default.htm#cshid=
+        SourceImage|contains: :\Program Files\internet explorer\iexplore.exe
+    filter_optional_aurora_smartconsole2:
+        SourceImage|contains: :\Program Files\internet explorer\iexplore.exe
+        SourceParentImage|contains|all:
+          - :\Program Files
+          - \CheckPoint\SmartConsole\
+          - \SmartConsole.exe
+    filter_optional_powerpnt:
+        SourceImage|contains: \Microsoft Office\
+        SourceImage|endswith: \POWERPNT.EXE
+        TargetImage|endswith: :\Windows\System32\csrss.exe
+    selection:
+        SourceImage|endswith:
+          - \explorer.exe
+          - \iexplore.exe
+          - \msiexec.exe
+          - \powerpnt.exe
+          - \schtasks.exe
+          - \winlogon.exe
+falsepositives: This rule is best put in testing first in order to create a baseline
+    that reflects the data in your environment.
+level: medium
+customer: 'demo'
+modified: 2024/01/17
+tags:
+  - attack.privilege_escalation
+  - attack.defense_evasion
+  - attack.t1055
+  - DEMO

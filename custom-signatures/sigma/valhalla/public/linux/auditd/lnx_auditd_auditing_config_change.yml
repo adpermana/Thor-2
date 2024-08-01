@@ -1,0 +1,45 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Auditing Configuration Changes on Linux Host
+id: 977ef627-4539-4875-adf4-ed8f780c4922
+status: test
+description: Detect changes in auditd configuration files
+author: Mikhail Larin, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/10/25 17:41:31
+references:
+  - https://github.com/Neo23x0/auditd/blob/master/audit.rules
+  - Self Experience
+logsource:
+    product: linux
+    service: auditd
+detection:
+    condition: selection
+    selection:
+        name:
+          - /etc/audit/*
+          - /etc/libaudit.conf
+          - /etc/audisp/*
+        type: PATH
+fields:
+  - exe
+  - comm
+  - key
+falsepositives: Legitimate administrative activity
+level: high
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.defense_evasion
+  - attack.t1562.006
+  - DEMO

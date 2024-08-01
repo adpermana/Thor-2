@@ -1,0 +1,51 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Windows Defender Exclusions Added - PowerShell
+id: c1344fa2-323b-4d2e-9176-84b4d4821c88
+related:
+  - type: similar
+    id: 17769c90-230e-488b-a463-e05c08e9d48f
+status: test
+description: Detects modifications to the Windows Defender configuration settings
+    using PowerShell to add exclusions
+author: Tim Rauch, Elastic (idea)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/09/16 17:58:51
+references:
+  - https://www.elastic.co/guide/en/security/current/windows-defender-exclusions-added-via-powershell.html
+logsource:
+    category: ps_script
+    product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+    condition: all of selection*
+    selection_args_exc:
+        ScriptBlockText|contains:
+          - ' -ExclusionPath '
+          - ' -ExclusionExtension '
+          - ' -ExclusionProcess '
+          - ' -ExclusionIpAddress '
+    selection_args_pref:
+        ScriptBlockText|contains:
+          - 'Add-MpPreference '
+          - 'Set-MpPreference '
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/11/26
+tags:
+  - attack.defense_evasion
+  - attack.t1562
+  - attack.execution
+  - attack.t1059
+  - DEMO

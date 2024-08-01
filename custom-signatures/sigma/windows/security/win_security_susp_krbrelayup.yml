@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: KrbRelayUp Attack Pattern
+id: 749c9f5e-b353-4b90-a9c1-05243357ca4b
+status: test
+description: Detects logon events that have characteristics of events generated during
+    an attack with KrbRelayUp and the like
+author: '@SBousseaden, Florian Roth'
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/04/27 12:38:31
+references:
+  - https://twitter.com/sbousseaden/status/1518976397364056071?s=12&t=qKO5eKHvWhAP19a50FTZ7g
+  - https://github.com/elastic/detection-rules/blob/fb6ee2c69864ffdfe347bf3b050cb931f53067a6/rules/windows/privilege_escalation_krbrelayup_suspicious_logon.toml
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: selection
+    selection:
+        AuthenticationPackageName: Kerberos
+        EventID: "4624"
+        IpAddress: 127.0.0.1
+        LogonType: "3"
+        TargetUserSid|endswith: "-500"
+        TargetUserSid|startswith: S-1-5-21-
+falsepositives: Unknown
+level: high
+customer: 'demo'
+tags:
+  - attack.privilege_escalation
+  - attack.credential_access
+  - DEMO

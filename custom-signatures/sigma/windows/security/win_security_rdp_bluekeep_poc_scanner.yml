@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Scanner PoC for CVE-2019-0708 RDP RCE Vuln
+id: 8400629e-79a9-4737-b387-5db940ab2367
+status: test
+description: Detects the use of a scanner by zerosum0x0 that discovers targets vulnerable
+    to  CVE-2019-0708 RDP RCE aka BlueKeep
+author: Florian Roth (Nextron Systems), Adam Bradbury (idea)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/06/02 14:33:51
+references:
+  - https://twitter.com/AdamTheAnalyst/status/1134394070045003776
+  - https://github.com/zerosum0x0/CVE-2019-0708
+logsource:
+    product: windows
+    service: security
+detection:
+    condition: selection
+    selection:
+        EventID: "4625"
+        TargetUserName: AAAAAAA
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+modified: 2022/12/25
+tags:
+  - attack.lateral_movement
+  - attack.t1210
+  - car.2013-07-002
+  - DEMO

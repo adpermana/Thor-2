@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Dump64.exe Execution
+id: 129966c9-de17-4334-a123-8b58172e664d
+status: test
+description: Detects when a user bypasses Defender by renaming a tool to dump64.exe
+    and placing it in a Visual Studio folder
+author: Austin Songer @austinsonger, Florian Roth
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/11/26 14:15:11
+references:
+  - https://twitter.com/mrd0x/status/1460597833917251595
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: ( selection and not filter ) or ( selection and procdump_flags )
+    filter:
+        Image|contains: \Installer\Feedback\dump64.exe
+    procdump_flags:
+        CommandLine|contains:
+          - ' -ma '
+          - accepteula
+    selection:
+        Image|endswith: \dump64.exe
+falsepositives: Dump64.exe in other folders than the excluded one
+level: high
+customer: 'demo'
+modified: 2023/03/24
+tags:
+  - attack.credential_access
+  - attack.t1003.001
+  - DEMO

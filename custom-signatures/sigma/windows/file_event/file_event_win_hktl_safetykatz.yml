@@ -1,0 +1,37 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: SafetyKatz Default Dump Filename
+id: e074832a-eada-4fd7-94a1-10642b130e16
+status: test
+description: Detects default lsass dump filename from SafetyKatz
+author: Markus Neis
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2018/07/24 14:27:01
+references:
+  - https://github.com/GhostPack/SafetyKatz
+  - https://github.com/GhostPack/SafetyKatz/blob/715b311f76eb3a4c8d00a1bd29c6cd1899e450b7/SafetyKatz/Program.cs#L63
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetFilename|endswith: \Temp\debug.bin
+falsepositives: Rare legitimate files with similar filename structure
+level: high
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.credential_access
+  - attack.t1003.001
+  - DEMO

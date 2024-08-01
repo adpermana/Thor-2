@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Ps.exe Renamed SysInternals Tool
+id: 18da1007-3f26-470f-875d-f77faf1cab31
+status: test
+description: Detects renamed SysInternals tool execution with a binary named ps.exe
+    as used by Dragonfly APT group and documented in TA17-293A report
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/10/22 14:26:01
+references:
+  - https://www.us-cert.gov/ncas/alerts/TA17-293A
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains|all:
+          - ps.exe -accepteula
+          - -s cmd /c netstat
+falsepositives: Renamed SysInternals tool
+level: high
+customer: 'demo'
+modified: 2023/05/02
+tags:
+  - attack.defense_evasion
+  - attack.g0035
+  - attack.t1036.003
+  - car.2013-05-009
+  - detection.emerging_threats
+  - DEMO

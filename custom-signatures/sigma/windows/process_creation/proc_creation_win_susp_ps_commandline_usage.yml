@@ -1,0 +1,155 @@
+title: Suspicious Powershell Commandline Usage
+id: b2b52ff5-9035-41c9-b9f4-a9907c1cf1c2
+status: experimental
+description: Detects suspicious powershell commandline usage
+author: Paul Hager
+date: 2022/02/22
+references:
+    - https://docs.broadcom.com/doc/living-off-the-land-turning-your-infrastructure-against-you-en
+    - https://unit42.paloaltonetworks.com/unit42-pulling-back-the-curtains-on-encodedcommand-powershell-attacks/
+    - https://pbs.twimg.com/media/FMbnio0VQAMdf5L?format=jpg&name=large
+logsource:
+    category: process_creation
+    product: windows
+tags:
+    - attack.execution
+    - attack.t1059.001
+detection:
+    selection1:
+        CommandLine|contains|all:
+            - ' -nop '
+            - ' -noni '
+            - ' -window hidden '
+            - ' -exec bypass  '
+            - ' -encoded '
+    selection2:
+        CommandLine|contains|all:
+            - ' -nop '
+            - ' -noni '
+            - ' -wind hidden '
+            - ' -enc '
+    selection3:
+        CommandLine|contains|all:
+            - ' -nop '
+            - ' -noni '
+            - ' -win hidden '
+            - ' -exec bypass '
+            - ' -enc '
+    selection4:
+        CommandLine|contains|all:
+            - ' -nop '
+            - ' -noni '
+            - ' -w hidden '
+            - ' -ep bypass '
+    selection5:
+        CommandLine|contains|all:
+            - ' -nop '
+            - ' -noni '
+            - ' -w hidden '
+            - ' -exec bypass '
+            - ' -enc '
+    selection6:
+        CommandLine|contains|all:
+            - ' -nop '
+            - ' -noni '
+            - ' -w hidden '
+            - ' -exec bypass '
+            - ' -command '
+    selection7:
+        CommandLine|contains|all:
+            - ' -nop '
+            - ' -noni '
+            - ' -w hidden '
+            - ' -enc '
+    selection8:
+        CommandLine|contains|all:
+            - ' -nop '
+            - ' -noni '
+            - ' -w hidden '
+            - ' -sta '
+            - ' -enc '
+    selection9:
+        CommandLine|contains|all:
+            - ' -nop '
+            - ' -exec bypass '
+            - ' -sta '
+            - ' -w 1 '
+            - ' iex'
+    selection10:
+        CommandLine|contains|all:
+            - ' -noni '
+            - ' -ep bypass '
+            - ' -w hidden '
+            - ' -enc '
+    selection11:
+        CommandLine|contains|all:
+            - ' -nop '
+            - ' -sta '
+            - ' -w 1 '
+            - ' -enc '
+    selection12:
+        CommandLine|contains|all:
+            - ' -nop '
+            - ' -exec bypass '
+            - ' -encodedcommand \"%s\" '
+    selection13:
+        CommandLine|contains|all:
+            - ' -nop '
+            - ' -noni '
+            - ' -w hidden '
+            - ' -ep bypass '
+            - ' -enc '
+    selection14:
+        CommandLine|contains|all:
+            - ' -nop '
+            - ' -noni '
+            - ' -w hidden  '
+            - ' -e $'
+    selection15:
+        CommandLine|contains|all:
+            - ' -nop '
+            - ' -noni '
+            - ' -w hidden '
+            - ' -sta '
+            - ' $'
+    selection16:
+        CommandLine|contains|all:
+            - ' -nop '
+            - ' -exec bypass '
+            - ' -encodedcommand sqb'
+    selection17:
+        CommandLine|contains|all:
+            - ' -exec bypass '
+            - ' -noninteractive '
+            - ' /w 1 '
+            - ' -e '
+    selection18:
+        CommandLine|contains|all:
+            - ' -ep b '
+            - ' -nop '
+            - ' -c i'
+    selection19:
+        CommandLine|contains|all:
+            - ' -nop '
+            - ' -w hidden'
+            - ' -e SQB'
+    selection20:
+        CommandLine|contains|all:
+            - ' -noni '
+            - ' -w hidden'
+            - ' -enc SQB'
+    selection21:
+        CommandLine|contains|all:
+            - ' -nop '
+            - ' -w hidden'
+            - ' -c '
+            - ' -ep bypass '
+    selection22:
+        CommandLine|contains|all:
+            - ' -nop '
+            - ' -w hidden'
+            - ' -encodedcommand JABzA'
+    condition: 1 of selection*
+falsepositives:
+    - False positives depend on scripts and administrative tools used in the monitored environment
+level: high

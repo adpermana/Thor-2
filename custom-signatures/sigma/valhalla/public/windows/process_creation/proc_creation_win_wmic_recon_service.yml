@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Service Reconnaissance Via Wmic.EXE
+id: 76f55eaa-d27f-4213-9d45-7b0e4b60bbae
+related:
+  - type: similar
+    id: 68bcd73b-37ef-49cb-95fc-edc809730be6
+status: test
+description: |
+    An adversary might use WMI to check if a certain remote service is running on a remote device.
+    When the test completes, a service information will be displayed on the screen if it exists.
+    A common feedback message is that "No instance(s) Available" if the service queried is not running.
+    A common error message is "Node - (provided IP or default) ERROR Description =The RPC server is unavailable" if the provided remote host is unreachable
+author: frack113, Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/02/14 14:58:11
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1047/T1047.md
+  - https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/wmic
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains: service
+    selection_img:
+      - Image|endswith: \WMIC.exe
+      - OriginalFileName: wmic.exe
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+tags:
+  - attack.execution
+  - attack.t1047
+  - DEMO

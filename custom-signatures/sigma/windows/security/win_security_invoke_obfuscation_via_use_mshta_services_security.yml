@@ -1,0 +1,48 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Invoke-Obfuscation Via Use MSHTA - Security
+id: 9b8d9203-4e0f-4cd9-bb06-4cc4ea6d0e9a
+related:
+  - type: derived
+    id: 7e9c7999-0f9b-4d4a-a6ed-af6d553d4af4
+status: test
+description: Detects Obfuscated Powershell via use MSHTA in Scripts
+author: Nikita Nazarov, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/09 16:40:51
+references:
+  - https://github.com/SigmaHQ/sigma/issues/1009
+logsource:
+    product: windows
+    service: security
+    definition: The 'System Security Extension' audit subcategory need to be enabled
+        to log the EID 4697
+detection:
+    condition: selection
+    selection:
+        EventID: "4697"
+        ServiceFileName|contains|all:
+          - mshta
+          - vbscript:createobject
+          - .run
+          - window.close
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/11/29
+tags:
+  - attack.defense_evasion
+  - attack.t1027
+  - attack.execution
+  - attack.t1059.001
+  - DEMO

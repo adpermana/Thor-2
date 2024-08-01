@@ -1,0 +1,67 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Greenbug Espionage Group Indicators
+id: 3711eee4-a808-4849-8a14-faf733da3612
+status: test
+description: Detects tools and process executions used by Greenbug in their May 2020
+    campaign as reported by Symantec
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/05/20 15:26:31
+references:
+  - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/greenbug-espionage-telco-south-asia
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_img:
+        Image|endswith:
+          - :\ProgramData\adobe\Adobe.exe
+          - :\ProgramData\oracle\local.exe
+          - \revshell.exe
+          - \infopagesbackup\ncat.exe
+          - :\ProgramData\comms\comms.exe
+    selection_msf:
+        CommandLine|contains|all:
+          - -ExecutionPolicy Bypass -File
+          - \msf.ps1
+    selection_ncat:
+        CommandLine|contains|all:
+          - infopagesbackup
+          - \ncat
+          - -e cmd.exe
+    selection_other:
+        CommandLine|contains: L3NlcnZlcj1
+    selection_powershell:
+        CommandLine|contains:
+          - system.Data.SqlClient.SqlDataAdapter($cmd); [void]$da.fill
+          - -nop -w hidden -c $k=new-object
+          - '[Net.CredentialCache]::DefaultCredentials;IEX '
+          - ' -nop -w hidden -c $m=new-object net.webclient;$m'
+          - -noninteractive -executionpolicy bypass whoami
+          - -noninteractive -executionpolicy bypass netstat -a
+falsepositives: Unlikely
+level: critical
+customer: 'demo'
+modified: 2023/03/09
+tags:
+  - attack.g0049
+  - attack.execution
+  - attack.t1059.001
+  - attack.command_and_control
+  - attack.t1105
+  - attack.defense_evasion
+  - attack.t1036.005
+  - detection.emerging_threats
+  - DEMO

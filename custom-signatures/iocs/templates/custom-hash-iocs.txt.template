@@ -1,0 +1,18 @@
+#
+# THOR CUSTOM HASH IOCs
+# This file contains MD5, SHA1 and SHA256 hashes and a short info like file name
+# or hash origin
+#
+# Important: Rename this template file from .txt.template to .txt 
+#
+# FORMAT -----------------------------------------------------------------------
+#
+# MD5;COMMENT
+# SHA1;COMMENT
+# SHA256;COMMENT
+#
+# EXAMPLES ---------------------------------------------------------------------
+#
+# 0c2674c3a97c53082187d930efb645c2;DEEP PANDA Sakula Malware - http://goo.gl/R3e6eG
+# 000c907d39924de62b5891f8d0e03116;The Darkhotel APT http://goo.gl/DuS7WS
+# c03318cb12b827c03d556c8747b1e323225df97bdc4258c2756b0d6a4fd52b47;Operation SMN Hashes http://goo.gl/bfmF8B - Zxshell

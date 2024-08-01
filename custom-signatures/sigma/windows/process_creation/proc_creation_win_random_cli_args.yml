@@ -1,0 +1,85 @@
+title: Potentially Uncommon CommandLine Arguments
+id: 983fd74b-0be6-4ae7-ae5a-9e8ff185e7d9
+status: experimental
+description: Detects potential uncommon commandline arguments
+references:
+    - Internal Research
+author: Nasreddine Bencherchali (Nextron Systems)
+date: 2023/04/04
+tags:
+    - attack.defense_evasion
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains:
+            - '.exe 1111111'
+            - '.exe 2222222'
+            - '.exe 3333333'
+            - '.exe 4444444'
+            - '.exe 5555555'
+            - '.exe 6666666'
+            - '.exe 7777777'
+            - '.exe 8888888'
+            - '.exe 9999999'
+            - '.exe aaaaaaa'
+            - '.exe bbbbbbb'
+            - '.exe ccccccc'
+            - '.exe ddddddd'
+            - '.exe eeeeeee'
+            - '.exe fffffff'
+            - '.exe ggggggg'
+            - '.exe hhhhhhh'
+            - '.exe iiiiiii'
+            - '.exe jjjjjjj'
+            - '.exe kkkkkkk'
+            - '.exe lllllll'
+            - '.exe mmmmmmm'
+            - '.exe nnnnnnn'
+            - '.exe ooooooo'
+            - '.exe ppppppp'
+            - '.exe qqqqqqq'
+            - '.exe rrrrrrr'
+            - '.exe sssssss'
+            - '.exe ttttttt'
+            - '.exe uuuuuuu'
+            - '.exe vvvvvvv'
+            - '.exe wwwwwww'
+            - '.exe xxxxxxx'
+            - '.exe yyyyyyy'
+            - '.exe zzzzzzz'
+            - '.exe !!!!!!!'
+            - '.exe ((((((('
+            - '.exe )))))))'
+            - '.exe $$$$$$$'
+            - '.exe %%%%%%%'
+            - '.exe &&&&&&&'
+            - '.exe \*\*\*\*\*\*\*'
+            - '.exe +++++++'
+            - '.exe ,,,,,,,'
+            - '.exe -------'
+            - '.exe .......'
+            - '.exe ///////'
+            - '.exe :::::::'
+            - '.exe ;;;;;;;'
+            - '.exe <<<<<<<'
+            - '.exe ======='
+            - '.exe >>>>>>>'
+            - '.exe \?\?\?\?\?\?\?'
+            - '.exe @@@@@@@'
+            - '.exe [[[[[[['
+            - '.exe \\\\\\\'
+            - '.exe ]]]]]]]'
+            - '.exe ^^^^^^^'
+            - '.exe {{{{{{{'
+            - '.exe |||||||'
+            - '.exe }}}}}}}'
+            - '.exe ~~~~~~~'
+    filter_main_conhost:
+        Image: 'C:\Windows\System32\conhost.exe'
+        CommandLine|contains: 'conhost.exe 0xffffffff'
+    condition: selection and not 1 of filter_main_*
+falsepositives:
+    - Unknown
+level: medium

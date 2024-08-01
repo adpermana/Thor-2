@@ -1,0 +1,39 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: AWS EFS Fileshare Mount Modified or Deleted
+id: 6a7ba45c-63d8-473e-9736-2eaabff79964
+status: test
+description: Detects when a EFS Fileshare Mount is modified or deleted. An adversary
+    breaking any file system using the mount target that is being deleted, which might
+    disrupt instances or applications using those mounts.
+author: Austin Songer @austinsonger
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/08/15 16:36:01
+references:
+  - https://docs.aws.amazon.com/efs/latest/ug/API_DeleteMountTarget.html
+logsource:
+    product: aws
+    service: cloudtrail
+detection:
+    condition: selection
+    selection:
+        eventName: DeleteMountTarget
+        eventSource: elasticfilesystem.amazonaws.com
+falsepositives: Unknown
+level: medium
+customer: 'demo'
+modified: 2022/10/09
+tags:
+  - attack.impact
+  - attack.t1485
+  - DEMO

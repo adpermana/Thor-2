@@ -1,0 +1,22 @@
+title: PhishingLnk Tool Default Payload
+id: 64171903-ef6d-4a2c-a264-f02b522fee85
+status: experimental
+description: Detects the default payload used by default in the PhishingLnk tool
+references:
+    - https://github.com/qwqdanchun/PhishingLnk
+author: Nasreddine Bencherchali
+date: 2022/05/15
+modified: 2022/11/04
+tags:
+    - attack.execution
+    - attack.t1059.003
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains: '/c cd C:\Users\logs\AppData\Local\Microsoft\Windows\INetCache & dir /s /B'
+    condition: selection
+falsepositives:
+    - This default combination of commands shouldn't be used by legitiamte tools
+level: critical

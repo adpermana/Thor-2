@@ -1,0 +1,64 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Registry Persistence Attempt Via Windows Telemetry
+id: 73a883d0-0348-4be4-a8d8-51031c2564f8
+related:
+  - type: obsoletes
+    id: 4e8d5fd3-c959-441f-a941-f73d0cdcdca5
+status: test
+description: |
+    Detects potential persistence behavior using the windows telemetry registry key.
+    Windows telemetry makes use of the binary CompatTelRunner.exe to run a variety of commands and perform the actual telemetry collections.
+    This binary was created to be easily extensible, and to that end, it relies on the registry to instruct on which commands to run.
+    The problem is, it will run any arbitrary command without restriction of location or type.
+author: Lednyov Alexey, oscd.community, Sreeman
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/16 22:19:11
+references:
+  - https://www.trustedsec.com/blog/abusing-windows-telemetry-for-persistence/
+logsource:
+    category: registry_set
+    product: windows
+    definition: 'Requirements: Sysmon config that monitors \SOFTWARE\Microsoft\Windows
+        NT\CurrentVersion\AppCompatFlags\TelemetryController subkey of the HKLM hives'
+detection:
+    condition: selection and not 1 of filter_main_*
+    filter_main_generic:
+        Details|contains:
+          - \system32\CompatTelRunner.exe
+          - \system32\DeviceCensus.exe
+    selection:
+        Details|contains:
+          - .bat
+          - .bin
+          - .cmd
+          - .dat
+          - .dll
+          - .exe
+          - .hta
+          - .jar
+          - .js
+          - .msi
+          - .ps
+          - .sh
+          - .vb
+        TargetObject|contains: \SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\TelemetryController\
+        TargetObject|endswith: \Command
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/08/17
+tags:
+  - attack.persistence
+  - attack.t1053.005
+  - DEMO

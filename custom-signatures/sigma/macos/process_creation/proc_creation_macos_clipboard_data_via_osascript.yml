@@ -1,0 +1,46 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Clipboard Data Collection Via OSAScript
+id: 7794fa3c-edea-4cff-bec7-267dd4770fd7
+related:
+  - type: derived
+    id: 1bc2e6c5-0885-472b-bed6-be5ea8eace55
+status: test
+description: Detects possible collection of data from the clipboard via execution
+    of the osascript binary
+author: Sohan G (D4rkCiph3r)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2023/01/31 15:59:41
+references:
+  - https://www.sentinelone.com/blog/how-offensive-actors-use-applescript-for-attacking-macos/
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    condition: selection
+    selection:
+        CommandLine|contains|all:
+          - osascript
+          - ' -e '
+          - clipboard
+fields:
+  - CommandLine
+falsepositives: Unlikely
+level: high
+customer: 'demo'
+tags:
+  - attack.collection
+  - attack.execution
+  - attack.t1115
+  - attack.t1059.002
+  - DEMO

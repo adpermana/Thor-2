@@ -1,0 +1,42 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: BITS Transfer Job Download To Potential Suspicious Folder
+id: f8a56cb7-a363-44ed-a82f-5926bb44cd05
+status: test
+description: Detects new BITS transfer job where the LocalName/Saved file is stored
+    in a potentially suspicious location
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/06/28 20:42:41
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1197/T1197.md
+logsource:
+    product: windows
+    service: bits-client
+detection:
+    condition: selection
+    selection:
+        EventID: "16403"
+        LocalName|contains:
+          - \Desktop\
+          - C:\Users\Public\
+          - C:\PerfLogs\
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/03/27
+tags:
+  - attack.defense_evasion
+  - attack.persistence
+  - attack.t1197
+  - DEMO

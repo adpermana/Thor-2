@@ -1,0 +1,65 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Recon Activity Via Nltest.EXE
+id: 5cc90652-4cbd-4241-aa3b-4b462fa5a248
+related:
+  - type: similar
+    id: 410ad193-a728-4107-bc79-4419789fcbf8
+  - type: similar
+    id: 903076ff-f442-475a-b667-4f246bcc203b
+  - type: obsoletes
+    id: 77815820-246c-47b8-9741-e0def3f57308
+status: test
+description: Detects nltest commands that can be used for information discovery
+author: Craig Young, oscd.community, Georg Lauenstein
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2021/07/24 16:02:21
+references:
+  - https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/cc731935(v=ws.11)
+  - https://thedfirreport.com/2021/08/16/trickbot-leads-up-to-fake-1password-installation/
+  - https://thedfirreport.com/2020/10/18/ryuk-in-5-hours/
+  - https://book.hacktricks.xyz/windows/basic-cmd-for-pentesters
+  - https://research.nccgroup.com/2022/08/19/back-in-black-unlocking-a-lockbit-3-0-ransomware-attack/
+  - https://eqllib.readthedocs.io/en/latest/analytics/03e231a6-74bc-467a-acb1-e5676b0fb55e.html
+  - https://redcanary.com/blog/how-one-hospital-thwarted-a-ryuk-ransomware-outbreak/
+  - https://github.com/redcanaryco/atomic-red-team/blob/5360c9d9ffa3b25f6495f7a16e267b719eba2c37/atomics/T1482/T1482.md#atomic-test-2---windows---discover-domain-trusts-with-nltest
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_nltest:
+      - Image|endswith: \nltest.exe
+      - OriginalFileName: nltestrk.exe
+    selection_recon:
+      - CommandLine|contains|all:
+          - server
+          - query
+      - CommandLine|contains:
+          - /user
+          - all_trusts
+          - 'dclist:'
+          - 'dnsgetdc:'
+          - domain_trusts
+          - 'dsgetdc:'
+          - parentdomain
+          - trusted_domains
+falsepositives: Legitimate administration use but user and host must be investigated
+level: medium
+customer: 'demo'
+modified: 2023/12/15
+tags:
+  - attack.discovery
+  - attack.t1016
+  - attack.t1482
+  - DEMO

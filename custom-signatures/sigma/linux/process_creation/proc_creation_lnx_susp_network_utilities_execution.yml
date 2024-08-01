@@ -1,0 +1,58 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Linux Network Service Scanning Tools Execution
+id: 3e102cd9-a70d-4a7a-9508-403963092f31
+status: test
+description: Detects execution of network scanning and reconnaisance tools. These
+    tools can be used for the enumeration of local or remote network services for
+    example.
+author: Alejandro Ortuno, oscd.community, Georg Lauenstein (sure[secure])
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/21 18:21:31
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1046/T1046.md
+  - https://github.com/projectdiscovery/naabu
+  - https://github.com/Tib3rius/AutoRecon
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    condition: (selection_netcat and not filter_main_netcat_listen_flag) or selection_network_scanning_tools
+    filter_main_netcat_listen_flag:
+        CommandLine|contains:
+          - ' --listen '
+          - ' -l '
+    selection_netcat:
+        Image|endswith:
+          - /nc
+          - /ncat
+          - /netcat
+          - /socat
+    selection_network_scanning_tools:
+        Image|endswith:
+          - /autorecon
+          - /hping
+          - /hping2
+          - /hping3
+          - /naabu
+          - /nmap
+          - /nping
+          - /telnet
+falsepositives: Legitimate administration activities
+level: low
+customer: 'demo'
+modified: 2023/10/25
+tags:
+  - attack.discovery
+  - attack.t1046
+  - DEMO

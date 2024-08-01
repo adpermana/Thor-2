@@ -1,0 +1,43 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-06-21 19:00
+# Generated for User: demo
+# Number of Rules: 3228
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Privileged Container Deployed
+id: c5cd1b20-36bb-488d-8c05-486be3d0cb97
+status: experimental
+description: |
+    Detects the creation of a "privileged" container, an action which could be indicative of a threat actor mounting a container breakout attacks.
+    A privileged container is a container that can access the host with all of the root capabilities of the host machine. This allows it to view, interact and modify processes, network operations, IPC calls, the file system, mount points, SELinux configurations etc. as the root user on the host.
+    Various versions of "privileged" containers can be specified, e.g. by setting the securityContext.privileged flag in the resource specification, setting non-standard Linux capabilities, or configuring the hostNetwork/hostPID fields
+author: Leo Tsaousis (@laripping)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/03/26 13:55:21
+references:
+  - https://microsoft.github.io/Threat-Matrix-for-Kubernetes/techniques/Privileged%20container/
+  - https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types-kubernetes.html#privilegeescalation-kubernetes-privilegedcontainer
+  - https://www.elastic.co/guide/en/security/current/kubernetes-pod-created-with-hostnetwork.html
+  - https://www.elastic.co/guide/en/security/current/kubernetes-container-created-with-excessive-linux-capabilities.html
+logsource:
+    category: application
+    product: kubernetes
+    service: audit
+detection:
+    condition: selection
+    selection:
+        capabilities: '*'
+        objectRef.resource: pods
+        verb: create
+falsepositives: Unknown
+level: low
+customer: 'demo'
+tags:
+  - attack.t1611
+  - DEMO

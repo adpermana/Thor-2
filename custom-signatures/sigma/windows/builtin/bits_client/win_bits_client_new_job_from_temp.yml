@@ -1,0 +1,30 @@
+title: New BITS Job Created From Temp Folder
+id: d48e23fb-9471-4e38-9d2b-dd7016bcb817
+related:
+    - id: 598932c4-4cb4-4a50-9c58-983663962258
+      type: similar
+status: experimental
+description: Detects the creation of a new BITS job by an application located in %TEMP%
+references:
+    - Internal Research
+author: Nasreddine Bencherchali (Nextron Systems)
+date: 2023/03/27
+tags:
+    - attack.defense_evasion
+    - attack.persistence
+    - attack.t1197
+logsource:
+    product: windows
+    service: bits-client
+detection:
+    selection:
+        EventID: 3
+        processPath|contains: '\AppData\Local\Temp\' # This could be prone to false positives from installers and updaters
+    filter_optional_vs_studio:
+        processPath|startswith: 'C:\Users\'
+        processPath|contains: '\AppData\Local\Temp\'
+        processPath|endswith: '\resources\app\ServiceHub\Services\Microsoft.VisualStudio.Setup.Service\BackgroundDownload.exe'
+    condition: selection and not 1 of filter_optional_*
+falsepositives:
+    - Legitimate application updaters were seen using the %TEMP% directory to stage downloads via the bits service. Apply filters accordingly
+level: low

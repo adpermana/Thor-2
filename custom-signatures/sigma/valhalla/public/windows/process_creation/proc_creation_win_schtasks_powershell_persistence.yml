@@ -1,0 +1,52 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Potential Persistence Via Powershell Search Order Hijacking - Task
+id: b66474aa-bd92-4333-a16c-298155b120df
+related:
+  - type: similar
+    id: 6e8811ee-90ba-441e-8486-5653e68b2299
+status: test
+description: Detects suspicious powershell execution via a schedule task where the
+    command ends with an suspicious flags to hide the powershell instance instead
+    of executeing scripts or commands. This could be a sign of persistence via PowerShell
+    "Get-Variable" technique as seen being used in Colibri Loader
+author: pH-T (Nextron Systems), Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/04/08 23:07:21
+references:
+  - https://blog.malwarebytes.com/threat-intelligence/2022/04/colibri-loader-combines-task-scheduler-and-powershell-in-clever-persistence-technique/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+        CommandLine|endswith:
+          - ' -windowstyle hidden'
+          - ' -w hidden'
+          - ' -ep bypass'
+          - ' -noni'
+        ParentCommandLine|contains|all:
+          - -k netsvcs
+          - -s Schedule
+        ParentImage: C:\WINDOWS\System32\svchost.exe
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/02/03
+tags:
+  - attack.execution
+  - attack.persistence
+  - attack.t1053.005
+  - attack.t1059.001
+  - DEMO

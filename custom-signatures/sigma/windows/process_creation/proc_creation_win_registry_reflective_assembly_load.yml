@@ -1,0 +1,32 @@
+title: Powershell Reflective Assembly Load Registry Via Process Creation
+id: 47b28fd4-0f24-45a1-a536-dd46dfe4adf0
+related:
+    - id: 0238c8b4-9637-4081-9184-bea6958d5d9f
+      type: similar
+status: experimental
+description: Detects Powershell .NET reflective loading of Assembly via registry
+author: pH-T
+date: 2022/05/10
+tags:
+    - attack.execution
+    - attack.t1059.001
+    - attack.defense_evasion
+    - attack.t1027
+references:
+    - https://github.com/bytecode77/r77-rootkit
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains|all:
+            - '[Reflection.Assembly]::Load('
+            - '[Microsoft.Win32.Registry]::'
+            - '.GetValue('
+            - 'EntryPoint.Invoke('
+    condition: selection
+fields:
+    - CommandLine
+falsepositives:
+    - Unlikely
+level: high

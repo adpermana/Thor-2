@@ -1,0 +1,68 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Windows Binaries Write Suspicious Extensions
+id: b8fd0e93-ff58-4cbd-8f48-1c114e342e62
+related:
+  - type: derived
+    id: 1277f594-a7d1-4f28-a2d3-73af5cbeab43
+status: test
+description: Detects Windows executables that writes files with suspicious extensions
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2022/08/12 18:07:01
+references:
+  - Internal Research
+logsource:
+    category: file_event
+    product: windows
+detection:
+    condition: 1 of selection_*
+    selection_generic:
+        Image|endswith:
+          - \smss.exe
+          - \RuntimeBroker.exe
+          - \sihost.exe
+          - \lsass.exe
+          - \csrss.exe
+          - \winlogon.exe
+          - \wininit.exe
+        TargetFilename|endswith:
+          - .bat
+          - .vbe
+          - .txt
+          - .vbs
+          - .exe
+          - .ps1
+          - .hta
+          - .iso
+          - .dll
+    selection_special:
+        Image|endswith:
+          - \rundll32.exe
+          - \svchost.exe
+          - \dllhost.exe
+        TargetFilename|endswith:
+          - .bat
+          - .vbe
+          - .vbs
+          - .ps1
+          - .hta
+          - .iso
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/03/14
+tags:
+  - attack.defense_evasion
+  - attack.t1036
+  - DEMO

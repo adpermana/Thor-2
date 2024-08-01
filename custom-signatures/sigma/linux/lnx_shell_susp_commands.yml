@@ -1,0 +1,70 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Activity in Shell Commands
+id: 2aa1440c-9ae9-4d92-84a7-a9e5f5e31695
+status: test
+description: Detects suspicious shell commands used in various exploit codes (see
+    references)
+author: Florian Roth (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/08/21 15:58:11
+references:
+  - https://web.archive.org/web/20170319121015/http://www.threatgeek.com/2017/03/widespread-exploitation-attempts-using-cve-2017-5638.html
+  - https://github.com/rapid7/metasploit-framework/blob/eb6535009f5fdafa954525687f09294918b5398d/modules/exploits/multi/http/struts_code_exec_exception_delegator.rb
+  - http://pastebin.com/FtygZ1cg
+  - https://artkond.com/2017/03/23/pivoting-guide/
+logsource:
+    product: linux
+detection:
+    condition: keywords
+    keywords:
+      - wget * - http* | perl
+      - wget * - http* | sh
+      - wget * - http* | bash
+      - python -m SimpleHTTPServer
+      - -m http.server
+      - import pty; pty.spawn*
+      - socat exec:*
+      - socat -O /tmp/*
+      - socat tcp-connect*
+      - '*echo binary >>*'
+      - '*wget *; chmod +x*'
+      - '*wget *; chmod 777 *'
+      - '*cd /tmp || cd /var/run || cd /mnt*'
+      - '*stop;service iptables stop;*'
+      - '*stop;SuSEfirewall2 stop;*'
+      - chmod 777 2020*
+      - '*>>/etc/rc.local'
+      - '*base64 -d /tmp/*'
+      - '* | base64 -d *'
+      - '*/chmod u+s *'
+      - '*chmod +s /tmp/*'
+      - '*chmod u+s /tmp/*'
+      - '* /tmp/haxhax*'
+      - '* /tmp/ns_sploit*'
+      - nc -l -p *
+      - cp /bin/ksh *
+      - cp /bin/sh *
+      - '* /tmp/*.b64 *'
+      - '*/tmp/ysocereal.jar*'
+      - '*/tmp/x *'
+      - '*; chmod +x /tmp/*'
+      - '*;chmod +x /tmp/*'
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.execution
+  - attack.t1059.004
+  - DEMO

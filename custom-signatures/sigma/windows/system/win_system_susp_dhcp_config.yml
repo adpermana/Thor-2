@@ -1,0 +1,40 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-07 01:36
+# Generated for User: demo
+# Number of Rules: 3139
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: DHCP Server Loaded the CallOut DLL
+id: 13fc89a9-971e-4ca6-b9dc-aa53a445bf40
+status: test
+description: This rule detects a DHCP server in which a specified Callout DLL (in
+    registry) was loaded
+author: Dimitrios Slamaris
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2017/05/15 14:02:41
+references:
+  - https://blog.3or.de/mimilib-dhcp-server-callout-dll-injection.html
+  - https://technet.microsoft.com/en-us/library/cc726884(v=ws.10).aspx
+  - https://msdn.microsoft.com/de-de/library/windows/desktop/aa363389(v=vs.85).aspx
+logsource:
+    product: windows
+    service: system
+detection:
+    condition: selection
+    selection:
+        EventID: "1033"
+        Provider_Name: Microsoft-Windows-DHCP-Server
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2022/12/25
+tags:
+  - attack.defense_evasion
+  - attack.t1574.002
+  - DEMO

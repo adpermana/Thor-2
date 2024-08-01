@@ -1,0 +1,41 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-06-21 19:00
+# Generated for User: demo
+# Number of Rules: 3228
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: MaxMpxCt Registry Value Changed
+id: 0e6a9e62-627e-496c-aef5-bfa39da29b5e
+status: experimental
+description: |
+    Detects changes to the "MaxMpxCt" registry value.
+    MaxMpxCt specifies the maximum outstanding network requests for the server per client, which is used when negotiating a Server Message Block (SMB) connection with a client. Note if the value is set beyond 125 older Windows 9x clients will fail to negotiate.
+    Ransomware threat actors and operators (specifically BlackCat) were seen increasing this value in order to handle a higher volume of traffic.
+author: Nasreddine Bencherchali (Nextron Systems)
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2024/03/19 14:08:21
+references:
+  - https://www.huntress.com/blog/blackcat-ransomware-affiliate-ttps
+  - https://securityscorecard.com/research/deep-dive-into-alphv-blackcat-ransomware
+  - https://www.intrinsec.com/alphv-ransomware-gang-analysis/?cn-reloaded=1
+  - https://www.sentinelone.com/labs/blackcat-ransomware-highly-configurable-rust-driven-raas-on-the-prowl-for-victims/
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    condition: selection
+    selection:
+        TargetObject|endswith: \Services\LanmanServer\Parameters\MaxMpxCt
+falsepositives: Unknown
+level: low
+customer: 'demo'
+tags:
+  - attack.defense_evasion
+  - attack.t1070.005
+  - DEMO

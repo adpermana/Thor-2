@@ -1,0 +1,32 @@
+title: Microsoft Exchange ProxyNotShell Exploit Traffic - Proxy
+id: 6ee5187f-4e7d-406d-8338-01b2cd0385e6
+status: test
+description: Detects Microsoft Exchange exploit traffic for CVE-2022-41040 and CVE-2022-41082 (A.K.A ProxyNotShell)
+references:
+    - https://github.com/testanull/ProxyNotShell-PoC
+    - https://twitter.com/testanull/status/1593069258543894528
+author: pH-T
+date: 2022/11/21
+modified: 2023/03/28
+tags:
+    - attack.execution
+logsource:
+    category: proxy
+detection:
+    selection_1:
+        cs-method: 'POST'
+        sc-status: 200
+        c-uri|contains|all:
+            - '/powershell/'
+            - '/autodiscover.json'
+            - '/autodiscover/admin@localhost/'
+    selection_2:
+        cs-method: 'POST'
+        sc-status: 200
+        c-uri|contains|all:
+            - '/powershell/autodiscover.json'
+            - 'x=a'
+    condition: 1 of selection*
+falsepositives:
+    - Unknown
+level: high

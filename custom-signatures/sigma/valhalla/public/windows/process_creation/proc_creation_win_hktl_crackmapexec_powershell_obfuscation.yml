@@ -1,0 +1,57 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: HackTool - CrackMapExec PowerShell Obfuscation
+id: 6f8b3439-a203-45dc-a88b-abf57ea15ccf
+status: test
+description: The CrachMapExec pentesting framework implements a PowerShell obfuscation
+    with some static strings detected by this rule.
+author: Thomas Patzke
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/05/22 17:56:31
+references:
+  - https://github.com/byt3bl33d3r/CrackMapExec
+  - https://github.com/byt3bl33d3r/CrackMapExec/blob/0a49f75347b625e81ee6aa8c33d3970b5515ea9e/cme/helpers/powershell.py#L242
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: all of selection_*
+    selection_cli:
+        CommandLine|contains:
+          - join*split
+          - ( $ShellId[1]+$ShellId[13]+'x')
+          - ( $PSHome[*]+$PSHOME[*]+
+          - ( $env:Public[13]+$env:Public[5]+'x')
+          - ( $env:ComSpec[4,*,25]-Join'')
+          - '[1,3]+''x''-Join'''')'
+    selection_img:
+      - Image|endswith:
+          - \powershell.exe
+          - \pwsh.exe
+      - OriginalFileName:
+          - PowerShell.EXE
+          - pwsh.dll
+fields:
+  - ComputerName
+  - User
+  - CommandLine
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/02/21
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - attack.defense_evasion
+  - attack.t1027.005
+  - DEMO

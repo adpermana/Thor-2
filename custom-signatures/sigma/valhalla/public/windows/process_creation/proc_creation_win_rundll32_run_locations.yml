@@ -1,0 +1,49 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Suspicious Process Start Locations
+id: 15b75071-74cc-47e0-b4c6-b43744a62a2b
+status: test
+description: Detects suspicious process run from unusual locations
+author: juju4, Jonhnathan Ribeiro, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/01/16 15:22:41
+references:
+  - https://car.mitre.org/wiki/CAR-2013-05-002
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection
+    selection:
+      - Image|contains:
+          - :\RECYCLER\
+          - :\SystemVolumeInformation\
+      - Image|startswith:
+          - C:\Windows\Tasks\
+          - C:\Windows\debug\
+          - C:\Windows\fonts\
+          - C:\Windows\help\
+          - C:\Windows\drivers\
+          - C:\Windows\addins\
+          - C:\Windows\cursors\
+          - C:\Windows\system32\tasks\
+falsepositives: False positives depend on scripts and administrative tools used in
+    the monitored environment
+level: medium
+customer: 'demo'
+modified: 2022/01/07
+tags:
+  - attack.defense_evasion
+  - attack.t1036
+  - car.2013-05-002
+  - DEMO

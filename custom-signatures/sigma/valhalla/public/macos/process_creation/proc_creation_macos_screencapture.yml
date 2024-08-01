@@ -1,0 +1,37 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Screen Capture - macOS
+id: 0877ed01-da46-4c49-8476-d49cdd80dfa7
+status: test
+description: Detects attempts to use screencapture to collect macOS screenshots
+author: remotephone, oscd.community
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2020/10/13 11:23:21
+references:
+  - https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1113/T1113.md
+  - https://github.com/EmpireProject/Empire/blob/08cbd274bef78243d7a8ed6443b8364acd1fc48b/lib/modules/python/collection/osx/screenshot.py
+logsource:
+    category: process_creation
+    product: macos
+detection:
+    condition: selection
+    selection:
+        Image: /usr/sbin/screencapture
+falsepositives: Legitimate user activity taking screenshots
+level: low
+customer: 'demo'
+modified: 2021/11/27
+tags:
+  - attack.collection
+  - attack.t1113
+  - DEMO

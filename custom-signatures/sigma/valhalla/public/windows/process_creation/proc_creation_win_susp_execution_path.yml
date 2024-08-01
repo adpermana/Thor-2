@@ -1,0 +1,66 @@
+
+# VALHALLA SIGMA RULE SET - DEMO
+# Retrieved: 2024-03-26 18:48
+# Generated for User: demo
+# Number of Rules: 3189
+# Warning:
+#     The full rule set contains rules with low level (< high) 
+#     that can lead to false positives - use the Python
+#     module valhallaAPI tools to retrieve a filtered set
+# This is the VALHALLA demo rule set. The content represents the 'SigmaHQ' repository
+# in a streamlined format.
+# All rules are licensed under DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md.
+title: Execution from Suspicious Folder
+id: 3dfd06d2-eaf4-4532-9555-68aca59f57c4
+status: test
+description: Detects a suspicious execution from an uncommon folder
+author: Florian Roth (Nextron Systems), Tim Shelton
+license: 'DRL 1.1 https://github.com/SigmaHQ/sigma/blob/master/LICENSE.Detection.Rules.md'
+date: 2019/01/16 14:47:11
+references:
+  - https://github.com/mbevilacqua/appcompatprocessor/blob/6c847937c5a836e2ce2fe2b915f213c345a3c389/AppCompatSearch.txt
+  - https://www.secureworks.com/research/bronze-butler-targets-japanese-businesses
+  - https://www.crowdstrike.com/resources/reports/2019-crowdstrike-global-threat-report/
+  - https://github.com/ThreatHuntingProject/ThreatHunting/blob/cb22598bb70651f88e0285abc8d835757d2cb596/hunts/suspicious_process_creation_via_windows_event_logs.md
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    condition: selection and not 1 of filter_*
+    filter_citrix:
+        Image|endswith: \CitrixReceiverUpdater.exe
+        Image|startswith: C:\Windows\SysWOW64\config\systemprofile\Citrix\UpdaterBinaries\
+    filter_ibm:
+        Image|startswith: C:\Users\Public\IBM\ClientSolutions\Start_Programs\
+    selection:
+      - Image|contains:
+          - \$Recycle.bin\
+          - \config\systemprofile\
+          - \Intel\Logs\
+          - \RSA\MachineKeys\
+          - \Users\All Users\
+          - \Users\Default\
+          - \Users\NetworkService\
+          - \Users\Public\
+          - \Windows\addins\
+          - \Windows\debug\
+          - \Windows\Fonts\
+          - \Windows\Help\
+          - \Windows\IME\
+          - \Windows\Media\
+          - \Windows\repair\
+          - \Windows\security\
+          - \Windows\System32\Tasks\
+          - \Windows\Tasks\
+      - Image|startswith: C:\Perflogs\
+fields:
+  - CommandLine
+  - ParentCommandLine
+falsepositives: Unknown
+level: high
+customer: 'demo'
+modified: 2023/01/10
+tags:
+  - attack.defense_evasion
+  - attack.t1036
+  - DEMO
